@@ -19,7 +19,28 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/tailwind": ["./src/styles/tailwind.css"],
+      "@/features/*": ["./src/features/*"],
+      "@/components/layout": ["./src/components/layout"],
+      "@/components/layout/*": ["./src/components/layout/*"],
+      "@/components/shared": ["./src/components/shared"],
+      "@/components/shared/*": ["./src/components/shared/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/ui": ["./src/components/ui"],
+      "@/ui/*": ["./src/components/ui/*"],
+      "@/hooks": ["./src/hooks"],
+      "@/hooks/*": ["./src/hooks/*"],
+      "@/schemas": ["./src/schemas"],
+      "@/schemas/*": ["./src/schemas/*"],
+      "@/stores/*": ["./src/stores/*"],
+      "@/styles/*": ["./src/styles/*"],
+      "@/constants/*": ["./src/constants/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/providers/*": ["./src/providers/*"],
+      "@/types/*": ["./src/types/*"],
+      "@/utils/*": ["./src/utils/*"],
+      "@/helpers/*": ["./src/helpers/*"]
     }
   },
   "include": [
@@ -28,7 +49,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    "src/types"
   ],
   "exclude": ["node_modules"]
 }
