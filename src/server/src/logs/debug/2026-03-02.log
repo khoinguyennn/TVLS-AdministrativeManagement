@@ -1,0 +1,20 @@
+2026-03-02 13:40:46 info: =================================
+2026-03-02 13:40:46 info: ======= ENV: development =======
+2026-03-02 13:40:46 info: 🚀 App listening on the port 3000
+2026-03-02 13:40:46 info: =================================
+2026-03-02 13:40:46 info: 0ms Executed (default): SELECT 1+1 AS result
+2026-03-02 13:40:46 info: 5ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-02 13:40:46 info: 5ms Executed (default): SHOW INDEX FROM `users`
+2026-03-02 13:40:52 info: [0mGET / [33m404[0m 4.108 ms - 139[0m
+2026-03-02 13:40:55 info: [0mGET /api-docs [36m301[0m 1.849 ms - 158[0m
+2026-03-02 13:40:55 info: [0mGET /api-docs/ [32m200[0m 3.745 ms - -[0m
+2026-03-02 13:40:55 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 4.735 ms - -[0m
+2026-03-02 13:40:55 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 4.724 ms - -[0m
+2026-03-02 13:40:55 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 5.642 ms - -[0m
+2026-03-02 13:40:55 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.382 ms - -[0m
+2026-03-02 13:40:57 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 1.271 ms - -[0m
+2026-03-02 13:41:41 error: [POST] /users >> StatusCode:: 400, Message:: email must be an email, password must be longer than or equal to 9 characters
+2026-03-02 13:41:41 info: [0mPOST /users [33m400[0m 20.294 ms - 91[0m
+2026-03-02 13:42:08 info: 6ms Executed (default): SELECT `id`, `email`, `password`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'abc@xyz.com' LIMIT 1;
+2026-03-02 13:42:08 info: 5ms Executed (default): INSERT INTO `users` (`id`,`email`,`password`,`created_at`,`updated_at`) VALUES (DEFAULT,?,?,?,?); "abc@xyz.com", "$2b$10$pIPh6ms.9mtk2kGeQmlPxufIfQE4khJPGygPTKO4sIiEQAW145lZm", "2026-03-02 15:42:08", "2026-03-02 15:42:08"
+2026-03-02 13:42:08 info: [0mPOST /users [32m201[0m 86.118 ms - 211[0m

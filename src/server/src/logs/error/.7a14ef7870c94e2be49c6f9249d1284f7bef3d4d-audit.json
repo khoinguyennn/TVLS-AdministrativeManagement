@@ -1,0 +1,20 @@
+{
+    "keep": {
+        "days": false,
+        "amount": 30
+    },
+    "auditLog": "D:\\DATN\\express-typescript-starter\\src\\logs\\error\\.7a14ef7870c94e2be49c6f9249d1284f7bef3d4d-audit.json",
+    "files": [
+        {
+            "date": 1771477315644,
+            "name": "D:\\DATN\\express-typescript-starter\\src\\logs\\error\\2026-02-19.log",
+            "hash": "1e81ecaa226271f55d2b7f002fb3c6941809048258cc4f6a1150abd715d57de0"
+        },
+        {
+            "date": 1772433646159,
+            "name": "D:\\DATN\\express-typescript-starter\\src\\logs\\error\\2026-03-02.log",
+            "hash": "f845e02fa79dccc9ac85495715557ee6f31842fd8eb4ba87244e975c455d2206"
+        }
+    ],
+    "hashType": "sha256"
+}

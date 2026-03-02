@@ -1,0 +1,244 @@
+2026-02-19 12:01:56 info: =================================
+2026-02-19 12:01:56 info: ======= ENV: development =======
+2026-02-19 12:01:56 info: 🚀 App listening on the port 3000
+2026-02-19 12:01:56 info: =================================
+2026-02-19 12:01:56 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-02-19 12:01:56 info: 2ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-02-19 12:01:56 info: 2ms Executed (default): SHOW INDEX FROM `users`
+2026-02-19 12:02:08 info: [0mGET /api-docs/ [36m304[0m 4.492 ms - -[0m
+2026-02-19 12:02:08 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.370 ms - -[0m
+2026-02-19 12:02:08 info: [0mGET /api-docs/swagger-ui.css [32m200[0m 9.452 ms - -[0m
+2026-02-19 12:02:08 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [32m200[0m 5.456 ms - -[0m
+2026-02-19 12:02:08 info: [0mGET /api-docs/swagger-ui-bundle.js [32m200[0m 8.169 ms - -[0m
+2026-02-19 12:02:08 info: [0mGET /api-docs/favicon-32x32.png [32m200[0m 0.866 ms - 628[0m
+2026-02-19 12:03:43 info: =================================
+2026-02-19 12:03:43 info: ======= ENV: development =======
+2026-02-19 12:03:43 info: 🚀 App listening on the port 3000
+2026-02-19 12:03:43 info: =================================
+2026-02-19 12:03:43 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-02-19 12:03:43 info: 2ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-02-19 12:03:43 info: 3ms Executed (default): SHOW INDEX FROM `users`
+2026-02-19 12:03:51 info: =================================
+2026-02-19 12:03:51 info: ======= ENV: development =======
+2026-02-19 12:03:51 info: 🚀 App listening on the port 3000
+2026-02-19 12:03:51 info: =================================
+2026-02-19 12:03:51 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-02-19 12:03:51 info: 2ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-02-19 12:03:51 info: 3ms Executed (default): SHOW INDEX FROM `users`
+2026-02-19 12:05:25 info: =================================
+2026-02-19 12:05:25 info: ======= ENV: development =======
+2026-02-19 12:05:25 info: 🚀 App listening on the port 3000
+2026-02-19 12:05:25 info: =================================
+2026-02-19 12:05:25 info: 0ms Executed (default): SELECT 1+1 AS result
+2026-02-19 12:05:25 info: 2ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-02-19 12:05:25 info: 2ms Executed (default): SHOW INDEX FROM `users`
+2026-02-19 12:09:13 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-02-19 12:09:13 info: 2ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-02-19 12:09:13 info: 3ms Executed (default): SHOW INDEX FROM `users`
+2026-02-19 12:09:30 info: [0mGET /api-docs/ [36m304[0m 5.246 ms - -[0m
+2026-02-19 12:09:30 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 4.202 ms - -[0m
+2026-02-19 12:09:30 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 4.297 ms - -[0m
+2026-02-19 12:09:30 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.636 ms - -[0m
+2026-02-19 12:09:30 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 2.841 ms - -[0m
+2026-02-19 12:10:31 info: [0mGET /api-docs/ [36m304[0m 0.844 ms - -[0m
+2026-02-19 12:10:31 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 2.000 ms - -[0m
+2026-02-19 12:10:31 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 1.951 ms - -[0m
+2026-02-19 12:10:31 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 2.668 ms - -[0m
+2026-02-19 12:10:31 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.444 ms - -[0m
+2026-02-19 12:10:33 info: [0mGET /api-docs/ [36m304[0m 0.945 ms - -[0m
+2026-02-19 12:10:33 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 1.639 ms - -[0m
+2026-02-19 12:10:33 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 1.686 ms - -[0m
+2026-02-19 12:10:33 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.369 ms - -[0m
+2026-02-19 12:10:33 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 1.756 ms - -[0m
+2026-02-19 12:10:33 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 0.634 ms - -[0m
+2026-02-19 12:10:38 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-02-19 12:10:38 info: 2ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-02-19 12:10:38 info: 3ms Executed (default): SHOW INDEX FROM `users`
+2026-02-19 12:10:43 info: [0mGET /api-docs/ [36m304[0m 0.690 ms - -[0m
+2026-02-19 12:10:43 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 1.214 ms - -[0m
+2026-02-19 12:10:43 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 1.745 ms - -[0m
+2026-02-19 12:10:43 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.245 ms - -[0m
+2026-02-19 12:10:43 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 1.307 ms - -[0m
+2026-02-19 12:10:43 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 0.558 ms - -[0m
+2026-02-19 12:10:55 info: [0mGET /api-docs/ [36m304[0m 0.718 ms - -[0m
+2026-02-19 12:10:55 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 0.485 ms - -[0m
+2026-02-19 12:10:55 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 1.325 ms - -[0m
+2026-02-19 12:10:55 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.273 ms - -[0m
+2026-02-19 12:10:55 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 1.321 ms - -[0m
+2026-02-19 12:10:55 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 0.511 ms - -[0m
+2026-02-19 12:11:23 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel`;
+2026-02-19 12:11:23 info: [0mGET /users [36m304[0m 8.861 ms - -[0m
+2026-02-19 12:12:45 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel`;
+2026-02-19 12:12:45 info: [0mGET /users [36m304[0m 5.184 ms - -[0m
+2026-02-19 12:13:14 info: [0mGET /api-docs/ [36m304[0m 0.719 ms - -[0m
+2026-02-19 12:13:14 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 0.563 ms - -[0m
+2026-02-19 12:13:14 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 1.021 ms - -[0m
+2026-02-19 12:13:14 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.280 ms - -[0m
+2026-02-19 12:13:14 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 1.517 ms - -[0m
+2026-02-19 12:13:14 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 0.617 ms - -[0m
+2026-02-19 12:13:16 info: [0mGET /api-docs/ [36m304[0m 0.620 ms - -[0m
+2026-02-19 12:13:16 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 1.596 ms - -[0m
+2026-02-19 12:13:16 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 2.124 ms - -[0m
+2026-02-19 12:13:16 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.307 ms - -[0m
+2026-02-19 12:13:16 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 3.238 ms - -[0m
+2026-02-19 12:24:12 info: [0mGET /api-docs/ [36m304[0m 0.829 ms - -[0m
+2026-02-19 12:24:12 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 0.615 ms - -[0m
+2026-02-19 12:24:12 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 1.354 ms - -[0m
+2026-02-19 12:24:12 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.282 ms - -[0m
+2026-02-19 12:24:12 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 2.162 ms - -[0m
+2026-02-19 12:24:12 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 1.006 ms - -[0m
+2026-02-19 12:24:13 info: [0mGET /api-docs/ [36m304[0m 0.703 ms - -[0m
+2026-02-19 12:24:13 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 0.673 ms - -[0m
+2026-02-19 12:24:13 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.297 ms - -[0m
+2026-02-19 12:24:13 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 1.946 ms - -[0m
+2026-02-19 12:24:13 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 2.156 ms - -[0m
+2026-02-19 12:24:13 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 0.953 ms - -[0m
+2026-02-19 12:24:24 info: [0mGET /api-docs/ [36m304[0m 0.603 ms - -[0m
+2026-02-19 12:24:24 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 0.525 ms - -[0m
+2026-02-19 12:24:24 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.260 ms - -[0m
+2026-02-19 12:24:24 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 2.339 ms - -[0m
+2026-02-19 12:24:24 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 2.229 ms - -[0m
+2026-02-19 12:24:25 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 1.202 ms - -[0m
+2026-02-19 12:24:25 info: [0mGET /api-docs/ [36m304[0m 0.650 ms - -[0m
+2026-02-19 12:24:25 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 0.665 ms - -[0m
+2026-02-19 12:24:25 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 0.595 ms - -[0m
+2026-02-19 12:24:25 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.262 ms - -[0m
+2026-02-19 12:24:25 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 1.508 ms - -[0m
+2026-02-19 12:24:25 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 0.991 ms - -[0m
+2026-02-19 12:24:25 info: [0mGET /api-docs/ [36m304[0m 0.717 ms - -[0m
+2026-02-19 12:24:25 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 1.429 ms - -[0m
+2026-02-19 12:24:25 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 1.398 ms - -[0m
+2026-02-19 12:24:25 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.304 ms - -[0m
+2026-02-19 12:24:25 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 1.510 ms - -[0m
+2026-02-19 12:24:25 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 1.104 ms - -[0m
+2026-02-19 12:24:26 info: [0mGET /api-docs/ [36m304[0m 0.595 ms - -[0m
+2026-02-19 12:24:26 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 1.293 ms - -[0m
+2026-02-19 12:24:26 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 1.722 ms - -[0m
+2026-02-19 12:24:26 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.238 ms - -[0m
+2026-02-19 12:24:26 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 1.407 ms - -[0m
+2026-02-19 12:24:26 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 1.036 ms - -[0m
+2026-02-19 12:24:26 info: [0mGET /api-docs/ [36m304[0m 0.671 ms - -[0m
+2026-02-19 12:24:26 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 1.184 ms - -[0m
+2026-02-19 12:24:26 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 1.437 ms - -[0m
+2026-02-19 12:24:26 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.225 ms - -[0m
+2026-02-19 12:24:26 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 1.289 ms - -[0m
+2026-02-19 12:24:26 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 0.980 ms - -[0m
+2026-02-19 12:24:26 info: [0mGET /api-docs/ [36m304[0m 0.791 ms - -[0m
+2026-02-19 12:24:26 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 0.656 ms - -[0m
+2026-02-19 12:24:26 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.227 ms - -[0m
+2026-02-19 12:24:26 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 1.702 ms - -[0m
+2026-02-19 12:24:26 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 1.935 ms - -[0m
+2026-02-19 12:24:26 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 1.122 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/ [36m304[0m 0.651 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 0.638 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 0.681 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.265 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 1.861 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 0.979 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/ [36m304[0m 0.673 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 1.530 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 2.023 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.227 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 1.287 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 1.329 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/ [36m304[0m 0.597 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 1.127 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.225 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 2.863 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 1.790 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 1.148 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/ [36m304[0m 0.613 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 0.480 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 0.580 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.287 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 1.418 ms - -[0m
+2026-02-19 12:24:27 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 0.978 ms - -[0m
+2026-02-19 12:27:19 info: [0mGET /api-docs/ [36m304[0m 0.628 ms - -[0m
+2026-02-19 12:27:19 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 0.933 ms - -[0m
+2026-02-19 12:27:19 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 1.508 ms - -[0m
+2026-02-19 12:27:19 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 0.520 ms - -[0m
+2026-02-19 12:27:19 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.259 ms - -[0m
+2026-02-19 12:27:19 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 1.325 ms - -[0m
+2026-02-19 12:27:19 info: [0mGET /api-docs/ [36m304[0m 0.694 ms - -[0m
+2026-02-19 12:27:19 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 0.603 ms - -[0m
+2026-02-19 12:27:19 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.251 ms - -[0m
+2026-02-19 12:27:19 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 1.946 ms - -[0m
+2026-02-19 12:27:19 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 1.923 ms - -[0m
+2026-02-19 12:27:19 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 0.611 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/ [36m304[0m 0.624 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 0.987 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.267 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 2.912 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 2.036 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 0.720 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/ [36m304[0m 0.618 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 0.720 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.371 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 2.561 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 2.692 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 0.539 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/ [36m304[0m 1.048 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 0.500 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 0.587 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.210 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 1.211 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 0.503 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/ [36m304[0m 0.614 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 1.184 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 1.605 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.217 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 1.169 ms - -[0m
+2026-02-19 12:27:20 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 1.587 ms - -[0m
+2026-02-19 12:29:48 info: [0mGET /api-docs/ [36m304[0m 0.651 ms - -[0m
+2026-02-19 12:29:48 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 0.694 ms - -[0m
+2026-02-19 12:29:48 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.360 ms - -[0m
+2026-02-19 12:29:48 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 2.656 ms - -[0m
+2026-02-19 12:29:48 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 2.622 ms - -[0m
+2026-02-19 12:29:49 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 0.543 ms - -[0m
+2026-02-19 12:32:30 info: [0mGET /api-docs/ [36m304[0m 0.627 ms - -[0m
+2026-02-19 12:32:30 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 0.568 ms - -[0m
+2026-02-19 12:32:30 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 0.946 ms - -[0m
+2026-02-19 12:32:30 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.227 ms - -[0m
+2026-02-19 12:32:30 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 1.460 ms - -[0m
+2026-02-19 12:32:30 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 0.684 ms - -[0m
+2026-02-19 12:35:46 info: =================================
+2026-02-19 12:35:46 info: ======= ENV: development =======
+2026-02-19 12:35:46 info: 🚀 App listening on the port 3000
+2026-02-19 12:35:46 info: =================================
+2026-02-19 12:35:46 info: 0ms Executed (default): SELECT 1+1 AS result
+2026-02-19 12:35:46 info: 2ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-02-19 12:35:46 info: 2ms Executed (default): SHOW INDEX FROM `users`
+2026-02-19 12:36:10 info: [0mGET /api-docs/ [36m304[0m 5.174 ms - -[0m
+2026-02-19 12:36:10 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 3.135 ms - -[0m
+2026-02-19 12:36:10 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 3.139 ms - -[0m
+2026-02-19 12:36:10 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.916 ms - -[0m
+2026-02-19 12:36:10 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 6.612 ms - -[0m
+2026-02-19 12:36:11 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 0.631 ms - -[0m
+2026-02-19 12:56:54 info: =================================
+2026-02-19 12:56:54 info: ======= ENV: development =======
+2026-02-19 12:56:54 info: 🚀 App listening on the port 3000
+2026-02-19 12:56:54 info: =================================
+2026-02-19 12:56:54 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-02-19 12:56:54 info: 2ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-02-19 12:56:54 info: 2ms Executed (default): SHOW INDEX FROM `users`
+2026-02-19 13:14:50 info: =================================
+2026-02-19 13:14:50 info: ======= ENV: development =======
+2026-02-19 13:14:50 info: 🚀 App listening on the port 3000
+2026-02-19 13:14:50 info: =================================
+2026-02-19 13:14:50 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-02-19 13:14:50 info: 2ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-02-19 13:14:50 info: 3ms Executed (default): SHOW INDEX FROM `users`
+2026-02-19 13:14:56 info: =================================
+2026-02-19 13:14:56 info: ======= ENV: development =======
+2026-02-19 13:14:56 info: 🚀 App listeninggg on the port 3000
+2026-02-19 13:14:56 info: =================================
+2026-02-19 13:14:56 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-02-19 13:14:56 info: 2ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-02-19 13:14:56 info: 2ms Executed (default): SHOW INDEX FROM `users`
+2026-02-19 13:15:04 info: =================================
+2026-02-19 13:15:04 info: ======= ENV: development =======
+2026-02-19 13:15:04 info: 🚀 App listening on the port 3000
+2026-02-19 13:15:04 info: =================================
+2026-02-19 13:15:04 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-02-19 13:15:04 info: 2ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-02-19 13:15:04 info: 3ms Executed (default): SHOW INDEX FROM `users`

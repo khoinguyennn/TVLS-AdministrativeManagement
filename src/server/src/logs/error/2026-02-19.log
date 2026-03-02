@@ -1,0 +1,24 @@
+2026-02-19 12:09:13 error: uncaughtException: listen EADDRINUSE: address already in use :::3000
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (D:\DATN\express-typescript-starter\node_modules\express\lib\application.js:635:24)
+    at App.listen (D:\DATN\express-typescript-starter\src\app.ts:35:14)
+    at Object.<anonymous> (D:\DATN\express-typescript-starter\src\server.ts:9:5)
+    at Module._compile (node:internal/modules/cjs/loader:1562:14)
+    at Module.m._compile (D:\DATN\express-typescript-starter\node_modules\ts-node\src\index.ts:1618:23)
+    at node:internal/modules/cjs/loader:1699:10
+    at Object.require.extensions.<computed> [as .ts] (D:\DATN\express-typescript-starter\node_modules\ts-node\src\index.ts:1621:12)
+2026-02-19 12:10:38 error: uncaughtException: listen EADDRINUSE: address already in use :::3000
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (D:\DATN\express-typescript-starter\node_modules\express\lib\application.js:635:24)
+    at App.listen (D:\DATN\express-typescript-starter\src\app.ts:35:14)
+    at Object.<anonymous> (D:\DATN\express-typescript-starter\src\server.ts:9:5)
+    at Module._compile (node:internal/modules/cjs/loader:1562:14)
+    at Module.m._compile (D:\DATN\express-typescript-starter\node_modules\ts-node\src\index.ts:1618:23)
+    at node:internal/modules/cjs/loader:1699:10
+    at Object.require.extensions.<computed> [as .ts] (D:\DATN\express-typescript-starter\node_modules\ts-node\src\index.ts:1621:12)

@@ -1,0 +1,107 @@
+XÂY DỰNG WEBSITE QUẢN LÝ HÀNH CHÍNH TRƯỜNG THỰC HÀNH SƯ PHẠM TRÀ VINH
+
+I. TỔNG QUAN HỆ THỐNG
+
+Mục tiêu: - Số hóa quy trình công lệnh nội bộ - Quản lý thiết bị, phòng
+học, phòng thí nghiệm - Theo dõi mượn – trả minh bạch - Hỗ trợ Ban Giám
+hiệu và bộ phận hành chính kiểm soát tập trung
+
+================================================== II. PHÂN HỆ 1: QUẢN
+LÝ CÔNG LỆNH
+
+1.  Đối tượng sử dụng
+
+-   Ban Giám hiệu
+-   Tổ trưởng chuyên môn
+-   Giáo viên
+-   Nhân viên hành chính
+-   Kế toán
+
+2.  Chức năng chính
+
+2.1. Tạo công lệnh - Tên công lệnh - Loại công lệnh (nội bộ, giảng dạy,
+sửa chữa, sự kiện) - Nội dung chi tiết - Thời gian thực hiện - Người/đơn
+vị phụ trách - Mức độ ưu tiên - Đính kèm file
+
+2.2. Quy trình duyệt Tạo → Gửi duyệt → BGH duyệt → Thực hiện → Hoàn
+thành → Lưu trữ
+
+2.3. Trạng thái công lệnh - Chờ duyệt - Đã duyệt - Đang thực hiện - Hoàn
+thành - Từ chối - Hủy
+
+2.4. Báo cáo – thống kê - Số công lệnh theo tháng - Công lệnh quá hạn -
+Công lệnh theo phòng ban - Tỷ lệ hoàn thành
+
+================================================== III. PHÂN HỆ 2: QUẢN
+LÝ MƯỢN – TRẢ THIẾT BỊ
+
+1.  Danh mục thiết bị
+
+-   Mã thiết bị
+-   Tên thiết bị
+-   Loại thiết bị
+-   Phòng ban quản lý
+-   Số lượng
+-   Tình trạng (Tốt, Đang sửa, Hỏng)
+-   Hình ảnh
+-   Ngày nhập
+-   Giá trị
+
+2.  Tạo phiếu mượn
+
+-   Thiết bị cần mượn
+-   Số lượng
+-   Thời gian mượn
+-   Mục đích sử dụng
+-   Ghi chú
+
+Trạng thái: - Chờ duyệt - Đã duyệt - Đang mượn - Đã trả - Quá hạn
+
+3.  Quy trình xử lý Tạo phiếu → Duyệt → Xuất kho → Ghi nhận tình trạng →
+    Trả → Kiểm tra → Hoàn tất
+
+Nếu thiết bị hỏng: - Tạo công lệnh sửa chữa - Ghi nhận trách nhiệm
+
+4.  Quản lý tồn kho
+
+-   Số lượng khả dụng
+-   Thiết bị đang mượn
+-   Thiết bị hỏng
+-   Lịch sử sử dụng
+
+5.  Báo cáo
+
+-   Thiết bị được mượn nhiều nhất
+-   Danh sách người mượn nhiều
+-   Thiết bị hỏng theo tháng
+-   Tỷ lệ trễ hạn
+
+================================================== IV. PHÂN QUYỀN HỆ
+THỐNG
+
+Admin: Toàn quyền BGH: Duyệt công lệnh, duyệt mượn Tổ trưởng: Tạo và
+theo dõi công lệnh Giáo viên: Tạo phiếu mượn Thủ kho: Xác nhận xuất –
+nhập thiết bị
+
+================================================== V. CƠ SỞ DỮ LIỆU ĐỀ
+XUẤT
+
+Các bảng chính: - users - roles - departments - work_orders -
+work_order_logs - equipments - equipment_categories - borrow_requests -
+borrow_details - borrow_logs
+
+================================================== VI. CÔNG NGHỆ ĐỀ XUẤT
+
+Frontend: - NextJS - Shadcn UI - Tailwind
+
+Backend: - NodeJS + Express (TypeScript) - PostgreSQL hoặc MySQL -
+Prisma ORM
+
+================================================== VII. HƯỚNG PHÁT TRIỂN
+NÂNG CAO
+
+-   Dashboard thông minh
+-   QR code cho thiết bị
+-   Check-in mượn trả bằng mã QR
+-   Phân tích dữ liệu sử dụng thiết bị
+-   Responsive cho mobile
