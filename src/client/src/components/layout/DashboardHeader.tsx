@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 
-import { Bell, HelpCircle, Moon, Search, Sun } from "lucide-react";
+import { Bell, HelpCircle, Menu, Moon, Search, Sun } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 
@@ -25,7 +25,11 @@ const FlagIcon = ({ locale, className }: { locale: LocaleCode; className?: strin
   return <USFlag className={className} />;
 };
 
-export function DashboardHeader() {
+interface DashboardHeaderProps {
+  onMenuClick?: () => void;
+}
+
+export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
   const { setTheme } = useTheme();
   const locale = useLocale() as LocaleCode;
   const router = useRouter();
@@ -39,10 +43,22 @@ export function DashboardHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-8 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/80">
-      {/* Search */}
-      <div className="flex flex-1 items-center gap-4">
-        <div className="relative w-full max-w-md">
+    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-4 backdrop-blur-md lg:px-8 dark:border-slate-800 dark:bg-slate-900/80">
+      {/* Mobile Menu Button + Search */}
+      <div className="flex flex-1 items-center gap-2 lg:gap-4">
+        {/* Hamburger Menu - Mobile Only */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-9 shrink-0 lg:hidden"
+          onClick={onMenuClick}
+        >
+          <Menu className="size-5" />
+          <span className="sr-only">Toggle menu</span>
+        </Button>
+
+        {/* Search */}
+        <div className="relative hidden w-full max-w-md sm:block">
           <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-400" />
           <Input
             type="text"
@@ -50,6 +66,11 @@ export function DashboardHeader() {
             className="w-full rounded-lg border-none bg-slate-100 py-2 pr-4 pl-10 text-sm transition-all focus:ring-2 focus:ring-[#2060df]/20 dark:bg-slate-800"
           />
         </div>
+
+        {/* Mobile Search Icon */}
+        <Button variant="ghost" size="icon" className="size-9 sm:hidden">
+          <Search className="size-5" />
+        </Button>
       </div>
 
       {/* Actions */}
@@ -57,14 +78,14 @@ export function DashboardHeader() {
         <Button
           variant="ghost"
           size="icon"
-          className="size-9 rounded-lg text-slate-600 dark:text-slate-400"
+          className="hidden size-9 rounded-lg text-slate-600 sm:flex dark:text-slate-400"
         >
           <Bell className="size-5" />
         </Button>
         <Button
           variant="ghost"
           size="icon"
-          className="size-9 rounded-lg text-slate-600 dark:text-slate-400"
+          className="hidden size-9 rounded-lg text-slate-600 sm:flex dark:text-slate-400"
         >
           <HelpCircle className="size-5" />
         </Button>
@@ -83,7 +104,7 @@ export function DashboardHeader() {
           <span className="sr-only">{t("toggleTheme")}</span>
         </Button>
 
-        <div className="mx-2 h-6 w-px bg-slate-200 dark:bg-slate-800" />
+        <div className="mx-1 hidden h-6 w-px bg-slate-200 sm:block dark:bg-slate-800" />
 
         {/* Language Selector */}
         <DropdownMenu>
@@ -91,10 +112,10 @@ export function DashboardHeader() {
             <Button
               variant="outline"
               size="sm"
-              className="flex items-center gap-2 rounded-lg px-3 py-1.5"
+              className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 sm:gap-2 sm:px-3"
             >
-              <FlagIcon locale={locale} className="size-5 rounded-sm" />
-              <span className="text-xs font-medium uppercase">{locale}</span>
+              <FlagIcon locale={locale} className="size-4 rounded-sm sm:size-5" />
+              <span className="hidden text-xs font-medium uppercase sm:inline">{locale}</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">

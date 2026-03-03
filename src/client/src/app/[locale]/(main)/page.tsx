@@ -1,11 +1,6 @@
-import { Dashboard, FeaturesList, Showcase } from "@/features/landing";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <section className="flex flex-col items-center justify-center pb-40">
-      <Dashboard />
-      <FeaturesList />
-      <Showcase />
-    </section>
-  );
+  // Redirect to login page
+  redirect("/login");
 }

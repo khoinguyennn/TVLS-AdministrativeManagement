@@ -10,6 +10,13 @@ export const seoConfig: Metadata = {
   },
   description: siteConfig.description,
   alternates: { canonical: "/" },
+  icons: {
+    icon: [
+      { url: "/logothsp.png", type: "image/png" }
+    ],
+    shortcut: "/logothsp.png",
+    apple: "/logothsp.png"
+  },
   openGraph: {
     type: "website",
     title: siteConfig.name,

@@ -1,20 +1,20 @@
 {
-    "keep": {
-        "days": false,
-        "amount": 30
+  "keep": {
+    "days": false,
+    "amount": 30
+  },
+  "auditLog": "D:\\DATN\\express-typescript-starter\\src\\logs\\debug\\.743d9362a0dbeda53bb71eb2b236403080242988-audit.json",
+  "files": [
+    {
+      "date": 1771477315643,
+      "name": "D:\\DATN\\express-typescript-starter\\src\\logs\\debug\\2026-02-19.log",
+      "hash": "ff741e8a624718e04747c22483971a70ae235e79318ca5a32649e1a0df7e045f"
     },
-    "auditLog": "D:\\DATN\\express-typescript-starter\\src\\logs\\debug\\.743d9362a0dbeda53bb71eb2b236403080242988-audit.json",
-    "files": [
-        {
-            "date": 1771477315643,
-            "name": "D:\\DATN\\express-typescript-starter\\src\\logs\\debug\\2026-02-19.log",
-            "hash": "ff741e8a624718e04747c22483971a70ae235e79318ca5a32649e1a0df7e045f"
-        },
-        {
-            "date": 1772433646157,
-            "name": "D:\\DATN\\express-typescript-starter\\src\\logs\\debug\\2026-03-02.log",
-            "hash": "cac11686bf1f98980627d20c5c56d742217b04fe483c8639209ee6786b31711b"
-        }
-    ],
-    "hashType": "sha256"
+    {
+      "date": 1772433646157,
+      "name": "D:\\DATN\\express-typescript-starter\\src\\logs\\debug\\2026-03-02.log",
+      "hash": "cac11686bf1f98980627d20c5c56d742217b04fe483c8639209ee6786b31711b"
+    }
+  ],
+  "hashType": "sha256"
 }

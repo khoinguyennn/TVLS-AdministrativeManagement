@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
-import { CreateUserDto } from '@dtos/users.dto';
+import { CreateUserDto, LoginDto, RefreshTokenDto } from '@dtos/users.dto';
 import { User } from '@interfaces/users.interface';
 import { RequestWithUser } from '@interfaces/auth.interface';
 import { AuthService } from '@services/auth.service';
@@ -13,7 +13,16 @@ export class AuthController {
       const userData: CreateUserDto = req.body;
       const signUpUserData: User = await this.auth.signup(userData);
 
-      res.status(201).json({ data: signUpUserData, message: 'signup' });
+      res.status(201).json({
+        success: true,
+        data: {
+          id: signUpUserData.id,
+          email: signUpUserData.email,
+          fullName: signUpUserData.fullName,
+          role: signUpUserData.role,
+        },
+        message: 'Đăng ký tài khoản thành công',
+      });
     } catch (error) {
       next(error);
     }
@@ -21,11 +30,31 @@ export class AuthController {
 
   public logIn = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userData: CreateUserDto = req.body;
-      const { cookie, findUser } = await this.auth.login(userData);
+      const loginData: LoginDto = req.body;
+      const { cookie, loginResponse } = await this.auth.login(loginData);
 
       res.setHeader('Set-Cookie', [cookie]);
-      res.status(200).json({ data: findUser, message: 'login' });
+      res.status(200).json({
+        success: true,
+        data: loginResponse,
+        message: 'Đăng nhập thành công',
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public refreshToken = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { refreshToken }: RefreshTokenDto = req.body;
+      const { cookie, accessToken } = await this.auth.refreshToken(refreshToken);
+
+      res.setHeader('Set-Cookie', [cookie]);
+      res.status(200).json({
+        success: true,
+        data: { accessToken },
+        message: 'Làm mới token thành công',
+      });
     } catch (error) {
       next(error);
     }
@@ -34,10 +63,28 @@ export class AuthController {
   public logOut = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
       const userData: User = req.user;
-      const logOutUserData: User = await this.auth.logout(userData);
+      await this.auth.logout(userData);
 
-      res.setHeader('Set-Cookie', ['Authorization=; Max-age=0']);
-      res.status(200).json({ data: logOutUserData, message: 'logout' });
+      res.setHeader('Set-Cookie', ['Authorization=; Max-Age=0; Path=/']);
+      res.status(200).json({
+        success: true,
+        message: 'Đăng xuất thành công',
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getProfile = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user.id;
+      const userData = await this.auth.getProfile(userId);
+
+      res.status(200).json({
+        success: true,
+        data: userData,
+        message: 'Lấy thông tin người dùng thành công',
+      });
     } catch (error) {
       next(error);
     }

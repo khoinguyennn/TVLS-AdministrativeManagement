@@ -10,6 +10,7 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config';
 import { DB } from '@database';
+import { seedAdminUser } from './database/seeders/admin.seeder';
 import { Routes } from '@interfaces/routes.interface';
 import { ErrorMiddleware } from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
@@ -45,7 +46,8 @@ export class App {
   }
 
   private async connectToDatabase() {
-    await DB.sequelize.sync({ force: false });
+    await DB.sequelize.sync({ alter: true });
+    await seedAdminUser();
   }
 
   private initializeMiddlewares() {
@@ -69,9 +71,20 @@ export class App {
     const options = {
       swaggerDefinition: {
         info: {
-          title: 'REST API',
+          title: 'THSP Administrative Management API',
           version: '1.0.0',
-          description: 'Example docs',
+          description: 'API quản lý hành chính Trường Thực hành Sư phạm',
+        },
+        host: `localhost:${this.port}`,
+        basePath: '/',
+        schemes: ['http', 'https'],
+        securityDefinitions: {
+          BearerAuth: {
+            type: 'apiKey',
+            name: 'Authorization',
+            in: 'header',
+            description: 'Nhập token theo format: Bearer {access_token}',
+          },
         },
       },
       apis: ['swagger.yaml'],

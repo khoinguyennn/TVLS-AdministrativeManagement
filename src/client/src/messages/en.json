@@ -1,4 +1,23 @@
 {
+  "Auth": {
+    "pageTitle": "Login",
+    "systemTitle": "ADMINISTRATIVE MANAGEMENT SYSTEM",
+    "schoolName": "PRACTICE PEDAGOGICAL SCHOOL",
+    "loginTitle": "Login to the system",
+    "loginSubtitle": "Please enter your login information",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "loginButton": "Login",
+    "orContinueWith": "Or continue with",
+    "loginWithGoogle": "Login with Google",
+    "noAccount": "Don't have an account?",
+    "register": "Register now",
+    "copyright": "© 2024 Practice Pedagogical School. All rights reserved."
+  },
   "Dashboard": {
     "title": "Administrative Management System",
     "description": "Administrative records management system for Practice Pedagogical School",

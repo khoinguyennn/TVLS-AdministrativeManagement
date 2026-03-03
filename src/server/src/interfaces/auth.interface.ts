@@ -10,6 +10,17 @@ export interface TokenData {
   expiresIn: number;
 }
 
+export interface LoginResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: {
+    id: number;
+    email: string;
+    fullName: string;
+    role: string;
+  };
+}
+
 export interface RequestWithUser extends Request {
   user: User;
 }

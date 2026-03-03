@@ -1,51 +1,120 @@
 import { compare, hash } from 'bcrypt';
-import { sign } from 'jsonwebtoken';
+import { sign, verify } from 'jsonwebtoken';
 import { Service } from 'typedi';
 import { SECRET_KEY } from '@config';
 import { DB } from '@database';
-import { CreateUserDto } from '@dtos/users.dto';
+import { CreateUserDto, LoginDto } from '@dtos/users.dto';
 import { HttpException } from '@/exceptions/HttpException';
-import { DataStoredInToken, TokenData } from '@interfaces/auth.interface';
+import { DataStoredInToken, TokenData, LoginResponse } from '@interfaces/auth.interface';
 import { User } from '@interfaces/users.interface';
 
-const createToken = (user: User): TokenData => {
-  const dataStoredInToken: DataStoredInToken = { id: user.id };
-  const expiresIn: number = 60 * 60;
+const ACCESS_TOKEN_EXPIRY = 60 * 60; // 1 hour
+const REFRESH_TOKEN_EXPIRY = 60 * 60 * 24 * 7; // 7 days
 
-  return { expiresIn, token: sign(dataStoredInToken, SECRET_KEY, { expiresIn }) };
+const createAccessToken = (user: User): TokenData => {
+  const dataStoredInToken: DataStoredInToken = { id: user.id };
+  return {
+    expiresIn: ACCESS_TOKEN_EXPIRY,
+    token: sign(dataStoredInToken, SECRET_KEY, { expiresIn: ACCESS_TOKEN_EXPIRY }),
+  };
+};
+
+const createRefreshToken = (user: User): TokenData => {
+  const dataStoredInToken: DataStoredInToken = { id: user.id };
+  return {
+    expiresIn: REFRESH_TOKEN_EXPIRY,
+    token: sign(dataStoredInToken, SECRET_KEY + '_refresh', { expiresIn: REFRESH_TOKEN_EXPIRY }),
+  };
 };
 
 const createCookie = (tokenData: TokenData): string => {
-  return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`;
+  return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}; Path=/; SameSite=Strict`;
 };
+
 @Service()
 export class AuthService {
   public async signup(userData: CreateUserDto): Promise<User> {
     const findUser: User = await DB.Users.findOne({ where: { email: userData.email } });
-    if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
+    if (findUser) throw new HttpException(409, `Email ${userData.email} đã tồn tại trong hệ thống`);
 
     const hashedPassword = await hash(userData.password, 10);
-    const createUserData: User = await DB.Users.create({ ...userData, password: hashedPassword });
+    const createUserData: User = await DB.Users.create({
+      ...userData,
+      password: hashedPassword,
+      role: (userData.role as 'admin' | 'manager' | 'staff') || 'staff',
+    });
 
     return createUserData;
   }
 
-  public async login(userData: CreateUserDto): Promise<{ cookie: string; findUser: User }> {
-    const findUser: User = await DB.Users.findOne({ where: { email: userData.email } });
-    if (!findUser) throw new HttpException(409, `This email ${userData.email} was not found`);
+  public async login(loginData: LoginDto): Promise<{ cookie: string; loginResponse: LoginResponse }> {
+    // Find user by email
+    const findUser: User = await DB.Users.findOne({ where: { email: loginData.email } });
+    if (!findUser) throw new HttpException(401, 'Email hoặc mật khẩu không chính xác');
 
-    const isPasswordMatching: boolean = await compare(userData.password, findUser.password);
-    if (!isPasswordMatching) throw new HttpException(409, 'Password not matching');
+    // Check account status
+    if (findUser.status === 'locked') {
+      throw new HttpException(403, 'Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên');
+    }
+    if (findUser.status === 'inactive') {
+      throw new HttpException(403, 'Tài khoản chưa được kích hoạt');
+    }
 
-    const tokenData = createToken(findUser);
-    const cookie = createCookie(tokenData);
+    // Verify password
+    const isPasswordMatching: boolean = await compare(loginData.password, findUser.password);
+    if (!isPasswordMatching) throw new HttpException(401, 'Email hoặc mật khẩu không chính xác');
 
-    return { cookie, findUser };
+    // Update last login time
+    await DB.Users.update({ lastLoginAt: new Date() }, { where: { id: findUser.id } });
+
+    // Generate tokens
+    const accessTokenData = createAccessToken(findUser);
+    const refreshTokenData = createRefreshToken(findUser);
+    const cookie = createCookie(accessTokenData);
+
+    const loginResponse: LoginResponse = {
+      accessToken: accessTokenData.token,
+      refreshToken: refreshTokenData.token,
+      user: {
+        id: findUser.id,
+        email: findUser.email,
+        fullName: findUser.fullName,
+        role: findUser.role,
+      },
+    };
+
+    return { cookie, loginResponse };
+  }
+
+  public async refreshToken(refreshToken: string): Promise<{ cookie: string; accessToken: string }> {
+    try {
+      const decoded = verify(refreshToken, SECRET_KEY + '_refresh') as DataStoredInToken;
+      const findUser: User = await DB.Users.findByPk(decoded.id);
+
+      if (!findUser) throw new HttpException(401, 'Token không hợp lệ');
+      if (findUser.status !== 'active') throw new HttpException(403, 'Tài khoản không hoạt động');
+
+      const accessTokenData = createAccessToken(findUser);
+      const cookie = createCookie(accessTokenData);
+
+      return { cookie, accessToken: accessTokenData.token };
+    } catch (error) {
+      throw new HttpException(401, 'Refresh token không hợp lệ hoặc đã hết hạn');
+    }
   }
 
   public async logout(userData: User): Promise<User> {
-    const findUser: User = await DB.Users.findOne({ where: { email: userData.email, password: userData.password } });
-    if (!findUser) throw new HttpException(409, "User doesn't exist");
+    const findUser: User = await DB.Users.findByPk(userData.id);
+    if (!findUser) throw new HttpException(404, 'Không tìm thấy người dùng');
+
+    return findUser;
+  }
+
+  public async getProfile(userId: number): Promise<User> {
+    const findUser: User = await DB.Users.findByPk(userId, {
+      attributes: { exclude: ['password'] },
+    });
+    if (!findUser) throw new HttpException(404, 'Không tìm thấy người dùng');
 
     return findUser;
   }

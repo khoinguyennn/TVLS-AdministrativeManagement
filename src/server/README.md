@@ -7,6 +7,7 @@ Express TypeScript Starter là một boilerplate RESTful API server được xâ
 ## ✨ Tính năng
 
 ### Core Features
+
 - ⚡ **TypeScript** - Type safety và modern JavaScript features
 - 🚀 **Express.js** - Fast, unopinionated web framework
 - 🗄️ **Sequelize ORM** - Promise-based Node.js ORM cho MySQL
@@ -20,6 +21,7 @@ Express TypeScript Starter là một boilerplate RESTful API server được xâ
 - 🔄 **Hot Reload** - Nodemon cho development mode
 
 ### Architecture
+
 - **MVC Pattern** - Controllers, Services, Models separation
 - **Dependency Injection** - TypeDI container
 - **DTOs** - Data Transfer Objects cho validation
@@ -27,6 +29,7 @@ Express TypeScript Starter là một boilerplate RESTful API server được xâ
 - **Exception Handling** - Custom HTTP exceptions
 
 ### API Features
+
 - User Management (CRUD operations)
 - Authentication (Sign up, Login, Logout)
 - Input validation
@@ -36,6 +39,7 @@ Express TypeScript Starter là một boilerplate RESTful API server được xâ
 ## 🛠️ Tech Stack
 
 ### Backend
+
 - **Runtime**: Node.js
 - **Framework**: Express.js
 - **Language**: TypeScript
@@ -46,6 +50,7 @@ Express TypeScript Starter là một boilerplate RESTful API server được xâ
 - **API Documentation**: Swagger (swagger-jsdoc, swagger-ui-express)
 
 ### Security & Middleware
+
 - **helmet** - Secure Express apps by setting various HTTP headers
 - **cors** - Enable CORS
 - **hpp** - HTTP Parameter Pollution protection
@@ -53,6 +58,7 @@ Express TypeScript Starter là một boilerplate RESTful API server được xâ
 - **morgan** - HTTP request logger
 
 ### Development Tools
+
 - **TypeScript Compiler** - tsc & swc
 - **Nodemon** - Auto-restart server
 - **ESLint** - Code linting
@@ -91,6 +97,7 @@ yarn install
 3. **Cấu hình Database**:
 
    Tạo database MySQL:
+
    ```sql
    CREATE DATABASE dev;
    ```
@@ -147,11 +154,13 @@ yarn dev
 ## 🐳 Docker
 
 ### Development
+
 ```bash
 docker-compose up -d
 ```
 
 ### Production
+
 ```bash
 docker build -f Dockerfile.prod -t express-api .
 docker run -p 3000:3000 express-api
@@ -214,11 +223,13 @@ express-typescript-starter/
 ## 📚 API Endpoints
 
 ### Authentication
+
 - `POST /signup` - Register new user
 - `POST /login` - User login
 - `POST /logout` - User logout
 
 ### Users
+
 - `GET /users` - Get all users
 - `GET /users/:id` - Get user by ID
 - `POST /users` - Create new user
@@ -232,13 +243,16 @@ express-typescript-starter/
 ### Trong Development Mode
 
 #### Cách 1: Ctrl + C
+
 Nhấn `Ctrl + C` trong terminal đang chạy server (có thể cần nhấn 2 lần)
 
 #### Cách 2: Kill Terminal
+
 - VS Code: Click icon 🗑️ ở góc phải terminal
 - Hoặc: `Ctrl + Shift + P` → "Terminal: Kill Active Terminal"
 
 #### Cách 3: Sử dụng Scripts
+
 ```bash
 # Dừng server đang chạy trên port 3000
 npm run stop
@@ -251,6 +265,7 @@ npm run restart
 ```
 
 #### Cách 4: Manual Kill
+
 ```bash
 # Tìm process đang chạy trên port 3000
 netstat -ano | findstr :3000
@@ -280,34 +295,40 @@ npm run pm2:logs
 ## 🔧 Scripts khác
 
 ### Development
+
 - **Dev mode**: `npm run dev` - Chạy server với hot reload
 - **Build**: `npm run build` - Build dự án với SWC
 - **Build (TSC)**: `npm run build:tsc` - Build dự án với TypeScript compiler
 - **Restart**: `npm run restart` - Kill port và restart server
 
 ### Production
+
 - **Start**: `npm start` - Build và chạy production server
 - **Deploy (PM2)**:
   - `npm run deploy:prod` - Deploy production với PM2
   - `npm run deploy:dev` - Deploy development với PM2
 
 ### PM2 Management
+
 - **List**: `npm run pm2:list` - Xem danh sách PM2 processes
 - **Stop**: `npm run pm2:stop` - Stop tất cả PM2 processes
 - **Delete**: `npm run pm2:delete` - Xóa tất cả PM2 processes
 - **Logs**: `npm run pm2:logs` - Xem PM2 logs
 
 ### Process Management
+
 - **Stop**: `npm run stop` - Dừng server đang chạy trên port 3000
 - **Kill**: `npm run kill` - Kill tất cả Node.js processes
 - **Kill Port**: `npm run kill:port` - Kill process trên port 3000
 
 ### Code Quality
+
 - **Lint**: `npm run lint` - Kiểm tra code style
 - **Lint Fix**: `npm run lint:fix` - Tự động fix linting issues
 - **Test**: `npm test` - Chạy unit tests với Jest
 
 ### Database
+
 - **Generate Migration**: `npm run migration:generate -- <migration-name>` - Tạo migration file mới
 - **Run Migrations**: `npm run migration:run` - Chạy pending migrations
 
@@ -324,11 +345,13 @@ npm run pm2:logs
 ## 🧪 Testing
 
 Chạy test suite:
+
 ```bash
 npm test
 ```
 
 Chạy test với coverage:
+
 ```bash
 npm test -- --coverage
 ```
@@ -353,23 +376,24 @@ npm test -- --coverage
 ## 🔄 Environment Variables
 
 Dự án hỗ trợ nhiều môi trường:
+
 - `.env.development.local` - Development environment
 - `.env.production.local` - Production environment
 - `.env.test.local` - Test environment
 
 ## 📦 Dependencies chính
 
-| Package | Version | Mô tả |
-|---------|---------|-------|
-| express | ^4.18.1 | Web framework |
-| sequelize | ^6.21.3 | ORM cho MySQL |
-| mysql2 | ^2.3.3 | MySQL driver |
-| jsonwebtoken | ^8.5.1 | JWT authentication |
-| bcrypt | ^5.0.1 | Password hashing |
+| Package         | Version | Mô tả                 |
+| --------------- | ------- | --------------------- |
+| express         | ^4.18.1 | Web framework         |
+| sequelize       | ^6.21.3 | ORM cho MySQL         |
+| mysql2          | ^2.3.3  | MySQL driver          |
+| jsonwebtoken    | ^8.5.1  | JWT authentication    |
+| bcrypt          | ^5.0.1  | Password hashing      |
 | class-validator | ^0.13.2 | Validation decorators |
-| swagger-jsdoc | ^6.2.1 | API documentation |
-| winston | ^3.8.1 | Logging |
-| helmet | ^5.1.1 | Security middleware |
+| swagger-jsdoc   | ^6.2.1  | API documentation     |
+| winston         | ^3.8.1  | Logging               |
+| helmet          | ^5.1.1  | Security middleware   |
 
 ## 🤝 Contributing
 

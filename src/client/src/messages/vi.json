@@ -1,4 +1,23 @@
 {
+  "Auth": {
+    "pageTitle": "Đăng nhập",
+    "systemTitle": "HỆ THỐNG QUẢN LÝ HÀNH CHÍNH",
+    "schoolName": "TRƯỜNG THỰC HÀNH SƯ PHẠM",
+    "loginTitle": "Đăng nhập vào hệ thống",
+    "loginSubtitle": "Vui lòng nhập thông tin đăng nhập",
+    "email": "Email",
+    "emailPlaceholder": "Nhập email của bạn",
+    "password": "Mật khẩu",
+    "passwordPlaceholder": "Nhập mật khẩu",
+    "rememberMe": "Ghi nhớ đăng nhập",
+    "forgotPassword": "Quên mật khẩu?",
+    "loginButton": "Đăng nhập",
+    "orContinueWith": "Hoặc đăng nhập với",
+    "loginWithGoogle": "Đăng nhập với Google",
+    "noAccount": "Chưa có tài khoản?",
+    "register": "Đăng ký ngay",
+    "copyright": "© 2024 Trường Thực hành Sư phạm. All rights reserved."
+  },
   "Dashboard": {
     "title": "Hệ thống Quản lý Hành chính",
     "description": "Hệ thống quản lý hồ sơ hành chính cho Trường Thực hành Sư phạm",

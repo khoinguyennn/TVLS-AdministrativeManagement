@@ -76,21 +76,23 @@ export default function DashboardPage() {
   return (
     <>
       {/* Page Header */}
-      <div className="mb-8">
-        <h2 className="mb-1 text-3xl font-bold tracking-tight">Dashboard</h2>
-        <p className="text-slate-500">Xin chào! Đây là tổng quan về hệ thống quản lý hành chính.</p>
+      <div className="mb-6 sm:mb-8">
+        <h2 className="mb-1 text-2xl font-bold tracking-tight sm:text-3xl">Dashboard</h2>
+        <p className="text-sm text-slate-500 sm:text-base">
+          Xin chào! Đây là tổng quan về hệ thống quản lý hành chính.
+        </p>
       </div>
 
       {/* Stats Cards */}
-      <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mb-6 grid grid-cols-2 gap-3 sm:mb-8 sm:gap-4 md:gap-6 lg:grid-cols-4">
         {stats.map((stat) => (
           <Card key={stat.title}>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="mb-1 text-sm text-slate-500">{stat.title}</p>
-                  <p className="text-3xl font-bold">{stat.value}</p>
-                  <p className="mt-1 flex items-center gap-1 text-xs text-slate-500">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="order-2 sm:order-1">
+                  <p className="mb-1 text-xs text-slate-500 sm:text-sm">{stat.title}</p>
+                  <p className="text-2xl font-bold sm:text-3xl">{stat.value}</p>
+                  <p className="mt-1 hidden items-center gap-1 text-xs text-slate-500 sm:flex">
                     <TrendingUp className="size-3" />
                     <span
                       className={stat.change.startsWith("+") ? "text-green-500" : "text-red-500"}
@@ -100,8 +102,8 @@ export default function DashboardPage() {
                     <span>so với tháng trước</span>
                   </p>
                 </div>
-                <div className={`rounded-xl p-3 ${stat.bgColor}`}>
-                  <stat.icon className={`size-6 ${stat.color}`} />
+                <div className={`order-1 self-start rounded-xl p-2 sm:order-2 sm:p-3 ${stat.bgColor}`}>
+                  <stat.icon className={`size-5 sm:size-6 ${stat.color}`} />
                 </div>
               </div>
             </CardContent>

@@ -1,111 +1,232 @@
 tags:
+  - name: auth
+    description: Authentication API
   - name: users
-    description: users API
+    description: Users API
 
 paths:
+  # ==================== AUTH ====================
+
+  # [POST] auth/signup
+  /auth/signup:
+    post:
+      tags:
+        - auth
+      summary: Đăng ký tài khoản mới
+      parameters:
+        - name: body
+          in: body
+          description: Thông tin đăng ký
+          required: true
+          schema:
+            $ref: '#/definitions/signup'
+      responses:
+        201:
+          description: 'Đăng ký thành công'
+          schema:
+            $ref: '#/definitions/authSuccessResponse'
+        400:
+          description: 'Dữ liệu không hợp lệ'
+        409:
+          description: 'Email đã tồn tại'
+        500:
+          description: 'Lỗi server'
+
+  # [POST] auth/login
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: Đăng nhập tài khoản
+      parameters:
+        - name: body
+          in: body
+          description: Thông tin đăng nhập
+          required: true
+          schema:
+            $ref: '#/definitions/login'
+      responses:
+        200:
+          description: 'Đăng nhập thành công'
+          schema:
+            $ref: '#/definitions/loginResponse'
+        401:
+          description: 'Sai email hoặc mật khẩu'
+        403:
+          description: 'Tài khoản bị khóa hoặc vô hiệu hóa'
+        500:
+          description: 'Lỗi server'
+
+  # [POST] auth/refresh
+  /auth/refresh:
+    post:
+      tags:
+        - auth
+      summary: Làm mới access token
+      parameters:
+        - name: body
+          in: body
+          description: Refresh token
+          required: true
+          schema:
+            $ref: '#/definitions/refreshToken'
+      responses:
+        200:
+          description: 'Làm mới token thành công'
+        401:
+          description: 'Refresh token không hợp lệ'
+        500:
+          description: 'Lỗi server'
+
+  # [GET] auth/profile
+  /auth/profile:
+    get:
+      tags:
+        - auth
+      summary: Lấy thông tin người dùng hiện tại
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: 'Thành công'
+          schema:
+            $ref: '#/definitions/profileResponse'
+        401:
+          description: 'Chưa xác thực'
+        500:
+          description: 'Lỗi server'
+
+  # [POST] auth/logout
+  /auth/logout:
+    post:
+      tags:
+        - auth
+      summary: Đăng xuất
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: 'Đăng xuất thành công'
+        401:
+          description: 'Chưa xác thực'
+        500:
+          description: 'Lỗi server'
+
+  # ==================== USERS ====================
+
   # [GET] users
   /users:
     get:
       tags:
         - users
-      summary: Find All Users
+      summary: Lấy danh sách tất cả người dùng
+      security:
+        - BearerAuth: []
       responses:
         200:
           description: 'OK'
         500:
-          description: 'Server Error'
+          description: 'Lỗi server'
 
     # [POST] users
     post:
       tags:
         - users
-      summary: Add User
+      summary: Thêm người dùng mới
+      security:
+        - BearerAuth: []
       parameters:
         - name: body
           in: body
-          description: user Data
+          description: Thông tin người dùng
           required: true
           schema:
-            $ref: '#/definitions/users'
+            $ref: '#/definitions/signup'
       responses:
         201:
-          description: 'Created'
+          description: 'Tạo thành công'
         400:
-          description: 'Bad Request'
+          description: 'Dữ liệu không hợp lệ'
         409:
-          description: 'Conflict'
+          description: 'Email đã tồn tại'
         500:
-          description: 'Server Error'
+          description: 'Lỗi server'
 
   # [GET] users/id
   /users/{id}:
     get:
       tags:
         - users
-      summary: Find User By Id
+      summary: Lấy thông tin người dùng theo ID
+      security:
+        - BearerAuth: []
       parameters:
         - name: id
           in: path
-          description: User Id
+          description: User ID
           required: true
           type: integer
       responses:
         200:
           description: 'OK'
         409:
-          description: 'Conflict'
+          description: 'Không tìm thấy'
         500:
-          description: 'Server Error'
+          description: 'Lỗi server'
 
     # [PUT] users/id
     put:
       tags:
         - users
-      summary: Update User By Id
+      summary: Cập nhật thông tin người dùng
+      security:
+        - BearerAuth: []
       parameters:
         - name: id
           in: path
-          description: user Id
+          description: User ID
           required: true
           type: integer
         - name: body
           in: body
-          description: user Data
+          description: Thông tin cập nhật
           required: true
           schema:
-            $ref: '#/definitions/users'
+            $ref: '#/definitions/updateUser'
       responses:
         200:
-          description: 'OK'
+          description: 'Cập nhật thành công'
         400:
-          description: 'Bad Request'
+          description: 'Dữ liệu không hợp lệ'
         409:
-          description: 'Conflict'
+          description: 'Không tìm thấy'
         500:
-          description: 'Server Error'
+          description: 'Lỗi server'
 
     # [DELETE] users/id
     delete:
       tags:
         - users
-      summary: Delete User By Id
+      summary: Xóa người dùng
+      security:
+        - BearerAuth: []
       parameters:
         - name: id
           in: path
-          description: user Id
+          description: User ID
           required: true
           type: integer
       responses:
         200:
-          description: 'OK'
+          description: 'Xóa thành công'
         409:
-          description: 'Conflict'
+          description: 'Không tìm thấy'
         500:
-          description: 'Server Error'
+          description: 'Lỗi server'
 
 # definitions
 definitions:
-  users:
+  login:
     type: object
     required:
       - email
@@ -113,10 +234,136 @@ definitions:
     properties:
       email:
         type: string
-        description: user Email
+        example: 'admin@thsp.edu.vn'
+        description: Email đăng nhập
       password:
         type: string
-        description: user Password
+        example: 'admin@123'
+        description: Mật khẩu (tối thiểu 6 ký tự)
+
+  signup:
+    type: object
+    required:
+      - email
+      - password
+      - fullName
+    properties:
+      email:
+        type: string
+        example: 'user@thsp.edu.vn'
+        description: Email đăng ký
+      password:
+        type: string
+        example: 'password123'
+        description: Mật khẩu (tối thiểu 6 ký tự)
+      fullName:
+        type: string
+        example: 'Nguyen Van A'
+        description: Họ và tên
+      role:
+        type: string
+        enum: ['admin', 'manager', 'staff']
+        default: 'staff'
+        description: Vai trò
+
+  updateUser:
+    type: object
+    properties:
+      fullName:
+        type: string
+        example: 'Nguyen Van B'
+        description: Họ và tên
+      password:
+        type: string
+        description: Mật khẩu mới
+      status:
+        type: string
+        enum: ['active', 'inactive', 'locked']
+        description: Trạng thái tài khoản
+
+  refreshToken:
+    type: object
+    required:
+      - refreshToken
+    properties:
+      refreshToken:
+        type: string
+        description: Refresh token nhận được khi đăng nhập
+
+  loginResponse:
+    type: object
+    properties:
+      success:
+        type: boolean
+        example: true
+      data:
+        type: object
+        properties:
+          accessToken:
+            type: string
+          refreshToken:
+            type: string
+          user:
+            type: object
+            properties:
+              id:
+                type: integer
+              email:
+                type: string
+              fullName:
+                type: string
+              role:
+                type: string
+      message:
+        type: string
+        example: 'Đăng nhập thành công'
+
+  profileResponse:
+    type: object
+    properties:
+      success:
+        type: boolean
+        example: true
+      data:
+        type: object
+        properties:
+          id:
+            type: integer
+          email:
+            type: string
+          fullName:
+            type: string
+          role:
+            type: string
+          status:
+            type: string
+          lastLoginAt:
+            type: string
+            format: date-time
+          createdAt:
+            type: string
+            format: date-time
+      message:
+        type: string
+        example: 'Lấy thông tin thành công'
+
+  authSuccessResponse:
+    type: object
+    properties:
+      success:
+        type: boolean
+        example: true
+      data:
+        type: object
+      message:
+        type: string
+
+securityDefinitions:
+  BearerAuth:
+    type: apiKey
+    name: Authorization
+    in: header
+    description: 'Nhập token theo format: Bearer {access_token}'
 
 schemes:
   - https

@@ -4,14 +4,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { BarChart3, FileText, LayoutDashboard, LogOut, Settings, Users } from "lucide-react";
+import { BarChart3, FileText, LayoutDashboard, LogOut, Settings, Users, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 
-export function DashboardSidebar() {
+interface DashboardSidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarProps) {
   const pathname = usePathname();
   const t = useTranslations("Sidebar");
 
@@ -56,9 +62,38 @@ export function DashboardSidebar() {
   };
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-      {/* Logo Section */}
-      <div className="flex items-center gap-3 border-b border-slate-100 p-4 dark:border-slate-800">
+    <>
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          onClick={onClose}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-slate-200 bg-white transition-transform duration-300 dark:border-slate-800 dark:bg-slate-900",
+          // Mobile: hidden by default, slide in when open
+          isOpen ? "translate-x-0" : "-translate-x-full",
+          // Desktop: always visible
+          "lg:translate-x-0"
+        )}
+      >
+        {/* Mobile Close Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute top-4 right-4 size-8 lg:hidden"
+          onClick={onClose}
+        >
+          <X className="size-5" />
+        </Button>
+
+        {/* Logo Section */}
+        <div className="flex items-center gap-3 border-b border-slate-100 p-4 dark:border-slate-800">
         <Image
           src="/logo-thsp.png"
           alt="Logo"
@@ -137,6 +172,7 @@ export function DashboardSidebar() {
           </button>
         </div>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }

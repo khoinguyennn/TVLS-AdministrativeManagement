@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 
 import { Eye, EyeOff, KeyRound, LogIn, User } from "lucide-react";
 
+import { AuthFooter } from "@/components/layout/AuthFooter";
+import { AuthHeader } from "@/components/layout/AuthHeader";
 import { Button, Card, CardContent, CardFooter, Input, Label, Separator } from "@/ui";
 
 export default function LoginPage() {
@@ -13,51 +14,25 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      {/* Header */}
-      <header className="w-full border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-4">
-            <div className="flex size-12 items-center justify-center overflow-hidden">
-              <Image
-                src="/logothsp.png"
-                alt="Trường Thực hành Sư phạm Logo"
-                width={48}
-                height={48}
-                className="h-full w-auto object-contain"
-              />
-            </div>
-            <div className="flex flex-col">
-              <h1 className="text-lg leading-tight font-bold tracking-wide text-[#2060df] uppercase">
-                Hệ thống Quản lý Hành chính
-              </h1>
-              <h2 className="text-sm font-semibold text-slate-600 uppercase dark:text-slate-400">
-                Trường Thực hành Sư phạm
-              </h2>
-            </div>
-          </div>
-          <div className="hidden md:block">
-            <span className="text-xs text-slate-400 italic">Cổng thông tin nội bộ</span>
-          </div>
-        </div>
-      </header>
+      <AuthHeader />
 
       {/* Main */}
-      <main className="flex grow items-center justify-center px-4 py-12">
+      <main className="flex grow items-center justify-center px-4 py-8 sm:py-12">
         <div className="w-full max-w-md">
           <Card className="overflow-hidden border-slate-200 shadow-xl dark:border-slate-800">
-            <CardContent className="p-8">
+            <CardContent className="p-5 sm:p-8">
               {/* Title */}
-              <div className="mb-8 text-center">
-                <h3 className="mb-2 text-2xl font-bold text-slate-900 dark:text-slate-100">
+              <div className="mb-6 text-center sm:mb-8">
+                <h3 className="mb-2 text-xl font-bold text-slate-900 sm:text-2xl dark:text-slate-100">
                   Đăng nhập hệ thống
                 </h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-slate-500 sm:text-sm dark:text-slate-400">
                   Vui lòng nhập thông tin tài khoản của bạn
                 </p>
               </div>
 
               {/* Form */}
-              <form className="space-y-5">
+              <form className="space-y-4 sm:space-y-5">
                 {/* Email/Username field */}
                 <div className="space-y-2">
                   <Label
@@ -72,7 +47,7 @@ export default function LoginPage() {
                       id="email"
                       type="text"
                       placeholder="example@tvu.edu.vn"
-                      className="h-12 rounded-lg border-slate-300 pr-4 pl-10 transition-all focus-visible:border-primary focus-visible:ring-primary dark:border-slate-700"
+                      className="h-11 rounded-lg border-slate-300 pr-4 pl-10 transition-all sm:h-12 focus-visible:border-primary focus-visible:ring-primary dark:border-slate-700"
                     />
                   </div>
                 </div>
@@ -99,7 +74,7 @@ export default function LoginPage() {
                       id="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
-                      className="h-12 rounded-lg border-slate-300 pr-12 pl-10 transition-all focus-visible:border-primary focus-visible:ring-primary dark:border-slate-700"
+                      className="h-11 rounded-lg border-slate-300 pr-12 pl-10 transition-all sm:h-12 focus-visible:border-primary focus-visible:ring-primary dark:border-slate-700"
                     />
                     <button
                       type="button"
@@ -130,17 +105,17 @@ export default function LoginPage() {
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full gap-2 rounded-lg bg-[#2060df] py-6 font-bold shadow-lg shadow-[#2060df]/20 hover:bg-[#2060df]/90"
+                  className="w-full gap-2 rounded-lg bg-[#2060df] py-5 font-bold shadow-lg shadow-[#2060df]/20 sm:py-6 hover:bg-[#2060df]/90"
                 >
                   <span>Đăng nhập</span>
                   <LogIn className="size-5" />
                 </Button>
 
                 {/* Divider */}
-                <div className="relative my-8">
+                <div className="relative my-6 sm:my-8">
                   <Separator className="bg-slate-200 dark:bg-slate-800" />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="bg-white px-2 text-xs text-slate-500 uppercase dark:bg-slate-900">
+                    <span className="bg-white px-2 text-[10px] text-slate-500 uppercase sm:text-xs dark:bg-slate-900">
                       Hoặc sử dụng phương thức khác
                     </span>
                   </div>
@@ -151,7 +126,7 @@ export default function LoginPage() {
                   type="button"
                   variant="outline"
                   size="lg"
-                  className="w-full gap-2 rounded-lg py-6 font-semibold"
+                  className="w-full gap-2 rounded-lg py-5 font-semibold sm:py-6"
                 >
                   <svg className="size-5" viewBox="0 0 24 24">
                     <path
@@ -189,37 +164,7 @@ export default function LoginPage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="w-full border-t border-slate-200 bg-white px-4 py-8 dark:border-slate-800 dark:bg-slate-900">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 md:flex-row">
-          <div className="text-center text-sm text-slate-500 md:text-left dark:text-slate-400">
-            <p className="font-semibold text-slate-700 dark:text-slate-300">
-              © 2025 TRƯỜNG THỰC HÀNH SƯ PHẠM
-            </p>
-            <p className="text-slate-500 dark:text-slate-400">TRƯỜNG ĐẠI HỌC TRÀ VINH</p>
-          </div>
-          <div className="flex flex-wrap justify-center gap-6">
-            <Link
-              href="/terms"
-              className="text-sm text-slate-500 transition-colors hover:text-primary dark:text-slate-400"
-            >
-              Điều khoản sử dụng
-            </Link>
-            <Link
-              href="/privacy"
-              className="text-sm text-slate-500 transition-colors hover:text-primary dark:text-slate-400"
-            >
-              Chính sách bảo mật
-            </Link>
-            <Link
-              href="/guide"
-              className="text-sm text-slate-500 transition-colors hover:text-primary dark:text-slate-400"
-            >
-              Hướng dẫn
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <AuthFooter />
     </div>
   );
 }

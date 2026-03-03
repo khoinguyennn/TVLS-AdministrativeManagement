@@ -2,24 +2,23 @@ import type { SiteConfig } from "@/types/site-config.types";
 import { DEFAULT_LOCALE } from "@/constants/i18n.constants";
 import { env } from "@/env";
 
-// FIXME: Update site branding, default locale, theme color, social links, languages and OG image
 export const siteConfig: SiteConfig = {
-  name: "Nizam | Next.js 16 Boilerplate",
-  description: "Production-ready Next.js 16+ starter built with Tailwind CSS 4 and TypeScript.",
+  name: "Hệ thống Quản lý Hành chính",
+  description: "Hệ thống quản lý hồ sơ hành chính cho Trường Thực hành Sư phạm",
   url: env.NEXT_PUBLIC_SITE_URL,
-  author: "Ömer Gülçiçek",
+  author: "Trường Thực hành Sư phạm",
   locale: DEFAULT_LOCALE,
-  themeColor: "#ffffff",
-  keywords: ["nextjs", "typescript", "tailwindcss", "boilerplate", "starter"],
+  themeColor: "#2060df",
+  keywords: ["quản lý hành chính", "hồ sơ", "trường thực hành sư phạm", "administrative management"],
   social: {
-    twitter: "@omergulcicek",
-    github: "omergulcicek",
-    linkedin: "omergulcicek"
+    twitter: "",
+    github: "khoinguyennn",
+    linkedin: ""
   },
   ogImage: "/og.jpg",
   languages: {
-    tr: "/tr",
+    vi: "/vi",
     en: "/en",
-    "x-default": "/en"
+    "x-default": "/vi"
   }
 } as const;

@@ -1,0 +1,6 @@
+2026-03-03 20:42:42 error: ❌ Failed to seed admin user: Unknown column 'full_name' in 'field list'
+2026-03-03 20:46:09 error: ❌ Failed to seed admin user: Unknown column 'full_name' in 'field list'
+2026-03-03 20:50:13 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-03 20:51:07 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-03 20:53:53 error: [GET] /auth/profile >> StatusCode:: 404, Message:: Authentication token missing
+2026-03-03 20:54:06 error: [POST] /auth/logout >> StatusCode:: 404, Message:: Authentication token missing
