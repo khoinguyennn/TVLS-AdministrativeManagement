@@ -1,13 +1,13 @@
-// FIXME: Customize supported locales (labels, tags, flags) and default locale
+// Supported locales: Vietnamese and English
 export const LOCALES = {
-  tr: { label: "Türkçe", tag: "tr-TR", flag: "🇹🇷" },
-  en: { label: "English", tag: "en-US", flag: "🇬🇧" }
+  vi: { label: "Tiếng Việt", tag: "vi-VN", flag: "��" },
+  en: { label: "English", tag: "en-US", flag: "��" }
 } as const;
 
 export type LocaleCode = keyof typeof LOCALES;
 
-// FIXME: Set your project's default locale code
-export const DEFAULT_LOCALE: LocaleCode = "en";
+// Default locale is Vietnamese
+export const DEFAULT_LOCALE: LocaleCode = "vi";
 
 export const SUPPORTED_LOCALES = Object.keys(LOCALES) as LocaleCode[];
 

@@ -1,0 +1,125 @@
+{
+  "Dashboard": {
+    "title": "Hệ thống Quản lý Hành chính",
+    "description": "Hệ thống quản lý hồ sơ hành chính cho Trường Thực hành Sư phạm",
+    "welcome": "Xin chào! Đây là tổng quan về hệ thống quản lý hành chính."
+  },
+  "Sidebar": {
+    "systemTitle": "QUẢN LÝ HÀNH CHÍNH",
+    "schoolName": "TRƯỜNG THỰC HÀNH SƯ PHẠM",
+    "dashboard": "Dashboard",
+    "records": "Hồ sơ hành chính",
+    "departments": "Phòng ban",
+    "reports": "Báo cáo",
+    "system": "Hệ thống",
+    "settings": "Cài đặt",
+    "logout": "Đăng xuất"
+  },
+  "Header": {
+    "searchPlaceholder": "Tìm kiếm hồ sơ...",
+    "toggleTheme": "Chuyển đổi theme"
+  },
+  "Records": {
+    "title": "Hồ sơ hành chính",
+    "description": "Quản lý và phê duyệt các hồ sơ hành chính của doanh nghiệp",
+    "createNew": "Tạo hồ sơ mới",
+    "filter": "Bộ lọc",
+    "clearFilter": "Xóa bộ lọc",
+    "status": "Trạng thái",
+    "all": "Tất cả",
+    "time": "Thời gian",
+    "thisMonth": "Tháng này",
+    "department": "Phòng ban",
+    "table": {
+      "name": "Tên hồ sơ",
+      "submitter": "Người nộp",
+      "date": "Ngày tạo",
+      "department": "Phòng ban",
+      "status": "Trạng thái",
+      "actions": "Thao tác"
+    },
+    "statusLabels": {
+      "pending": "Đang chờ",
+      "approved": "Đã duyệt",
+      "rejected": "Từ chối",
+      "submitted": "Đã gửi"
+    },
+    "actions": {
+      "view": "Xem",
+      "edit": "Sửa",
+      "approve": "Phê duyệt",
+      "reject": "Từ chối"
+    },
+    "pagination": {
+      "showing": "Hiển thị",
+      "of": "trong số",
+      "records": "hồ sơ",
+      "previous": "Trước",
+      "next": "Tiếp theo"
+    }
+  },
+  "Stats": {
+    "totalRecords": "Tổng hồ sơ",
+    "pending": "Đang chờ xử lý",
+    "approved": "Đã phê duyệt",
+    "rejected": "Từ chối",
+    "comparedToLastMonth": "so với tháng trước"
+  },
+  "RecentActivity": {
+    "title": "Hoạt động gần đây",
+    "submitted": "đã nộp hồ sơ mới",
+    "approved": "đã phê duyệt hồ sơ",
+    "rejected": "đã từ chối hồ sơ",
+    "edited": "đã chỉnh sửa hồ sơ"
+  },
+  "QuickActions": {
+    "title": "Thao tác nhanh",
+    "viewAllRecords": "Xem tất cả hồ sơ",
+    "createNewRecord": "Tạo hồ sơ mới",
+    "manageDepartments": "Quản lý phòng ban",
+    "viewReports": "Xem báo cáo"
+  },
+  "Breadcrumb": {
+    "home": "Trang chủ"
+  },
+  "Common": {
+    "loading": "Đang tải...",
+    "error": "Có lỗi xảy ra",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "create": "Tạo mới",
+    "search": "Tìm kiếm"
+  },
+  "UserList": {
+    "title": "Danh sách người dùng",
+    "description": "Danh sách người dùng trong hệ thống",
+    "error": "Lỗi",
+    "loading": "Đang tải...",
+    "id": "ID",
+    "name": "Tên",
+    "email": "Email",
+    "searchPlaceholder": "Tìm kiếm người dùng...",
+    "noResults": "Không có kết quả."
+  },
+  "AuthForm": {
+    "usernameLabel": "Tên đăng nhập",
+    "usernamePlaceholder": "nguyenvana",
+    "passwordLabel": "Mật khẩu",
+    "passwordPlaceholder": "••••••••",
+    "forgotPassword": "Quên mật khẩu",
+    "submit": "Đăng nhập"
+  },
+  "AuthSchema": {
+    "usernameMin": "Tên đăng nhập phải có ít nhất 3 ký tự",
+    "usernameRegex": "Chỉ cho phép chữ cái, số và dấu gạch dưới",
+    "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự"
+  },
+  "Error": {
+    "title": "Lỗi",
+    "message": "Đã có lỗi xảy ra!",
+    "retry": "Thử lại",
+    "goHome": "Về trang chủ"
+  }
+}

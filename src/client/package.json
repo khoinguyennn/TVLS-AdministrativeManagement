@@ -1,12 +1,11 @@
 {
-  "name": "nizam",
+  "name": "tvls-administrativemanagement-fe",
   "version": "16.0.0",
   "private": true,
   "description": "Production-ready Next.js 16+ starter built with Tailwind CSS 4 and TypeScript.",
   "author": {
-    "name": "Ömer Gülçiçek",
-    "email": "iletisim@omergulcicek.com",
-    "url": "https://omergulcicek.com"
+    "name": "Tram Khoi Nguyen",
+    "email": "tramkhoinguyen27122@gmail.com"
   },
   "engines": {
     "node": "22.x"
@@ -59,6 +58,7 @@
     "next": "^16.0.7",
     "next-intl": "^4.4.0",
     "next-themes": "^0.4.6",
+    "radix-ui": "^1.4.3",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "react-hook-form": "^7.65.0",

@@ -12,7 +12,6 @@ import { env } from "@/env";
 
 import { routing } from "@/i18n/routing";
 
-import { Footer, Header } from "@/components/layout";
 import { Toaster } from "@/ui";
 import { Providers } from "@/providers";
 
@@ -63,10 +62,8 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen w-full flex-col antialiased`}
       >
         <Providers messages={messages} locale={locale}>
-          <Header />
-          <main className="flex-1">{children}</main>
+          {children}
           <Toaster richColors />
-          <Footer />
         </Providers>
 
         {env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={env.NEXT_PUBLIC_GA_ID} />}
