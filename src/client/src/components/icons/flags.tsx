@@ -1,13 +1,10 @@
-import { SVGProps } from 'react';
+import { SVGProps } from "react";
 
 export function VietnamFlag(props: SVGProps<SVGSVGElement>) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20" {...props}>
       <rect width="30" height="20" fill="#da251d" />
-      <polygon
-        points="15,4 11.47,14.85 20.71,8.24 9.29,8.24 18.53,14.85"
-        fill="#ff0"
-      />
+      <polygon points="15,4 11.47,14.85 20.71,8.24 9.29,8.24 18.53,14.85" fill="#ff0" />
     </svg>
   );
 }

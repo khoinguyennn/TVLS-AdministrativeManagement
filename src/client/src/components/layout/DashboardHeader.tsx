@@ -1,23 +1,25 @@
-'use client';
+"use client";
 
-import { Bell, HelpCircle, Moon, Search, Sun } from 'lucide-react';
-import { useTheme } from 'next-themes';
-import { useLocale, useTranslations } from 'next-intl';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from "next/navigation";
 
-import { USFlag, VietnamFlag } from '@/components/icons/flags';
-import { Button } from '@/components/ui/button';
+import { Bell, HelpCircle, Moon, Search, Sun } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import { useTheme } from "next-themes";
+
+import { LOCALES, type LocaleCode } from "@/constants/i18n.constants";
+
+import { USFlag, VietnamFlag } from "@/components/icons/flags";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
-import { LOCALES, type LocaleCode } from '@/constants/i18n.constants';
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 
 const FlagIcon = ({ locale, className }: { locale: LocaleCode; className?: string }) => {
-  if (locale === 'vi') {
+  if (locale === "vi") {
     return <VietnamFlag className={className} />;
   }
   return <USFlag className={className} />;
@@ -28,7 +30,7 @@ export function DashboardHeader() {
   const locale = useLocale() as LocaleCode;
   const router = useRouter();
   const pathname = usePathname();
-  const t = useTranslations('Header');
+  const t = useTranslations("Header");
 
   const switchLocale = (newLocale: string) => {
     // Replace the locale in the pathname
@@ -37,15 +39,15 @@ export function DashboardHeader() {
   };
 
   return (
-    <header className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-40 px-8 flex items-center justify-between">
+    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-8 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/80">
       {/* Search */}
-      <div className="flex items-center gap-4 flex-1">
+      <div className="flex flex-1 items-center gap-4">
         <div className="relative w-full max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 size-4" />
+          <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-400" />
           <Input
             type="text"
-            placeholder={t('searchPlaceholder')}
-            className="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-[#2060df]/20 transition-all"
+            placeholder={t("searchPlaceholder")}
+            className="w-full rounded-lg border-none bg-slate-100 py-2 pr-4 pl-10 text-sm transition-all focus:ring-2 focus:ring-[#2060df]/20 dark:bg-slate-800"
           />
         </div>
       </div>
@@ -72,14 +74,16 @@ export function DashboardHeader() {
           variant="ghost"
           size="icon"
           className="size-9 rounded-lg text-slate-600 dark:text-slate-400"
-          onClick={() => setTheme(document.documentElement.classList.contains('dark') ? 'light' : 'dark')}
+          onClick={() =>
+            setTheme(document.documentElement.classList.contains("dark") ? "light" : "dark")
+          }
         >
-          <Sun className="size-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute size-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">{t('toggleTheme')}</span>
+          <Sun className="size-5 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+          <Moon className="absolute size-5 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+          <span className="sr-only">{t("toggleTheme")}</span>
         </Button>
 
-        <div className="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-2" />
+        <div className="mx-2 h-6 w-px bg-slate-200 dark:bg-slate-800" />
 
         {/* Language Selector */}
         <DropdownMenu>
@@ -87,7 +91,7 @@ export function DashboardHeader() {
             <Button
               variant="outline"
               size="sm"
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg"
+              className="flex items-center gap-2 rounded-lg px-3 py-1.5"
             >
               <FlagIcon locale={locale} className="size-5 rounded-sm" />
               <span className="text-xs font-medium uppercase">{locale}</span>
@@ -95,17 +99,17 @@ export function DashboardHeader() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem
-              onClick={() => switchLocale('vi')}
-              className={locale === 'vi' ? 'bg-slate-100 dark:bg-slate-800' : ''}
+              onClick={() => switchLocale("vi")}
+              className={locale === "vi" ? "bg-slate-100 dark:bg-slate-800" : ""}
             >
-              <VietnamFlag className="size-5 rounded-sm mr-2" />
+              <VietnamFlag className="mr-2 size-5 rounded-sm" />
               {LOCALES.vi.label}
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => switchLocale('en')}
-              className={locale === 'en' ? 'bg-slate-100 dark:bg-slate-800' : ''}
+              onClick={() => switchLocale("en")}
+              className={locale === "en" ? "bg-slate-100 dark:bg-slate-800" : ""}
             >
-              <USFlag className="size-5 rounded-sm mr-2" />
+              <USFlag className="mr-2 size-5 rounded-sm" />
               {LOCALES.en.label}
             </DropdownMenuItem>
           </DropdownMenuContent>

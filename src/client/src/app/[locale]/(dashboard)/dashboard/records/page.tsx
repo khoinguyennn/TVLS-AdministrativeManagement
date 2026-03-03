@@ -1,4 +1,6 @@
-'use client';
+"use client";
+
+import Link from "next/link";
 
 import {
   Calendar,
@@ -8,103 +10,103 @@ import {
   Eye,
   Filter,
   Plus,
-  XCircle,
-} from 'lucide-react';
-import Link from 'next/link';
+  XCircle
+} from "lucide-react";
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+  TableRow
+} from "@/components/ui/table";
 
 // Mock data
 const records = [
   {
-    id: 'REC-8291',
-    name: 'Báo cáo tài chính Q3',
-    submitter: 'Trần Duy',
-    initials: 'TD',
-    date: '12/10/2023',
-    department: 'Phòng Tài chính',
-    status: 'pending',
+    id: "REC-8291",
+    name: "Báo cáo tài chính Q3",
+    submitter: "Trần Duy",
+    initials: "TD",
+    date: "12/10/2023",
+    department: "Phòng Tài chính",
+    status: "pending"
   },
   {
-    id: 'REC-7312',
-    name: 'Đề xuất mua sắm thiết bị IT',
-    submitter: 'Lê Hoa',
-    initials: 'LH',
-    date: '11/10/2023',
-    department: 'Phòng Kỹ thuật',
-    status: 'approved',
+    id: "REC-7312",
+    name: "Đề xuất mua sắm thiết bị IT",
+    submitter: "Lê Hoa",
+    initials: "LH",
+    date: "11/10/2023",
+    department: "Phòng Kỹ thuật",
+    status: "approved"
   },
   {
-    id: 'REC-9011',
-    name: 'Hợp đồng đối tác ABC',
-    submitter: 'Nguyễn Phong',
-    initials: 'NP',
-    date: '10/10/2023',
-    department: 'Phòng Kinh doanh',
-    status: 'rejected',
+    id: "REC-9011",
+    name: "Hợp đồng đối tác ABC",
+    submitter: "Nguyễn Phong",
+    initials: "NP",
+    date: "10/10/2023",
+    department: "Phòng Kinh doanh",
+    status: "rejected"
   },
   {
-    id: 'REC-6623',
-    name: 'Kế hoạch marketing Tết',
-    submitter: 'Phạm Thúy',
-    initials: 'PT',
-    date: '08/10/2023',
-    department: 'Phòng Marketing',
-    status: 'submitted',
+    id: "REC-6623",
+    name: "Kế hoạch marketing Tết",
+    submitter: "Phạm Thúy",
+    initials: "PT",
+    date: "08/10/2023",
+    department: "Phòng Marketing",
+    status: "submitted"
   },
   {
-    id: 'REC-4412',
-    name: 'Đơn xin nghỉ phép - Mai Anh',
-    submitter: 'Mai Anh',
-    initials: 'MA',
-    date: '05/10/2023',
-    department: 'Phòng Hành chính',
-    status: 'approved',
-  },
+    id: "REC-4412",
+    name: "Đơn xin nghỉ phép - Mai Anh",
+    submitter: "Mai Anh",
+    initials: "MA",
+    date: "05/10/2023",
+    department: "Phòng Hành chính",
+    status: "approved"
+  }
 ];
 
-const statusConfig: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
-  pending: { label: 'Đang chờ', variant: 'secondary' },
-  approved: { label: 'Đã duyệt', variant: 'default' },
-  rejected: { label: 'Từ chối', variant: 'destructive' },
-  submitted: { label: 'Đã gửi', variant: 'outline' },
+const statusConfig: Record<
+  string,
+  { label: string; variant: "default" | "secondary" | "destructive" | "outline" }
+> = {
+  pending: { label: "Đang chờ", variant: "secondary" },
+  approved: { label: "Đã duyệt", variant: "default" },
+  rejected: { label: "Từ chối", variant: "destructive" },
+  submitted: { label: "Đã gửi", variant: "outline" }
 };
 
 export default function DashboardRecordsPage() {
   return (
     <>
       {/* Breadcrumbs */}
-      <nav className="flex items-center gap-2 text-sm text-slate-500 mb-6">
+      <nav className="mb-6 flex items-center gap-2 text-sm text-slate-500">
         <Link href="/dashboard" className="hover:text-[#2060df]">
           Trang chủ
         </Link>
         <ChevronRight className="size-3" />
-        <span className="text-slate-900 dark:text-slate-100 font-medium">
-          Hồ sơ hành chính
-        </span>
+        <span className="font-medium text-slate-900 dark:text-slate-100">Hồ sơ hành chính</span>
       </nav>
 
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight mb-1">Hồ sơ hành chính</h2>
+          <h2 className="mb-1 text-3xl font-bold tracking-tight">Hồ sơ hành chính</h2>
           <p className="text-slate-500">
             Quản lý và phê duyệt các hồ sơ hành chính của doanh nghiệp
           </p>
         </div>
-        <Button className="bg-[#2060df] hover:bg-[#2060df]/90 text-white">
-          <Plus className="size-5 mr-2" />
+        <Button className="bg-[#2060df] text-white hover:bg-[#2060df]/90">
+          <Plus className="mr-2 size-5" />
           Tạo hồ sơ mới
         </Button>
       </div>
@@ -113,7 +115,7 @@ export default function DashboardRecordsPage() {
       <Card className="mb-6">
         <CardContent className="p-4">
           <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-wider mr-2">
+            <div className="mr-2 flex items-center gap-2 text-xs font-bold tracking-wider text-slate-400 uppercase">
               <Filter className="size-4" />
               Bộ lọc
             </div>
@@ -123,7 +125,7 @@ export default function DashboardRecordsPage() {
             </Button>
 
             <Button variant="outline" size="sm" className="text-sm">
-              <Calendar className="size-4 mr-2" />
+              <Calendar className="mr-2 size-4" />
               Thời gian: <b className="ml-1">Tháng này</b>
             </Button>
 
@@ -131,11 +133,7 @@ export default function DashboardRecordsPage() {
               Phòng ban: <b className="ml-1">Tất cả</b>
             </Button>
 
-            <Button
-              variant="link"
-              size="sm"
-              className="ml-auto text-[#2060df] font-medium"
-            >
+            <Button variant="link" size="sm" className="ml-auto font-medium text-[#2060df]">
               Xóa bộ lọc
             </Button>
           </div>
@@ -152,17 +150,21 @@ export default function DashboardRecordsPage() {
                 <TableHead className="font-bold">Người nộp</TableHead>
                 <TableHead className="font-bold">Ngày tạo</TableHead>
                 <TableHead className="font-bold">Phòng ban</TableHead>
-                <TableHead className="font-bold text-center">Trạng thái</TableHead>
-                <TableHead className="font-bold text-right">Thao tác</TableHead>
+                <TableHead className="text-center font-bold">Trạng thái</TableHead>
+                <TableHead className="text-right font-bold">Thao tác</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {records.map((record) => {
                 const status = statusConfig[record.status];
-                const isActionDisabled = record.status === 'approved' || record.status === 'rejected';
+                const isActionDisabled =
+                  record.status === "approved" || record.status === "rejected";
 
                 return (
-                  <TableRow key={record.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                  <TableRow
+                    key={record.id}
+                    className="hover:bg-slate-50 dark:hover:bg-slate-800/30"
+                  >
                     <TableCell>
                       <div className="flex flex-col">
                         <span className="text-sm font-semibold">{record.name}</span>
@@ -172,7 +174,7 @@ export default function DashboardRecordsPage() {
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Avatar className="size-6">
-                          <AvatarFallback className="text-[10px] font-bold bg-[#2060df]/10 text-[#2060df]">
+                          <AvatarFallback className="bg-[#2060df]/10 text-[10px] font-bold text-[#2060df]">
                             {record.initials}
                           </AvatarFallback>
                         </Avatar>
@@ -231,9 +233,9 @@ export default function DashboardRecordsPage() {
         </div>
 
         {/* Pagination */}
-        <div className="px-6 py-4 bg-slate-50/50 dark:bg-slate-800/20 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div className="flex items-center justify-between border-t border-slate-200 bg-slate-50/50 px-6 py-4 dark:border-slate-800 dark:bg-slate-800/20">
           <p className="text-sm text-slate-500">
-            Hiển thị <span className="font-medium">1-5</span> trong số{' '}
+            Hiển thị <span className="font-medium">1-5</span> trong số{" "}
             <span className="font-medium">84</span> hồ sơ
           </p>
           <div className="flex items-center gap-2">

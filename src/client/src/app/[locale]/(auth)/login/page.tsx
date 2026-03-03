@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-
 import Image from "next/image";
 import Link from "next/link";
 
@@ -28,16 +27,16 @@ export default function LoginPage() {
               />
             </div>
             <div className="flex flex-col">
-              <h1 className="text-lg font-bold uppercase leading-tight tracking-wide text-[#2060df]">
+              <h1 className="text-lg leading-tight font-bold tracking-wide text-[#2060df] uppercase">
                 Hệ thống Quản lý Hành chính
               </h1>
-              <h2 className="text-sm font-semibold uppercase text-slate-600 dark:text-slate-400">
+              <h2 className="text-sm font-semibold text-slate-600 uppercase dark:text-slate-400">
                 Trường Thực hành Sư phạm
               </h2>
             </div>
           </div>
           <div className="hidden md:block">
-            <span className="text-xs italic text-slate-400">Cổng thông tin nội bộ</span>
+            <span className="text-xs text-slate-400 italic">Cổng thông tin nội bộ</span>
           </div>
         </div>
       </header>
@@ -68,12 +67,12 @@ export default function LoginPage() {
                     Email hoặc Tên đăng nhập
                   </Label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 size-5 -translate-y-1/2 text-slate-400" />
+                    <User className="absolute top-1/2 left-3 size-5 -translate-y-1/2 text-slate-400" />
                     <Input
                       id="email"
                       type="text"
                       placeholder="example@tvu.edu.vn"
-                      className="h-12 rounded-lg border-slate-300 pl-10 pr-4 transition-all focus-visible:border-primary focus-visible:ring-primary dark:border-slate-700"
+                      className="h-12 rounded-lg border-slate-300 pr-4 pl-10 transition-all focus-visible:border-primary focus-visible:ring-primary dark:border-slate-700"
                     />
                   </div>
                 </div>
@@ -95,17 +94,17 @@ export default function LoginPage() {
                     </Link>
                   </div>
                   <div className="relative">
-                    <KeyRound className="absolute left-3 top-1/2 size-5 -translate-y-1/2 text-slate-400" />
+                    <KeyRound className="absolute top-1/2 left-3 size-5 -translate-y-1/2 text-slate-400" />
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
-                      className="h-12 rounded-lg border-slate-300 pl-10 pr-12 transition-all focus-visible:border-primary focus-visible:ring-primary dark:border-slate-700"
+                      className="h-12 rounded-lg border-slate-300 pr-12 pl-10 transition-all focus-visible:border-primary focus-visible:ring-primary dark:border-slate-700"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                      className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
                     >
                       {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
                     </button>
@@ -141,7 +140,7 @@ export default function LoginPage() {
                 <div className="relative my-8">
                   <Separator className="bg-slate-200 dark:bg-slate-800" />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="bg-white px-2 text-xs uppercase text-slate-500 dark:bg-slate-900">
+                    <span className="bg-white px-2 text-xs text-slate-500 uppercase dark:bg-slate-900">
                       Hoặc sử dụng phương thức khác
                     </span>
                   </div>
