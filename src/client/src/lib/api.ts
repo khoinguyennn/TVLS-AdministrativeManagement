@@ -1,29 +1,66 @@
-import axios, { AxiosError, AxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 
 import { env } from "@/env";
+import { authStorage } from "@/lib/auth-storage";
 
-// FIXME: Set your API base URL and global headers
 export const api = axios.create({
   baseURL: env.NEXT_PUBLIC_API_URL,
   timeout: 10_000,
   headers: {
-    Accept: "application/json"
+    Accept: "application/json",
+    "Content-Type": "application/json"
   }
 });
 
-api.interceptors.request.use((config) => {
-  // FIXME: Inject your auth token/header if required
-  // const token = getToken();
-  // if (token) config.headers.Authorization = `Bearer ${token}`;
+// Request interceptor - inject access token
+api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  const token = authStorage.getAccessToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 });
 
+// Response interceptor - handle errors and token refresh
 api.interceptors.response.use(
   (res) => res,
-  (err) => {
-    if (axios.isAxiosError(err)) return Promise.reject(err);
+  async (err) => {
+    const originalRequest = err.config;
 
-    return Promise.reject(new AxiosError("Bilinmeyen hata"));
+    // If 401 and not already retrying, try to refresh token
+    if (err.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      const refreshToken = authStorage.getRefreshToken();
+      if (refreshToken) {
+        try {
+          const response = await axios.post(`${env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
+            refreshToken
+          });
+
+          const { accessToken } = response.data.data;
+          authStorage.setAccessToken(accessToken);
+
+          // Retry original request with new token
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+          return api(originalRequest);
+        } catch {
+          // Refresh failed, clear auth and redirect to login
+          authStorage.clearAll();
+          if (typeof window !== "undefined") {
+            window.location.href = "/login";
+          }
+        }
+      } else {
+        authStorage.clearAll();
+        if (typeof window !== "undefined") {
+          window.location.href = "/login";
+        }
+      }
+    }
+
+    if (axios.isAxiosError(err)) return Promise.reject(err);
+    return Promise.reject(new AxiosError("Lỗi không xác định"));
   }
 );
 

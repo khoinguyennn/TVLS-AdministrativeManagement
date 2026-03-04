@@ -1,4 +1,5 @@
 import { compare, hash } from 'bcrypt';
+import https from 'https';
 import { sign, verify } from 'jsonwebtoken';
 import { Service } from 'typedi';
 import { SECRET_KEY } from '@config';
@@ -117,5 +118,87 @@ export class AuthService {
     if (!findUser) throw new HttpException(404, 'Không tìm thấy người dùng');
 
     return findUser;
+  }
+
+  public async loginWithGoogle(credential: string): Promise<{ cookie: string; loginResponse: LoginResponse }> {
+    try {
+      // Verify Google access token by calling userinfo endpoint
+      const payload = await this.verifyGoogleToken(credential);
+
+      if (!payload || !payload.email) {
+        throw new HttpException(401, 'Token Google không hợp lệ');
+      }
+
+      const email = payload.email;
+
+      // Find user by email in database (NOT auto-create)
+      const findUser: User = await DB.Users.findOne({ where: { email } });
+      if (!findUser) {
+        throw new HttpException(404, 'Tài khoản không tồn tại trong hệ thống. Vui lòng liên hệ quản trị viên để được cấp tài khoản.');
+      }
+
+      // Check account status
+      if (findUser.status === 'locked') {
+        throw new HttpException(403, 'Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên');
+      }
+      if (findUser.status === 'inactive') {
+        throw new HttpException(403, 'Tài khoản chưa được kích hoạt');
+      }
+
+      // Update last login time
+      await DB.Users.update({ lastLoginAt: new Date() }, { where: { id: findUser.id } });
+
+      // Generate tokens
+      const accessTokenData = createAccessToken(findUser);
+      const refreshTokenData = createRefreshToken(findUser);
+      const cookie = createCookie(accessTokenData);
+
+      const loginResponse: LoginResponse = {
+        accessToken: accessTokenData.token,
+        refreshToken: refreshTokenData.token,
+        user: {
+          id: findUser.id,
+          email: findUser.email,
+          fullName: findUser.fullName,
+          role: findUser.role,
+        },
+      };
+
+      return { cookie, loginResponse };
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      throw new HttpException(401, 'Xác thực Google thất bại');
+    }
+  }
+
+  private verifyGoogleToken(accessToken: string): Promise<{ email: string; name?: string }> {
+    return new Promise((resolve, reject) => {
+      const url = `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`;
+
+      https
+        .get(url, res => {
+          let data = '';
+
+          res.on('data', chunk => {
+            data += chunk;
+          });
+
+          res.on('end', () => {
+            try {
+              const payload = JSON.parse(data);
+              if (payload.error) {
+                reject(new Error(payload.error_description || 'Invalid token'));
+              } else {
+                resolve(payload);
+              }
+            } catch {
+              reject(new Error('Failed to parse Google response'));
+            }
+          });
+        })
+        .on('error', err => {
+          reject(err);
+        });
+    });
   }
 }

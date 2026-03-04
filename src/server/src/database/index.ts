@@ -1,5 +1,6 @@
 import Sequelize from 'sequelize';
 import { NODE_ENV, DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_DATABASE } from '@config';
+import OTPModel from '@models/otp.model';
 import UserModel from '@models/users.model';
 import { logger } from '@utils/logger';
 
@@ -29,6 +30,7 @@ sequelize.authenticate();
 
 export const DB = {
   Users: UserModel(sequelize),
+  OTPs: OTPModel(sequelize),
   sequelize, // connection instance (RAW queries)
   Sequelize, // library
 };

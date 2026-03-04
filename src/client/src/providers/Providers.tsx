@@ -2,7 +2,13 @@
 
 import { type AbstractIntlMessages } from "next-intl";
 
-import { IntlProvider, QueryProvider, ThemeProvider } from "@/providers";
+import {
+  GoogleAuthProvider,
+  IntlProvider,
+  QueryProvider,
+  ThemeProvider,
+  ToastProvider
+} from "@/providers";
 
 export function Providers({
   children,
@@ -15,9 +21,13 @@ export function Providers({
 }) {
   return (
     <ThemeProvider>
-      <IntlProvider messages={messages} locale={locale}>
-        <QueryProvider>{children}</QueryProvider>
-      </IntlProvider>
+      <GoogleAuthProvider>
+        <IntlProvider messages={messages} locale={locale}>
+          <QueryProvider>
+            <ToastProvider>{children}</ToastProvider>
+          </QueryProvider>
+        </IntlProvider>
+      </GoogleAuthProvider>
     </ThemeProvider>
   );
 }

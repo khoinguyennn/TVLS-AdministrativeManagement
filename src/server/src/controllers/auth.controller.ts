@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
-import { CreateUserDto, LoginDto, RefreshTokenDto } from '@dtos/users.dto';
+import { CreateUserDto, LoginDto, RefreshTokenDto, GoogleLoginDto } from '@dtos/users.dto';
 import { User } from '@interfaces/users.interface';
 import { RequestWithUser } from '@interfaces/auth.interface';
 import { AuthService } from '@services/auth.service';
@@ -84,6 +84,22 @@ export class AuthController {
         success: true,
         data: userData,
         message: 'Lấy thông tin người dùng thành công',
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public googleLogin = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { credential }: GoogleLoginDto = req.body;
+      const { cookie, loginResponse } = await this.auth.loginWithGoogle(credential);
+
+      res.setHeader('Set-Cookie', [cookie]);
+      res.status(200).json({
+        success: true,
+        data: loginResponse,
+        message: 'Đăng nhập với Google thành công',
       });
     } catch (error) {
       next(error);

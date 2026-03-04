@@ -54,3 +54,45 @@ export class RefreshTokenDto {
   @IsNotEmpty()
   public refreshToken: string;
 }
+
+export class GoogleLoginDto {
+  @IsString()
+  @IsNotEmpty()
+  public credential: string;
+}
+
+export class ForgotPasswordDto {
+  @IsEmail()
+  @IsNotEmpty()
+  public email: string;
+}
+
+export class VerifyOTPDto {
+  @IsEmail()
+  @IsNotEmpty()
+  public email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(6)
+  @MaxLength(6)
+  public otp: string;
+}
+
+export class ResetPasswordDto {
+  @IsEmail()
+  @IsNotEmpty()
+  public email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(6)
+  @MaxLength(6)
+  public otp: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(6)
+  @MaxLength(32)
+  public newPassword: string;
+}

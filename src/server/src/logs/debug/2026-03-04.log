@@ -1,0 +1,786 @@
+2026-03-04 07:21:57 info: =================================
+2026-03-04 07:21:57 info: ======= ENV: development =======
+2026-03-04 07:21:57 info: 🚀 App listening on the port 5000
+2026-03-04 07:21:57 info: =================================
+2026-03-04 07:21:57 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-03-04 07:21:57 info: 8ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 07:21:57 info: 6ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 07:21:57 info: 9ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 07:21:57 info: 39ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 07:21:57 info: 8ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 07:21:57 info: 10ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 07:21:57 info: 10ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 07:21:57 info: 10ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 07:21:57 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 07:21:57 info: 16ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 07:21:57 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 07:21:57 info: 6ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 07:21:57 info: 3ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:21:57 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 07:23:41 info: [0mGET /api-docs/ [36m304[0m 9.420 ms - -[0m
+2026-03-04 07:23:41 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 4.225 ms - -[0m
+2026-03-04 07:23:41 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 4.876 ms - -[0m
+2026-03-04 07:23:41 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.768 ms - -[0m
+2026-03-04 07:23:41 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 2.072 ms - -[0m
+2026-03-04 07:25:26 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:25:26 info: 12ms Executed (default): UPDATE `users` SET `last_login_at`=?,`updated_at`=? WHERE `id` = ?; "2026-03-04 07:25:26", "2026-03-04 07:25:26", 3
+2026-03-04 07:25:26 info: [0mPOST /auth/login [32m200[0m 162.027 ms - 464[0m
+2026-03-04 07:36:16 info: [0mOPTIONS /auth/login [32m204[0m 0.615 ms - 0[0m
+2026-03-04 07:36:16 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen27122@gmail.com';
+2026-03-04 07:36:16 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 07:36:16 info: [0mPOST /auth/login [33m401[0m 97.273 ms - 87[0m
+2026-03-04 07:36:17 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen27122@gmail.com';
+2026-03-04 07:36:17 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 07:36:17 info: [0mPOST /auth/login [33m401[0m 91.244 ms - 87[0m
+2026-03-04 07:36:30 info: [0mOPTIONS /auth/login [32m204[0m 0.188 ms - 0[0m
+2026-03-04 07:36:30 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:36:31 info: 5ms Executed (default): UPDATE `users` SET `last_login_at`=?,`updated_at`=? WHERE `id` = ?; "2026-03-04 07:36:30", "2026-03-04 07:36:30", 3
+2026-03-04 07:36:31 info: [0mPOST /auth/login [32m200[0m 110.266 ms - 464[0m
+2026-03-04 07:37:05 info: [0mOPTIONS /auth/login [32m204[0m 0.199 ms - 0[0m
+2026-03-04 07:37:05 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:37:05 info: 4ms Executed (default): UPDATE `users` SET `last_login_at`=?,`updated_at`=? WHERE `id` = ?; "2026-03-04 07:37:05", "2026-03-04 07:37:05", 3
+2026-03-04 07:37:05 info: [0mPOST /auth/login [32m200[0m 108.705 ms - 464[0m
+2026-03-04 07:40:01 info: [0mOPTIONS /auth/login [32m204[0m 0.233 ms - 0[0m
+2026-03-04 07:40:01 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:40:02 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 07:40:02 info: [0mPOST /auth/login [33m401[0m 93.476 ms - 87[0m
+2026-03-04 07:40:02 info: [0mOPTIONS /auth/refresh [32m204[0m 0.198 ms - 0[0m
+2026-03-04 07:40:02 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 3;
+2026-03-04 07:40:02 info: [0mPOST /auth/refresh [32m200[0m 6.613 ms - 221[0m
+2026-03-04 07:40:02 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:40:02 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 07:40:02 info: [0mPOST /auth/login [33m401[0m 83.523 ms - 87[0m
+2026-03-04 07:40:03 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:40:03 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 07:40:03 info: [0mPOST /auth/login [33m401[0m 96.148 ms - 87[0m
+2026-03-04 07:40:03 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 3;
+2026-03-04 07:40:03 info: [0mPOST /auth/refresh [32m200[0m 5.173 ms - 221[0m
+2026-03-04 07:40:03 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:40:03 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 07:40:03 info: [0mPOST /auth/login [33m401[0m 87.992 ms - 87[0m
+2026-03-04 07:40:08 info: [0mOPTIONS /auth/login [32m204[0m 0.226 ms - 0[0m
+2026-03-04 07:40:08 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:40:08 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 07:40:08 info: [0mPOST /auth/login [33m401[0m 81.655 ms - 87[0m
+2026-03-04 07:40:08 info: [0mOPTIONS /auth/refresh [32m204[0m 0.183 ms - 0[0m
+2026-03-04 07:40:08 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 3;
+2026-03-04 07:40:08 info: [0mPOST /auth/refresh [32m200[0m 4.249 ms - 221[0m
+2026-03-04 07:40:08 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:40:08 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 07:40:08 info: [0mPOST /auth/login [33m401[0m 82.691 ms - 87[0m
+2026-03-04 07:40:21 info: [0mOPTIONS /auth/login [32m204[0m 0.199 ms - 0[0m
+2026-03-04 07:40:21 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:40:21 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 07:40:21 info: [0mPOST /auth/login [33m401[0m 122.083 ms - 87[0m
+2026-03-04 07:40:21 info: [0mOPTIONS /auth/refresh [32m204[0m 0.162 ms - 0[0m
+2026-03-04 07:40:21 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 3;
+2026-03-04 07:40:21 info: [0mPOST /auth/refresh [32m200[0m 4.398 ms - 221[0m
+2026-03-04 07:40:21 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:40:22 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 07:40:22 info: [0mPOST /auth/login [33m401[0m 95.008 ms - 87[0m
+2026-03-04 07:40:26 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:40:26 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 07:40:26 info: [0mPOST /auth/login [33m401[0m 97.352 ms - 87[0m
+2026-03-04 07:40:26 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 3;
+2026-03-04 07:40:26 info: [0mPOST /auth/refresh [32m200[0m 4.735 ms - 221[0m
+2026-03-04 07:40:26 info: [0mOPTIONS /auth/login [32m204[0m 0.233 ms - 0[0m
+2026-03-04 07:40:26 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:40:26 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 07:40:26 info: [0mPOST /auth/login [33m401[0m 83.678 ms - 87[0m
+2026-03-04 07:40:51 info: [0mOPTIONS /auth/login [32m204[0m 0.246 ms - 0[0m
+2026-03-04 07:40:51 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:40:51 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 07:40:51 info: [0mPOST /auth/login [33m401[0m 93.655 ms - 87[0m
+2026-03-04 07:40:51 info: [0mOPTIONS /auth/refresh [32m204[0m 0.156 ms - 0[0m
+2026-03-04 07:40:51 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 3;
+2026-03-04 07:40:51 info: [0mPOST /auth/refresh [32m200[0m 3.577 ms - 221[0m
+2026-03-04 07:40:51 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:40:52 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 07:40:52 info: [0mPOST /auth/login [33m401[0m 94.103 ms - 87[0m
+2026-03-04 07:42:08 info: [0mGET /api-docs/ [36m304[0m 1.210 ms - -[0m
+2026-03-04 07:42:08 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 2.220 ms - -[0m
+2026-03-04 07:42:08 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 3.027 ms - -[0m
+2026-03-04 07:42:08 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 1.421 ms - -[0m
+2026-03-04 07:42:08 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.962 ms - -[0m
+2026-03-04 07:42:08 info: [0mGET /api-docs/favicon-32x32.png [36m304[0m 2.195 ms - -[0m
+2026-03-04 07:46:14 info: =================================
+2026-03-04 07:46:14 info: ======= ENV: development =======
+2026-03-04 07:46:14 info: 🚀 App listening on the port 5000
+2026-03-04 07:46:14 info: =================================
+2026-03-04 07:46:14 info: 2ms Executed (default): SELECT 1+1 AS result
+2026-03-04 07:46:14 info: 7ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 07:46:14 info: 5ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 07:46:14 info: 8ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 07:46:14 info: 50ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 07:46:14 info: 9ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 07:46:14 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 07:46:14 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 07:46:14 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 07:46:14 info: 10ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 07:46:14 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 07:46:14 info: 9ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 07:46:14 info: 8ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 07:46:14 info: 3ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:46:14 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 07:46:35 info: =================================
+2026-03-04 07:46:35 info: ======= ENV: development =======
+2026-03-04 07:46:35 info: 🚀 App listening on the port 5000
+2026-03-04 07:46:35 info: =================================
+2026-03-04 07:46:35 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-03-04 07:46:35 info: 4ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 07:46:36 info: 5ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 07:46:36 info: 7ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 07:46:36 info: 32ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 07:46:36 info: 10ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 07:46:36 info: 9ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 07:46:36 info: 9ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 07:46:36 info: 10ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 07:46:36 info: 10ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 07:46:36 info: 10ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 07:46:36 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 07:46:36 info: 7ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 07:46:36 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:46:36 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 07:46:49 info: =================================
+2026-03-04 07:46:49 info: ======= ENV: development =======
+2026-03-04 07:46:49 info: 🚀 App listening on the port 5000
+2026-03-04 07:46:49 info: =================================
+2026-03-04 07:46:50 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-03-04 07:46:50 info: 3ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 07:46:50 info: 4ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 07:46:50 info: 7ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 07:46:50 info: 36ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 07:46:50 info: 12ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 07:46:50 info: 10ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 07:46:50 info: 9ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 07:46:50 info: 9ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 07:46:50 info: 9ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 07:46:50 info: 10ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 07:46:50 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 07:46:50 info: 6ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 07:46:50 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:46:50 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 07:47:02 info: =================================
+2026-03-04 07:47:02 info: ======= ENV: development =======
+2026-03-04 07:47:02 info: 🚀 App listening on the port 5000
+2026-03-04 07:47:02 info: =================================
+2026-03-04 07:47:02 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-03-04 07:47:02 info: 3ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 07:47:02 info: 4ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 07:47:02 info: 6ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 07:47:02 info: 31ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 07:47:02 info: 10ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 07:47:02 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 07:47:02 info: 12ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 07:47:02 info: 10ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 07:47:02 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 07:47:02 info: 12ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 07:47:02 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 07:47:02 info: 7ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 07:47:02 info: 3ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:47:02 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 07:47:15 info: =================================
+2026-03-04 07:47:15 info: ======= ENV: development =======
+2026-03-04 07:47:15 info: 🚀 App listening on the port 5000
+2026-03-04 07:47:15 info: =================================
+2026-03-04 07:47:15 info: 2ms Executed (default): SELECT 1+1 AS result
+2026-03-04 07:47:15 info: 4ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 07:47:15 info: 4ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 07:47:15 info: 7ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 07:47:15 info: 31ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 07:47:15 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 07:47:15 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 07:47:15 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 07:47:15 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 07:47:15 info: 12ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 07:47:15 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 07:47:15 info: 18ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 07:47:15 info: 8ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 07:47:15 info: 3ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:47:15 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 07:47:23 info: =================================
+2026-03-04 07:47:23 info: ======= ENV: development =======
+2026-03-04 07:47:23 info: 🚀 App listening on the port 5000
+2026-03-04 07:47:23 info: =================================
+2026-03-04 07:47:23 info: 2ms Executed (default): SELECT 1+1 AS result
+2026-03-04 07:47:23 info: 3ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 07:47:23 info: 4ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 07:47:23 info: 6ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 07:47:23 info: 33ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 07:47:23 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 07:47:23 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 07:47:23 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 07:47:23 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 07:47:23 info: 12ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 07:47:23 info: 10ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 07:47:23 info: 10ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 07:47:23 info: 6ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 07:47:23 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:47:23 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 07:47:36 info: =================================
+2026-03-04 07:47:36 info: ======= ENV: development =======
+2026-03-04 07:47:36 info: 🚀 App listening on the port 5000
+2026-03-04 07:47:36 info: =================================
+2026-03-04 07:47:36 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-03-04 07:47:36 info: 2ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 07:47:36 info: 3ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 07:47:36 info: 6ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 07:47:36 info: 41ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 07:47:36 info: 9ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 07:47:36 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 07:47:36 info: 12ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 07:47:36 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 07:47:36 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 07:47:36 info: 12ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 07:47:36 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 07:47:36 info: 7ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 07:47:36 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:47:36 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 07:50:51 info: =================================
+2026-03-04 07:50:51 info: ======= ENV: development =======
+2026-03-04 07:50:51 info: 🚀 App listening on the port 5000
+2026-03-04 07:50:51 info: =================================
+2026-03-04 07:50:51 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-03-04 07:50:51 info: 4ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 07:50:51 info: 4ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 07:50:51 info: 8ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 07:50:51 info: 42ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 07:50:51 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 07:50:51 info: 12ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 07:50:51 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 07:50:51 info: 12ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 07:50:51 info: 10ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 07:50:51 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 07:50:51 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 07:50:51 info: 6ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 07:50:51 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:50:51 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 07:51:02 info: =================================
+2026-03-04 07:51:02 info: ======= ENV: development =======
+2026-03-04 07:51:02 info: 🚀 App listening on the port 5000
+2026-03-04 07:51:02 info: =================================
+2026-03-04 07:51:02 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-03-04 07:51:02 info: 4ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 07:51:02 info: 5ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 07:51:02 info: 7ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 07:51:02 info: 36ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 07:51:02 info: 10ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 07:51:02 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 07:51:02 info: 12ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 07:51:02 info: 12ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 07:51:02 info: 20ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 07:51:02 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 07:51:02 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 07:51:02 info: 6ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 07:51:02 info: 3ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:51:02 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 07:51:24 info: =================================
+2026-03-04 07:51:24 info: ======= ENV: development =======
+2026-03-04 07:51:24 info: 🚀 App listening on the port 5000
+2026-03-04 07:51:24 info: =================================
+2026-03-04 07:51:24 info: 5ms Executed (default): SELECT 1+1 AS result
+2026-03-04 07:51:24 info: 9ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 07:51:24 info: 10ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 07:51:24 info: 15ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 07:51:24 info: 67ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 07:51:24 info: 26ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 07:51:24 info: 28ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 07:51:24 info: 28ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 07:51:24 info: 33ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 07:51:24 info: 27ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 07:51:24 info: 25ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 07:51:24 info: 28ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 07:51:25 info: 10ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 07:51:25 info: 3ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:51:25 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 07:52:46 info: =================================
+2026-03-04 07:52:46 info: ======= ENV: development =======
+2026-03-04 07:52:46 info: 🚀 App listening on the port 5000
+2026-03-04 07:52:46 info: =================================
+2026-03-04 07:52:46 info: 3ms Executed (default): SELECT 1+1 AS result
+2026-03-04 07:52:46 info: 6ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 07:52:46 info: 4ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 07:52:46 info: 10ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 07:52:46 info: 55ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 07:52:46 info: 16ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 07:52:47 info: 20ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 07:52:47 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 07:52:47 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 07:52:47 info: 18ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 07:52:51 info: =================================
+2026-03-04 07:52:51 info: ======= ENV: development =======
+2026-03-04 07:52:51 info: 🚀 App listening on the port 5000
+2026-03-04 07:52:51 info: =================================
+2026-03-04 07:52:52 info: 2ms Executed (default): SELECT 1+1 AS result
+2026-03-04 07:52:52 info: 4ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 07:52:52 info: 3ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 07:52:52 info: 7ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 07:52:52 info: 33ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 07:52:52 info: 17ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 07:52:52 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 07:52:52 info: 15ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 07:52:52 info: 16ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 07:52:52 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 07:52:52 info: 18ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 07:52:52 info: 16ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 07:52:52 info: 9ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 07:52:52 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:52:52 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 07:54:23 info: =================================
+2026-03-04 07:54:23 info: ======= ENV: development =======
+2026-03-04 07:54:23 info: 🚀 App listening on the port 5000
+2026-03-04 07:54:23 info: =================================
+2026-03-04 07:54:23 info: 2ms Executed (default): SELECT 1+1 AS result
+2026-03-04 07:54:23 info: 2ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 07:54:23 info: 3ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 07:54:23 info: 5ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 07:54:23 info: 33ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 07:54:23 info: 12ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 07:54:23 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 07:54:23 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 07:54:23 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 07:54:23 info: 20ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 07:54:23 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 07:54:23 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 07:54:23 info: 6ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 07:54:23 info: 3ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 07:54:23 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 07:54:30 info: [0mGET /api-docs/ [36m304[0m 7.514 ms - -[0m
+2026-03-04 07:54:30 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 10.663 ms - -[0m
+2026-03-04 07:54:30 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 2.681 ms - -[0m
+2026-03-04 07:54:30 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 4.251 ms - -[0m
+2026-03-04 07:54:30 info: [0mGET /api-docs/swagger-ui-init.js [32m200[0m 4.761 ms - -[0m
+2026-03-04 08:07:49 info: =================================
+2026-03-04 08:07:49 info: ======= ENV: development =======
+2026-03-04 08:07:49 info: 🚀 App listening on the port 5000
+2026-03-04 08:07:49 info: =================================
+2026-03-04 08:07:49 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-03-04 08:07:49 info: 4ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 08:07:49 info: 3ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 08:07:49 info: 7ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 08:07:49 info: 38ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 08:07:49 info: 18ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 08:07:49 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 08:07:49 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 08:07:49 info: 17ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 08:07:49 info: 17ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 08:07:49 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 08:07:49 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 08:07:49 info: 5ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 08:07:49 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 08:07:49 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 08:08:29 info: [0mOPTIONS /auth/google [32m204[0m 3.290 ms - 0[0m
+2026-03-04 08:08:30 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen27122@gmail.com';
+2026-03-04 08:08:30 info: 7ms Executed (default): UPDATE `users` SET `last_login_at`=?,`updated_at`=? WHERE `id` = ?; "2026-03-04 08:08:30", "2026-03-04 08:08:30", 1
+2026-03-04 08:08:30 info: [0mPOST /auth/google [32m200[0m 467.011 ms - 471[0m
+2026-03-04 08:08:38 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel`;
+2026-03-04 08:08:38 info: [0mGET /users [32m200[0m 4.835 ms - 863[0m
+2026-03-04 08:09:10 info: [0mOPTIONS /auth/google [32m204[0m 0.161 ms - 0[0m
+2026-03-04 08:09:10 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'khoinguyenveo3@gmail.com';
+2026-03-04 08:09:10 error: [POST] /auth/google >> StatusCode:: 404, Message:: Tài khoản không tồn tại trong hệ thống. Vui lòng liên hệ quản trị viên để được cấp tài khoản.
+2026-03-04 08:09:10 info: [0mPOST /auth/google [33m404[0m 132.665 ms - 169[0m
+2026-03-04 08:09:37 info: [0mOPTIONS /auth/google [32m204[0m 0.280 ms - 0[0m
+2026-03-04 08:09:37 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen27122@gmail.com';
+2026-03-04 08:09:37 info: 5ms Executed (default): UPDATE `users` SET `last_login_at`=?,`updated_at`=? WHERE `id` = ?; "2026-03-04 08:09:37", "2026-03-04 08:09:37", 1
+2026-03-04 08:09:37 info: [0mPOST /auth/google [32m200[0m 128.535 ms - 471[0m
+2026-03-04 08:10:38 info: [0mOPTIONS /auth/login [32m204[0m 0.148 ms - 0[0m
+2026-03-04 08:10:38 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen27122@gmail.com';
+2026-03-04 08:10:38 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 08:10:38 info: [0mPOST /auth/login [33m401[0m 99.875 ms - 87[0m
+2026-03-04 08:10:38 info: [0mOPTIONS /auth/refresh [32m204[0m 0.227 ms - 0[0m
+2026-03-04 08:10:38 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 1;
+2026-03-04 08:10:38 info: [0mPOST /auth/refresh [32m200[0m 6.035 ms - 221[0m
+2026-03-04 08:10:38 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen27122@gmail.com';
+2026-03-04 08:10:38 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 08:10:38 info: [0mPOST /auth/login [33m401[0m 84.424 ms - 87[0m
+2026-03-04 08:10:40 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen27122@gmail.com';
+2026-03-04 08:10:40 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 08:10:40 info: [0mPOST /auth/login [33m401[0m 96.989 ms - 87[0m
+2026-03-04 08:10:40 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 1;
+2026-03-04 08:10:40 info: [0mPOST /auth/refresh [32m200[0m 6.201 ms - 221[0m
+2026-03-04 08:10:40 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen27122@gmail.com';
+2026-03-04 08:10:40 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 08:10:40 info: [0mPOST /auth/login [33m401[0m 83.692 ms - 87[0m
+2026-03-04 08:10:43 info: [0mOPTIONS /auth/login [32m204[0m 0.179 ms - 0[0m
+2026-03-04 08:10:43 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen27122@gmail.com';
+2026-03-04 08:10:44 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 08:10:44 info: [0mPOST /auth/login [33m401[0m 85.588 ms - 87[0m
+2026-03-04 08:10:44 info: [0mOPTIONS /auth/refresh [32m204[0m 0.190 ms - 0[0m
+2026-03-04 08:10:44 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 1;
+2026-03-04 08:10:44 info: [0mPOST /auth/refresh [32m200[0m 4.407 ms - 221[0m
+2026-03-04 08:10:44 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen27122@gmail.com';
+2026-03-04 08:10:44 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 08:10:44 info: [0mPOST /auth/login [33m401[0m 84.613 ms - 87[0m
+2026-03-04 08:11:01 info: [0mOPTIONS /auth/login [32m204[0m 0.207 ms - 0[0m
+2026-03-04 08:11:01 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen27122@gmail.com';
+2026-03-04 08:11:01 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 08:11:01 info: [0mPOST /auth/login [33m401[0m 78.086 ms - 87[0m
+2026-03-04 08:11:01 info: [0mOPTIONS /auth/refresh [32m204[0m 0.192 ms - 0[0m
+2026-03-04 08:11:01 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 1;
+2026-03-04 08:11:01 info: [0mPOST /auth/refresh [32m200[0m 4.550 ms - 221[0m
+2026-03-04 08:11:01 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen27122@gmail.com';
+2026-03-04 08:11:01 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 08:11:01 info: [0mPOST /auth/login [33m401[0m 72.383 ms - 87[0m
+2026-03-04 08:11:08 info: [0mOPTIONS /auth/login [32m204[0m 0.199 ms - 0[0m
+2026-03-04 08:11:08 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen27122@gmail.com';
+2026-03-04 08:11:08 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 08:11:08 info: [0mPOST /auth/login [33m401[0m 75.989 ms - 87[0m
+2026-03-04 08:11:08 info: [0mOPTIONS /auth/refresh [32m204[0m 0.236 ms - 0[0m
+2026-03-04 08:11:08 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 1;
+2026-03-04 08:11:08 info: [0mPOST /auth/refresh [32m200[0m 3.948 ms - 221[0m
+2026-03-04 08:11:08 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen27122@gmail.com';
+2026-03-04 08:11:08 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 08:11:08 info: [0mPOST /auth/login [33m401[0m 72.630 ms - 87[0m
+2026-03-04 08:15:04 info: =================================
+2026-03-04 08:15:04 info: ======= ENV: development =======
+2026-03-04 08:15:04 info: 🚀 App listening on the port 5000
+2026-03-04 08:15:04 info: =================================
+2026-03-04 08:15:04 info: 2ms Executed (default): SELECT 1+1 AS result
+2026-03-04 08:15:04 info: 3ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 08:15:04 info: 4ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 08:15:04 info: 6ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 08:15:04 info: 40ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 08:15:04 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 08:15:04 info: 15ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 08:15:04 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 08:15:04 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 08:15:04 info: 12ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 08:15:04 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 08:15:04 info: 15ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 08:15:04 info: 6ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 08:15:04 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 08:15:04 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 08:15:37 info: =================================
+2026-03-04 08:15:37 info: ======= ENV: development =======
+2026-03-04 08:15:37 info: 🚀 App listening on the port 5000
+2026-03-04 08:15:37 info: =================================
+2026-03-04 08:15:37 info: 2ms Executed (default): SELECT 1+1 AS result
+2026-03-04 08:15:37 info: 3ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 08:15:37 info: 2ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 08:15:37 info: 6ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 08:15:37 info: 40ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 08:15:37 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 08:15:37 info: 17ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 08:15:37 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 08:15:37 info: 12ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 08:15:37 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 08:15:37 info: 22ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 08:15:37 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 08:15:37 info: 6ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 08:15:37 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 08:15:37 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 08:15:47 info: =================================
+2026-03-04 08:15:47 info: ======= ENV: development =======
+2026-03-04 08:15:47 info: 🚀 App listening on the port 5000
+2026-03-04 08:15:47 info: =================================
+2026-03-04 08:15:47 info: 2ms Executed (default): SELECT 1+1 AS result
+2026-03-04 08:15:47 info: 3ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 08:15:47 info: 3ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 08:15:47 info: 6ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 08:15:47 info: 35ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 08:15:48 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 08:15:48 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 08:15:48 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 08:15:48 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 08:15:48 info: 16ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 08:15:48 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 08:15:48 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 08:15:48 info: 6ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 08:15:48 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 08:15:48 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 08:15:59 info: =================================
+2026-03-04 08:15:59 info: ======= ENV: development =======
+2026-03-04 08:15:59 info: 🚀 App listening on the port 5000
+2026-03-04 08:15:59 info: =================================
+2026-03-04 08:15:59 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-03-04 08:15:59 info: 3ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 08:15:59 info: 4ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 08:15:59 info: 7ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 08:15:59 info: 41ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 08:15:59 info: 15ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 08:15:59 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 08:15:59 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 08:15:59 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 08:15:59 info: 16ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 08:15:59 info: 18ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 08:15:59 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 08:15:59 info: 6ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 08:15:59 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 08:15:59 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 08:16:05 info: =================================
+2026-03-04 08:16:05 info: ======= ENV: development =======
+2026-03-04 08:16:05 info: 🚀 App listening on the port 5000
+2026-03-04 08:16:05 info: =================================
+2026-03-04 08:16:05 info: 2ms Executed (default): SELECT 1+1 AS result
+2026-03-04 08:16:05 info: 3ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 08:16:05 info: 3ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 08:16:05 info: 7ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 08:16:05 info: 37ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 08:16:05 info: 16ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 08:16:05 info: 18ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 08:16:05 info: 20ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 08:16:05 info: 19ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 08:16:05 info: 16ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 08:16:05 info: 19ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 08:16:05 info: 15ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 08:16:05 info: 8ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 08:16:05 info: 2ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'password_reset_otps' AND TABLE_SCHEMA = 'dev'
+2026-03-04 08:16:05 info: 17ms Executed (default): CREATE TABLE IF NOT EXISTS `password_reset_otps` (`id` INTEGER auto_increment , `email` VARCHAR(100) NOT NULL, `otp` VARCHAR(6) NOT NULL, `expires_at` DATETIME NOT NULL, `is_used` TINYINT(1) NOT NULL DEFAULT false, `created_at` DATETIME NOT NULL, `updated_at` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
+2026-03-04 08:16:05 info: 3ms Executed (default): SHOW INDEX FROM `password_reset_otps`
+2026-03-04 08:16:05 info: 3ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 08:16:05 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 08:16:17 info: =================================
+2026-03-04 08:16:17 info: ======= ENV: development =======
+2026-03-04 08:16:17 info: 🚀 App listening on the port 5000
+2026-03-04 08:16:17 info: =================================
+2026-03-04 08:16:17 info: 2ms Executed (default): SELECT 1+1 AS result
+2026-03-04 08:16:17 info: 2ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 08:16:17 info: 2ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 08:16:17 info: 6ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 08:16:17 info: 33ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 08:16:17 info: 16ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 08:16:17 info: 16ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 08:16:17 info: 15ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 08:16:17 info: 16ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 08:16:18 info: 17ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 08:16:18 info: 15ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 08:16:18 info: 15ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 08:16:18 info: 6ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 08:16:18 info: 2ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'password_reset_otps' AND TABLE_SCHEMA = 'dev'
+2026-03-04 08:16:18 info: 2ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'password_reset_otps' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 08:16:18 info: 3ms Executed (default): SHOW FULL COLUMNS FROM `password_reset_otps`;
+2026-03-04 08:16:18 info: 7ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `email` `email` VARCHAR(100) NOT NULL;
+2026-03-04 08:16:18 info: 7ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `otp` `otp` VARCHAR(6) NOT NULL;
+2026-03-04 08:16:18 info: 6ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `expires_at` `expires_at` DATETIME NOT NULL;
+2026-03-04 08:16:18 info: 6ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `is_used` `is_used` TINYINT(1) NOT NULL DEFAULT false;
+2026-03-04 08:16:18 info: 7ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 08:16:18 info: 7ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 08:16:18 info: 2ms Executed (default): SHOW INDEX FROM `password_reset_otps`
+2026-03-04 08:16:18 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 08:16:18 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 08:16:36 info: =================================
+2026-03-04 08:16:36 info: ======= ENV: development =======
+2026-03-04 08:16:36 info: 🚀 App listening on the port 5000
+2026-03-04 08:16:36 info: =================================
+2026-03-04 08:16:36 info: 2ms Executed (default): SELECT 1+1 AS result
+2026-03-04 08:16:36 info: 3ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 08:16:36 info: 2ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 08:16:36 info: 6ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 08:16:36 info: 34ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 08:16:36 info: 15ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 08:16:36 info: 16ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 08:16:36 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 08:16:36 info: 15ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 08:16:36 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 08:16:36 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 08:16:36 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 08:16:36 info: 6ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 08:16:36 info: 2ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'password_reset_otps' AND TABLE_SCHEMA = 'dev'
+2026-03-04 08:16:36 info: 2ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'password_reset_otps' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 08:16:36 info: 3ms Executed (default): SHOW FULL COLUMNS FROM `password_reset_otps`;
+2026-03-04 08:16:36 info: 9ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `email` `email` VARCHAR(100) NOT NULL;
+2026-03-04 08:16:36 info: 7ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `otp` `otp` VARCHAR(6) NOT NULL;
+2026-03-04 08:16:36 info: 6ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `expires_at` `expires_at` DATETIME NOT NULL;
+2026-03-04 08:16:36 info: 16ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `is_used` `is_used` TINYINT(1) NOT NULL DEFAULT false;
+2026-03-04 08:16:36 info: 6ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 08:16:36 info: 6ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 08:16:36 info: 2ms Executed (default): SHOW INDEX FROM `password_reset_otps`
+2026-03-04 08:16:36 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 08:16:36 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 08:16:45 info: =================================
+2026-03-04 08:16:45 info: ======= ENV: development =======
+2026-03-04 08:16:45 info: 🚀 App listening on the port 5000
+2026-03-04 08:16:45 info: =================================
+2026-03-04 08:16:45 info: 2ms Executed (default): SELECT 1+1 AS result
+2026-03-04 08:16:45 info: 3ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 08:16:45 info: 4ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 08:16:45 info: 7ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 08:16:45 info: 34ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 08:16:45 info: 18ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 08:16:45 info: 22ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 08:16:45 info: 19ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 08:16:45 info: 29ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 08:16:45 info: 24ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 08:16:45 info: 15ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 08:16:45 info: 17ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 08:16:45 info: 5ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 08:16:45 info: 1ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'password_reset_otps' AND TABLE_SCHEMA = 'dev'
+2026-03-04 08:16:45 info: 2ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'password_reset_otps' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 08:16:45 info: 4ms Executed (default): SHOW FULL COLUMNS FROM `password_reset_otps`;
+2026-03-04 08:16:45 info: 7ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `email` `email` VARCHAR(100) NOT NULL;
+2026-03-04 08:16:45 info: 6ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `otp` `otp` VARCHAR(6) NOT NULL;
+2026-03-04 08:16:45 info: 7ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `expires_at` `expires_at` DATETIME NOT NULL;
+2026-03-04 08:16:45 info: 7ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `is_used` `is_used` TINYINT(1) NOT NULL DEFAULT false;
+2026-03-04 08:16:45 info: 7ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 08:16:45 info: 7ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 08:16:45 info: 2ms Executed (default): SHOW INDEX FROM `password_reset_otps`
+2026-03-04 08:16:45 info: 3ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 08:16:45 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 08:16:54 info: =================================
+2026-03-04 08:16:54 info: ======= ENV: development =======
+2026-03-04 08:16:54 info: 🚀 App listening on the port 5000
+2026-03-04 08:16:54 info: =================================
+2026-03-04 08:16:54 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-03-04 08:16:54 info: 3ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 08:16:54 info: 3ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 08:16:54 info: 6ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 08:16:54 info: 34ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 08:16:54 info: 15ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 08:16:54 info: 15ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 08:16:54 info: 20ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 08:16:54 info: 19ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 08:16:54 info: 19ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 08:16:54 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 08:16:54 info: 15ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 08:16:54 info: 7ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 08:16:54 info: 2ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'password_reset_otps' AND TABLE_SCHEMA = 'dev'
+2026-03-04 08:16:54 info: 2ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'password_reset_otps' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 08:16:54 info: 4ms Executed (default): SHOW FULL COLUMNS FROM `password_reset_otps`;
+2026-03-04 08:16:54 info: 8ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `email` `email` VARCHAR(100) NOT NULL;
+2026-03-04 08:16:54 info: 8ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `otp` `otp` VARCHAR(6) NOT NULL;
+2026-03-04 08:16:54 info: 7ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `expires_at` `expires_at` DATETIME NOT NULL;
+2026-03-04 08:16:54 info: 6ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `is_used` `is_used` TINYINT(1) NOT NULL DEFAULT false;
+2026-03-04 08:16:54 info: 7ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 08:16:54 info: 6ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 08:16:54 info: 2ms Executed (default): SHOW INDEX FROM `password_reset_otps`
+2026-03-04 08:16:54 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 08:16:54 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 08:17:07 info: =================================
+2026-03-04 08:17:07 info: ======= ENV: development =======
+2026-03-04 08:17:07 info: 🚀 App listening on the port 5000
+2026-03-04 08:17:07 info: =================================
+2026-03-04 08:17:07 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-03-04 08:17:07 info: 4ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 08:17:07 info: 3ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 08:17:07 info: 6ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 08:17:07 info: 40ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 08:17:07 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 08:17:07 info: 14ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 08:17:07 info: 16ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 08:17:07 info: 15ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 08:17:07 info: 17ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 08:17:07 info: 17ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 08:17:07 info: 18ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 08:17:07 info: 6ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 08:17:07 info: 3ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'password_reset_otps' AND TABLE_SCHEMA = 'dev'
+2026-03-04 08:17:07 info: 2ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'password_reset_otps' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 08:17:07 info: 4ms Executed (default): SHOW FULL COLUMNS FROM `password_reset_otps`;
+2026-03-04 08:17:07 info: 7ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `email` `email` VARCHAR(100) NOT NULL;
+2026-03-04 08:17:07 info: 6ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `otp` `otp` VARCHAR(6) NOT NULL;
+2026-03-04 08:17:07 info: 5ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `expires_at` `expires_at` DATETIME NOT NULL;
+2026-03-04 08:17:07 info: 6ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `is_used` `is_used` TINYINT(1) NOT NULL DEFAULT false;
+2026-03-04 08:17:07 info: 6ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 08:17:07 info: 8ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 08:17:07 info: 4ms Executed (default): SHOW INDEX FROM `password_reset_otps`
+2026-03-04 08:17:07 info: 3ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 08:17:07 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 08:24:25 info: =================================
+2026-03-04 08:24:25 info: ======= ENV: development =======
+2026-03-04 08:24:25 info: 🚀 App listening on the port 5000
+2026-03-04 08:24:25 info: =================================
+2026-03-04 08:24:25 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-03-04 08:24:25 info: 2ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 08:24:25 info: 2ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 08:24:25 info: 5ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 08:24:25 info: 24ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 08:24:25 info: 8ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 08:24:25 info: 9ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 08:24:25 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 08:24:25 info: 9ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 08:24:25 info: 9ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 08:24:25 info: 12ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 08:24:25 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 08:24:25 info: 4ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 08:24:25 info: 2ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'password_reset_otps' AND TABLE_SCHEMA = 'dev'
+2026-03-04 08:24:25 info: 0ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'password_reset_otps' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 08:24:25 info: 2ms Executed (default): SHOW FULL COLUMNS FROM `password_reset_otps`;
+2026-03-04 08:24:25 info: 4ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `email` `email` VARCHAR(100) NOT NULL;
+2026-03-04 08:24:25 info: 4ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `otp` `otp` VARCHAR(6) NOT NULL;
+2026-03-04 08:24:25 info: 4ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `expires_at` `expires_at` DATETIME NOT NULL;
+2026-03-04 08:24:25 info: 4ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `is_used` `is_used` TINYINT(1) NOT NULL DEFAULT false;
+2026-03-04 08:24:25 info: 4ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 08:24:25 info: 5ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 08:24:25 info: 2ms Executed (default): SHOW INDEX FROM `password_reset_otps`
+2026-03-04 08:24:25 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 08:24:25 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 08:30:54 info: =================================
+2026-03-04 08:30:54 info: ======= ENV: development =======
+2026-03-04 08:30:54 info: 🚀 App listening on the port 5000
+2026-03-04 08:30:54 info: =================================
+2026-03-04 08:30:55 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-03-04 08:30:55 info: 2ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'dev'
+2026-03-04 08:30:55 info: 2ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 08:30:55 info: 4ms Executed (default): SHOW FULL COLUMNS FROM `users`;
+2026-03-04 08:30:55 info: 34ms Executed (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(100) NOT NULL UNIQUE;
+2026-03-04 08:30:55 info: 13ms Executed (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+2026-03-04 08:30:55 info: 10ms Executed (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 08:30:55 info: 10ms Executed (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 08:30:55 info: 10ms Executed (default): ALTER TABLE `users` CHANGE `full_name` `full_name` VARCHAR(100) NOT NULL;
+2026-03-04 08:30:55 info: 11ms Executed (default): ALTER TABLE `users` CHANGE `role` `role` ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff';
+2026-03-04 08:30:55 info: 10ms Executed (default): ALTER TABLE `users` CHANGE `status` `status` ENUM('active', 'inactive', 'locked') NOT NULL DEFAULT 'active';
+2026-03-04 08:30:55 info: 9ms Executed (default): ALTER TABLE `users` CHANGE `last_login_at` `last_login_at` DATETIME;
+2026-03-04 08:30:55 info: 4ms Executed (default): SHOW INDEX FROM `users`
+2026-03-04 08:30:55 info: 1ms Executed (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'password_reset_otps' AND TABLE_SCHEMA = 'dev'
+2026-03-04 08:30:55 info: 1ms Executed (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'password_reset_otps' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='dev' AND REFERENCED_TABLE_NAME IS NOT NULL;
+2026-03-04 08:30:55 info: 2ms Executed (default): SHOW FULL COLUMNS FROM `password_reset_otps`;
+2026-03-04 08:30:55 info: 5ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `email` `email` VARCHAR(100) NOT NULL;
+2026-03-04 08:30:55 info: 4ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `otp` `otp` VARCHAR(6) NOT NULL;
+2026-03-04 08:30:55 info: 4ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `expires_at` `expires_at` DATETIME NOT NULL;
+2026-03-04 08:30:55 info: 4ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `is_used` `is_used` TINYINT(1) NOT NULL DEFAULT false;
+2026-03-04 08:30:55 info: 6ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+2026-03-04 08:30:55 info: 5ms Executed (default): ALTER TABLE `password_reset_otps` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+2026-03-04 08:30:55 info: 2ms Executed (default): SHOW INDEX FROM `password_reset_otps`
+2026-03-04 08:30:55 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 08:30:55 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 08:31:20 info: [0mGET /api-docs/ [36m304[0m 4.791 ms - -[0m
+2026-03-04 08:31:20 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 2.785 ms - -[0m
+2026-03-04 08:31:20 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 1.220 ms - -[0m
+2026-03-04 08:31:20 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 1.978 ms - -[0m
+2026-03-04 08:31:20 info: [0mGET /api-docs/swagger-ui-init.js [32m200[0m 1.933 ms - -[0m
+2026-03-04 08:32:05 error: [POST] /users >> StatusCode:: 400, Message:: password must be longer than or equal to 9 characters
+2026-03-04 08:32:05 info: [0mPOST /users [33m400[0m 17.527 ms - 96[0m
+2026-03-04 08:32:11 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'trinhfokko@gmail.com';
+2026-03-04 08:32:11 info: 12ms Executed (default): INSERT INTO `users` (`id`,`email`,`password`,`full_name`,`role`,`status`,`created_at`,`updated_at`) VALUES (DEFAULT,?,?,?,?,?,?,?); "trinhfokko@gmail.com", "$2b$10$eUC01sJI5TAF69/AQOeku.1DnB.srrVCGPgxur8gVuKfncrZAx98q", "Huệ Trinh", "staff", "active", "2026-03-04 08:32:11", "2026-03-04 08:32:11"
+2026-03-04 08:32:11 info: [0mPOST /users [32m201[0m 89.041 ms - 278[0m
+2026-03-04 08:32:25 info: [0mOPTIONS /auth/forgot-password [32m204[0m 0.207 ms - 0[0m
+2026-03-04 08:32:25 info: 0ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'trinhfokko@gmail.com';
+2026-03-04 08:32:25 info: 1ms Executed (default): UPDATE `password_reset_otps` SET `is_used`=?,`updated_at`=? WHERE `email` = ? AND `is_used` = ?; true, "2026-03-04 08:32:25", "trinhfokko@gmail.com", false
+2026-03-04 08:32:25 info: 1ms Executed (default): INSERT INTO `password_reset_otps` (`id`,`email`,`otp`,`expires_at`,`is_used`,`created_at`,`updated_at`) VALUES (DEFAULT,?,?,?,?,?,?); "trinhfokko@gmail.com", "786239", "2026-03-04 08:37:25", false, "2026-03-04 08:32:25", "2026-03-04 08:32:25"
+2026-03-04 08:32:29 info: OTP email sent successfully to trinhfokko@gmail.com
+2026-03-04 08:32:29 info: [0mPOST /auth/forgot-password [32m200[0m 3354.671 ms - 90[0m
+2026-03-04 08:33:16 info: [0mOPTIONS /auth/verify-otp [32m204[0m 0.130 ms - 0[0m
+2026-03-04 08:33:16 info: 2ms Executed (default): SELECT `id`, `email`, `otp`, `expires_at` AS `expiresAt`, `is_used` AS `isUsed`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `password_reset_otps` AS `OTPModel` WHERE `OTPModel`.`email` = 'trinhfokko@gmail.com' AND `OTPModel`.`otp` = '222222' AND `OTPModel`.`is_used` = false AND `OTPModel`.`expires_at` > '2026-03-04 08:33:16' LIMIT 1;
+2026-03-04 08:33:16 error: [POST] /auth/verify-otp >> StatusCode:: 400, Message:: Mã xác thực không hợp lệ hoặc đã hết hạn.
+2026-03-04 08:33:17 info: [0mPOST /auth/verify-otp [33m400[0m 7.803 ms - 101[0m
+2026-03-04 08:33:25 info: [0mOPTIONS /auth/verify-otp [32m204[0m 0.186 ms - 0[0m
+2026-03-04 08:33:25 info: 1ms Executed (default): SELECT `id`, `email`, `otp`, `expires_at` AS `expiresAt`, `is_used` AS `isUsed`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `password_reset_otps` AS `OTPModel` WHERE `OTPModel`.`email` = 'trinhfokko@gmail.com' AND `OTPModel`.`otp` = '786239' AND `OTPModel`.`is_used` = false AND `OTPModel`.`expires_at` > '2026-03-04 08:33:25' LIMIT 1;
+2026-03-04 08:33:25 info: [0mPOST /auth/verify-otp [32m200[0m 3.429 ms - 78[0m
+2026-03-04 08:33:36 info: [0mOPTIONS /auth/reset-password [32m204[0m 0.121 ms - 0[0m
+2026-03-04 08:33:36 info: 1ms Executed (default): SELECT `id`, `email`, `otp`, `expires_at` AS `expiresAt`, `is_used` AS `isUsed`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `password_reset_otps` AS `OTPModel` WHERE `OTPModel`.`email` = 'trinhfokko@gmail.com' AND `OTPModel`.`otp` = '786239' AND `OTPModel`.`is_used` = false AND `OTPModel`.`expires_at` > '2026-03-04 08:33:36' LIMIT 1;
+2026-03-04 08:33:36 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'trinhfokko@gmail.com';
+2026-03-04 08:33:36 info: 3ms Executed (default): UPDATE `users` SET `password`=?,`updated_at`=? WHERE `id` = ?; "$2b$10$14smnhiT1lPXX4KSQqZ6wOSP3JjkUjkUUXGfGHCZ1pQJGY9cBsWl6", "2026-03-04 08:33:36", 4
+2026-03-04 08:33:36 info: 2ms Executed (default): UPDATE `password_reset_otps` SET `is_used`=?,`updated_at`=? WHERE `id` = ?; true, "2026-03-04 08:33:36", 1
+2026-03-04 08:33:36 info: [0mPOST /auth/reset-password [32m200[0m 70.474 ms - 118[0m
+2026-03-04 08:34:04 info: [0mGET /api-docs/ [36m304[0m 0.687 ms - -[0m
+2026-03-04 08:34:04 info: [0mGET /api-docs/swagger-ui.css [36m304[0m 1.213 ms - -[0m
+2026-03-04 08:34:04 info: [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 0.967 ms - -[0m
+2026-03-04 08:34:04 info: [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 1.063 ms - -[0m
+2026-03-04 08:34:04 info: [0mGET /api-docs/swagger-ui-init.js [36m304[0m 0.424 ms - -[0m
+2026-03-04 08:34:26 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'nhi96942@gmail.com';
+2026-03-04 08:34:26 info: 3ms Executed (default): INSERT INTO `users` (`id`,`email`,`password`,`full_name`,`role`,`status`,`created_at`,`updated_at`) VALUES (DEFAULT,?,?,?,?,?,?,?); "nhi96942@gmail.com", "$2b$10$M0yCbiHPUkUbjcKoA3S0S.orbq2YvCHQxVSIROR81jzuW3IcIVGFa", "Yến Nhi", "staff", "active", "2026-03-04 08:34:26", "2026-03-04 08:34:26"
+2026-03-04 08:34:26 info: [0mPOST /users [32m201[0m 64.358 ms - 274[0m
+2026-03-04 08:37:34 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel`;
+2026-03-04 08:37:34 info: [0mGET /users [32m200[0m 8.577 ms - -[0m
+2026-03-04 08:38:27 info: 0ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'reisoh2771@gmail.com';
+2026-03-04 08:38:27 info: 2ms Executed (default): INSERT INTO `users` (`id`,`email`,`password`,`full_name`,`role`,`status`,`created_at`,`updated_at`) VALUES (DEFAULT,?,?,?,?,?,?,?); "reisoh2771@gmail.com", "$2b$10$CAg3r8HIWLlKoI0B00Ve4eLgZcij4JwNxuAOfeTiLt3oqAa0U94tq", "Khôi Nguyên", "staff", "active", "2026-03-04 08:38:27", "2026-03-04 08:38:27"
+2026-03-04 08:38:27 info: [0mPOST /users [32m201[0m 63.916 ms - 280[0m
+2026-03-04 08:39:03 info: [0mOPTIONS /auth/forgot-password [32m204[0m 0.146 ms - 0[0m
+2026-03-04 08:39:03 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'reisoh2771@gmail.com';
+2026-03-04 08:39:03 info: 1ms Executed (default): UPDATE `password_reset_otps` SET `is_used`=?,`updated_at`=? WHERE `email` = ? AND `is_used` = ?; true, "2026-03-04 08:39:03", "reisoh2771@gmail.com", false
+2026-03-04 08:39:03 info: 2ms Executed (default): INSERT INTO `password_reset_otps` (`id`,`email`,`otp`,`expires_at`,`is_used`,`created_at`,`updated_at`) VALUES (DEFAULT,?,?,?,?,?,?); "reisoh2771@gmail.com", "988808", "2026-03-04 08:44:03", false, "2026-03-04 08:39:03", "2026-03-04 08:39:03"
+2026-03-04 08:39:06 info: OTP email sent successfully to reisoh2771@gmail.com
+2026-03-04 08:39:06 info: [0mPOST /auth/forgot-password [32m200[0m 3018.748 ms - 90[0m
+2026-03-04 08:39:15 info: [0mOPTIONS /auth/verify-otp [32m204[0m 0.126 ms - 0[0m
+2026-03-04 08:39:15 info: 1ms Executed (default): SELECT `id`, `email`, `otp`, `expires_at` AS `expiresAt`, `is_used` AS `isUsed`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `password_reset_otps` AS `OTPModel` WHERE `OTPModel`.`email` = 'reisoh2771@gmail.com' AND `OTPModel`.`otp` = '222222' AND `OTPModel`.`is_used` = false AND `OTPModel`.`expires_at` > '2026-03-04 08:39:15' LIMIT 1;
+2026-03-04 08:39:15 error: [POST] /auth/verify-otp >> StatusCode:: 400, Message:: Mã xác thực không hợp lệ hoặc đã hết hạn.
+2026-03-04 08:39:15 info: [0mPOST /auth/verify-otp [33m400[0m 4.945 ms - 101[0m

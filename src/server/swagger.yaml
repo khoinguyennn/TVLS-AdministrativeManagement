@@ -57,6 +57,98 @@ paths:
         500:
           description: 'Lỗi server'
 
+  # [POST] auth/google
+  /auth/google:
+    post:
+      tags:
+        - auth
+      summary: Đăng nhập bằng Google (chỉ dành cho tài khoản đã có trong hệ thống)
+      parameters:
+        - name: body
+          in: body
+          description: Google ID Token (credential từ Google Sign-In)
+          required: true
+          schema:
+            $ref: '#/definitions/googleLogin'
+      responses:
+        200:
+          description: 'Đăng nhập thành công'
+          schema:
+            $ref: '#/definitions/loginResponse'
+        404:
+          description: 'Tài khoản không tồn tại trong hệ thống'
+        403:
+          description: 'Tài khoản bị khóa hoặc vô hiệu hóa'
+        401:
+          description: 'Token Google không hợp lệ'
+        500:
+          description: 'Lỗi server'
+
+  # [POST] auth/forgot-password
+  /auth/forgot-password:
+    post:
+      tags:
+        - auth
+      summary: Yêu cầu đặt lại mật khẩu (gửi OTP qua email)
+      parameters:
+        - name: body
+          in: body
+          description: Email đăng ký trong hệ thống
+          required: true
+          schema:
+            $ref: '#/definitions/forgotPassword'
+      responses:
+        200:
+          description: 'Mã xác thực đã được gửi'
+        403:
+          description: 'Tài khoản bị khóa'
+        500:
+          description: 'Lỗi server'
+
+  # [POST] auth/verify-otp
+  /auth/verify-otp:
+    post:
+      tags:
+        - auth
+      summary: Xác thực mã OTP
+      parameters:
+        - name: body
+          in: body
+          description: Email và mã OTP
+          required: true
+          schema:
+            $ref: '#/definitions/verifyOTP'
+      responses:
+        200:
+          description: 'Mã xác thực hợp lệ'
+        400:
+          description: 'Mã xác thực không hợp lệ hoặc đã hết hạn'
+        500:
+          description: 'Lỗi server'
+
+  # [POST] auth/reset-password
+  /auth/reset-password:
+    post:
+      tags:
+        - auth
+      summary: Đặt lại mật khẩu mới
+      parameters:
+        - name: body
+          in: body
+          description: Email, OTP và mật khẩu mới
+          required: true
+          schema:
+            $ref: '#/definitions/resetPassword'
+      responses:
+        200:
+          description: 'Đặt lại mật khẩu thành công'
+        400:
+          description: 'Mã xác thực không hợp lệ hoặc đã hết hạn'
+        404:
+          description: 'Không tìm thấy người dùng'
+        500:
+          description: 'Lỗi server'
+
   # [POST] auth/refresh
   /auth/refresh:
     post:
@@ -240,6 +332,61 @@ definitions:
         type: string
         example: 'admin@123'
         description: Mật khẩu (tối thiểu 6 ký tự)
+
+  googleLogin:
+    type: object
+    required:
+      - credential
+    properties:
+      credential:
+        type: string
+        description: Google ID Token (nhận được từ Google Sign-In callback)
+        example: 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...'
+
+  forgotPassword:
+    type: object
+    required:
+      - email
+    properties:
+      email:
+        type: string
+        example: 'user@thsp.edu.vn'
+        description: Email đã đăng ký trong hệ thống
+
+  verifyOTP:
+    type: object
+    required:
+      - email
+      - otp
+    properties:
+      email:
+        type: string
+        example: 'user@thsp.edu.vn'
+        description: Email đã đăng ký
+      otp:
+        type: string
+        example: '123456'
+        description: Mã OTP 6 chữ số nhận được qua email
+
+  resetPassword:
+    type: object
+    required:
+      - email
+      - otp
+      - newPassword
+    properties:
+      email:
+        type: string
+        example: 'user@thsp.edu.vn'
+        description: Email đã đăng ký
+      otp:
+        type: string
+        example: '123456'
+        description: Mã OTP 6 chữ số
+      newPassword:
+        type: string
+        example: 'newPassword123'
+        description: Mật khẩu mới (tối thiểu 6 ký tự)
 
   signup:
     type: object
