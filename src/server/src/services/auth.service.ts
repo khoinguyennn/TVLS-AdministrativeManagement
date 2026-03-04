@@ -42,7 +42,7 @@ export class AuthService {
     const createUserData: User = await DB.Users.create({
       ...userData,
       password: hashedPassword,
-      role: (userData.role as 'admin' | 'manager' | 'staff') || 'staff',
+      role: (userData.role as 'admin' | 'manager' | 'teacher' | 'technician') || 'teacher',
     });
 
     return createUserData;
@@ -106,15 +106,6 @@ export class AuthService {
 
   public async logout(userData: User): Promise<User> {
     const findUser: User = await DB.Users.findByPk(userData.id);
-    if (!findUser) throw new HttpException(404, 'Không tìm thấy người dùng');
-
-    return findUser;
-  }
-
-  public async getProfile(userId: number): Promise<User> {
-    const findUser: User = await DB.Users.findByPk(userId, {
-      attributes: { exclude: ['password'] },
-    });
     if (!findUser) throw new HttpException(404, 'Không tìm thấy người dùng');
 
     return findUser;

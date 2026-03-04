@@ -1,16 +1,32 @@
 "use client";
 
+import { useState } from "react";
+
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { BarChart3, FileText, LayoutDashboard, LogOut, Settings, Users, X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { toast } from "react-toastify";
 
 import { cn } from "@/lib/utils";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/use-auth";
+import { authStorage } from "@/lib/auth-storage";
+import { authService } from "@/services/auth.service";
 
 interface DashboardSidebarProps {
   isOpen?: boolean;
@@ -19,7 +35,28 @@ interface DashboardSidebarProps {
 
 export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const t = useTranslations("Sidebar");
+  const { user, getRoleLabel, getInitials } = useAuth();
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await authService.logout();
+      authStorage.clearAll();
+      toast.success("Đăng xuất thành công!");
+      router.push("/login");
+    } catch {
+      // authService.logout đã gọi authStorage.clearAll() trong finally
+      toast.success("Đã đăng xuất");
+      router.push("/login");
+    } finally {
+      setIsLoggingOut(false);
+      setShowLogoutDialog(false);
+    }
+  };
 
   const mainNavItems = [
     {
@@ -157,21 +194,44 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
       <div className="border-t border-slate-200 p-4 dark:border-slate-800">
         <div className="flex items-center gap-3 px-2">
           <Avatar className="size-8">
-            <AvatarImage src="/nice-avatar.png" alt="User avatar" />
-            <AvatarFallback>NA</AvatarFallback>
+            <AvatarImage src={user?.avatar || "/nice-avatar.png"} alt="User avatar" />
+            <AvatarFallback>{getInitials()}</AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-xs font-semibold">Nguyễn Văn A</p>
-            <p className="truncate text-[10px] text-slate-500">Administrator</p>
+            <p className="truncate text-xs font-semibold">{user?.fullName || "Người dùng"}</p>
+            <p className="truncate text-[10px] text-slate-500">{getRoleLabel()}</p>
           </div>
           <button
             className="text-slate-400 transition-colors hover:text-slate-600 dark:hover:text-slate-300"
             aria-label={t("logout")}
+            onClick={() => setShowLogoutDialog(true)}
           >
             <LogOut className="size-4" />
           </button>
         </div>
       </div>
+
+      {/* Logout Confirmation Dialog */}
+      <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Xác nhận đăng xuất</AlertDialogTitle>
+            <AlertDialogDescription>
+              Bạn có chắc chắn muốn đăng xuất khỏi hệ thống không?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isLoggingOut}>Hủy</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {isLoggingOut ? "Đang đăng xuất..." : "Đăng xuất"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       </aside>
     </>
   );

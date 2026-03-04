@@ -75,21 +75,6 @@ export class AuthController {
     }
   };
 
-  public getProfile = async (req: RequestWithUser, res: Response, next: NextFunction) => {
-    try {
-      const userId = req.user.id;
-      const userData = await this.auth.getProfile(userId);
-
-      res.status(200).json({
-        success: true,
-        data: userData,
-        message: 'Lấy thông tin người dùng thành công',
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
   public googleLogin = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { credential }: GoogleLoginDto = req.body;

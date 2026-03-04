@@ -2,7 +2,8 @@ export interface User {
   id: number;
   email: string;
   fullName: string;
-  role: "admin" | "manager" | "staff";
+  avatar?: string;
+  role: "admin" | "manager" | "teacher" | "technician";
   status?: "active" | "inactive" | "locked";
   lastLoginAt?: string;
   createdAt?: string;

@@ -170,24 +170,6 @@ paths:
         500:
           description: 'Lỗi server'
 
-  # [GET] auth/profile
-  /auth/profile:
-    get:
-      tags:
-        - auth
-      summary: Lấy thông tin người dùng hiện tại
-      security:
-        - BearerAuth: []
-      responses:
-        200:
-          description: 'Thành công'
-          schema:
-            $ref: '#/definitions/profileResponse'
-        401:
-          description: 'Chưa xác thực'
-        500:
-          description: 'Lỗi server'
-
   # [POST] auth/logout
   /auth/logout:
     post:
@@ -205,6 +187,51 @@ paths:
           description: 'Lỗi server'
 
   # ==================== USERS ====================
+
+  # [GET] users/me
+  /users/me:
+    get:
+      tags:
+        - users
+      summary: Lấy thông tin cá nhân của người dùng hiện tại
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: 'Thành công'
+          schema:
+            $ref: '#/definitions/profileResponse'
+        401:
+          description: 'Chưa xác thực'
+        500:
+          description: 'Lỗi server'
+
+    put:
+      tags:
+        - users
+      summary: Cập nhật thông tin cá nhân
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: body
+          in: body
+          description: Thông tin cần cập nhật
+          required: true
+          schema:
+            $ref: '#/definitions/updateProfile'
+      responses:
+        200:
+          description: 'Cập nhật thành công'
+          schema:
+            $ref: '#/definitions/profileResponse'
+        400:
+          description: 'Dữ liệu không hợp lệ hoặc mật khẩu hiện tại sai'
+        401:
+          description: 'Chưa xác thực'
+        409:
+          description: 'Email đã được sử dụng'
+        500:
+          description: 'Lỗi server'
 
   # [GET] users
   /users:
@@ -427,6 +454,30 @@ definitions:
         type: string
         enum: ['active', 'inactive', 'locked']
         description: Trạng thái tài khoản
+
+  updateProfile:
+    type: object
+    properties:
+      email:
+        type: string
+        example: 'newemail@thsp.edu.vn'
+        description: Email mới (nếu muốn thay đổi)
+      currentPassword:
+        type: string
+        example: 'oldpassword123'
+        description: Mật khẩu hiện tại (bắt buộc khi đổi mật khẩu)
+      newPassword:
+        type: string
+        example: 'newpassword123'
+        description: Mật khẩu mới (tối thiểu 6 ký tự)
+      fullName:
+        type: string
+        example: 'Nguyen Van B'
+        description: Họ và tên mới
+      avatar:
+        type: string
+        example: 'https://example.com/avatar.jpg'
+        description: URL ảnh đại diện
 
   refreshToken:
     type: object

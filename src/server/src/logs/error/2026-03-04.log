@@ -48,3 +48,20 @@
 2026-03-04 09:56:36 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
 2026-03-04 09:56:36 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
 2026-03-04 10:20:19 error: [POST] /auth/verify-otp >> StatusCode:: 400, Message:: Mã xác thực không hợp lệ hoặc đã hết hạn.
+2026-03-04 15:57:13 error: uncaughtException: Route.get() requires a callback function but got a [object Undefined]
+Error: Route.get() requires a callback function but got a [object Undefined]
+    at Route.<computed> [as get] (D:\THSP\TVLS-AdministrativeManagement\src\server\node_modules\express\lib\router\route.js:216:15)
+    at Function.proto.<computed> [as get] (D:\THSP\TVLS-AdministrativeManagement\src\server\node_modules\express\lib\router\index.js:521:19)
+    at UserRoute.initializeRoutes (D:\THSP\TVLS-AdministrativeManagement\src\server\src\routes\users.route.ts:19:17)
+    at new UserRoute (D:\THSP\TVLS-AdministrativeManagement\src\server\src\routes\users.route.ts:14:10)
+    at Object.<anonymous> (D:\THSP\TVLS-AdministrativeManagement\src\server\src\server.ts:8:65)
+    at Module._compile (node:internal/modules/cjs/loader:1562:14)
+    at Module.m._compile (D:\THSP\TVLS-AdministrativeManagement\src\server\node_modules\ts-node\src\index.ts:1618:23)
+    at node:internal/modules/cjs/loader:1699:10
+    at Object.require.extensions.<computed> [as .ts] (D:\THSP\TVLS-AdministrativeManagement\src\server\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1313:32)
+2026-03-04 16:09:45 error: [PUT] /users/me >> StatusCode:: 400, Message:: Mật khẩu hiện tại không chính xác
+2026-03-04 16:10:36 error: [GET] /users/me >> StatusCode:: 404, Message:: Authentication token missing
+2026-03-04 16:10:41 error: [PUT] /users/me >> StatusCode:: 404, Message:: Authentication token missing
+2026-03-04 16:11:03 error: [GET] /users/me >> StatusCode:: 404, Message:: Authentication token missing
+2026-03-04 16:11:19 error: [PUT] /users/me >> StatusCode:: 404, Message:: Authentication token missing

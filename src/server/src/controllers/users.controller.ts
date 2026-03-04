@@ -1,11 +1,47 @@
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
-import { CreateUserDto } from '@dtos/users.dto';
+import { CreateUserDto, UpdateProfileDto } from '@dtos/users.dto';
 import { User } from '@interfaces/users.interface';
+import { RequestWithUser } from '@interfaces/auth.interface';
 import { UserService } from '@services/users.service';
 
 export class UserController {
   public user = Container.get(UserService);
+
+  public getMyProfile = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user.id;
+      const userData = await this.user.findUserById(userId);
+
+      // Exclude password
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...userWithoutPassword } = userData as User & { password: string };
+
+      res.status(200).json({
+        success: true,
+        data: userWithoutPassword,
+        message: 'Lấy thông tin thành công',
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public updateMyProfile = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user.id;
+      const updateData: UpdateProfileDto = req.body;
+      const updatedUser = await this.user.updateProfile(userId, updateData);
+
+      res.status(200).json({
+        success: true,
+        data: updatedUser,
+        message: 'Cập nhật thông tin thành công',
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 
   public getUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {

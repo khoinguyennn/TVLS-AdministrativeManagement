@@ -46,7 +46,9 @@ export class App {
   }
 
   private async connectToDatabase() {
-    await DB.sequelize.sync({ alter: true });
+    // Database schema đã được tạo sẵn, không cần sync
+    // Chỉ cần kiểm tra kết nối
+    await DB.sequelize.authenticate();
     await seedAdminUser();
   }
 

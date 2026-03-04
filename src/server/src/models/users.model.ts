@@ -1,14 +1,15 @@
 import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
 import { User } from '@interfaces/users.interface';
 
-export type UserCreationAttributes = Optional<User, 'id' | 'role' | 'status' | 'lastLoginAt' | 'createdAt' | 'updatedAt'>;
+export type UserCreationAttributes = Optional<User, 'id' | 'role' | 'status' | 'avatar' | 'lastLoginAt' | 'createdAt' | 'updatedAt'>;
 
 export class UserModel extends Model<User, UserCreationAttributes> implements User {
   public id: number;
   public email: string;
   public password: string;
   public fullName: string;
-  public role: 'admin' | 'manager' | 'staff';
+  public avatar: string;
+  public role: 'admin' | 'manager' | 'teacher' | 'technician';
   public status: 'active' | 'inactive' | 'locked';
   public lastLoginAt: Date;
 
@@ -38,10 +39,14 @@ export default function (sequelize: Sequelize): typeof UserModel {
         type: DataTypes.STRING(100),
         field: 'full_name',
       },
+      avatar: {
+        allowNull: true,
+        type: DataTypes.STRING(255),
+      },
       role: {
         allowNull: false,
-        type: DataTypes.ENUM('admin', 'manager', 'staff'),
-        defaultValue: 'staff',
+        type: DataTypes.ENUM('admin', 'manager', 'teacher', 'technician'),
+        defaultValue: 'teacher',
       },
       status: {
         allowNull: false,

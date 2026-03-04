@@ -96,3 +96,31 @@ export class ResetPasswordDto {
   @MaxLength(32)
   public newPassword: string;
 }
+
+export class UpdateProfileDto {
+  @IsOptional()
+  @IsEmail()
+  public email?: string;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(6)
+  @MaxLength(32)
+  public currentPassword?: string;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(6)
+  @MaxLength(32)
+  public newPassword?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  public fullName?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  public avatar?: string;
+}
