@@ -26,3 +26,25 @@
 2026-03-04 08:32:05 error: [POST] /users >> StatusCode:: 400, Message:: password must be longer than or equal to 9 characters
 2026-03-04 08:33:16 error: [POST] /auth/verify-otp >> StatusCode:: 400, Message:: Mã xác thực không hợp lệ hoặc đã hết hạn.
 2026-03-04 08:39:15 error: [POST] /auth/verify-otp >> StatusCode:: 400, Message:: Mã xác thực không hợp lệ hoặc đã hết hạn.
+2026-03-04 08:45:31 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 08:45:31 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 08:46:00 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 08:46:00 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 08:48:56 error: [POST] /auth/google >> StatusCode:: 404, Message:: Tài khoản không tồn tại trong hệ thống. Vui lòng liên hệ quản trị viên để được cấp tài khoản.
+2026-03-04 09:43:16 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 09:43:16 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 09:48:46 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 09:48:46 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 09:48:50 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 09:48:50 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 09:48:53 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 09:48:53 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 09:54:01 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 09:54:01 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 09:54:51 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 09:54:51 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 09:56:31 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 09:56:31 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 09:56:36 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 09:56:36 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-04 10:20:19 error: [POST] /auth/verify-otp >> StatusCode:: 400, Message:: Mã xác thực không hợp lệ hoặc đã hết hạn.

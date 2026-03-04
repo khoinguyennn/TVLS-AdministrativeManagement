@@ -33,10 +33,10 @@ export class PasswordResetService {
       throw new HttpException(403, 'Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên.');
     }
 
-    // Invalidate any existing OTPs for this email
+    // Invalidate any existing OTPs for this user
     await DB.OTPs.update(
       { isUsed: true },
-      { where: { email, isUsed: false } }
+      { where: { userId: findUser.id, isUsed: false } }
     );
 
     // Generate new OTP
@@ -45,6 +45,7 @@ export class PasswordResetService {
 
     // Save OTP to database
     await DB.OTPs.create({
+      userId: findUser.id,
       email,
       otp,
       expiresAt,

@@ -28,9 +28,24 @@ const sequelize = new Sequelize.Sequelize(DB_DATABASE, DB_USER, DB_PASSWORD, {
 
 sequelize.authenticate();
 
+// Initialize models
+const Users = UserModel(sequelize);
+const OTPs = OTPModel(sequelize);
+
+// Define associations
+Users.hasMany(OTPs, {
+  foreignKey: 'userId',
+  as: 'passwordResetOtps',
+});
+
+OTPs.belongsTo(Users, {
+  foreignKey: 'userId',
+  as: 'user',
+});
+
 export const DB = {
-  Users: UserModel(sequelize),
-  OTPs: OTPModel(sequelize),
+  Users,
+  OTPs,
   sequelize, // connection instance (RAW queries)
   Sequelize, // library
 };

@@ -2,6 +2,7 @@ import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
 
 export interface OTPAttributes {
   id: number;
+  userId: number;
   email: string;
   otp: string;
   expiresAt: Date;
@@ -14,6 +15,7 @@ export type OTPCreationAttributes = Optional<OTPAttributes, 'id' | 'isUsed'>;
 
 export class OTPModel extends Model<OTPAttributes, OTPCreationAttributes> implements OTPAttributes {
   public id: number;
+  public userId: number;
   public email: string;
   public otp: string;
   public expiresAt: Date;
@@ -30,6 +32,17 @@ export default function (sequelize: Sequelize): typeof OTPModel {
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER,
+      },
+      userId: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        field: 'user_id',
+        references: {
+          model: 'users',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       email: {
         allowNull: false,
