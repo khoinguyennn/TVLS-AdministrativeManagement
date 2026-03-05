@@ -843,3 +843,53 @@
 2026-03-05 10:16:53 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen.dev@gmail.com';
 2026-03-05 10:16:53 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
 2026-03-05 10:16:53 info: [0mPOST /auth/login [33m401[0m 59.352 ms - 87[0m
+2026-03-05 10:19:00 info: [0mOPTIONS /auth/login [32m204[0m 0.113 ms - 0[0m
+2026-03-05 10:19:00 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen.dev@gmail.com';
+2026-03-05 10:19:00 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-05 10:19:00 info: [0mPOST /auth/login [33m401[0m 60.046 ms - 87[0m
+2026-03-05 10:19:02 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen.dev@gmail.com';
+2026-03-05 10:19:02 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-05 10:19:02 info: [0mPOST /auth/login [33m401[0m 58.124 ms - 87[0m
+2026-03-05 10:19:03 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen.dev@gmail.com';
+2026-03-05 10:19:03 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-05 10:19:03 info: [0mPOST /auth/login [33m401[0m 57.466 ms - 87[0m
+2026-03-05 10:19:12 info: [0mOPTIONS /auth/login [32m204[0m 0.094 ms - 0[0m
+2026-03-05 10:19:12 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen.dev@gmail.com';
+2026-03-05 10:19:12 info: 4ms Executed (default): UPDATE `users` SET `last_login_at`=?,`updated_at`=? WHERE `id` = ?; "2026-03-05 10:19:12", "2026-03-05 10:19:12", 7
+2026-03-05 10:19:12 info: [0mPOST /auth/login [32m200[0m 61.743 ms - 539[0m
+2026-03-05 10:19:12 info: [0mGET /uploads/avatars/avatar-1772679653135-77501598.jpg [32m200[0m 1.029 ms - 260932[0m
+2026-03-05 10:19:13 info: [0mOPTIONS /users/me [32m204[0m 0.107 ms - 0[0m
+2026-03-05 10:19:13 info: [0mOPTIONS /users/me [32m204[0m 0.084 ms - 0[0m
+2026-03-05 10:19:13 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 7;
+2026-03-05 10:19:13 info: 0ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 7;
+2026-03-05 10:19:13 info: [0mGET /users/me [32m200[0m 4.835 ms - 361[0m
+2026-03-05 10:19:13 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 7;
+2026-03-05 10:19:13 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 7;
+2026-03-05 10:19:13 info: [0mGET /users/me [36m304[0m 4.941 ms - -[0m
+2026-03-05 10:19:17 info: [0mOPTIONS /auth/logout [32m204[0m 0.142 ms - 0[0m
+2026-03-05 10:19:17 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 7;
+2026-03-05 10:19:17 info: 0ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 7;
+2026-03-05 10:19:17 info: [0mPOST /auth/logout [32m200[0m 3.961 ms - 55[0m
+2026-03-05 10:19:39 info: [0mGET /uploads/avatars/avatar-1772679653135-77501598.jpg [36m304[0m 0.507 ms - -[0m
+2026-03-05 10:19:39 info: [0mOPTIONS /users/me [32m204[0m 0.100 ms - 0[0m
+2026-03-05 10:19:39 info: 0ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 7;
+2026-03-05 10:19:39 info: 0ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 7;
+2026-03-05 10:19:39 info: [0mGET /users/me [32m200[0m 5.956 ms - 361[0m
+2026-03-05 10:20:04 info: [0mGET /uploads/avatars/avatar-1772679653135-77501598.jpg [36m304[0m 1.447 ms - -[0m
+2026-03-05 10:20:04 info: [0mOPTIONS /users/me [32m204[0m 0.136 ms - 0[0m
+2026-03-05 10:20:04 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 7;
+2026-03-05 10:20:04 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 7;
+2026-03-05 10:20:04 info: [0mGET /users/me [36m304[0m 5.921 ms - -[0m
+2026-03-05 10:20:05 info: [0mGET /uploads/avatars/avatar-1772679653135-77501598.jpg [36m304[0m 0.881 ms - -[0m
+2026-03-05 10:20:05 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 7;
+2026-03-05 10:20:05 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 7;
+2026-03-05 10:20:05 info: [0mGET /users/me [36m304[0m 4.252 ms - -[0m
+2026-03-05 10:20:07 info: [0mGET /uploads/avatars/avatar-1772679653135-77501598.jpg [36m304[0m 0.847 ms - -[0m
+2026-03-05 10:20:07 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 7;
+2026-03-05 10:20:07 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 7;
+2026-03-05 10:20:07 info: [0mGET /users/me [36m304[0m 7.434 ms - -[0m
+2026-03-05 10:30:00 info: [0mGET /uploads/avatars/avatar-1772679653135-77501598.jpg [36m304[0m 1.122 ms - -[0m
+2026-03-05 10:30:00 info: [0mOPTIONS /users/me [32m204[0m 0.145 ms - 0[0m
+2026-03-05 10:30:00 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 7;
+2026-03-05 10:30:00 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 7;
+2026-03-05 10:30:00 info: [0mGET /users/me [36m304[0m 6.011 ms - -[0m

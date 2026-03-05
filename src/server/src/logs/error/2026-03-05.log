@@ -19,3 +19,6 @@
 2026-03-05 09:51:35 error: [GET] /users/me >> StatusCode:: 401, Message:: Wrong authentication token
 2026-03-05 10:16:25 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
 2026-03-05 10:16:53 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-05 10:19:00 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-05 10:19:02 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-05 10:19:03 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
