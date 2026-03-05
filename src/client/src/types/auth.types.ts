@@ -24,7 +24,7 @@ export interface LoginResponse {
   data: {
     accessToken: string;
     refreshToken: string;
-    user: Pick<User, "id" | "email" | "fullName" | "role">;
+    user: Pick<User, "id" | "email" | "fullName" | "role" | "avatar">;
   };
   message: string;
 }

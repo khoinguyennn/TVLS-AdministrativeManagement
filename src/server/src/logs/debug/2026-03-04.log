@@ -2151,3 +2151,50 @@
 2026-03-04 16:43:05 info: 0ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 1;
 2026-03-04 16:43:05 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 1;
 2026-03-04 16:43:05 info: [0mPOST /auth/logout [32m200[0m 7.107 ms - 55[0m
+2026-03-04 16:43:40 info: [0mOPTIONS /auth/login [32m204[0m 0.090 ms - 0[0m
+2026-03-04 16:43:40 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen27122@gmail.com';
+2026-03-04 16:43:40 info: 3ms Executed (default): UPDATE `users` SET `last_login_at`=?,`updated_at`=? WHERE `id` = ?; "2026-03-04 16:43:40", "2026-03-04 16:43:40", 1
+2026-03-04 16:43:40 info: [0mPOST /auth/login [32m200[0m 63.016 ms - 473[0m
+2026-03-04 16:43:53 info: [0mOPTIONS /auth/logout [32m204[0m 0.101 ms - 0[0m
+2026-03-04 16:43:53 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 1;
+2026-03-04 16:43:53 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 1;
+2026-03-04 16:43:53 info: [0mPOST /auth/logout [32m200[0m 7.809 ms - 55[0m
+2026-03-04 16:44:14 info: [0mOPTIONS /auth/forgot-password [32m204[0m 0.147 ms - 0[0m
+2026-03-04 16:44:14 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@example.com';
+2026-03-04 16:44:14 info: [0mPOST /auth/forgot-password [32m200[0m 6.345 ms - 116[0m
+2026-03-04 16:44:44 info: [0mOPTIONS /auth/login [32m204[0m 0.093 ms - 0[0m
+2026-03-04 16:44:44 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen27122@gmail.com';
+2026-03-04 16:44:44 info: 3ms Executed (default): UPDATE `users` SET `last_login_at`=?,`updated_at`=? WHERE `id` = ?; "2026-03-04 16:44:44", "2026-03-04 16:44:44", 1
+2026-03-04 16:44:44 info: [0mPOST /auth/login [32m200[0m 65.067 ms - 473[0m
+2026-03-04 16:44:52 info: [0mOPTIONS /auth/logout [32m204[0m 0.139 ms - 0[0m
+2026-03-04 16:44:52 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 1;
+2026-03-04 16:44:52 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 1;
+2026-03-04 16:44:52 info: [0mPOST /auth/logout [32m200[0m 4.788 ms - 55[0m
+2026-03-04 19:13:03 info: =================================
+2026-03-04 19:13:03 info: ======= ENV: development =======
+2026-03-04 19:13:03 info: 🚀 App listening on the port 5000
+2026-03-04 19:13:03 info: =================================
+2026-03-04 19:13:03 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-03-04 19:13:03 info: 1ms Executed (default): SELECT 1+1 AS result
+2026-03-04 19:13:03 info: 30ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'admin@thsp.edu.vn';
+2026-03-04 19:13:03 info: ℹ️ Admin user already exists, skipping seed
+2026-03-04 19:14:06 info: [0mOPTIONS /auth/login [32m204[0m 1.296 ms - 0[0m
+2026-03-04 19:14:06 info: 3ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen27122@gmail.com';
+2026-03-04 19:14:06 info: 9ms Executed (default): UPDATE `users` SET `last_login_at`=?,`updated_at`=? WHERE `id` = ?; "2026-03-04 19:14:06", "2026-03-04 19:14:06", 1
+2026-03-04 19:14:06 info: [0mPOST /auth/login [32m200[0m 144.948 ms - 473[0m
+2026-03-04 19:14:12 info: [0mOPTIONS /auth/logout [32m204[0m 0.253 ms - 0[0m
+2026-03-04 19:14:12 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 1;
+2026-03-04 19:14:12 info: 2ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 1;
+2026-03-04 19:14:12 info: [0mPOST /auth/logout [32m200[0m 10.195 ms - 55[0m
+2026-03-04 19:15:48 info: [0mOPTIONS /auth/google [32m204[0m 0.839 ms - 0[0m
+2026-03-04 19:15:54 info: 3ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen27122@gmail.com';
+2026-03-04 19:15:54 info: 6ms Executed (default): UPDATE `users` SET `last_login_at`=?,`updated_at`=? WHERE `id` = ?; "2026-03-04 19:15:54", "2026-03-04 19:15:54", 1
+2026-03-04 19:15:54 info: [0mPOST /auth/google [32m200[0m 6048.200 ms - 486[0m
+2026-03-04 19:28:31 info: [0mOPTIONS /auth/logout [32m204[0m 0.215 ms - 0[0m
+2026-03-04 19:28:31 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 1;
+2026-03-04 19:28:31 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`id` = 1;
+2026-03-04 19:28:31 info: [0mPOST /auth/logout [32m200[0m 11.440 ms - 55[0m
+2026-03-04 19:28:51 info: [0mOPTIONS /auth/google [32m204[0m 0.393 ms - 0[0m
+2026-03-04 19:28:51 info: 1ms Executed (default): SELECT `id`, `email`, `password`, `full_name` AS `fullName`, `avatar`, `role`, `status`, `last_login_at` AS `lastLoginAt`, `created_at` AS `createdAt`, `updated_at` AS `updatedAt` FROM `users` AS `UserModel` WHERE `UserModel`.`email` = 'tramkhoinguyen27122@gmail.com';
+2026-03-04 19:28:51 info: 4ms Executed (default): UPDATE `users` SET `last_login_at`=?,`updated_at`=? WHERE `id` = ?; "2026-03-04 19:28:51", "2026-03-04 19:28:51", 1
+2026-03-04 19:28:51 info: [0mPOST /auth/google [32m200[0m 494.459 ms - 486[0m

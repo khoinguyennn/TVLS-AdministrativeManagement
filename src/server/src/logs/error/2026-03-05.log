@@ -1,0 +1,19 @@
+2026-03-05 08:19:45 error: [GET] /users/me >> StatusCode:: 404, Message:: Authentication token missing
+2026-03-05 08:58:46 error: [PUT] /users/me >> StatusCode:: 413, Message:: request entity too large
+2026-03-05 08:58:55 error: [PUT] /users/me >> StatusCode:: 400, Message:: avatar must be shorter than or equal to 255 characters
+2026-03-05 08:59:06 error: [PUT] /users/me >> StatusCode:: 413, Message:: request entity too large
+2026-03-05 08:59:32 error: [PUT] /users/me >> StatusCode:: 413, Message:: request entity too large
+2026-03-05 08:59:58 error: [PUT] /users/me >> StatusCode:: 413, Message:: request entity too large
+2026-03-05 09:01:13 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-05 09:01:26 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-05 09:02:04 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-05 09:12:45 error: [PUT] /users/me >> StatusCode:: 413, Message:: request entity too large
+2026-03-05 09:12:50 error: [PUT] /users/me >> StatusCode:: 413, Message:: request entity too large
+2026-03-05 09:13:10 error: [PUT] /users/me >> StatusCode:: 400, Message:: avatar must be shorter than or equal to 255 characters
+2026-03-05 09:13:17 error: [PUT] /users/me >> StatusCode:: 413, Message:: request entity too large
+2026-03-05 09:13:25 error: [PUT] /users/me >> StatusCode:: 413, Message:: request entity too large
+2026-03-05 09:15:00 error: [PUT] /users/me >> StatusCode:: 400, Message:: avatar must be shorter than or equal to 255 characters
+2026-03-05 09:15:05 error: [PUT] /users/me >> StatusCode:: 400, Message:: avatar must be shorter than or equal to 255 characters
+2026-03-05 09:15:11 error: [PUT] /users/me >> StatusCode:: 400, Message:: avatar must be shorter than or equal to 255 characters
+2026-03-05 09:15:55 error: [PUT] /users/me >> StatusCode:: 400, Message:: avatar must be shorter than or equal to 255 characters
+2026-03-05 09:51:35 error: [GET] /users/me >> StatusCode:: 401, Message:: Wrong authentication token

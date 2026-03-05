@@ -6,7 +6,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
-import { BarChart3, FileText, LayoutDashboard, LogOut, Settings, Users, X } from "lucide-react";
+import {
+  AlertTriangle,
+  Building2,
+  CalendarOff,
+  ClipboardList,
+  DoorOpen,
+  FileText,
+  Fingerprint,
+  LayoutDashboard,
+  LogOut,
+  Monitor,
+  Settings,
+  Users,
+  X
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
 
@@ -25,6 +39,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
+import { env } from "@/env";
 import { authStorage } from "@/lib/auth-storage";
 import { authService } from "@/services/auth.service";
 
@@ -65,19 +80,55 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
       icon: LayoutDashboard
     },
     {
-      href: "/dashboard/records",
-      label: t("records"),
-      icon: FileText
-    },
-    {
-      href: "/dashboard/departments",
-      label: t("departments"),
+      href: "/dashboard/users",
+      label: t("users"),
       icon: Users
     },
     {
-      href: "/dashboard/reports",
-      label: t("reports"),
-      icon: BarChart3
+      href: "/dashboard/staff",
+      label: t("staff"),
+      icon: FileText
+    },
+    {
+      href: "/dashboard/work-orders",
+      label: t("workOrders"),
+      icon: ClipboardList
+    }
+  ];
+
+  const facilityNavItems = [
+    {
+      href: "/dashboard/buildings",
+      label: t("buildings"),
+      icon: Building2
+    },
+    {
+      href: "/dashboard/rooms",
+      label: t("rooms"),
+      icon: DoorOpen
+    },
+    {
+      href: "/dashboard/devices",
+      label: t("devices"),
+      icon: Monitor
+    }
+  ];
+
+  const otherNavItems = [
+    {
+      href: "/dashboard/device-reports",
+      label: t("deviceReports"),
+      icon: AlertTriangle
+    },
+    {
+      href: "/dashboard/leave-requests",
+      label: t("leaveRequests"),
+      icon: CalendarOff
+    },
+    {
+      href: "/dashboard/digital-signatures",
+      label: t("digitalSignatures"),
+      icon: Fingerprint
     }
   ];
 
@@ -149,8 +200,54 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 space-y-1 px-4 py-4">
+      <nav className="flex-1 space-y-1 overflow-y-auto px-4 py-4">
         {mainNavItems.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={cn(
+              "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors",
+              isActive(item.href)
+                ? "bg-[#2060df]/10 text-[#2060df]"
+                : "text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
+            )}
+          >
+            <item.icon className="size-5" />
+            <span className="text-sm font-medium">{item.label}</span>
+          </Link>
+        ))}
+
+        {/* Facility Section */}
+        <div className="pt-4 pb-2">
+          <p className="px-3 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+            {t("facilitySection")}
+          </p>
+        </div>
+
+        {facilityNavItems.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={cn(
+              "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors",
+              isActive(item.href)
+                ? "bg-[#2060df]/10 text-[#2060df]"
+                : "text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
+            )}
+          >
+            <item.icon className="size-5" />
+            <span className="text-sm font-medium">{item.label}</span>
+          </Link>
+        ))}
+
+        {/* Other Section */}
+        <div className="pt-4 pb-2">
+          <p className="px-3 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+            {t("otherSection")}
+          </p>
+        </div>
+
+        {otherNavItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}
@@ -194,7 +291,16 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
       <div className="border-t border-slate-200 p-4 dark:border-slate-800">
         <div className="flex items-center gap-3 px-2">
           <Avatar className="size-8">
-            <AvatarImage src={user?.avatar || "/nice-avatar.png"} alt="User avatar" />
+            <AvatarImage
+              src={
+                user?.avatar
+                  ? user.avatar.startsWith("http")
+                    ? user.avatar
+                    : `${env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "")}${user.avatar}`
+                  : "/nice-avatar.png"
+              }
+              alt="User avatar"
+            />
             <AvatarFallback>{getInitials()}</AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">

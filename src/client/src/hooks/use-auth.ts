@@ -3,6 +3,7 @@
 import { useCallback, useSyncExternalStore } from "react";
 
 import type { User } from "@/types/auth.types";
+import { subscribeUserChange } from "@/lib/auth-storage";
 
 const ROLE_LABELS: Record<User["role"], string> = {
   admin: "Quản trị viên",
@@ -13,12 +14,13 @@ const ROLE_LABELS: Record<User["role"], string> = {
 
 type AuthUser = Pick<User, "id" | "email" | "fullName" | "role" | "avatar"> | null;
 
-// Cache the snapshot so useSyncExternalStore gets a stable reference
-let cachedUser: AuthUser = null;
+// Cache so useSyncExternalStore gets a stable reference
 let cachedRaw: string | null = null;
+let cachedUser: AuthUser = null;
 
+// Snapshot for client - reads localStorage with caching
 function getClientSnapshot(): AuthUser {
-  const raw = typeof window !== "undefined" ? localStorage.getItem("user") : null;
+  const raw = localStorage.getItem("user");
   if (raw !== cachedRaw) {
     cachedRaw = raw;
     cachedUser = raw ? JSON.parse(raw) : null;
@@ -26,14 +28,23 @@ function getClientSnapshot(): AuthUser {
   return cachedUser;
 }
 
+// Snapshot for server - no localStorage available
 function getServerSnapshot(): AuthUser {
   return null;
 }
 
-const emptySubscribe = () => () => {};
+// Subscribe to both custom events (same tab) and native storage events (cross-tab)
+function subscribe(callback: () => void) {
+  const unsubscribeCustom = subscribeUserChange(callback);
+  window.addEventListener("storage", callback);
+  return () => {
+    unsubscribeCustom();
+    window.removeEventListener("storage", callback);
+  };
+}
 
 export function useAuth() {
-  const user = useSyncExternalStore(emptySubscribe, getClientSnapshot, getServerSnapshot);
+  const user = useSyncExternalStore(subscribe, getClientSnapshot, getServerSnapshot);
 
   const getRoleLabel = useCallback(() => {
     if (!user) return "";

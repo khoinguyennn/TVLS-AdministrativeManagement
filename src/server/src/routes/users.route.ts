@@ -4,6 +4,7 @@ import { CreateUserDto, UpdateProfileDto } from '@dtos/users.dto';
 import { Routes } from '@interfaces/routes.interface';
 import { AuthMiddleware } from '@middlewares/auth.middleware';
 import { ValidationMiddleware } from '@middlewares/validation.middleware';
+import { uploadAvatar } from '@middlewares/upload.middleware';
 
 export class UserRoute implements Routes {
   public path = '/users';
@@ -18,6 +19,7 @@ export class UserRoute implements Routes {
     // Profile của user đang đăng nhập
     this.router.get(`${this.path}/me`, AuthMiddleware, this.user.getMyProfile);
     this.router.put(`${this.path}/me`, AuthMiddleware, ValidationMiddleware(UpdateProfileDto), this.user.updateMyProfile);
+    this.router.post(`${this.path}/me/avatar`, AuthMiddleware, uploadAvatar, this.user.uploadAvatar);
 
     // CRUD users (admin)
     this.router.get(`${this.path}`, this.user.getUsers);

@@ -4,6 +4,7 @@ import { CreateUserDto, UpdateProfileDto } from '@dtos/users.dto';
 import { User } from '@interfaces/users.interface';
 import { RequestWithUser } from '@interfaces/auth.interface';
 import { UserService } from '@services/users.service';
+import { HttpException } from '@exceptions/HttpException';
 
 export class UserController {
   public user = Container.get(UserService);
@@ -93,6 +94,27 @@ export class UserController {
       const deleteUserData: User = await this.user.deleteUser(userId);
 
       res.status(200).json({ data: deleteUserData, message: 'deleted' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public uploadAvatar = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    try {
+      if (!req.file) {
+        throw new HttpException(400, 'Vui lòng chọn file ảnh');
+      }
+
+      const userId = req.user.id;
+      const avatarUrl = `/uploads/avatars/${req.file.filename}`;
+
+      const updatedUser = await this.user.updateProfile(userId, { avatar: avatarUrl });
+
+      res.status(200).json({
+        success: true,
+        data: updatedUser,
+        message: 'Cập nhật ảnh đại diện thành công',
+      });
     } catch (error) {
       next(error);
     }

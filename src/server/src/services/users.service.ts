@@ -13,10 +13,10 @@ export class UserService {
   }
 
   public async findUserById(userId: number): Promise<User> {
-    const findUser: User = await DB.Users.findByPk(userId);
+    const findUser = await DB.Users.findByPk(userId);
     if (!findUser) throw new HttpException(409, "User doesn't exist");
 
-    return findUser;
+    return findUser.get({ plain: true }) as User;
   }
 
   public async createUser(userData: CreateUserDto): Promise<User> {
@@ -112,10 +112,10 @@ export class UserService {
     await DB.Users.update(updateData, { where: { id: userId } });
 
     // Return updated user (without password)
-    const updatedUser: User = await DB.Users.findByPk(userId, {
+    const updatedUser = await DB.Users.findByPk(userId, {
       attributes: { exclude: ['password'] },
     });
 
-    return updatedUser;
+    return updatedUser.get({ plain: true }) as User;
   }
 }

@@ -81,6 +81,7 @@ export class AuthService {
         email: findUser.email,
         fullName: findUser.fullName,
         role: findUser.role,
+        avatar: findUser.avatar,
       },
     };
 
@@ -152,6 +153,7 @@ export class AuthService {
           email: findUser.email,
           fullName: findUser.fullName,
           role: findUser.role,
+          avatar: findUser.avatar,
         },
       };
 
