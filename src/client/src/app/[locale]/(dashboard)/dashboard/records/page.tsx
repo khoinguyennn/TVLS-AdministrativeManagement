@@ -90,7 +90,7 @@ export default function DashboardRecordsPage() {
     <>
       {/* Breadcrumbs */}
       <nav className="mb-6 flex items-center gap-2 text-sm text-slate-500">
-        <Link href="/dashboard" className="hover:text-[#2060df]">
+        <Link href="/dashboard" className="hover:text-primary">
           Trang chủ
         </Link>
         <ChevronRight className="size-3" />
@@ -105,7 +105,7 @@ export default function DashboardRecordsPage() {
             Quản lý và phê duyệt các hồ sơ hành chính của doanh nghiệp
           </p>
         </div>
-        <Button className="bg-[#2060df] text-white hover:bg-[#2060df]/90">
+        <Button className="bg-primary text-white hover:bg-primary/90">
           <Plus className="mr-2 size-5" />
           Tạo hồ sơ mới
         </Button>
@@ -133,7 +133,7 @@ export default function DashboardRecordsPage() {
               Phòng ban: <b className="ml-1">Tất cả</b>
             </Button>
 
-            <Button variant="link" size="sm" className="ml-auto font-medium text-[#2060df]">
+            <Button variant="link" size="sm" className="ml-auto font-medium text-primary">
               Xóa bộ lọc
             </Button>
           </div>
@@ -174,7 +174,7 @@ export default function DashboardRecordsPage() {
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Avatar className="size-6">
-                          <AvatarFallback className="bg-[#2060df]/10 text-[10px] font-bold text-[#2060df]">
+                          <AvatarFallback className="bg-primary/10 text-[10px] font-bold text-primary">
                             {record.initials}
                           </AvatarFallback>
                         </Avatar>
@@ -191,7 +191,7 @@ export default function DashboardRecordsPage() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="size-8 hover:text-[#2060df]"
+                          className="size-8 hover:text-primary"
                           title="Xem"
                         >
                           <Eye className="size-4" />
@@ -243,7 +243,7 @@ export default function DashboardRecordsPage() {
               Trước
             </Button>
             <div className="flex items-center gap-1">
-              <Button size="sm" className="size-8 bg-[#2060df] text-white">
+              <Button size="sm" className="size-8 bg-primary text-white">
                 1
               </Button>
               <Button variant="ghost" size="sm" className="size-8">

@@ -8,8 +8,11 @@ import { User } from '@interfaces/users.interface';
 @Service()
 export class UserService {
   public async findAllUser(): Promise<User[]> {
-    const allUser: User[] = await DB.Users.findAll();
-    return allUser;
+    const allUser = await DB.Users.findAll({
+      attributes: { exclude: ['password'] },
+      order: [['createdAt', 'DESC']],
+    });
+    return allUser.map(u => u.get({ plain: true })) as User[];
   }
 
   public async findUserById(userId: number): Promise<User> {
@@ -33,23 +36,28 @@ export class UserService {
     return createUserData;
   }
 
-  public async updateUser(userId: number, userData: CreateUserDto): Promise<User> {
-    const findUser: User = await DB.Users.findByPk(userId);
+  public async updateUser(userId: number, userData: Partial<CreateUserDto & { status: string }>): Promise<User> {
+    const findUser = await DB.Users.findByPk(userId);
     if (!findUser) throw new HttpException(409, "User doesn't exist");
 
-    const hashedPassword = await hash(userData.password, 10);
-    await DB.Users.update(
-      {
-        email: userData.email,
-        password: hashedPassword,
-        fullName: userData.fullName,
-        role: (userData.role as 'admin' | 'manager' | 'teacher' | 'technician') || findUser.role,
-      },
-      { where: { id: userId } },
-    );
+    const updateData: Partial<User> = {};
 
-    const updateUser: User = await DB.Users.findByPk(userId);
-    return updateUser;
+    if (userData.email !== undefined) updateData.email = userData.email;
+    if (userData.fullName !== undefined) updateData.fullName = userData.fullName;
+    if (userData.role !== undefined) updateData.role = userData.role as User['role'];
+    if (userData.status !== undefined) updateData.status = userData.status as User['status'];
+    if (userData.password) updateData.password = await hash(userData.password, 10);
+
+    if (Object.keys(updateData).length === 0) {
+      throw new HttpException(400, 'Không có thông tin nào để cập nhật');
+    }
+
+    await DB.Users.update(updateData, { where: { id: userId } });
+
+    const updatedUser = await DB.Users.findByPk(userId, {
+      attributes: { exclude: ['password'] },
+    });
+    return updatedUser.get({ plain: true }) as User;
   }
 
   public async deleteUser(userId: number): Promise<User> {

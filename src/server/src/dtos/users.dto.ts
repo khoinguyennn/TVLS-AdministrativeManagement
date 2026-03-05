@@ -16,7 +16,7 @@ export class CreateUserDto {
 
   @IsOptional()
   @IsString()
-  @IsIn(['admin', 'manager', 'staff'])
+  @IsIn(['admin', 'manager', 'teacher', 'technician'])
   public role?: string;
 }
 
@@ -42,6 +42,11 @@ export class UpdateUserDto {
   @MinLength(9)
   @MaxLength(32)
   public password?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(['admin', 'manager', 'teacher', 'technician'])
+  public role?: string;
 
   @IsOptional()
   @IsString()

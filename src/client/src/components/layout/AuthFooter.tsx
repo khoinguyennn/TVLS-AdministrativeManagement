@@ -13,19 +13,19 @@ export function AuthFooter() {
         <div className="flex flex-wrap justify-center gap-6">
           <Link
             href="/terms"
-            className="text-xs font-medium text-slate-500 transition-colors sm:text-sm hover:text-[#2060df] dark:text-slate-400"
+            className="text-xs font-medium text-slate-500 transition-colors sm:text-sm hover:text-primary dark:text-slate-400"
           >
             Điều khoản sử dụng
           </Link>
           <Link
             href="/privacy"
-            className="text-xs font-medium text-slate-500 transition-colors sm:text-sm hover:text-[#2060df] dark:text-slate-400"
+            className="text-xs font-medium text-slate-500 transition-colors sm:text-sm hover:text-primary dark:text-slate-400"
           >
             Chính sách bảo mật
           </Link>
           <Link
             href="/guide"
-            className="text-xs font-medium text-slate-500 transition-colors sm:text-sm hover:text-[#2060df] dark:text-slate-400"
+            className="text-xs font-medium text-slate-500 transition-colors sm:text-sm hover:text-primary dark:text-slate-400"
           >
             Hướng dẫn
           </Link>

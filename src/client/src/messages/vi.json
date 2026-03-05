@@ -149,6 +149,72 @@
     "retry": "Thử lại",
     "goHome": "Về trang chủ"
   },
+  "UserManagement": {
+    "title": "Quản lý người dùng",
+    "description": "Quản lý tài khoản và phân quyền cho cán bộ, giáo viên.",
+    "addUser": "Thêm người dùng",
+    "editUser": "Chỉnh sửa người dùng",
+    "deleteUser": "Xóa người dùng",
+    "searchPlaceholder": "Tìm kiếm theo tên hoặc email...",
+    "allRoles": "Tất cả vai trò",
+    "allStatuses": "Tất cả trạng thái",
+    "columns": {
+      "user": "Người dùng",
+      "email": "Email",
+      "role": "Vai trò",
+      "status": "Trạng thái",
+      "actions": "Hành động"
+    },
+    "roles": {
+      "admin": "Quản trị viên",
+      "manager": "Quản lý",
+      "teacher": "Giáo viên",
+      "technician": "Kỹ thuật viên"
+    },
+    "statuses": {
+      "active": "Hoạt động",
+      "inactive": "Không hoạt động",
+      "locked": "Đã khóa"
+    },
+    "form": {
+      "fullName": "Họ và tên",
+      "fullNamePlaceholder": "Nhập họ và tên",
+      "email": "Email",
+      "emailPlaceholder": "Nhập email",
+      "password": "Mật khẩu",
+      "passwordPlaceholder": "Nhập mật khẩu (tối thiểu 9 ký tự)",
+      "role": "Vai trò",
+      "selectRole": "Chọn vai trò",
+      "status": "Trạng thái",
+      "selectStatus": "Chọn trạng thái",
+      "save": "Lưu",
+      "cancel": "Hủy",
+      "create": "Tạo người dùng",
+      "update": "Cập nhật"
+    },
+    "deleteConfirm": {
+      "title": "Xác nhận xóa",
+      "description": "Bạn có chắc chắn muốn xóa người dùng \"{name}\"? Hành động này không thể hoàn tác.",
+      "confirm": "Xóa",
+      "cancel": "Hủy"
+    },
+    "toast": {
+      "createSuccess": "Tạo người dùng thành công!",
+      "updateSuccess": "Cập nhật người dùng thành công!",
+      "deleteSuccess": "Xóa người dùng thành công!",
+      "error": "Có lỗi xảy ra, vui lòng thử lại."
+    },
+    "pagination": {
+      "showing": "Hiển thị",
+      "to": "-",
+      "of": "trên",
+      "users": "người dùng",
+      "previous": "Trước",
+      "next": "Tiếp"
+    },
+    "noResults": "Không tìm thấy người dùng nào.",
+    "loading": "Đang tải..."
+  },
   "Settings": {
     "title": "Cài đặt tài khoản",
     "description": "Quản lý thông tin cá nhân và bảo mật tài khoản của bạn",

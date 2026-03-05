@@ -15,7 +15,7 @@ export function AuthHeader() {
             />
           </div>
           <div className="flex min-w-0 flex-col">
-            <h1 className="text-sm leading-tight font-bold tracking-wide text-[#2060df] uppercase sm:text-lg">
+            <h1 className="text-sm leading-tight font-bold tracking-wide text-primary uppercase sm:text-lg">
               Hệ thống Quản lý Hành chính
             </h1>
             <h2 className="text-xs font-semibold text-slate-600 uppercase sm:text-sm dark:text-slate-400">

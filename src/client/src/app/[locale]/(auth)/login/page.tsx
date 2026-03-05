@@ -199,7 +199,7 @@ export default function LoginPage() {
                   type="submit"
                   size="lg"
                   disabled={isLoading}
-                  className="w-full gap-2 rounded-lg bg-[#2060df] py-5 font-bold shadow-lg shadow-[#2060df]/20 sm:py-6 hover:bg-[#2060df]/90 disabled:opacity-70"
+                  className="w-full gap-2 rounded-lg bg-primary py-5 font-bold shadow-lg shadow-primary/20 sm:py-6 hover:bg-primary/90 disabled:opacity-70"
                 >
                   {isLoading ? (
                     <>

@@ -72,8 +72,8 @@ export default function OTPVerificationPage() {
         <Card className="w-full max-w-md overflow-hidden border-slate-100 shadow-xl dark:border-slate-800">
           <CardContent className="flex flex-col items-center p-6 text-center sm:p-8">
             {/* Icon */}
-            <div className="mb-5 flex size-14 items-center justify-center rounded-full bg-[#2060df]/10 sm:mb-6 sm:size-16">
-              <MailCheck className="size-7 text-[#2060df] sm:size-8" />
+            <div className="mb-5 flex size-14 items-center justify-center rounded-full bg-primary/10 sm:mb-6 sm:size-16">
+              <MailCheck className="size-7 text-primary sm:size-8" />
             </div>
 
             {/* Title & Subtitle */}
@@ -102,14 +102,14 @@ export default function OTPVerificationPage() {
                     onChange={(e) => handleChange(index, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(index, e)}
                     onPaste={handlePaste}
-                    className="size-10 rounded-lg border-slate-200 bg-slate-50 p-0 text-center text-lg font-bold transition-all sm:size-12 sm:text-xl md:h-14 md:w-12 focus:border-[#2060df] focus:ring-2 focus:ring-[#2060df]/20 dark:border-slate-700 dark:bg-slate-800"
+                    className="size-10 rounded-lg border-slate-200 bg-slate-50 p-0 text-center text-lg font-bold transition-all sm:size-12 sm:text-xl md:h-14 md:w-12 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-800"
                   />
                 ))}
               </div>
 
               <Button
                 type="submit"
-                className="mb-6 w-full rounded-lg bg-[#2060df] py-3 font-bold shadow-lg shadow-[#2060df]/20 transition-colors sm:py-3.5 hover:bg-[#2060df]/90"
+                className="mb-6 w-full rounded-lg bg-primary py-3 font-bold shadow-lg shadow-primary/20 transition-colors sm:py-3.5 hover:bg-primary/90"
               >
                 Xác nhận
               </Button>
@@ -121,7 +121,7 @@ export default function OTPVerificationPage() {
                 </p>
                 <button
                   type="button"
-                  className="flex items-center gap-1 text-xs font-medium text-[#2060df] sm:text-sm hover:underline disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex items-center gap-1 text-xs font-medium text-primary sm:text-sm hover:underline disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={countdown > 0}
                   onClick={handleResend}
                 >

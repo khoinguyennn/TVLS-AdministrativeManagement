@@ -189,8 +189,8 @@ export default function ForgotPasswordPage() {
                 <>
                   {/* Icon & Title */}
                   <div className="mb-6 flex flex-col items-center text-center sm:mb-8">
-                    <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-[#2060df]/5 sm:size-16">
-                      <Mail className="size-7 text-[#2060df] sm:size-8" />
+                    <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-primary/5 sm:size-16">
+                      <Mail className="size-7 text-primary sm:size-8" />
                     </div>
                     <h2 className="text-xl font-bold text-slate-900 sm:text-2xl dark:text-white">
                       Quên mật khẩu
@@ -220,7 +220,7 @@ export default function ForgotPasswordPage() {
                           onChange={(e) => setEmail(e.target.value)}
                           disabled={isLoading}
                           required
-                          className="h-11 rounded-lg border-slate-200 pr-4 pl-10 transition-all sm:h-12 focus:border-[#2060df] focus:ring-2 focus:ring-[#2060df]/20 dark:border-slate-700 dark:bg-slate-800"
+                          className="h-11 rounded-lg border-slate-200 pr-4 pl-10 transition-all sm:h-12 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-800"
                         />
                       </div>
                     </div>
@@ -228,7 +228,7 @@ export default function ForgotPasswordPage() {
                     <Button
                       type="submit"
                       disabled={isLoading}
-                      className="w-full gap-2 rounded-lg bg-[#2060df] py-5 font-bold transition-colors sm:py-6 hover:bg-[#2060df]/90"
+                      className="w-full gap-2 rounded-lg bg-primary py-5 font-bold transition-colors sm:py-6 hover:bg-primary/90"
                     >
                       {isLoading ? (
                         <>
@@ -248,7 +248,7 @@ export default function ForgotPasswordPage() {
                   <div className="mt-6 flex justify-center border-t border-slate-100 pt-6 sm:mt-8 dark:border-slate-800">
                     <Link
                       href="/login"
-                      className="flex items-center gap-2 text-sm font-semibold text-[#2060df] transition-colors hover:text-[#2060df]/80"
+                      className="flex items-center gap-2 text-sm font-semibold text-primary transition-colors hover:text-primary/80"
                     >
                       <ArrowLeft className="size-4" />
                       Quay lại đăng nhập
@@ -262,8 +262,8 @@ export default function ForgotPasswordPage() {
                 <>
                   {/* Icon & Title */}
                   <div className="mb-5 flex flex-col items-center text-center sm:mb-6">
-                    <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-[#2060df]/10 sm:size-16">
-                      <MailCheck className="size-7 text-[#2060df] sm:size-8" />
+                    <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-primary/10 sm:size-16">
+                      <MailCheck className="size-7 text-primary sm:size-8" />
                     </div>
                     <h2 className="text-xl font-bold text-slate-900 sm:text-2xl dark:text-white">
                       Xác thực OTP
@@ -294,7 +294,7 @@ export default function ForgotPasswordPage() {
                           onKeyDown={(e) => handleOtpKeyDown(index, e)}
                           onPaste={handleOtpPaste}
                           disabled={isLoading}
-                          className="size-10 rounded-lg border-slate-200 bg-slate-50 p-0 text-center text-lg font-bold transition-all sm:size-12 sm:text-xl md:h-14 md:w-12 focus:border-[#2060df] focus:ring-2 focus:ring-[#2060df]/20 dark:border-slate-700 dark:bg-slate-800"
+                          className="size-10 rounded-lg border-slate-200 bg-slate-50 p-0 text-center text-lg font-bold transition-all sm:size-12 sm:text-xl md:h-14 md:w-12 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-800"
                         />
                       ))}
                     </div>
@@ -302,7 +302,7 @@ export default function ForgotPasswordPage() {
                     <Button
                       type="submit"
                       disabled={isLoading || getOtpString().length !== 6}
-                      className="mb-6 w-full rounded-lg bg-[#2060df] py-3 font-bold shadow-lg shadow-[#2060df]/20 transition-colors sm:py-3.5 hover:bg-[#2060df]/90"
+                      className="mb-6 w-full rounded-lg bg-primary py-3 font-bold shadow-lg shadow-primary/20 transition-colors sm:py-3.5 hover:bg-primary/90"
                     >
                       {isLoading ? (
                         <>
@@ -321,7 +321,7 @@ export default function ForgotPasswordPage() {
                       </p>
                       <button
                         type="button"
-                        className="flex items-center gap-1 text-xs font-medium text-[#2060df] sm:text-sm hover:underline disabled:cursor-not-allowed disabled:opacity-50"
+                        className="flex items-center gap-1 text-xs font-medium text-primary sm:text-sm hover:underline disabled:cursor-not-allowed disabled:opacity-50"
                         disabled={countdown > 0 || isLoading}
                         onClick={handleResendOTP}
                       >
@@ -335,7 +335,7 @@ export default function ForgotPasswordPage() {
                     <button
                       type="button"
                       onClick={() => setStep("email")}
-                      className="flex items-center gap-2 text-sm font-semibold text-[#2060df] transition-colors hover:text-[#2060df]/80"
+                      className="flex items-center gap-2 text-sm font-semibold text-primary transition-colors hover:text-primary/80"
                     >
                       <ArrowLeft className="size-4" />
                       Thay đổi email
@@ -378,7 +378,7 @@ export default function ForgotPasswordPage() {
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
                           disabled={isLoading}
-                          className="h-11 rounded-lg border-slate-200 pr-4 pl-10 transition-all sm:h-12 focus:border-[#2060df] focus:ring-2 focus:ring-[#2060df]/20 dark:border-slate-700 dark:bg-slate-800"
+                          className="h-11 rounded-lg border-slate-200 pr-4 pl-10 transition-all sm:h-12 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-800"
                         />
                       </div>
                     </div>
@@ -399,7 +399,7 @@ export default function ForgotPasswordPage() {
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           disabled={isLoading}
-                          className="h-11 rounded-lg border-slate-200 pr-4 pl-10 transition-all sm:h-12 focus:border-[#2060df] focus:ring-2 focus:ring-[#2060df]/20 dark:border-slate-700 dark:bg-slate-800"
+                          className="h-11 rounded-lg border-slate-200 pr-4 pl-10 transition-all sm:h-12 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-800"
                         />
                       </div>
                     </div>
@@ -407,7 +407,7 @@ export default function ForgotPasswordPage() {
                     <Button
                       type="submit"
                       disabled={isLoading}
-                      className="w-full gap-2 rounded-lg bg-[#2060df] py-5 font-bold transition-colors sm:py-6 hover:bg-[#2060df]/90"
+                      className="w-full gap-2 rounded-lg bg-primary py-5 font-bold transition-colors sm:py-6 hover:bg-primary/90"
                     >
                       {isLoading ? (
                         <>
@@ -427,7 +427,7 @@ export default function ForgotPasswordPage() {
                   <div className="mt-6 flex justify-center border-t border-slate-100 pt-6 sm:mt-8 dark:border-slate-800">
                     <Link
                       href="/login"
-                      className="flex items-center gap-2 text-sm font-semibold text-[#2060df] transition-colors hover:text-[#2060df]/80"
+                      className="flex items-center gap-2 text-sm font-semibold text-primary transition-colors hover:text-primary/80"
                     >
                       <ArrowLeft className="size-4" />
                       Quay lại đăng nhập

@@ -149,6 +149,72 @@
     "retry": "Try again",
     "goHome": "Go to home"
   },
+  "UserManagement": {
+    "title": "User Management",
+    "description": "Manage accounts and permissions for staff and teachers.",
+    "addUser": "Add User",
+    "editUser": "Edit User",
+    "deleteUser": "Delete User",
+    "searchPlaceholder": "Search by name or email...",
+    "allRoles": "All roles",
+    "allStatuses": "All statuses",
+    "columns": {
+      "user": "User",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "roles": {
+      "admin": "Administrator",
+      "manager": "Manager",
+      "teacher": "Teacher",
+      "technician": "Technician"
+    },
+    "statuses": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "locked": "Locked"
+    },
+    "form": {
+      "fullName": "Full name",
+      "fullNamePlaceholder": "Enter full name",
+      "email": "Email",
+      "emailPlaceholder": "Enter email",
+      "password": "Password",
+      "passwordPlaceholder": "Enter password (min 9 characters)",
+      "role": "Role",
+      "selectRole": "Select role",
+      "status": "Status",
+      "selectStatus": "Select status",
+      "save": "Save",
+      "cancel": "Cancel",
+      "create": "Create User",
+      "update": "Update"
+    },
+    "deleteConfirm": {
+      "title": "Confirm Delete",
+      "description": "Are you sure you want to delete user \"{name}\"? This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
+    "toast": {
+      "createSuccess": "User created successfully!",
+      "updateSuccess": "User updated successfully!",
+      "deleteSuccess": "User deleted successfully!",
+      "error": "An error occurred, please try again."
+    },
+    "pagination": {
+      "showing": "Showing",
+      "to": "-",
+      "of": "of",
+      "users": "users",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "noResults": "No users found.",
+    "loading": "Loading..."
+  },
   "Settings": {
     "title": "Account Settings",
     "description": "Manage your personal information and account security",

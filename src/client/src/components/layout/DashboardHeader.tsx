@@ -63,7 +63,7 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
           <Input
             type="text"
             placeholder={t("searchPlaceholder")}
-            className="w-full rounded-lg border-none bg-slate-100 py-2 pr-4 pl-10 text-sm transition-all focus:ring-2 focus:ring-[#2060df]/20 dark:bg-slate-800"
+            className="w-full rounded-lg border-none bg-slate-100 py-2 pr-4 pl-10 text-sm transition-all focus:ring-2 focus:ring-primary/20 dark:bg-slate-800"
           />
         </div>
 

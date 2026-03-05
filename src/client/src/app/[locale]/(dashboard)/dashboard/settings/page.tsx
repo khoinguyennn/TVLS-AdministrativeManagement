@@ -205,7 +205,7 @@ export default function SettingsPage() {
     <div className="mx-auto max-w-5xl">
       {/* Breadcrumbs */}
       <nav className="mb-6 flex items-center gap-2 text-sm text-slate-500">
-        <Link className="hover:text-[#2060df] transition-colors" href="/dashboard">
+        <Link className="hover:text-primary transition-colors" href="/dashboard">
           {tBreadcrumb("home")}
         </Link>
         <ChevronRight className="size-4" />
@@ -240,14 +240,14 @@ export default function SettingsPage() {
                 <div className="relative group">
                   <Avatar className="size-32 border-4 border-slate-50 shadow-sm dark:border-slate-800">
                     <AvatarImage src={getAvatarUrl(avatarPreview)} alt={fullName} />
-                    <AvatarFallback className="text-2xl font-bold bg-[#2060df]/10 text-[#2060df]">
+                    <AvatarFallback className="text-2xl font-bold bg-primary/10 text-primary">
                       {getInitials()}
                     </AvatarFallback>
                   </Avatar>
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="absolute bottom-0 right-0 rounded-full bg-[#2060df] p-2 text-white shadow-lg transition-transform hover:bg-[#2060df]/90 active:scale-95"
+                    className="absolute bottom-0 right-0 rounded-full bg-primary p-2 text-white shadow-lg transition-transform hover:bg-primary/90 active:scale-95"
                   >
                     <Camera className="size-4" />
                   </button>
@@ -263,7 +263,7 @@ export default function SettingsPage() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="text-sm font-semibold text-[#2060df] hover:underline"
+                    className="text-sm font-semibold text-primary hover:underline"
                   >
                     {t("changeAvatar")}
                   </button>
@@ -407,7 +407,7 @@ export default function SettingsPage() {
           <Button
             onClick={handleSave}
             disabled={isSaving}
-            className="bg-[#2060df] px-6 shadow-lg shadow-[#2060df]/25 hover:bg-[#2060df]/90"
+            className="bg-primary px-6 shadow-lg shadow-primary/25 hover:bg-primary/90"
           >
             {isSaving ? (
               <Loader2 className="size-4 animate-spin" />

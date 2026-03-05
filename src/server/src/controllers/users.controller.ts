@@ -48,7 +48,7 @@ export class UserController {
     try {
       const findAllUsersData: User[] = await this.user.findAllUser();
 
-      res.status(200).json({ data: findAllUsersData, message: 'findAll' });
+      res.status(200).json({ success: true, data: findAllUsersData, message: 'findAll' });
     } catch (error) {
       next(error);
     }
@@ -59,7 +59,7 @@ export class UserController {
       const userId = Number(req.params.id);
       const findOneUserData: User = await this.user.findUserById(userId);
 
-      res.status(200).json({ data: findOneUserData, message: 'findOne' });
+      res.status(200).json({ success: true, data: findOneUserData, message: 'findOne' });
     } catch (error) {
       next(error);
     }
@@ -70,7 +70,7 @@ export class UserController {
       const userData: CreateUserDto = req.body;
       const createUserData: User = await this.user.createUser(userData);
 
-      res.status(201).json({ data: createUserData, message: 'created' });
+      res.status(201).json({ success: true, data: createUserData, message: 'created' });
     } catch (error) {
       next(error);
     }
@@ -82,7 +82,7 @@ export class UserController {
       const userData: CreateUserDto = req.body;
       const updateUserData: User = await this.user.updateUser(userId, userData);
 
-      res.status(200).json({ data: updateUserData, message: 'updated' });
+      res.status(200).json({ success: true, data: updateUserData, message: 'updated' });
     } catch (error) {
       next(error);
     }
@@ -93,7 +93,7 @@ export class UserController {
       const userId = Number(req.params.id);
       const deleteUserData: User = await this.user.deleteUser(userId);
 
-      res.status(200).json({ data: deleteUserData, message: 'deleted' });
+      res.status(200).json({ success: true, data: deleteUserData, message: 'deleted' });
     } catch (error) {
       next(error);
     }

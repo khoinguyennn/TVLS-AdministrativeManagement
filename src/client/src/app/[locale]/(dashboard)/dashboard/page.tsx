@@ -12,8 +12,8 @@ const stats = [
     value: "84",
     change: "+12%",
     icon: FileText,
-    color: "text-[#2060df]",
-    bgColor: "bg-[#2060df]/10"
+    color: "text-primary",
+    bgColor: "bg-primary/10"
   },
   {
     title: "Đang chờ xử lý",
@@ -117,7 +117,7 @@ export default function DashboardPage() {
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-              <BarChart3 className="size-5 text-[#2060df]" />
+              <BarChart3 className="size-5 text-primary" />
               Hoạt động gần đây
             </CardTitle>
           </CardHeader>
@@ -128,13 +128,13 @@ export default function DashboardPage() {
                   key={activity.id}
                   className="flex items-start gap-3 border-b border-slate-100 pb-4 last:border-b-0 last:pb-0 dark:border-slate-800"
                 >
-                  <div className="flex size-8 items-center justify-center rounded-full bg-[#2060df]/10 text-[10px] font-bold text-[#2060df]">
+                  <div className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-[10px] font-bold text-primary">
                     {activity.user.charAt(0)}
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-sm">
                       <span className="font-semibold">{activity.user}</span> {activity.action}{" "}
-                      <span className="font-medium text-[#2060df]">{activity.record}</span>
+                      <span className="font-medium text-primary">{activity.record}</span>
                     </p>
                     <p className="text-xs text-slate-400">{activity.time}</p>
                   </div>
@@ -148,7 +148,7 @@ export default function DashboardPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-              <Users className="size-5 text-[#2060df]" />
+              <Users className="size-5 text-primary" />
               Thao tác nhanh
             </CardTitle>
           </CardHeader>
@@ -158,7 +158,7 @@ export default function DashboardPage() {
                 href="/dashboard/records"
                 className="flex items-center gap-3 rounded-lg bg-slate-50 p-3 transition-colors hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700"
               >
-                <FileText className="size-5 text-[#2060df]" />
+                <FileText className="size-5 text-primary" />
                 <span className="text-sm font-medium">Xem tất cả hồ sơ</span>
               </Link>
               <Link
