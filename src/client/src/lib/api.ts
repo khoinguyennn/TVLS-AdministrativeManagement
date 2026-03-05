@@ -27,6 +27,12 @@ api.interceptors.response.use(
   async (err) => {
     const originalRequest = err.config;
 
+    // Don't intercept auth endpoints — 401 here means bad credentials, not expired token
+    const isAuthEndpoint = originalRequest?.url?.startsWith("/auth/");
+    if (isAuthEndpoint) {
+      return Promise.reject(err);
+    }
+
     // If 401 and not already retrying, try to refresh token
     if (err.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;

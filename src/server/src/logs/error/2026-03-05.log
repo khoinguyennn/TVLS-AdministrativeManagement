@@ -17,3 +17,5 @@
 2026-03-05 09:15:11 error: [PUT] /users/me >> StatusCode:: 400, Message:: avatar must be shorter than or equal to 255 characters
 2026-03-05 09:15:55 error: [PUT] /users/me >> StatusCode:: 400, Message:: avatar must be shorter than or equal to 255 characters
 2026-03-05 09:51:35 error: [GET] /users/me >> StatusCode:: 401, Message:: Wrong authentication token
+2026-03-05 10:16:25 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
+2026-03-05 10:16:53 error: [POST] /auth/login >> StatusCode:: 401, Message:: Email hoặc mật khẩu không chính xác
