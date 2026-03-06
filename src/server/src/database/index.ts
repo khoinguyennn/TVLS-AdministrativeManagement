@@ -2,6 +2,9 @@ import Sequelize from 'sequelize';
 import { NODE_ENV, DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_DATABASE } from '@config';
 import OTPModel from '@models/otp.model';
 import UserModel from '@models/users.model';
+import BuildingModel from '@models/building.model';
+import RoomModel from '@models/room.model';
+import EquipmentModel from '@models/equipment.model';
 import { logger } from '@utils/logger';
 
 const sequelize = new Sequelize.Sequelize(DB_DATABASE, DB_USER, DB_PASSWORD, {
@@ -31,6 +34,9 @@ sequelize.authenticate();
 // Initialize models
 const Users = UserModel(sequelize);
 const OTPs = OTPModel(sequelize);
+const Buildings = BuildingModel(sequelize);
+const Rooms = RoomModel(sequelize);
+const Equipment = EquipmentModel(sequelize);
 
 // Define associations
 Users.hasMany(OTPs, {
@@ -43,9 +49,34 @@ OTPs.belongsTo(Users, {
   as: 'user',
 });
 
+// Building - Room associations
+Buildings.hasMany(Rooms, {
+  foreignKey: 'buildingId',
+  as: 'rooms',
+});
+
+Rooms.belongsTo(Buildings, {
+  foreignKey: 'buildingId',
+  as: 'building',
+});
+
+// Room - Equipment associations
+Rooms.hasMany(Equipment, {
+  foreignKey: 'roomId',
+  as: 'equipment',
+});
+
+Equipment.belongsTo(Rooms, {
+  foreignKey: 'roomId',
+  as: 'room',
+});
+
 export const DB = {
   Users,
   OTPs,
+  Buildings,
+  Rooms,
+  Equipment,
   sequelize, // connection instance (RAW queries)
   Sequelize, // library
 };
