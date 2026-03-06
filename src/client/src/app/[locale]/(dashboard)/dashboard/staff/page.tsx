@@ -12,7 +12,7 @@ import { personnelService } from "@/services/personnel.service";
 import type { PersonnelRecord } from "@/types/personnel.types";
 import { toast } from "sonner";
 
-export default function PersonnelPage() {
+export default function StaffPage() {
   const [personnel, setPersonnel] = useState<PersonnelRecord[]>([]);
   const [filteredPersonnel, setFilteredPersonnel] = useState<PersonnelRecord[]>(
     []
@@ -195,7 +195,7 @@ export default function PersonnelPage() {
             onImport={handleImportExcel}
             onExport={handleExportExcel}
           />
-          <Link href="/dashboard/records/add">
+          <Link href="/vi/dashboard/staff/add">
             <Button className="gap-2 bg-blue-600 hover:bg-blue-700 shadow-sm">
               <Plus className="h-4 w-4" />
               Thêm nhân sự
