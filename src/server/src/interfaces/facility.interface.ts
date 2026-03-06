@@ -1,12 +1,10 @@
 // Building Interface
 export interface Building {
   id?: number;
-  name: string;
   code: string;
-  address?: string;
+  name: string;
   floors?: number;
   description?: string;
-  status: 'active' | 'inactive' | 'maintenance';
   createdAt?: Date;
   updatedAt?: Date;
 }
