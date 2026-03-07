@@ -32,14 +32,21 @@ export default function EditPersonnelPage() {
       // Mock data for now
       const mockData: PersonnelRecord = {
         id,
+        userId: 1,
         code: "8401555613",
         fullName: "Bùi Hữu Khánh",
+        email: "bhkhanh@tvu.edu.vn",
+        role: "teacher",
+        status: "active",
         gender: "Nam",
         dateOfBirth: "1987-05-12",
-        idNumber: "084087001648",
-        email: "bhkhanh@tvu.edu.vn",
-        phoneNumber: "0904789498",
-        status: "active"
+        cccdNumber: "084087001648",
+        staffStatus: "working",
+        contactAddress: {
+          phone: "0904789498"
+        },
+        createdAt: "2020-01-15T00:00:00Z",
+        updatedAt: "2020-01-15T00:00:00Z",
       };
       setPersonnel(mockData);
     } catch (error) {

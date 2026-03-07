@@ -34,21 +34,30 @@ export default function ViewPersonnelPage({ params }: PageProps) {
       // Mock data for now
       const mockData: PersonnelRecord = {
         id,
+        userId: 1,
         code: "8401555613",
         fullName: "Bùi Hữu Khánh",
+        email: "bhkhanh@tvu.edu.vn",
+        role: "teacher",
+        status: "active",
         gender: "Nam",
         dateOfBirth: "1987-05-12",
-        idNumber: "084087001648",
-        email: "bhkhanh@tvu.edu.vn",
-        phoneNumber: "0904789498",
-        address: "123 Đường Nguyễn Huệ",
-        wardCommune: "Phường 1",
-        district: "Quận 1",
-        province: "TP.Hồ Chí Minh",
-        dateIssued: "2017-06-15",
-        placeIssued: "Công an TP.Hồ Chí Minh",
-        startDate: "2020-01-15",
-        status: "active"
+        cccdNumber: "084087001648",
+        cccdIssueDate: "2017-06-15",
+        cccdIssuePlace: "Công an TP.Hồ Chí Minh",
+        ethnicity: "Kinh",
+        religion: "Không",
+        staffStatus: "working",
+        recruitmentDate: "2020-01-15",
+        contactAddress: {
+          province: "TP.Hồ Chí Minh",
+          ward: "Phường 1",
+          hamlet: "Thôn 1",
+          detailAddress: "123 Đường Nguyễn Huệ",
+          phone: "0904789498"
+        },
+        createdAt: "2020-01-15T00:00:00Z",
+        updatedAt: "2020-01-15T00:00:00Z"
       };
       setPersonnel(mockData);
     } catch (error) {
@@ -154,7 +163,7 @@ export default function ViewPersonnelPage({ params }: PageProps) {
             <Phone className="h-5 w-5 text-gray-400" />
             <div>
               <p className="text-sm text-gray-500">Điện thoại</p>
-              <p className="font-semibold">{personnel.phoneNumber}</p>
+              <p className="font-semibold">{personnel.contactAddress?.phone || "N/A"}</p>
             </div>
           </div>
           <Separator />
@@ -163,13 +172,9 @@ export default function ViewPersonnelPage({ params }: PageProps) {
             <div>
               <p className="text-sm text-gray-500">Địa chỉ</p>
               <p className="font-semibold">
-                {personnel.address || "-"}
+                {personnel.contactAddress?.detailAddress || "-"}
               </p>
-              {personnel.wardCommune && (
-                <p className="text-sm text-gray-500">
-                  {personnel.wardCommune}, {personnel.district}, {personnel.province}
-                </p>
-              )}
+              {/* No wardCommune, district, province in PersonnelRecord. If needed, use contactAddress fields. */}
             </div>
           </div>
         </CardContent>
@@ -184,15 +189,15 @@ export default function ViewPersonnelPage({ params }: PageProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <p className="text-sm text-gray-500">Số CMT/CCCD</p>
-              <p className="text-lg font-semibold">{personnel.idNumber}</p>
+              <p className="text-lg font-semibold">{personnel.cccdNumber || "-"}</p>
             </div>
             <div>
               <p className="text-sm text-gray-500">Nơi cấp</p>
-              <p className="text-lg font-semibold">{personnel.placeIssued || "-"}</p>
+              <p className="text-lg font-semibold">{personnel.cccdIssuePlace || "-"}</p>
             </div>
             <div>
               <p className="text-sm text-gray-500">Ngày cấp</p>
-              <p className="text-lg font-semibold">{formatDate(personnel.dateIssued)}</p>
+              <p className="text-lg font-semibold">{formatDate(personnel.cccdIssueDate)}</p>
             </div>
           </div>
         </CardContent>
@@ -208,7 +213,7 @@ export default function ViewPersonnelPage({ params }: PageProps) {
             <Calendar className="h-5 w-5 text-gray-400" />
             <div>
               <p className="text-sm text-gray-500">Ngày bắt đầu</p>
-              <p className="font-semibold">{formatDate(personnel.startDate)}</p>
+              <p className="font-semibold">{formatDate(personnel.recruitmentDate)}</p>
             </div>
           </div>
         </CardContent>

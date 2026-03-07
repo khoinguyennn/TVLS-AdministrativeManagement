@@ -38,7 +38,7 @@ export default function PersonnelPage() {
         p.fullName.toLowerCase().includes(query) ||
         p.code.toLowerCase().includes(query) ||
         p.email.toLowerCase().includes(query) ||
-        p.phoneNumber.includes(query)
+        (p.contactAddress?.phone && p.contactAddress.phone.includes(query))
     );
     setFilteredPersonnel(filtered);
   }, [searchQuery, personnel]);
@@ -50,58 +50,93 @@ export default function PersonnelPage() {
       const mockData: PersonnelRecord[] = [
         {
           id: 1,
+          userId: 1,
           code: "8401555613",
           fullName: "Bùi Hữu Khánh",
+          email: "bhkhanh@tvu.edu.vn",
+          role: "teacher",
+          status: "active",
           gender: "Nam",
           dateOfBirth: "1987-05-12",
-          idNumber: "084087001648",
-          email: "bhkhanh@tvu.edu.vn",
-          phoneNumber: "0904789498",
-          status: "active"
+          cccdNumber: "084087001648",
+          staffStatus: "working",
+          createdAt: "2024-01-01T00:00:00Z",
+          updatedAt: "2024-01-01T00:00:00Z",
+          contactAddress: {
+            phone: "0904789498"
+          }
         },
         {
           id: 2,
+          userId: 2,
           code: "8413375048",
           fullName: "Bùi Quốc Tân",
+          email: "buitan@tvu.edu.vn",
+          role: "teacher",
+          status: "active",
           gender: "Nam",
           dateOfBirth: "1991-12-19",
-          idNumber: "084091001190",
-          email: "buitan@tvu.edu.vn",
-          phoneNumber: "0982454710",
-          status: "active"
+          cccdNumber: "084091001190",
+          staffStatus: "working",
+          createdAt: "2024-01-01T00:00:00Z",
+          updatedAt: "2024-01-01T00:00:00Z",
+          contactAddress: {
+            phone: "0982454710"
+          }
         },
         {
           id: 3,
+          userId: 3,
           code: "8400631101",
           fullName: "Bùi Thế Ngân",
+          email: "btngan@tvu.edu.vn",
+          role: "teacher",
+          status: "active",
           gender: "Nam",
           dateOfBirth: "1984-12-08",
-          idNumber: "084084001944",
-          email: "btngan@tvu.edu.vn",
-          phoneNumber: "0904542520",
-          status: "active"
+          cccdNumber: "084084001944",
+          staffStatus: "working",
+          createdAt: "2024-01-01T00:00:00Z",
+          updatedAt: "2024-01-01T00:00:00Z",
+          contactAddress: {
+            phone: "0904542520"
+          }
         },
         {
           id: 4,
+          userId: 4,
           code: "8401979501",
           fullName: "Bùi Thị Cẩm Loan",
+          email: "btcloan@tvu.edu.vn",
+          role: "teacher",
+          status: "active",
           gender: "Nữ",
           dateOfBirth: "1981-01-01",
-          idNumber: "084181002023",
-          email: "btcloan@tvu.edu.vn",
-          phoneNumber: "0914880571",
-          status: "active"
+          cccdNumber: "084181002023",
+          staffStatus: "working",
+          createdAt: "2024-01-01T00:00:00Z",
+          updatedAt: "2024-01-01T00:00:00Z",
+          contactAddress: {
+            phone: "0914880571"
+          }
         },
         {
           id: 5,
+          userId: 5,
           code: "8413269448",
           fullName: "Bùi Văn Cật",
+          email: "buicat@tvu.edu.vn",
+          role: "teacher",
+          status: "active",
           gender: "Nam",
           dateOfBirth: "1976-05-15",
-          idNumber: "084076001778",
-          email: "buicat@tvu.edu.vn",
-          phoneNumber: "0909207380",
-          status: "active"
+          cccdNumber: "084076001778",
+          staffStatus: "working",
+          createdAt: "2024-01-01T00:00:00Z",
+          updatedAt: "2024-01-01T00:00:00Z",
+          contactAddress: {
+            phone: "0909207380"
+          }
         }
       ];
       setPersonnel(mockData);
@@ -157,11 +192,11 @@ export default function PersonnelPage() {
             p.fullName,
             p.gender,
             p.dateOfBirth,
-            p.idNumber,
+            p.cccdNumber,
             p.email,
-            p.phoneNumber
+            p.contactAddress?.phone
           ]
-            .map((v) => `"${v}"`)
+            .map((v) => `"${v || ""}"`)
             .join(",")
         )
       ].join("\n");

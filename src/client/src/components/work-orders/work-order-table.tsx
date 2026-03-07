@@ -72,7 +72,8 @@ export function WorkOrderTable({
       approved: { label: "Đã duyệt", variant: "default" as const, icon: CheckCircle },
       in_progress: { label: "Đang thực hiện", variant: "outline" as const, icon: PlayCircle },
       completed: { label: "Hoàn thành", variant: "default" as const, icon: CheckCircle },
-      rejected: { label: "Từ chối", variant: "destructive" as const, icon: XCircle }
+      rejected: { label: "Từ chối", variant: "destructive" as const, icon: XCircle },
+      cancelled: { label: "Đã hủy", variant: "destructive" as const, icon: XCircle }
     };
 
     const config = statusConfig[status];
@@ -101,11 +102,12 @@ export function WorkOrderTable({
           <TableRow>
             <TableHead className="w-20">#</TableHead>
             <TableHead>Mã công lệnh</TableHead>
-            <TableHead>Nơi công tác</TableHead>
-            <TableHead>Nội dung công việc</TableHead>
+            <TableHead>Tiêu đề</TableHead>
+            <TableHead>Địa điểm</TableHead>
             <TableHead>Thời gian bắt đầu</TableHead>
             <TableHead>Thời gian kết thúc</TableHead>
-            <TableHead>Người gửi</TableHead>
+            <TableHead>Người giao</TableHead>
+            <TableHead>Người nhận</TableHead>
             <TableHead>Ngày tạo</TableHead>
             <TableHead>Trạng thái</TableHead>
             {showActions && <TableHead className="text-right">Hành động</TableHead>}
@@ -116,20 +118,23 @@ export function WorkOrderTable({
             <TableRow key={workOrder.id}>
               <TableCell className="font-medium">{index + 1}</TableCell>
               <TableCell className="font-mono text-sm">{workOrder.code}</TableCell>
-              <TableCell className="max-w-xs truncate" title={workOrder.workLocation}>
-                {workOrder.workLocation}
+              <TableCell className="max-w-xs truncate" title={workOrder.title}>
+                {workOrder.title}
               </TableCell>
-              <TableCell className="max-w-xs truncate" title={workOrder.workContent}>
-                {workOrder.workContent}
-              </TableCell>
-              <TableCell className="text-sm">
-                {formatDateTime(workOrder.startTime)}
+              <TableCell className="max-w-xs truncate" title={workOrder.location}>
+                {workOrder.location || "-"}
               </TableCell>
               <TableCell className="text-sm">
-                {formatDateTime(workOrder.endTime)}
+                {formatDateTime(workOrder.startDate)}
               </TableCell>
               <TableCell className="text-sm">
-                {getPersonnelName(workOrder.assignedBy)}
+                {formatDateTime(workOrder.endDate)}
+              </TableCell>
+              <TableCell className="text-sm">
+                {workOrder.createdByUser?.fullName || getPersonnelName(workOrder.createdBy)}
+              </TableCell>
+              <TableCell className="text-sm">
+                {workOrder.assignedToUser?.fullName || getPersonnelName(workOrder.assignedTo)}
               </TableCell>
               <TableCell className="text-sm">
                 {formatDate(workOrder.createdAt)}

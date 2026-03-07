@@ -46,13 +46,14 @@ export function PersonnelTable({
         <TableHeader>
           <TableRow>
             <TableHead className="w-20">#</TableHead>
-            <TableHead>Mã định danh</TableHead>
+            <TableHead>Mã NV</TableHead>
             <TableHead>Họ và tên</TableHead>
             <TableHead>Giới tính</TableHead>
             <TableHead>Ngày sinh</TableHead>
             <TableHead>CCCD</TableHead>
             <TableHead>Email</TableHead>
             <TableHead>Điện thoại</TableHead>
+            <TableHead>Chức vụ</TableHead>
             <TableHead>Trạng thái</TableHead>
             <TableHead className="text-right">Hành động</TableHead>
           </TableRow>
@@ -65,16 +66,23 @@ export function PersonnelTable({
               <TableCell className="font-medium">{personnel.fullName}</TableCell>
               <TableCell>{personnel.gender}</TableCell>
               <TableCell>{formatDate(personnel.dateOfBirth)}</TableCell>
-              <TableCell>{personnel.idNumber}</TableCell>
+              <TableCell>{personnel.cccdNumber}</TableCell>
               <TableCell className="text-sm">{personnel.email}</TableCell>
-              <TableCell>{personnel.phoneNumber}</TableCell>
+              <TableCell>{personnel.contactAddress?.phone}</TableCell>
+              <TableCell>{personnel.positions?.[0]?.jobPosition || "-"}</TableCell>
               <TableCell>
                 <Badge
                   variant={
-                    personnel.status === "active" ? "default" : "secondary"
+                    personnel.staffStatus === "working" ? "default" :
+                    personnel.staffStatus === "probation" ? "secondary" :
+                    personnel.staffStatus === "maternity_leave" ? "outline" : "destructive"
                   }
                 >
-                  {personnel.status === "active" ? "Hoạt động" : "Không hoạt động"}
+                  {personnel.staffStatus === "working" ? "Đang làm việc" :
+                   personnel.staffStatus === "probation" ? "Thử việc" :
+                   personnel.staffStatus === "maternity_leave" ? "Nghỉ thai sản" :
+                   personnel.staffStatus === "retired" ? "Đã nghỉ hưu" :
+                   personnel.staffStatus === "resigned" ? "Đã nghỉ việc" : "Không xác định"}
                 </Badge>
               </TableCell>
               <TableCell className="text-right">

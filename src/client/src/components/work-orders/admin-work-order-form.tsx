@@ -247,7 +247,7 @@ export function AdminWorkOrderForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-sm font-medium text-gray-700">
-                  Nội dùng công tác <span className="text-red-500">*</span>
+                  Nội dung công tác <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
                   <Textarea

@@ -38,7 +38,7 @@ export default function StaffPage() {
         p.fullName.toLowerCase().includes(query) ||
         p.code.toLowerCase().includes(query) ||
         p.email.toLowerCase().includes(query) ||
-        p.phoneNumber.includes(query)
+        (p.contactAddress?.phone && p.contactAddress.phone.includes(query))
     );
     setFilteredPersonnel(filtered);
   }, [searchQuery, personnel]);

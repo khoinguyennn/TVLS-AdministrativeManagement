@@ -30,11 +30,12 @@ import type { CreateWorkOrderPayload, UpdateWorkOrderPayload, WorkOrder } from "
 import type { PersonnelRecord } from "@/types/personnel.types";
 
 const workOrderSchema = z.object({
-  workLocation: z.string().min(1, "Vui lòng nhập nơi công tác"),
-  workContent: z.string().min(1, "Vui lòng nhập nội dung công việc"),
-  startTime: z.string().min(1, "Vui lòng chọn thời gian bắt đầu"),
-  endTime: z.string().min(1, "Vui lòng chọn thời gian kết thúc"),
-  notes: z.string().optional(),
+  title: z.string().min(1, "Vui lòng nhập tiêu đề công lệnh"),
+  content: z.string().min(1, "Vui lòng nhập nội dung công việc"),
+  location: z.string().optional(),
+  startDate: z.string().min(1, "Vui lòng chọn thời gian bắt đầu"),
+  endDate: z.string().min(1, "Vui lòng chọn thời gian kết thúc"),
+  note: z.string().optional(),
   assignedTo: z.number().min(1, "Vui lòng chọn nhân viên được giao"),
 });
 
@@ -58,19 +59,20 @@ export function WorkOrderForm({
   const form = useForm<WorkOrderFormData>({
     resolver: zodResolver(workOrderSchema),
     defaultValues: {
-      workLocation: workOrder?.workLocation || "",
-      workContent: workOrder?.workContent || "",
-      startTime: workOrder?.startTime || "",
-      endTime: workOrder?.endTime || "",
-      notes: workOrder?.notes || "",
+      title: workOrder?.title || "",
+      content: workOrder?.content || "",
+      location: workOrder?.location || "",
+      startDate: workOrder?.startDate || "",
+      endDate: workOrder?.endDate || "",
+      note: workOrder?.note || "",
       assignedTo: workOrder?.assignedTo || 0,
     },
   });
 
   const handleSubmit = async (data: WorkOrderFormData) => {
     // Parse the date-time strings and create proper ISO strings
-    const startDateTimeStr = data.startTime;
-    const endDateTimeStr = data.endTime;
+    const startDateTimeStr = data.startDate;
+    const endDateTimeStr = data.endDate;
 
     // If the strings don't contain 'T', they might be just dates, so add default times
     const startTime = startDateTimeStr.includes('T') ? startDateTimeStr : `${startDateTimeStr}T08:00`;
@@ -78,8 +80,8 @@ export function WorkOrderForm({
 
     const submitData = {
       ...data,
-      startTime,
-      endTime,
+      startDate: startTime,
+      endDate: endTime,
     };
 
     await onSubmit(submitData);
@@ -91,13 +93,13 @@ export function WorkOrderForm({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
-            name="workLocation"
+            name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nơi công tác *</FormLabel>
+                <FormLabel>Tiêu đề công lệnh *</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Ví dụ: Phòng 101, Tòa nhà A"
+                    placeholder="Ví dụ: Bảo trì máy chiếu phòng 101"
                     {...field}
                   />
                 </FormControl>
@@ -137,7 +139,7 @@ export function WorkOrderForm({
 
         <FormField
           control={form.control}
-          name="workContent"
+          name="content"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Nội dung công việc *</FormLabel>
@@ -156,7 +158,43 @@ export function WorkOrderForm({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
-            name="startTime"
+            name="location"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Địa điểm thực hiện</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Ví dụ: Phòng 101, Tòa nhà A"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="note"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Ghi chú</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Ghi chú bổ sung"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <FormField
+            control={form.control}
+            name="startDate"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Thời gian bắt đầu *</FormLabel>
@@ -191,7 +229,7 @@ export function WorkOrderForm({
 
           <FormField
             control={form.control}
-            name="endTime"
+            name="endDate"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Thời gian kết thúc *</FormLabel>
@@ -227,7 +265,7 @@ export function WorkOrderForm({
 
         <FormField
           control={form.control}
-          name="notes"
+          name="note"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Ghi chú</FormLabel>

@@ -16,3 +16,4 @@ export * from "./sonner";
 export * from "./table";
 export * from "./textarea";
 export * from "./tooltip";
+export * from "./tabs";

@@ -1,40 +1,190 @@
 export interface PersonnelRecord {
   id: number;
-  code: string; // Mã định danh
-  fullName: string; // Họ và tên
-  gender: "Nam" | "Nữ"; // Giới tính
-  dateOfBirth: string; // Ngày sinh (yyyy-MM-dd)
-  idNumber: string; // Số CMT/CCCD
-  email: string;
-  phoneNumber: string; // Điện thoại
-  address?: string; // Địa chỉ
-  wardCommune?: string; // Tổ/Thôn/Xóm
-  district?: string; // Huyện
-  province?: string; // Tỉnh
-  dateIssued?: string; // Ngày cấp CMT/CCCD
-  placeIssued?: string; // Nơi cấp CMT/CCCD
-  startDate?: string; // Ngày bắt đầu (yyyy-MM-dd)
-  status?: "active" | "inactive"; // Trạng thái
-  createdAt?: string;
-  updatedAt?: string;
+  userId: number;
+  code: string; // staff_code
+  fullName: string; // từ users.full_name
+  email: string; // từ users.email
+  role: string; // từ users.role
+  status: "active" | "inactive" | "locked"; // từ users.status
+  avatar?: string; // từ users.avatar
+
+  // Từ staff_profiles
+  gender: "Nam" | "Nữ" | "Khác";
+  dateOfBirth?: string;
+  cccdNumber?: string;
+  cccdIssueDate?: string;
+  cccdIssuePlace?: string;
+  ethnicity?: string;
+  religion?: string;
+  staffStatus: "working" | "probation" | "maternity_leave" | "retired" | "resigned";
+  recruitmentDate?: string;
+  createdAt: string;
+  updatedAt: string;
+
+  // Địa chỉ liên hệ (từ staff_addresses where address_type = 'contact')
+  contactAddress?: {
+    province?: string;
+    ward?: string;
+    hamlet?: string;
+    detailAddress?: string;
+    phone?: string;
+  };
+
+  // Địa chỉ quê quán (từ staff_addresses where address_type = 'hometown')
+  hometownAddress?: {
+    province?: string;
+    ward?: string;
+    hamlet?: string;
+    detailAddress?: string;
+  };
+
+  // Tài khoản ngân hàng (từ staff_bank_accounts)
+  bankAccounts?: Array<{
+    bankName?: string;
+    branch?: string;
+    accountNumber?: string;
+  }>;
+
+  // Đánh giá (từ staff_evaluations)
+  evaluations?: Array<{
+    civilServantRating?: string;
+    excellentTeacher: boolean;
+    evaluationYear?: number;
+    note?: string;
+  }>;
+
+  // Tổ chức (từ staff_organizations)
+  organizations?: {
+    isUnionMember: boolean;
+    unionJoinDate?: string;
+    isPartyMember: boolean;
+    partyJoinDate?: string;
+  };
+
+  // Vị trí công việc (từ staff_positions)
+  positions?: Array<{
+    jobPosition?: string;
+    positionGroup?: string;
+    recruitmentAgency?: string;
+    professionWhenRecruited?: string;
+    rankLevel?: string;
+    educationLevel?: string;
+    rankCode?: string;
+    subjectGroup?: string;
+    contractType?: string;
+  }>;
+
+  // Trình độ (từ staff_qualifications)
+  qualifications?: Array<{
+    generalEducationLevel?: string;
+    professionalLevel?: string;
+    major?: string;
+    trainingPlace?: string;
+    graduationYear?: number;
+    itLevel?: string;
+    foreignLanguageLevel?: string;
+  }>;
+
+  // Lương (từ staff_salaries)
+  salaries?: Array<{
+    salaryCoefficient?: number;
+    salaryLevel?: number;
+    baseSalary?: number;
+    salaryStartDate?: string;
+    unionAllowancePercent?: number;
+    seniorityAllowancePercent?: number;
+    incentiveAllowancePercent?: number;
+    positionAllowancePercent?: number;
+    salaryNote?: string;
+  }>;
 }
 
 export interface CreatePersonnelPayload {
-  code: string;
-  fullName: string;
-  gender: "Nam" | "Nữ";
-  dateOfBirth: string;
-  idNumber: string;
+  // User info
   email: string;
-  phoneNumber: string;
-  address?: string;
-  wardCommune?: string;
-  district?: string;
-  province?: string;
-  dateIssued?: string;
-  placeIssued?: string;
-  startDate?: string;
-  status?: "active" | "inactive";
+  fullName: string;
+  role: "admin" | "manager" | "teacher" | "technician";
+  status?: "active" | "inactive" | "locked";
+  avatar?: string;
+
+  // Staff profile
+  staffCode: string;
+  gender: "Nam" | "Nữ" | "Khác";
+  dateOfBirth?: string;
+  cccdNumber?: string;
+  cccdIssueDate?: string;
+  cccdIssuePlace?: string;
+  ethnicity?: string;
+  religion?: string;
+  staffStatus?: "working" | "probation" | "maternity_leave" | "retired" | "resigned";
+  recruitmentDate?: string;
+
+  // Addresses
+  contactAddress?: {
+    province?: string;
+    ward?: string;
+    hamlet?: string;
+    detailAddress?: string;
+    phone?: string;
+  };
+  hometownAddress?: {
+    province?: string;
+    ward?: string;
+    hamlet?: string;
+    detailAddress?: string;
+  };
+
+  // Bank accounts
+  bankAccounts?: Array<{
+    bankName?: string;
+    branch?: string;
+    accountNumber?: string;
+  }>;
+
+  // Organizations
+  organizations?: {
+    isUnionMember?: boolean;
+    unionJoinDate?: string;
+    isPartyMember?: boolean;
+    partyJoinDate?: string;
+  };
+
+  // Positions
+  positions?: Array<{
+    jobPosition?: string;
+    positionGroup?: string;
+    recruitmentAgency?: string;
+    professionWhenRecruited?: string;
+    rankLevel?: string;
+    educationLevel?: string;
+    rankCode?: string;
+    subjectGroup?: string;
+    contractType?: string;
+  }>;
+
+  // Qualifications
+  qualifications?: Array<{
+    generalEducationLevel?: string;
+    professionalLevel?: string;
+    major?: string;
+    trainingPlace?: string;
+    graduationYear?: number;
+    itLevel?: string;
+    foreignLanguageLevel?: string;
+  }>;
+
+  // Salaries
+  salaries?: Array<{
+    salaryCoefficient?: number;
+    salaryLevel?: number;
+    baseSalary?: number;
+    salaryStartDate?: string;
+    unionAllowancePercent?: number;
+    seniorityAllowancePercent?: number;
+    incentiveAllowancePercent?: number;
+    positionAllowancePercent?: number;
+    salaryNote?: string;
+  }>;
 }
 
 export interface UpdatePersonnelPayload
