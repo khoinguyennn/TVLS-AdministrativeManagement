@@ -12,7 +12,7 @@ import { personnelService } from "@/services/personnel.service";
 import type { PersonnelRecord } from "@/types/personnel.types";
 import { toast } from "sonner";
 
-export default function PersonnelPage() {
+export default function StaffPage() {
   const [personnel, setPersonnel] = useState<PersonnelRecord[]>([]);
   const [filteredPersonnel, setFilteredPersonnel] = useState<PersonnelRecord[]>(
     []
@@ -50,93 +50,58 @@ export default function PersonnelPage() {
       const mockData: PersonnelRecord[] = [
         {
           id: 1,
-          userId: 1,
           code: "8401555613",
           fullName: "Bùi Hữu Khánh",
-          email: "bhkhanh@tvu.edu.vn",
-          role: "teacher",
-          status: "active",
           gender: "Nam",
           dateOfBirth: "1987-05-12",
-          cccdNumber: "084087001648",
-          staffStatus: "working",
-          createdAt: "2024-01-01T00:00:00Z",
-          updatedAt: "2024-01-01T00:00:00Z",
-          contactAddress: {
-            phone: "0904789498"
-          }
+          idNumber: "084087001648",
+          email: "bhkhanh@tvu.edu.vn",
+          phoneNumber: "0904789498",
+          status: "active"
         },
         {
           id: 2,
-          userId: 2,
           code: "8413375048",
           fullName: "Bùi Quốc Tân",
-          email: "buitan@tvu.edu.vn",
-          role: "teacher",
-          status: "active",
           gender: "Nam",
           dateOfBirth: "1991-12-19",
-          cccdNumber: "084091001190",
-          staffStatus: "working",
-          createdAt: "2024-01-01T00:00:00Z",
-          updatedAt: "2024-01-01T00:00:00Z",
-          contactAddress: {
-            phone: "0982454710"
-          }
+          idNumber: "084091001190",
+          email: "buitan@tvu.edu.vn",
+          phoneNumber: "0982454710",
+          status: "active"
         },
         {
           id: 3,
-          userId: 3,
           code: "8400631101",
           fullName: "Bùi Thế Ngân",
-          email: "btngan@tvu.edu.vn",
-          role: "teacher",
-          status: "active",
           gender: "Nam",
           dateOfBirth: "1984-12-08",
-          cccdNumber: "084084001944",
-          staffStatus: "working",
-          createdAt: "2024-01-01T00:00:00Z",
-          updatedAt: "2024-01-01T00:00:00Z",
-          contactAddress: {
-            phone: "0904542520"
-          }
+          idNumber: "084084001944",
+          email: "btngan@tvu.edu.vn",
+          phoneNumber: "0904542520",
+          status: "active"
         },
         {
           id: 4,
-          userId: 4,
           code: "8401979501",
           fullName: "Bùi Thị Cẩm Loan",
-          email: "btcloan@tvu.edu.vn",
-          role: "teacher",
-          status: "active",
           gender: "Nữ",
           dateOfBirth: "1981-01-01",
-          cccdNumber: "084181002023",
-          staffStatus: "working",
-          createdAt: "2024-01-01T00:00:00Z",
-          updatedAt: "2024-01-01T00:00:00Z",
-          contactAddress: {
-            phone: "0914880571"
-          }
+          idNumber: "084181002023",
+          email: "btcloan@tvu.edu.vn",
+          phoneNumber: "0914880571",
+          status: "active"
         },
         {
           id: 5,
-          userId: 5,
           code: "8413269448",
           fullName: "Bùi Văn Cật",
-          email: "buicat@tvu.edu.vn",
-          role: "teacher",
-          status: "active",
           gender: "Nam",
           dateOfBirth: "1976-05-15",
-          cccdNumber: "084076001778",
-          staffStatus: "working",
-          createdAt: "2024-01-01T00:00:00Z",
-          updatedAt: "2024-01-01T00:00:00Z",
-          contactAddress: {
-            phone: "0909207380"
-          }
+          idNumber: "084076001778",
+          email: "buicat@tvu.edu.vn",
+          phoneNumber: "0909207380",
+          status: "active"
         }
       ];
       setPersonnel(mockData);
@@ -192,11 +157,11 @@ export default function PersonnelPage() {
             p.fullName,
             p.gender,
             p.dateOfBirth,
-            p.cccdNumber,
+            p.idNumber,
             p.email,
-            p.contactAddress?.phone
+            p.phoneNumber
           ]
-            .map((v) => `"${v || ""}"`)
+            .map((v) => `"${v}"`)
             .join(",")
         )
       ].join("\n");
@@ -230,7 +195,7 @@ export default function PersonnelPage() {
             onImport={handleImportExcel}
             onExport={handleExportExcel}
           />
-          <Link href="/dashboard/records/add">
+          <Link href="/vi/dashboard/staff/add">
             <Button className="gap-2 bg-blue-600 hover:bg-blue-700 shadow-sm">
               <Plus className="h-4 w-4" />
               Thêm nhân sự
