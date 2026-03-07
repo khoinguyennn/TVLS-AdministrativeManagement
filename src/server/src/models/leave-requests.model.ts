@@ -1,0 +1,88 @@
+import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
+import { LeaveRequest } from '@interfaces/leave.interface';
+
+export type LeaveRequestCreationAttributes = Optional<
+  LeaveRequest,
+  'id' | 'reason' | 'status' | 'approvedBy' | 'rejectedReason' | 'createdAt' | 'updatedAt'
+>;
+
+export class LeaveRequestModel extends Model<LeaveRequest, LeaveRequestCreationAttributes> implements LeaveRequest {
+  public id: number;
+  public userId: number;
+  public leaveTypeId: number;
+  public startDate: string;
+  public endDate: string;
+  public totalDays: number;
+  public reason: string;
+  public status: 'pending' | 'approved' | 'rejected';
+  public approvedBy: number;
+  public rejectedReason: string;
+
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+}
+
+export default function (sequelize: Sequelize): typeof LeaveRequestModel {
+  LeaveRequestModel.init(
+    {
+      id: {
+        autoIncrement: true,
+        primaryKey: true,
+        type: DataTypes.INTEGER,
+      },
+      userId: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        field: 'user_id',
+        references: { model: 'users', key: 'id' },
+      },
+      leaveTypeId: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        field: 'leave_type_id',
+        references: { model: 'leave_types', key: 'id' },
+      },
+      startDate: {
+        allowNull: false,
+        type: DataTypes.DATEONLY,
+        field: 'start_date',
+      },
+      endDate: {
+        allowNull: false,
+        type: DataTypes.DATEONLY,
+        field: 'end_date',
+      },
+      totalDays: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        field: 'total_days',
+      },
+      reason: {
+        allowNull: true,
+        type: DataTypes.TEXT,
+      },
+      status: {
+        allowNull: true,
+        type: DataTypes.ENUM('pending', 'approved', 'rejected'),
+        defaultValue: 'pending',
+      },
+      approvedBy: {
+        allowNull: true,
+        type: DataTypes.INTEGER,
+        field: 'approved_by',
+        references: { model: 'users', key: 'id' },
+      },
+      rejectedReason: {
+        allowNull: true,
+        type: DataTypes.TEXT,
+        field: 'rejected_reason',
+      },
+    },
+    {
+      tableName: 'leave_requests',
+      sequelize,
+    },
+  );
+
+  return LeaveRequestModel;
+}

@@ -215,6 +215,145 @@
     "noResults": "Không tìm thấy người dùng nào.",
     "loading": "Đang tải..."
   },
+  "DeviceReport": {
+    "title": "Quản lý phiếu báo hỏng",
+    "description": "Theo dõi và xử lý các yêu cầu sửa chữa thiết bị trong nhà trường.",
+    "addReport": "Tạo báo hỏng",
+    "editReport": "Chỉnh sửa phiếu",
+    "searchPlaceholder": "Tìm kiếm theo thiết bị, người gửi...",
+    "allStatuses": "Tất cả trạng thái",
+    "stats": {
+      "total": "Tổng số phiếu",
+      "pending": "Chờ tiếp nhận",
+      "repairing": "Đang sửa chữa",
+      "completed": "Đã hoàn thành"
+    },
+    "columns": {
+      "id": "ID",
+      "device": "Thiết bị",
+      "reporter": "Người báo",
+      "assignee": "Kỹ thuật viên",
+      "date": "Ngày gửi",
+      "status": "Trạng thái",
+      "actions": "Thao tác"
+    },
+    "statuses": {
+      "pending": "Chờ tiếp nhận",
+      "received": "Đã tiếp nhận",
+      "repairing": "Đang sửa chữa",
+      "repaired": "Đã sửa xong",
+      "waiting_replacement": "Chờ thay thế",
+      "unfixable": "Không sửa được",
+      "recheck_required": "Cần kiểm tra lại",
+      "completed": "Hoàn thành"
+    },
+    "form": {
+      "device": "Thiết bị",
+      "selectDevice": "Chọn thiết bị",
+      "description": "Mô tả tình trạng",
+      "descriptionPlaceholder": "Mô tả chi tiết tình trạng hư hỏng...",
+      "image": "Ảnh minh họa",
+      "imagePlaceholder": "Chọn hoặc kéo thả ảnh",
+      "status": "Trạng thái",
+      "selectStatus": "Chọn trạng thái",
+      "assignee": "Kỹ thuật viên phụ trách",
+      "selectAssignee": "Chọn kỹ thuật viên",
+      "noAssignee": "Chưa phân công",
+      "technicianNote": "Ghi chú kỹ thuật",
+      "technicianNotePlaceholder": "Ghi chú quá trình xử lý...",
+      "cancel": "Hủy",
+      "create": "Tạo phiếu",
+      "update": "Cập nhật"
+    },
+    "deleteConfirm": {
+      "title": "Xác nhận xóa",
+      "description": "Bạn có chắc chắn muốn xóa phiếu báo hỏng #{id}? Hành động này không thể hoàn tác.",
+      "confirm": "Xóa",
+      "cancel": "Hủy"
+    },
+    "toast": {
+      "createSuccess": "Tạo phiếu báo hỏng thành công!",
+      "updateSuccess": "Cập nhật phiếu thành công!",
+      "deleteSuccess": "Xóa phiếu thành công!",
+      "error": "Có lỗi xảy ra, vui lòng thử lại."
+    },
+    "pagination": {
+      "showing": "Hiển thị",
+      "to": "-",
+      "of": "trong",
+      "reports": "phiếu"
+    },
+    "noResults": "Không tìm thấy phiếu báo hỏng nào.",
+    "loading": "Đang tải..."
+  },
+  "LeaveRequest": {
+    "title": "Quản lý nghỉ phép",
+    "description": "Quản lý và phê duyệt hồ sơ nghỉ phép của cán bộ giáo viên",
+    "addRequest": "Thêm yêu cầu",
+    "searchPlaceholder": "Tìm kiếm theo tên nhân viên...",
+    "allStatuses": "Tất cả trạng thái",
+    "columns": {
+      "employee": "Nhân viên",
+      "leaveType": "Loại nghỉ",
+      "duration": "Thời gian",
+      "status": "Trạng thái",
+      "actions": "Thao tác"
+    },
+    "statuses": {
+      "pending": "Chờ duyệt",
+      "approved": "Đã duyệt",
+      "rejected": "Từ chối"
+    },
+    "stats": {
+      "total": "Tổng yêu cầu",
+      "pending": "Chờ duyệt",
+      "approved": "Đã duyệt",
+      "rejected": "Từ chối"
+    },
+    "form": {
+      "leaveType": "Loại nghỉ phép",
+      "leaveTypePlaceholder": "Chọn loại nghỉ phép",
+      "startDate": "Ngày bắt đầu",
+      "endDate": "Ngày kết thúc",
+      "totalDays": "Số ngày nghỉ",
+      "reason": "Lý do",
+      "reasonPlaceholder": "Nhập lý do nghỉ phép...",
+      "rejectedReason": "Lý do từ chối",
+      "rejectedReasonPlaceholder": "Nhập lý do từ chối...",
+      "approvedBy": "Người duyệt"
+    },
+    "dialog": {
+      "createTitle": "Tạo yêu cầu nghỉ phép",
+      "createDescription": "Điền thông tin để tạo yêu cầu nghỉ phép mới",
+      "viewTitle": "Chi tiết yêu cầu nghỉ phép",
+      "rejectTitle": "Từ chối yêu cầu",
+      "rejectDescription": "Bạn có chắc muốn từ chối yêu cầu này?",
+      "deleteTitle": "Xóa yêu cầu",
+      "deleteDescription": "Bạn có chắc muốn xóa yêu cầu nghỉ phép này? Thao tác không thể hoàn tác.",
+      "cancel": "Hủy",
+      "submit": "Gửi yêu cầu",
+      "approve": "Phê duyệt",
+      "reject": "Từ chối",
+      "delete": "Xóa",
+      "close": "Đóng"
+    },
+    "toast": {
+      "createSuccess": "Tạo yêu cầu nghỉ phép thành công!",
+      "approveSuccess": "Đã phê duyệt yêu cầu nghỉ phép!",
+      "rejectSuccess": "Đã từ chối yêu cầu nghỉ phép!",
+      "deleteSuccess": "Đã xóa yêu cầu nghỉ phép!",
+      "error": "Có lỗi xảy ra, vui lòng thử lại"
+    },
+    "pagination": {
+      "showing": "Hiển thị",
+      "to": "-",
+      "of": "trong",
+      "requests": "yêu cầu"
+    },
+    "noResults": "Không tìm thấy yêu cầu nghỉ phép nào.",
+    "loading": "Đang tải...",
+    "days": "ngày"
+  },
   "Settings": {
     "title": "Cài đặt tài khoản",
     "description": "Quản lý thông tin cá nhân và bảo mật tài khoản của bạn",
@@ -242,5 +381,67 @@
     "noChanges": "Không có thay đổi nào để lưu",
     "saveSuccess": "Cập nhật thông tin thành công!",
     "saveError": "Có lỗi xảy ra khi lưu thay đổi"
+  },
+  "DigitalSignature": {
+    "title": "Quản lý Chữ ký cá nhân",
+    "description": "Thiết lập hình ảnh hiển thị và bảo mật cho chữ ký số của bạn trên các văn bản điện tử.",
+    "signatureImage": "Hình ảnh chữ ký",
+    "tabs": {
+      "draw": "Vẽ tay",
+      "upload": "Tải ảnh"
+    },
+    "draw": {
+      "label": "Vùng vẽ chữ ký",
+      "placeholder": "Sử dụng chuột hoặc bảng vẽ để ký",
+      "clear": "Xóa",
+      "undo": "Hoàn tác"
+    },
+    "upload": {
+      "label": "Tải ảnh chữ ký",
+      "hint": "Kéo thả hoặc nhấp để chọn file ảnh chữ ký",
+      "formats": "PNG, JPG (Dung lượng < 2MB)",
+      "change": "Đổi ảnh"
+    },
+    "guide": {
+      "title": "Hướng dẫn",
+      "tip1": "Nên ký gọn trong khung để hình ảnh hiển thị đẹp nhất trên văn bản.",
+      "tip2": "Sử dụng nét ký rõ ràng, tránh các nét quá mảnh hoặc bị đứt đoạn.",
+      "tip3": "Hệ thống sẽ tự động tách nền nếu bạn chọn phương thức \"Tải ảnh\".",
+      "tip4": "Định dạng hỗ trợ: PNG, JPG (Dung lượng < 2MB)."
+    },
+    "pin": {
+      "title": "Mã PIN chữ ký số",
+      "currentPin": "Mã PIN hiện tại",
+      "newPin": "Mã PIN mới",
+      "confirmPin": "Xác nhận mã PIN",
+      "currentPinPlaceholder": "••••••••",
+      "newPinPlaceholder": "Nhập mã PIN mới",
+      "confirmPinPlaceholder": "Xác nhận mã PIN mới",
+      "warning": "Lưu ý: Mã PIN dùng để xác thực mỗi lần thực hiện ký văn bản. Không chia sẻ mã PIN cho người khác.",
+      "pinMismatch": "Mã PIN xác nhận không khớp",
+      "pinMinLength": "Mã PIN phải có ít nhất 4 ký tự",
+      "pinOnlyDigits": "Mã PIN chỉ chứa số",
+      "noPinYet": "Chưa thiết lập mã PIN",
+      "hasPinAlready": "Đã thiết lập mã PIN"
+    },
+    "actions": {
+      "cancel": "Hủy bỏ",
+      "save": "Lưu cấu hình"
+    },
+    "preview": {
+      "title": "Xem trước chữ ký",
+      "noSignature": "Chưa có chữ ký"
+    },
+    "toast": {
+      "saveSignatureSuccess": "Lưu chữ ký thành công!",
+      "deleteSignatureSuccess": "Đã xóa chữ ký!",
+      "setPinSuccess": "Đã thiết lập mã PIN thành công!",
+      "changePinSuccess": "Đã đổi mã PIN thành công!",
+      "error": "Có lỗi xảy ra, vui lòng thử lại",
+      "noSignatureData": "Vui lòng vẽ hoặc tải ảnh chữ ký",
+      "invalidFile": "Vui lòng chọn file ảnh hợp lệ (PNG, JPG)",
+      "fileTooLarge": "Dung lượng file tối đa là 2MB"
+    },
+    "loading": "Đang tải..."
   }
 }
