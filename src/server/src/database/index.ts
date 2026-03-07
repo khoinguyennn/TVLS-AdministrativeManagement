@@ -14,7 +14,7 @@ import { logger } from '@utils/logger';
 const sequelize = new Sequelize.Sequelize(DB_DATABASE, DB_USER, DB_PASSWORD, {
   dialect: 'mysql',
   host: DB_HOST,
-  port: DB_PORT,
+  port: Number(DB_PORT),
   timezone: '+07:00',
   define: {
     charset: 'utf8mb4',
