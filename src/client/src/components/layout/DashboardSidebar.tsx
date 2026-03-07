@@ -3,8 +3,7 @@
 import { useState } from "react";
 
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, Link } from "@/i18n/navigation";
 
 import {
   AlertTriangle,
