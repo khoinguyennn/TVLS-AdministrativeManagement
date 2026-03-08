@@ -59,7 +59,8 @@ import {
   type CreateDeviceReportPayload,
   type UpdateDeviceReportPayload,
 } from "@/services/device-report.service";
-import { deviceService, type DeviceItem } from "@/services/device.service";
+import { deviceService } from "@/services/device.service";
+import type { Device } from "@/types/facility.types";
 import { adminUserService } from "@/services/admin-user.service";
 import type { DeviceReport, DeviceReportStats } from "@/types/device-report.types";
 import type { User } from "@/types/auth.types";
@@ -126,7 +127,7 @@ export default function DeviceReportsPage() {
   // ── Data state ──
   const [reports, setReports] = useState<DeviceReport[]>([]);
   const [stats, setStats] = useState<DeviceReportStats>({ total: 0, pending: 0, repairing: 0, completed: 0 });
-  const [devices, setDevices] = useState<DeviceItem[]>([]);
+  const [devices, setDevices] = useState<Device[]>([]);
   const [technicians, setTechnicians] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -167,7 +168,7 @@ export default function DeviceReportsPage() {
       ]);
       setReports(reportsRes.data);
       setStats(statsRes.data);
-      setDevices(devicesRes.data);
+      setDevices(devicesRes);
       // Filter technicians from user list
       setTechnicians(usersRes.data.filter((u) => u.role === "technician"));
     } catch {
