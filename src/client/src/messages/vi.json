@@ -335,13 +335,29 @@
       "approve": "Phê duyệt",
       "reject": "Từ chối",
       "delete": "Xóa",
-      "close": "Đóng"
+      "close": "Đóng",
+      "exportPdf": "Xuất PDF",
+      "signTitle": "Ký đơn nghỉ phép",
+      "signDescription": "Nhập mã PIN chữ ký để ký xác nhận đơn nghỉ phép này",
+      "signPin": "Mã PIN chữ ký",
+      "signPinPlaceholder": "Nhập 6 chữ số PIN",
+      "signConfirm": "Xác nhận ký",
+      "signed": "Đã ký",
+      "approveTitle": "Phê duyệt yêu cầu nghỉ phép",
+      "approveDescription": "Nhập mã PIN chữ ký để xác nhận phê duyệt đơn nghỉ phép này",
+      "approveConfirm": "Xác nhận phê duyệt",
+      "approverSigned": "Lãnh đạo đã ký duyệt",
+      "print": "In đơn"
     },
     "toast": {
       "createSuccess": "Tạo yêu cầu nghỉ phép thành công!",
+      "pdfDownloaded": "Đã tải file PDF thành công!",
+      "pdfError": "Lỗi khi tải file PDF, vui lòng thử lại",
       "approveSuccess": "Đã phê duyệt yêu cầu nghỉ phép!",
       "rejectSuccess": "Đã từ chối yêu cầu nghỉ phép!",
       "deleteSuccess": "Đã xóa yêu cầu nghỉ phép!",
+      "signSuccess": "Đã ký đơn nghỉ phép thành công!",
+      "signError": "Ký đơn thất bại. Vui lòng kiểm tra mã PIN",
       "error": "Có lỗi xảy ra, vui lòng thử lại"
     },
     "pagination": {
@@ -419,7 +435,7 @@
       "confirmPinPlaceholder": "Xác nhận mã PIN mới",
       "warning": "Lưu ý: Mã PIN dùng để xác thực mỗi lần thực hiện ký văn bản. Không chia sẻ mã PIN cho người khác.",
       "pinMismatch": "Mã PIN xác nhận không khớp",
-      "pinMinLength": "Mã PIN phải có ít nhất 4 ký tự",
+      "pinMinLength": "Mã PIN phải đúng 6 số",
       "pinOnlyDigits": "Mã PIN chỉ chứa số",
       "noPinYet": "Chưa thiết lập mã PIN",
       "hasPinAlready": "Đã thiết lập mã PIN"

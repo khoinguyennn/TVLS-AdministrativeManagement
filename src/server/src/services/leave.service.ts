@@ -1,4 +1,5 @@
 import { Service } from 'typedi';
+import bcrypt from 'bcrypt';
 import { DB } from '@database';
 import { CreateLeaveRequestDto, CreateLeaveTypeDto, CreateLeaveBalanceDto } from '@dtos/leave.dto';
 import { HttpException } from '@/exceptions/HttpException';
@@ -7,8 +8,10 @@ import { LeaveRequest } from '@interfaces/leave.interface';
 @Service()
 export class LeaveRequestService {
   // ── Leave Requests ──
-  public async findAll(): Promise<any[]> {
+  public async findAll(userId?: number): Promise<any[]> {
+    const where = userId ? { userId } : {};
     const requests = await DB.LeaveRequests.findAll({
+      where,
       include: [
         { model: DB.Users, as: 'user', attributes: ['id', 'fullName', 'avatar', 'role'] },
         { model: DB.LeaveTypes, as: 'leaveType', attributes: ['id', 'name', 'maxDaysPerYear'] },
@@ -48,33 +51,36 @@ export class LeaveRequestService {
     return created.get({ plain: true }) as LeaveRequest;
   }
 
-  public async approve(id: number, approvedBy: number): Promise<any> {
+  public async approve(id: number, approvedBy: number, pin: string): Promise<any> {
     const request = await DB.LeaveRequests.findByPk(id);
     if (!request) throw new HttpException(404, 'Không tìm thấy yêu cầu nghỉ phép');
     if (request.status !== 'pending') throw new HttpException(400, 'Yêu cầu này đã được xử lý');
 
-    await DB.LeaveRequests.update({ status: 'approved', approvedBy }, { where: { id } });
+    // Verify approver's PIN
+    await this.verifySignaturePin(approvedBy, pin);
+
+    await DB.LeaveRequests.update({ status: 'approved', approvedBy, approverSignedAt: new Date() }, { where: { id } });
 
     // Update leave balance: increase used days
     const year = new Date(request.startDate).getFullYear();
     const balance = await DB.LeaveBalances.findOne({ where: { userId: request.userId, year } });
     if (balance) {
-      await DB.LeaveBalances.update(
-        { usedDays: balance.usedDays + request.totalDays },
-        { where: { id: balance.id } },
-      );
+      await DB.LeaveBalances.update({ usedDays: balance.usedDays + request.totalDays }, { where: { id: balance.id } });
     }
 
     return this.findById(id);
   }
 
-  public async reject(id: number, approvedBy: number, rejectedReason?: string): Promise<any> {
+  public async reject(id: number, approvedBy: number, pin: string, rejectedReason?: string): Promise<any> {
     const request = await DB.LeaveRequests.findByPk(id);
     if (!request) throw new HttpException(404, 'Không tìm thấy yêu cầu nghỉ phép');
     if (request.status !== 'pending') throw new HttpException(400, 'Yêu cầu này đã được xử lý');
 
+    // Verify approver's PIN
+    await this.verifySignaturePin(approvedBy, pin);
+
     await DB.LeaveRequests.update(
-      { status: 'rejected', approvedBy, rejectedReason: rejectedReason || null },
+      { status: 'rejected', approvedBy, rejectedReason: rejectedReason || null, approverSignedAt: new Date() },
       { where: { id } },
     );
 
@@ -98,6 +104,30 @@ export class LeaveRequestService {
     const approved = await DB.LeaveRequests.count({ where: { ...where, status: 'approved' } });
     const rejected = await DB.LeaveRequests.count({ where: { ...where, status: 'rejected' } });
     return { total, pending, approved, rejected };
+  }
+
+  // ── Verify Signature PIN helper ──
+  private async verifySignaturePin(userId: number, pin: string): Promise<void> {
+    if (!pin) throw new HttpException(400, 'Vui lòng nhập mã PIN chữ ký');
+    const sigConfig = await DB.SignatureConfigs.findOne({ where: { userId } });
+    if (!sigConfig || !sigConfig.pinHash) throw new HttpException(400, 'Bạn chưa thiết lập mã PIN chữ ký');
+    if (!sigConfig.signatureImage) throw new HttpException(400, 'Bạn chưa thiết lập hình ảnh chữ ký');
+    const pinValid = await bcrypt.compare(pin, sigConfig.pinHash);
+    if (!pinValid) throw new HttpException(400, 'Mã PIN không chính xác');
+  }
+
+  // ── Sign Request (user signs their own leave request with PIN) ──
+  public async signRequest(requestId: number, userId: number, pin: string): Promise<any> {
+    const request = await DB.LeaveRequests.findByPk(requestId);
+    if (!request) throw new HttpException(404, 'Không tìm thấy yêu cầu nghỉ phép');
+    if (request.userId !== userId) throw new HttpException(403, 'Bạn chỉ có thể ký đơn của chính mình');
+    if (request.signedAt) throw new HttpException(400, 'Đơn này đã được ký');
+
+    await this.verifySignaturePin(userId, pin);
+
+    await DB.LeaveRequests.update({ signedAt: new Date() }, { where: { id: requestId } });
+
+    return this.findById(requestId);
   }
 
   // ── Leave Types ──

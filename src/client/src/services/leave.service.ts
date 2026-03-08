@@ -1,5 +1,6 @@
+import type { LeaveBalance, LeaveRequest, LeaveRequestStats, LeaveType } from "@/types/leave.types";
+
 import { api } from "@/lib/api";
-import type { LeaveRequest, LeaveType, LeaveBalance, LeaveRequestStats } from "@/types/leave.types";
 
 // --- Request types ---
 export interface CreateLeaveRequestPayload {
@@ -58,13 +59,22 @@ export const leaveRequestService = {
     return response.data;
   },
 
-  approve: async (id: number): Promise<LeaveRequestApiResponse> => {
-    const response = await api.put<LeaveRequestApiResponse>(`/leave-requests/${id}/approve`);
+  approve: async (id: number, pin: string): Promise<LeaveRequestApiResponse> => {
+    const response = await api.put<LeaveRequestApiResponse>(`/leave-requests/${id}/approve`, {
+      pin
+    });
     return response.data;
   },
 
-  reject: async (id: number, rejectedReason?: string): Promise<LeaveRequestApiResponse> => {
-    const response = await api.put<LeaveRequestApiResponse>(`/leave-requests/${id}/reject`, { rejectedReason });
+  reject: async (
+    id: number,
+    pin: string,
+    rejectedReason?: string
+  ): Promise<LeaveRequestApiResponse> => {
+    const response = await api.put<LeaveRequestApiResponse>(`/leave-requests/${id}/reject`, {
+      pin,
+      rejectedReason
+    });
     return response.data;
   },
 
@@ -89,4 +99,18 @@ export const leaveRequestService = {
     const response = await api.get<LeaveBalanceApiResponse>(`/leave-balances/${userId}/${year}`);
     return response.data;
   },
+
+  // PDF Export
+  exportPdf: async (id: number): Promise<Blob> => {
+    const response = await api.get(`/leave-requests/${id}/pdf`, {
+      responseType: "blob"
+    });
+    return response.data as Blob;
+  },
+
+  // Sign request (user signs their own leave request with PIN)
+  signRequest: async (id: number, pin: string): Promise<LeaveRequestApiResponse> => {
+    const response = await api.put<LeaveRequestApiResponse>(`/leave-requests/${id}/sign`, { pin });
+    return response.data;
+  }
 };

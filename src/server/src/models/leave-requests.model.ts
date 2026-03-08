@@ -3,7 +3,7 @@ import { LeaveRequest } from '@interfaces/leave.interface';
 
 export type LeaveRequestCreationAttributes = Optional<
   LeaveRequest,
-  'id' | 'reason' | 'status' | 'approvedBy' | 'rejectedReason' | 'createdAt' | 'updatedAt'
+  'id' | 'reason' | 'status' | 'approvedBy' | 'rejectedReason' | 'signedAt' | 'approverSignedAt' | 'createdAt' | 'updatedAt'
 >;
 
 export class LeaveRequestModel extends Model<LeaveRequest, LeaveRequestCreationAttributes> implements LeaveRequest {
@@ -17,6 +17,8 @@ export class LeaveRequestModel extends Model<LeaveRequest, LeaveRequestCreationA
   public status: 'pending' | 'approved' | 'rejected';
   public approvedBy: number;
   public rejectedReason: string;
+  public signedAt: Date;
+  public approverSignedAt: Date;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -76,6 +78,16 @@ export default function (sequelize: Sequelize): typeof LeaveRequestModel {
         allowNull: true,
         type: DataTypes.TEXT,
         field: 'rejected_reason',
+      },
+      signedAt: {
+        allowNull: true,
+        type: DataTypes.DATE,
+        field: 'signed_at',
+      },
+      approverSignedAt: {
+        allowNull: true,
+        type: DataTypes.DATE,
+        field: 'approver_signed_at',
       },
     },
     {

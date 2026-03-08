@@ -238,7 +238,7 @@ export default function DigitalSignaturesPage() {
       setPinError(t("pin.pinOnlyDigits"));
       return false;
     }
-    if (newPin.length < 4) {
+    if (newPin.length !== 6) {
       setPinError(t("pin.pinMinLength"));
       return false;
     }
@@ -551,8 +551,10 @@ export default function DigitalSignaturesPage() {
                   <Input
                     type={showCurrentPin ? "text" : "password"}
                     value={currentPin}
-                    onChange={(e) => setCurrentPin(e.target.value)}
+                    onChange={(e) => setCurrentPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
                     placeholder={t("pin.currentPinPlaceholder")}
+                    maxLength={6}
+                    inputMode="numeric"
                     className="pr-10"
                   />
                   <button
@@ -574,10 +576,12 @@ export default function DigitalSignaturesPage() {
                   type={showNewPin ? "text" : "password"}
                   value={newPin}
                   onChange={(e) => {
-                    setNewPin(e.target.value);
+                    setNewPin(e.target.value.replace(/\D/g, "").slice(0, 6));
                     setPinError("");
                   }}
                   placeholder={t("pin.newPinPlaceholder")}
+                  maxLength={6}
+                  inputMode="numeric"
                   className="pr-10"
                 />
                 <button
@@ -598,10 +602,12 @@ export default function DigitalSignaturesPage() {
                   type={showConfirmPin ? "text" : "password"}
                   value={confirmPin}
                   onChange={(e) => {
-                    setConfirmPin(e.target.value);
+                    setConfirmPin(e.target.value.replace(/\D/g, "").slice(0, 6));
                     setPinError("");
                   }}
                   placeholder={t("pin.confirmPinPlaceholder")}
+                  maxLength={6}
+                  inputMode="numeric"
                   className="pr-10"
                 />
                 <button

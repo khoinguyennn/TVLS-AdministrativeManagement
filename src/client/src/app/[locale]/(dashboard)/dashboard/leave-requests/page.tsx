@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 
 import {
   CalendarDays,
@@ -8,17 +9,24 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock,
+  Download,
   Eye,
   FileText,
   Loader2,
+  PenLine,
   Plus,
+  Printer,
   Search,
   Trash2,
-  XCircle,
+  XCircle
 } from "lucide-react";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
+
+import type { LeaveRequest, LeaveRequestStats, LeaveType } from "@/types/leave.types";
+import { env } from "@/env";
+
+import { authStorage } from "@/lib/auth-storage";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/ui/avatar";
 import { Badge } from "@/ui/badge";
@@ -30,33 +38,14 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from "@/ui/dialog";
 import { Input } from "@/ui/input";
 import { Label } from "@/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/ui/table";
 import { Textarea } from "@/ui/textarea";
-
-import { env } from "@/env";
-import {
-  leaveRequestService,
-  type CreateLeaveRequestPayload,
-} from "@/services/leave.service";
-import type { LeaveRequest, LeaveType, LeaveRequestStats } from "@/types/leave.types";
+import { leaveRequestService, type CreateLeaveRequestPayload } from "@/services/leave.service";
 
 // ── Constants ──
 const STATUSES = ["pending", "approved", "rejected"] as const;
@@ -69,7 +58,7 @@ const statusBadgeClass: Record<string, string> = {
   approved:
     "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 border-emerald-100 dark:border-emerald-800",
   rejected:
-    "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400 border-red-100 dark:border-red-800",
+    "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400 border-red-100 dark:border-red-800"
 };
 
 // ── Helpers ──
@@ -94,7 +83,7 @@ function formatDate(dateStr?: string) {
   return d.toLocaleDateString("vi-VN", {
     day: "2-digit",
     month: "2-digit",
-    year: "numeric",
+    year: "numeric"
   });
 }
 
@@ -106,7 +95,12 @@ export default function LeaveRequestsPage() {
 
   // ── Data state ──
   const [requests, setRequests] = useState<LeaveRequest[]>([]);
-  const [stats, setStats] = useState<LeaveRequestStats>({ total: 0, pending: 0, approved: 0, rejected: 0 });
+  const [stats, setStats] = useState<LeaveRequestStats>({
+    total: 0,
+    pending: 0,
+    approved: 0,
+    rejected: 0
+  });
   const [leaveTypes, setLeaveTypes] = useState<LeaveType[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -125,6 +119,13 @@ export default function LeaveRequestsPage() {
   const [rejectingRequest, setRejectingRequest] = useState<LeaveRequest | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingRequest, setDeletingRequest] = useState<LeaveRequest | null>(null);
+  const [signDialogOpen, setSignDialogOpen] = useState(false);
+  const [signingRequest, setSigningRequest] = useState<LeaveRequest | null>(null);
+  const [signPin, setSignPin] = useState("");
+  const [approveDialogOpen, setApproveDialogOpen] = useState(false);
+  const [approvingRequest, setApprovingRequest] = useState<LeaveRequest | null>(null);
+  const [approvePin, setApprovePin] = useState("");
+  const [rejectPin, setRejectPin] = useState("");
   const [formLoading, setFormLoading] = useState(false);
 
   // ── Form state ──
@@ -135,6 +136,17 @@ export default function LeaveRequestsPage() {
   const [formReason, setFormReason] = useState("");
   const [formRejectedReason, setFormRejectedReason] = useState("");
 
+  // ── Current user role ──
+  const [userRole, setUserRole] = useState<string>("");
+  const [currentUserId, setCurrentUserId] = useState<number>(0);
+  const isAdminOrManager = userRole === "admin" || userRole === "manager";
+
+  useEffect(() => {
+    const user = authStorage.getUser();
+    if (user?.role) setUserRole(user.role);
+    if (user?.id) setCurrentUserId(user.id);
+  }, []);
+
   // ── Fetch data ──
   const fetchData = useCallback(async () => {
     try {
@@ -142,7 +154,7 @@ export default function LeaveRequestsPage() {
       const [requestsRes, statsRes, typesRes] = await Promise.all([
         leaveRequestService.getAll(),
         leaveRequestService.getStats(),
-        leaveRequestService.getLeaveTypes(),
+        leaveRequestService.getLeaveTypes()
       ]);
       setRequests(requestsRes.data);
       setStats(statsRes.data);
@@ -181,7 +193,7 @@ export default function LeaveRequestsPage() {
         (r) =>
           (r.user?.fullName && r.user.fullName.toLowerCase().includes(q)) ||
           (r.reason && r.reason.toLowerCase().includes(q)) ||
-          String(r.id).includes(q),
+          String(r.id).includes(q)
       );
     }
 
@@ -226,7 +238,7 @@ export default function LeaveRequestsPage() {
         leaveTypeId: Number(formLeaveTypeId),
         startDate: formStartDate,
         endDate: formEndDate,
-        totalDays: Number(formTotalDays),
+        totalDays: Number(formTotalDays)
       };
       if (formReason.trim()) payload.reason = formReason;
 
@@ -242,39 +254,45 @@ export default function LeaveRequestsPage() {
   }, [formLeaveTypeId, formStartDate, formEndDate, formTotalDays, formReason, fetchData, t]);
 
   // ── Approve ──
-  const handleApprove = useCallback(
-    async (id: number) => {
-      try {
-        setFormLoading(true);
-        await leaveRequestService.approve(id);
-        toast.success(t("toast.approveSuccess"));
-        fetchData();
-      } catch {
-        toast.error(t("toast.error"));
-      } finally {
-        setFormLoading(false);
-      }
-    },
-    [fetchData, t],
-  );
-
-  // ── Reject ──
-  const handleReject = useCallback(async () => {
-    if (!rejectingRequest) return;
+  const handleApprove = useCallback(async () => {
+    if (!approvingRequest || !approvePin) return;
     try {
       setFormLoading(true);
-      await leaveRequestService.reject(rejectingRequest.id, formRejectedReason || undefined);
-      toast.success(t("toast.rejectSuccess"));
-      setRejectDialogOpen(false);
-      setRejectingRequest(null);
-      setFormRejectedReason("");
+      await leaveRequestService.approve(approvingRequest.id, approvePin);
+      toast.success(t("toast.approveSuccess"));
+      setApproveDialogOpen(false);
+      setApprovingRequest(null);
+      setApprovePin("");
       fetchData();
     } catch {
       toast.error(t("toast.error"));
     } finally {
       setFormLoading(false);
     }
-  }, [rejectingRequest, formRejectedReason, fetchData, t]);
+  }, [approvingRequest, approvePin, fetchData, t]);
+
+  // ── Reject ──
+  const handleReject = useCallback(async () => {
+    if (!rejectingRequest || !rejectPin) return;
+    try {
+      setFormLoading(true);
+      await leaveRequestService.reject(
+        rejectingRequest.id,
+        rejectPin,
+        formRejectedReason || undefined
+      );
+      toast.success(t("toast.rejectSuccess"));
+      setRejectDialogOpen(false);
+      setRejectingRequest(null);
+      setFormRejectedReason("");
+      setRejectPin("");
+      fetchData();
+    } catch {
+      toast.error(t("toast.error"));
+    } finally {
+      setFormLoading(false);
+    }
+  }, [rejectingRequest, rejectPin, formRejectedReason, fetchData, t]);
 
   // ── Delete ──
   const handleDelete = useCallback(async () => {
@@ -292,6 +310,64 @@ export default function LeaveRequestsPage() {
       setFormLoading(false);
     }
   }, [deletingRequest, fetchData, t]);
+
+  // ── Export PDF ──
+  const handleExportPdf = useCallback(
+    async (id: number) => {
+      try {
+        const blob = await leaveRequestService.exportPdf(id);
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `leave-request-${id}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        toast.success(t("toast.pdfDownloaded"));
+      } catch {
+        toast.error(t("toast.pdfError"));
+      }
+    },
+    [t]
+  );
+
+  // ── Print PDF ──
+  const handlePrint = useCallback(
+    async (id: number) => {
+      try {
+        const blob = await leaveRequestService.exportPdf(id);
+        const url = window.URL.createObjectURL(blob);
+        const printWindow = window.open(url, "_blank");
+        if (printWindow) {
+          printWindow.addEventListener("load", () => {
+            printWindow.print();
+          });
+        }
+      } catch {
+        toast.error(t("toast.pdfError"));
+      }
+    },
+    [t]
+  );
+
+  // ── Sign Request ──
+  const handleSign = useCallback(async () => {
+    if (!signingRequest || !signPin) return;
+    try {
+      setFormLoading(true);
+      await leaveRequestService.signRequest(signingRequest.id, signPin);
+      toast.success(t("toast.signSuccess"));
+      setSignDialogOpen(false);
+      setSigningRequest(null);
+      setSignPin("");
+      fetchData();
+    } catch {
+      toast.error(t("toast.signError"));
+    } finally {
+      setFormLoading(false);
+    }
+  }, [signingRequest, signPin, fetchData, t]);
 
   // ── Pagination helpers ──
   const pageNumbers = useMemo(() => {
@@ -311,29 +387,29 @@ export default function LeaveRequestsPage() {
       value: stats.total,
       icon: <FileText className="size-5" />,
       bg: "bg-slate-100 dark:bg-slate-800",
-      text: "text-slate-600 dark:text-slate-300",
+      text: "text-slate-600 dark:text-slate-300"
     },
     {
       label: t("stats.pending"),
       value: stats.pending,
       icon: <Clock className="size-5" />,
       bg: "bg-amber-50 dark:bg-amber-900/20",
-      text: "text-amber-600",
+      text: "text-amber-600"
     },
     {
       label: t("stats.approved"),
       value: stats.approved,
       icon: <CheckCircle2 className="size-5" />,
       bg: "bg-emerald-50 dark:bg-emerald-900/20",
-      text: "text-emerald-600",
+      text: "text-emerald-600"
     },
     {
       label: t("stats.rejected"),
       value: stats.rejected,
       icon: <XCircle className="size-5" />,
       bg: "bg-red-50 dark:bg-red-900/20",
-      text: "text-red-600",
-    },
+      text: "text-red-600"
+    }
   ];
 
   // ═══════════════════════════════════════════════════════════
@@ -341,7 +417,7 @@ export default function LeaveRequestsPage() {
     <div className="flex flex-col gap-6">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-muted-foreground">
-        <Link href="/dashboard" className="hover:text-foreground transition-colors">
+        <Link href="/dashboard" className="transition-colors hover:text-foreground">
           {tBreadcrumb("home")}
         </Link>
         <ChevronRight className="size-4" />
@@ -352,7 +428,7 @@ export default function LeaveRequestsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">{t("title")}</h2>
-          <p className="text-muted-foreground text-sm mt-1">{t("description")}</p>
+          <p className="mt-1 text-sm text-muted-foreground">{t("description")}</p>
         </div>
         <Button onClick={handleOpenCreate} className="gap-2">
           <Plus className="size-4" />
@@ -361,24 +437,22 @@ export default function LeaveRequestsPage() {
       </div>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         {statCards.map((card) => (
-          <div key={card.label} className="bg-card border rounded-xl p-5 shadow-sm">
-            <div className="flex justify-between items-start mb-4">
-              <div className={`p-2 rounded-lg ${card.bg} ${card.text}`}>
-                {card.icon}
-              </div>
+          <div key={card.label} className="rounded-xl border bg-card p-5 shadow-sm">
+            <div className="mb-4 flex items-start justify-between">
+              <div className={`rounded-lg p-2 ${card.bg} ${card.text}`}>{card.icon}</div>
             </div>
             <p className="text-sm font-medium text-muted-foreground">{card.label}</p>
-            <p className="text-2xl font-bold mt-1">{card.value}</p>
+            <p className="mt-1 text-2xl font-bold">{card.value}</p>
           </div>
         ))}
       </div>
 
       {/* Search & Filters */}
-      <div className="bg-card border rounded-xl p-4 shadow-sm flex flex-wrap gap-4">
-        <div className="relative flex-1 min-w-75">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+      <div className="flex flex-wrap gap-4 rounded-xl border bg-card p-4 shadow-sm">
+        <div className="relative min-w-75 flex-1">
+          <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -402,48 +476,49 @@ export default function LeaveRequestsPage() {
       </div>
 
       {/* Data Table */}
-      <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
+      <div className="overflow-hidden rounded-xl border bg-card shadow-sm">
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <Loader2 className="size-6 animate-spin text-muted-foreground" />
             <span className="ml-2 text-sm text-muted-foreground">{t("loading")}</span>
           </div>
         ) : paginatedRequests.length === 0 ? (
-          <div className="text-center py-20 text-muted-foreground text-sm">
-            {t("noResults")}
-          </div>
+          <div className="py-20 text-center text-sm text-muted-foreground">{t("noResults")}</div>
         ) : (
           <>
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/50">
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">
+                  <TableHead className="px-6 py-4 text-xs font-bold tracking-wider uppercase">
                     {t("columns.employee")}
                   </TableHead>
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">
+                  <TableHead className="px-6 py-4 text-xs font-bold tracking-wider uppercase">
                     {t("columns.leaveType")}
                   </TableHead>
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">
+                  <TableHead className="px-6 py-4 text-xs font-bold tracking-wider uppercase">
                     {t("columns.duration")}
                   </TableHead>
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-center">
+                  <TableHead className="px-6 py-4 text-center text-xs font-bold tracking-wider uppercase">
                     {t("columns.status")}
                   </TableHead>
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-right">
+                  <TableHead className="px-6 py-4 text-right text-xs font-bold tracking-wider uppercase">
                     {t("columns.actions")}
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {paginatedRequests.map((request) => (
-                  <TableRow key={request.id} className="hover:bg-muted/30 transition-colors">
+                  <TableRow key={request.id} className="transition-colors hover:bg-muted/30">
                     {/* Employee */}
                     <TableCell className="px-6 py-4">
                       {request.user ? (
                         <div className="flex items-center gap-3">
                           <Avatar className="size-8">
-                            <AvatarImage src={getAvatarUrl(request.user.avatar)} alt={request.user.fullName} />
-                            <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">
+                            <AvatarImage
+                              src={getAvatarUrl(request.user.avatar)}
+                              alt={request.user.fullName}
+                            />
+                            <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary">
                               {getInitials(request.user.fullName)}
                             </AvatarFallback>
                           </Avatar>
@@ -491,13 +566,34 @@ export default function LeaveRequestsPage() {
                         >
                           <Eye className="size-4" />
                         </Button>
-                        {request.status === "pending" && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="size-8 text-muted-foreground hover:text-blue-600"
+                          onClick={() => handleExportPdf(request.id)}
+                        >
+                          <Download className="size-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="size-8 text-muted-foreground hover:text-orange-600"
+                          onClick={() => handlePrint(request.id)}
+                          title={t("dialog.print")}
+                        >
+                          <Printer className="size-4" />
+                        </Button>
+                        {request.status === "pending" && isAdminOrManager && (
                           <>
                             <Button
                               variant="ghost"
                               size="icon"
                               className="size-8 text-muted-foreground hover:text-emerald-600"
-                              onClick={() => handleApprove(request.id)}
+                              onClick={() => {
+                                setApprovingRequest(request);
+                                setApprovePin("");
+                                setApproveDialogOpen(true);
+                              }}
                               disabled={formLoading}
                             >
                               <CheckCircle2 className="size-4" />
@@ -509,23 +605,51 @@ export default function LeaveRequestsPage() {
                               onClick={() => {
                                 setRejectingRequest(request);
                                 setFormRejectedReason("");
+                                setRejectPin("");
                                 setRejectDialogOpen(true);
                               }}
                             >
                               <XCircle className="size-4" />
                             </Button>
+                          </>
+                        )}
+                        {request.status === "pending" &&
+                          request.userId === currentUserId &&
+                          !request.signedAt && (
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="size-8 text-muted-foreground hover:text-destructive"
+                              className="size-8 text-muted-foreground hover:text-violet-600"
+                              title={t("dialog.signTitle")}
                               onClick={() => {
-                                setDeletingRequest(request);
-                                setDeleteDialogOpen(true);
+                                setSigningRequest(request);
+                                setSignPin("");
+                                setSignDialogOpen(true);
                               }}
                             >
-                              <Trash2 className="size-4" />
+                              <PenLine className="size-4" />
                             </Button>
-                          </>
+                          )}
+                        {request.signedAt && (
+                          <Badge
+                            variant="outline"
+                            className="border-violet-200 bg-violet-50 text-xs text-violet-700 dark:border-violet-800 dark:bg-violet-900/20 dark:text-violet-400"
+                          >
+                            {t("dialog.signed")}
+                          </Badge>
+                        )}
+                        {request.status === "pending" && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-8 text-muted-foreground hover:text-destructive"
+                            onClick={() => {
+                              setDeletingRequest(request);
+                              setDeleteDialogOpen(true);
+                            }}
+                          >
+                            <Trash2 className="size-4" />
+                          </Button>
                         )}
                       </div>
                     </TableCell>
@@ -535,12 +659,11 @@ export default function LeaveRequestsPage() {
             </Table>
 
             {/* Pagination */}
-            <div className="px-6 py-4 bg-muted/50 border-t flex items-center justify-between">
+            <div className="flex items-center justify-between border-t bg-muted/50 px-6 py-4">
               <p className="text-xs text-muted-foreground">
-                {t("pagination.showing")} {(currentPage - 1) * PAGE_SIZE + 1}{" "}
-                {t("pagination.to")}{" "}
-                {Math.min(currentPage * PAGE_SIZE, filteredRequests.length)}{" "}
-                {t("pagination.of")} {filteredRequests.length} {t("pagination.requests")}
+                {t("pagination.showing")} {(currentPage - 1) * PAGE_SIZE + 1} {t("pagination.to")}{" "}
+                {Math.min(currentPage * PAGE_SIZE, filteredRequests.length)} {t("pagination.of")}{" "}
+                {filteredRequests.length} {t("pagination.requests")}
               </p>
               <div className="flex items-center gap-1">
                 <Button
@@ -590,10 +713,10 @@ export default function LeaveRequestsPage() {
           {viewingRequest && (
             <div className="space-y-4">
               {/* Employee */}
-              <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
+              <div className="flex items-center gap-3 rounded-lg bg-muted/50 p-3">
                 <Avatar className="size-10">
                   <AvatarImage src={getAvatarUrl(viewingRequest.user?.avatar)} />
-                  <AvatarFallback className="bg-primary/10 text-primary font-bold">
+                  <AvatarFallback className="bg-primary/10 font-bold text-primary">
                     {viewingRequest.user ? getInitials(viewingRequest.user.fullName) : "?"}
                   </AvatarFallback>
                 </Avatar>
@@ -604,30 +727,47 @@ export default function LeaveRequestsPage() {
 
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground mb-1">{t("form.leaveType")}</p>
+                  <p className="mb-1 text-xs font-medium text-muted-foreground">
+                    {t("form.leaveType")}
+                  </p>
                   <p className="font-medium">{viewingRequest.leaveType?.name || "-"}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground mb-1">{t("columns.status")}</p>
-                  <Badge variant="outline" className={statusBadgeClass[viewingRequest.status] || ""}>
+                  <p className="mb-1 text-xs font-medium text-muted-foreground">
+                    {t("columns.status")}
+                  </p>
+                  <Badge
+                    variant="outline"
+                    className={statusBadgeClass[viewingRequest.status] || ""}
+                  >
                     {t(`statuses.${viewingRequest.status}`)}
                   </Badge>
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground mb-1">{t("form.startDate")}</p>
+                  <p className="mb-1 text-xs font-medium text-muted-foreground">
+                    {t("form.startDate")}
+                  </p>
                   <p className="font-medium">{formatDate(viewingRequest.startDate)}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground mb-1">{t("form.endDate")}</p>
+                  <p className="mb-1 text-xs font-medium text-muted-foreground">
+                    {t("form.endDate")}
+                  </p>
                   <p className="font-medium">{formatDate(viewingRequest.endDate)}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground mb-1">{t("form.totalDays")}</p>
-                  <p className="font-medium">{viewingRequest.totalDays} {t("days")}</p>
+                  <p className="mb-1 text-xs font-medium text-muted-foreground">
+                    {t("form.totalDays")}
+                  </p>
+                  <p className="font-medium">
+                    {viewingRequest.totalDays} {t("days")}
+                  </p>
                 </div>
                 {viewingRequest.approver && (
                   <div>
-                    <p className="text-xs font-medium text-muted-foreground mb-1">{t("form.approvedBy")}</p>
+                    <p className="mb-1 text-xs font-medium text-muted-foreground">
+                      {t("form.approvedBy")}
+                    </p>
                     <p className="font-medium">{viewingRequest.approver.fullName}</p>
                   </div>
                 )}
@@ -635,22 +775,64 @@ export default function LeaveRequestsPage() {
 
               {viewingRequest.reason && (
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground mb-1">{t("form.reason")}</p>
-                  <p className="text-sm bg-muted/50 p-3 rounded-lg">{viewingRequest.reason}</p>
+                  <p className="mb-1 text-xs font-medium text-muted-foreground">
+                    {t("form.reason")}
+                  </p>
+                  <p className="rounded-lg bg-muted/50 p-3 text-sm">{viewingRequest.reason}</p>
                 </div>
               )}
 
               {viewingRequest.rejectedReason && (
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground mb-1">{t("form.rejectedReason")}</p>
-                  <p className="text-sm bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 p-3 rounded-lg">
+                  <p className="mb-1 text-xs font-medium text-muted-foreground">
+                    {t("form.rejectedReason")}
+                  </p>
+                  <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-900/10 dark:text-red-400">
                     {viewingRequest.rejectedReason}
                   </p>
+                </div>
+              )}
+
+              {viewingRequest.signedAt && (
+                <div className="flex items-center gap-2 rounded-lg bg-violet-50 p-3 dark:bg-violet-900/10">
+                  <PenLine className="size-4 text-violet-600" />
+                  <span className="text-sm font-medium text-violet-700 dark:text-violet-400">
+                    {t("dialog.signed")} — {formatDate(viewingRequest.signedAt)}
+                  </span>
+                </div>
+              )}
+
+              {viewingRequest.approverSignedAt && (
+                <div className="flex items-center gap-2 rounded-lg bg-emerald-50 p-3 dark:bg-emerald-900/10">
+                  <CheckCircle2 className="size-4 text-emerald-600" />
+                  <span className="text-sm font-medium text-emerald-700 dark:text-emerald-400">
+                    {t("dialog.approverSigned")} — {formatDate(viewingRequest.approverSignedAt)}
+                  </span>
                 </div>
               )}
             </div>
           )}
           <DialogFooter>
+            {viewingRequest && (
+              <>
+                <Button
+                  variant="outline"
+                  className="gap-2"
+                  onClick={() => handleExportPdf(viewingRequest.id)}
+                >
+                  <Download className="size-4" />
+                  {t("dialog.exportPdf")}
+                </Button>
+                <Button
+                  variant="outline"
+                  className="gap-2"
+                  onClick={() => handlePrint(viewingRequest.id)}
+                >
+                  <Printer className="size-4" />
+                  {t("dialog.print")}
+                </Button>
+              </>
+            )}
             <DialogClose asChild>
               <Button variant="outline">{t("dialog.close")}</Button>
             </DialogClose>
@@ -757,14 +939,107 @@ export default function LeaveRequestsPage() {
                 rows={3}
               />
             </div>
+            <div className="grid gap-2">
+              <Label>{t("dialog.signPin")}</Label>
+              <Input
+                type="password"
+                maxLength={6}
+                value={rejectPin}
+                onChange={(e) => setRejectPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                placeholder={t("dialog.signPinPlaceholder")}
+                className="text-center text-lg tracking-widest"
+              />
+            </div>
           </div>
           <DialogFooter>
             <DialogClose asChild>
               <Button variant="outline">{t("dialog.cancel")}</Button>
             </DialogClose>
-            <Button variant="destructive" onClick={handleReject} disabled={formLoading}>
+            <Button
+              variant="destructive"
+              onClick={handleReject}
+              disabled={formLoading || rejectPin.length !== 6}
+            >
               {formLoading && <Loader2 className="mr-2 size-4 animate-spin" />}
               {t("dialog.reject")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* ── Sign Dialog ── */}
+      <Dialog open={signDialogOpen} onOpenChange={setSignDialogOpen}>
+        <DialogContent className="sm:max-w-100">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <PenLine className="size-5 text-violet-600" />
+              {t("dialog.signTitle")}
+            </DialogTitle>
+            <DialogDescription>{t("dialog.signDescription")}</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label>{t("dialog.signPin")}</Label>
+              <Input
+                type="password"
+                maxLength={6}
+                value={signPin}
+                onChange={(e) => setSignPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                placeholder={t("dialog.signPinPlaceholder")}
+                className="text-center text-lg tracking-widest"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">{t("dialog.cancel")}</Button>
+            </DialogClose>
+            <Button
+              onClick={handleSign}
+              disabled={formLoading || signPin.length !== 6}
+              className="bg-violet-600 hover:bg-violet-700"
+            >
+              {formLoading && <Loader2 className="mr-2 size-4 animate-spin" />}
+              {t("dialog.signConfirm")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* ── Approve Dialog (PIN) ── */}
+      <Dialog open={approveDialogOpen} onOpenChange={setApproveDialogOpen}>
+        <DialogContent className="sm:max-w-100">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <CheckCircle2 className="size-5 text-emerald-600" />
+              {t("dialog.approveTitle")}
+            </DialogTitle>
+            <DialogDescription>{t("dialog.approveDescription")}</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label>{t("dialog.signPin")}</Label>
+              <Input
+                type="password"
+                maxLength={6}
+                value={approvePin}
+                onChange={(e) => setApprovePin(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                placeholder={t("dialog.signPinPlaceholder")}
+                className="text-center text-lg tracking-widest"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">{t("dialog.cancel")}</Button>
+            </DialogClose>
+            <Button
+              onClick={handleApprove}
+              disabled={formLoading || approvePin.length !== 6}
+              className="bg-emerald-600 hover:bg-emerald-700"
+            >
+              {formLoading && <Loader2 className="mr-2 size-4 animate-spin" />}
+              {t("dialog.approveConfirm")}
             </Button>
           </DialogFooter>
         </DialogContent>

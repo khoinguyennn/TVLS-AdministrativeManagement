@@ -15,6 +15,8 @@ export interface LeaveRequest {
   status: 'pending' | 'approved' | 'rejected';
   approvedBy?: number;
   rejectedReason?: string;
+  signedAt?: Date;
+  approverSignedAt?: Date;
   createdAt?: Date;
   updatedAt?: Date;
 }

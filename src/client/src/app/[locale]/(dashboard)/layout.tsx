@@ -32,7 +32,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, []);
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950">
+    <div className="flex min-h-screen bg-muted/40">
       <DashboardSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <main className="flex min-h-screen flex-1 flex-col lg:ml-64">
         <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />

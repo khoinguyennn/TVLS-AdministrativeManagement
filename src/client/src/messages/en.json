@@ -335,13 +335,29 @@
       "approve": "Approve",
       "reject": "Reject",
       "delete": "Delete",
-      "close": "Close"
+      "close": "Close",
+      "exportPdf": "Export PDF",
+      "signTitle": "Sign Leave Request",
+      "signDescription": "Enter your signature PIN to sign this leave request",
+      "signPin": "Signature PIN",
+      "signPinPlaceholder": "Enter 6-digit PIN",
+      "signConfirm": "Confirm Sign",
+      "signed": "Signed",
+      "approveTitle": "Approve Leave Request",
+      "approveDescription": "Enter your signature PIN to confirm approval of this leave request",
+      "approveConfirm": "Confirm Approve",
+      "approverSigned": "Approved & Signed by Leader",
+      "print": "Print"
     },
     "toast": {
       "createSuccess": "Leave request created successfully!",
+      "pdfDownloaded": "PDF file downloaded successfully!",
+      "pdfError": "Error downloading PDF, please try again",
       "approveSuccess": "Leave request approved!",
       "rejectSuccess": "Leave request rejected!",
       "deleteSuccess": "Leave request deleted!",
+      "signSuccess": "Leave request signed successfully!",
+      "signError": "Signing failed. Please check your PIN",
       "error": "An error occurred, please try again"
     },
     "pagination": {
@@ -419,7 +435,7 @@
       "confirmPinPlaceholder": "Confirm new PIN",
       "warning": "Note: PIN is used to authenticate each document signing. Do not share your PIN with others.",
       "pinMismatch": "PIN confirmation does not match",
-      "pinMinLength": "PIN must be at least 4 characters",
+      "pinMinLength": "PIN must be exactly 6 digits",
       "pinOnlyDigits": "PIN must contain only digits",
       "noPinYet": "PIN not set yet",
       "hasPinAlready": "PIN has been set"
