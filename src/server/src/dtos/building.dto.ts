@@ -1,18 +1,9 @@
-import { IsString, IsNotEmpty, IsOptional, IsInt, Min } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateBuildingDto {
   @IsString()
   @IsNotEmpty()
-  public code: string;
-
-  @IsString()
-  @IsNotEmpty()
   public name: string;
-
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  public floors?: number;
 
   @IsOptional()
   @IsString()
@@ -22,16 +13,7 @@ export class CreateBuildingDto {
 export class UpdateBuildingDto {
   @IsOptional()
   @IsString()
-  public code?: string;
-
-  @IsOptional()
-  @IsString()
   public name?: string;
-
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  public floors?: number;
 
   @IsOptional()
   @IsString()

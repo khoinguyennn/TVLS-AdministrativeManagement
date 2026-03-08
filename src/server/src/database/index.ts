@@ -5,6 +5,7 @@ import UserModel from '@models/users.model';
 import BuildingModel from '@models/building.model';
 import RoomModel from '@models/room.model';
 import EquipmentModel from '@models/equipment.model';
+import DeviceModel from '@models/device.model';
 import { logger } from '@utils/logger';
 
 const sequelize = new Sequelize.Sequelize(DB_DATABASE, DB_USER, DB_PASSWORD, {
@@ -37,6 +38,7 @@ const OTPs = OTPModel(sequelize);
 const Buildings = BuildingModel(sequelize);
 const Rooms = RoomModel(sequelize);
 const Equipment = EquipmentModel(sequelize);
+const Devices = DeviceModel(sequelize);
 
 // Define associations
 Users.hasMany(OTPs, {
@@ -71,12 +73,24 @@ Equipment.belongsTo(Rooms, {
   as: 'room',
 });
 
+// Room - Device associations
+Rooms.hasMany(Devices, {
+  foreignKey: 'roomId',
+  as: 'devices',
+});
+
+Devices.belongsTo(Rooms, {
+  foreignKey: 'roomId',
+  as: 'room',
+});
+
 export const DB = {
   Users,
   OTPs,
   Buildings,
   Rooms,
   Equipment,
+  Devices,
   sequelize, // connection instance (RAW queries)
   Sequelize, // library
 };

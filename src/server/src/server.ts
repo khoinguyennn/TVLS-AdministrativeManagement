@@ -5,6 +5,7 @@ import { UserRoute } from '@routes/users.route';
 import { BuildingRoute } from '@routes/building.route';
 import { RoomRoute } from '@routes/room.route';
 import { EquipmentRoute } from '@routes/equipment.route';
+import { DeviceRoute } from '@routes/device.route';
 import { ValidateEnv } from '@utils/validateEnv';
 ValidateEnv();
 
@@ -15,6 +16,7 @@ const app = new App([
   new BuildingRoute(),
   new RoomRoute(),
   new EquipmentRoute(),
+  new DeviceRoute(),
 ]);
 
 app.listen();

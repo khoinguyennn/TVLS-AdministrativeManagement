@@ -1,18 +1,12 @@
 // Building Types
 export interface Building {
   id: number;
-  code: string;
   name: string;
-  floors?: number;
   description?: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface CreateBuildingInput {
-  code: string;
   name: string;
-  floors?: number;
   description?: string;
 }
 
@@ -23,32 +17,34 @@ export interface Room {
   id: number;
   buildingId: number;
   name: string;
-  code: string;
-  floor?: number;
-  capacity?: number;
-  area?: number;
-  type: 'classroom' | 'lab' | 'office' | 'meeting' | 'storage' | 'other';
-  status: 'available' | 'occupied' | 'maintenance' | 'unavailable';
-  description?: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface CreateRoomInput {
   buildingId: number;
   name: string;
-  code: string;
-  floor?: number;
-  capacity?: number;
-  area?: number;
-  type: 'classroom' | 'lab' | 'office' | 'meeting' | 'storage' | 'other';
-  status?: 'available' | 'occupied' | 'maintenance' | 'unavailable';
-  description?: string;
 }
 
 export interface UpdateRoomInput extends Partial<CreateRoomInput> {}
 
-// Equipment Types
+// Device Types
+export interface Device {
+  id: number;
+  name: string;
+  roomId?: number;
+  status: 'active' | 'under_repair' | 'waiting_replacement' | 'broken';
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface CreateDeviceInput {
+  name: string;
+  roomId?: number;
+  status?: 'active' | 'under_repair' | 'waiting_replacement' | 'broken';
+}
+
+export interface UpdateDeviceInput extends Partial<CreateDeviceInput> {}
+
+// Equipment Types (keeping for backward compatibility)
 export interface Equipment {
   id: number;
   roomId: number;

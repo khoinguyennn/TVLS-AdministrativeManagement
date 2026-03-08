@@ -6,7 +6,6 @@ import { Building2, ChevronLeft, ChevronRight, Edit, Loader2, Plus, Search, Tras
 import Link from 'next/link';
 import { toast } from 'sonner';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -19,26 +18,12 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 import { buildingService } from '@/services/building.service';
 import type { Building, CreateBuildingInput, UpdateBuildingInput } from '@/types/facility.types';
 
 const PAGE_SIZE = 10;
-const STATUSES = ['active', 'inactive', 'maintenance'] as const;
-
-const statusBadgeClass: Record<string, string> = {
-  active: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-transparent',
-  inactive: 'bg-slate-100 text-slate-700 dark:bg-slate-900/30 dark:text-slate-400 border-transparent',
-  maintenance: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border-transparent',
-};
-
-const statusLabels: Record<string, string> = {
-  active: 'Hoạt động',
-  inactive: 'Không hoạt động',
-  maintenance: 'Bảo trì',
-};
 
 export default function BuildingsPage() {
   const queryClient = useQueryClient();
@@ -51,7 +36,6 @@ export default function BuildingsPage() {
 
   // Filter & pagination state
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState(1);
 
   // Dialog state
@@ -62,11 +46,7 @@ export default function BuildingsPage() {
 
   // Form state
   const [formName, setFormName] = useState('');
-  const [formCode, setFormCode] = useState('');
-  const [formAddress, setFormAddress] = useState('');
-  const [formFloors, setFormFloors] = useState('');
   const [formDescription, setFormDescription] = useState('');
-  const [formStatus, setFormStatus] = useState<string>('active');
 
   // Mutations
   const createMutation = useMutation({
@@ -111,15 +91,11 @@ export default function BuildingsPage() {
 
     if (search.trim()) {
       const q = search.toLowerCase();
-      result = result.filter((b) => b.name.toLowerCase().includes(q) || b.code.toLowerCase().includes(q));
-    }
-
-    if (statusFilter !== 'all') {
-      result = result.filter((b) => b.status === statusFilter);
+      result = result.filter((b) => b.name.toLowerCase().includes(q));
     }
 
     return result;
-  }, [buildings, search, statusFilter]);
+  }, [buildings, search]);
 
   const totalPages = Math.max(1, Math.ceil(filteredBuildings.length / PAGE_SIZE));
   const paginatedBuildings = useMemo(() => {
@@ -129,39 +105,27 @@ export default function BuildingsPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [search, statusFilter]);
+  }, [search]);
 
   // Dialog handlers
   const handleOpenCreate = useCallback(() => {
     setEditingBuilding(null);
     setFormName('');
-    setFormCode('');
-    setFormAddress('');
-    setFormFloors('');
     setFormDescription('');
-    setFormStatus('active');
     setDialogOpen(true);
   }, []);
 
   const handleOpenEdit = useCallback((building: Building) => {
     setEditingBuilding(building);
     setFormName(building.name);
-    setFormCode(building.code);
-    setFormAddress(building.address || '');
-    setFormFloors(building.floors?.toString() || '');
     setFormDescription(building.description || '');
-    setFormStatus(building.status);
     setDialogOpen(true);
   }, []);
 
   const handleSubmit = useCallback(() => {
     const data: CreateBuildingInput = {
       name: formName,
-      code: formCode,
-      address: formAddress || undefined,
-      floors: formFloors ? parseInt(formFloors) : undefined,
       description: formDescription || undefined,
-      status: formStatus as Building['status'],
     };
 
     if (editingBuilding) {
@@ -169,7 +133,7 @@ export default function BuildingsPage() {
     } else {
       createMutation.mutate(data);
     }
-  }, [editingBuilding, formName, formCode, formAddress, formFloors, formDescription, formStatus, createMutation, updateMutation]);
+  }, [editingBuilding, formName, formDescription, createMutation, updateMutation]);
 
   const handleDelete = useCallback(() => {
     if (deletingBuilding) {
@@ -213,25 +177,12 @@ export default function BuildingsPage() {
         </Button>
       </div>
 
-      {/* Search & Filters */}
-      <div className="bg-card border rounded-xl p-4 shadow-sm flex flex-wrap gap-4">
-        <div className="relative flex-1 min-w-75">
+      {/* Search */}
+      <div className="bg-card border rounded-xl p-4 shadow-sm flex gap-4">
+        <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Tìm kiếm theo tên hoặc mã toà nhà..." className="pl-10" />
+          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Tìm kiếm theo tên toà nhà..." className="pl-10" />
         </div>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Tất cả trạng thái" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tất cả trạng thái</SelectItem>
-            {STATUSES.map((s) => (
-              <SelectItem key={s} value={s}>
-                {statusLabels[s]}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
       </div>
 
       {/* Data Table */}
@@ -248,24 +199,18 @@ export default function BuildingsPage() {
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/50">
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Mã</TableHead>
+                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">ID</TableHead>
                   <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Tên toà nhà</TableHead>
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Địa chỉ</TableHead>
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Số tầng</TableHead>
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Trạng thái</TableHead>
+                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Mô tả</TableHead>
                   <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-right">Hành động</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {paginatedBuildings.map((building) => (
                   <TableRow key={building.id} className="hover:bg-muted/30 transition-colors">
-                    <TableCell className="px-6 py-4 font-mono text-sm">{building.code}</TableCell>
+                    <TableCell className="px-6 py-4 font-mono text-sm">{building.id}</TableCell>
                     <TableCell className="px-6 py-4 font-semibold">{building.name}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-muted-foreground">{building.address || '-'}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm">{building.floors || '-'}</TableCell>
-                    <TableCell className="px-6 py-4">
-                      <Badge className={statusBadgeClass[building.status]}>{statusLabels[building.status]}</Badge>
-                    </TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-muted-foreground">{building.description || '-'}</TableCell>
                     <TableCell className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-1">
                         <Button variant="ghost" size="icon" className="size-8 text-muted-foreground hover:text-primary" onClick={() => handleOpenEdit(building)}>
@@ -320,53 +265,18 @@ export default function BuildingsPage() {
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>{editingBuilding ? 'Chỉnh sửa toà nhà' : 'Thêm toà nhà mới'}</DialogTitle>
             <DialogDescription>{editingBuilding ? 'Cập nhật thông tin toà nhà' : 'Nhập thông tin toà nhà mới'}</DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="name">
-                  Tên toà nhà <span className="text-destructive">*</span>
-                </Label>
-                <Input id="name" value={formName} onChange={(e) => setFormName(e.target.value)} placeholder="Ví dụ: Toà A" />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="code">
-                  Mã toà nhà <span className="text-destructive">*</span>
-                </Label>
-                <Input id="code" value={formCode} onChange={(e) => setFormCode(e.target.value)} placeholder="Ví dụ: TOA-A" disabled={!!editingBuilding} />
-              </div>
-            </div>
-
             <div className="grid gap-2">
-              <Label htmlFor="address">Địa chỉ</Label>
-              <Input id="address" value={formAddress} onChange={(e) => setFormAddress(e.target.value)} placeholder="Nhập địa chỉ toà nhà" />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="floors">Số tầng</Label>
-                <Input id="floors" type="number" min="1" value={formFloors} onChange={(e) => setFormFloors(e.target.value)} placeholder="Ví dụ: 5" />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="status">Trạng thái</Label>
-                <Select value={formStatus} onValueChange={setFormStatus}>
-                  <SelectTrigger id="status">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {STATUSES.map((s) => (
-                      <SelectItem key={s} value={s}>
-                        {statusLabels[s]}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <Label htmlFor="name">
+                Tên toà nhà <span className="text-destructive">*</span>
+              </Label>
+              <Input id="name" value={formName} onChange={(e) => setFormName(e.target.value)} placeholder="Ví dụ: Toà A" />
             </div>
 
             <div className="grid gap-2">
@@ -379,7 +289,7 @@ export default function BuildingsPage() {
             <DialogClose asChild>
               <Button variant="outline">Hủy</Button>
             </DialogClose>
-            <Button onClick={handleSubmit} disabled={createMutation.isPending || updateMutation.isPending || !formName || !formCode}>
+            <Button onClick={handleSubmit} disabled={createMutation.isPending || updateMutation.isPending || !formName}>
               {(createMutation.isPending || updateMutation.isPending) && <Loader2 className="mr-2 size-4 animate-spin" />}
               {editingBuilding ? 'Cập nhật' : 'Tạo mới'}
             </Button>

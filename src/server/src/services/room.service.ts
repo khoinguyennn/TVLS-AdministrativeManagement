@@ -8,7 +8,7 @@ import { Room } from '@interfaces/facility.interface';
 export class RoomService {
   public async findAllRooms(): Promise<Room[]> {
     const rooms = await DB.Rooms.findAll({
-      order: [['createdAt', 'DESC']],
+      order: [['id', 'DESC']],
     });
     return rooms.map(r => r.get({ plain: true })) as Room[];
   }
@@ -23,7 +23,7 @@ export class RoomService {
   public async findRoomsByBuilding(buildingId: number): Promise<Room[]> {
     const rooms = await DB.Rooms.findAll({
       where: { buildingId },
-      order: [['floor', 'ASC'], ['name', 'ASC']],
+      order: [['name', 'ASC']],
     });
     return rooms.map(r => r.get({ plain: true })) as Room[];
   }
@@ -33,20 +33,9 @@ export class RoomService {
     const building = await DB.Buildings.findByPk(roomData.buildingId);
     if (!building) throw new HttpException(404, 'Không tìm thấy toà nhà');
 
-    // Check if room code already exists
-    const existingRoom = await DB.Rooms.findOne({ where: { code: roomData.code } });
-    if (existingRoom) throw new HttpException(409, `Mã phòng ${roomData.code} đã tồn tại`);
-
     const newRoom = await DB.Rooms.create({
       buildingId: roomData.buildingId,
       name: roomData.name,
-      code: roomData.code,
-      floor: roomData.floor,
-      capacity: roomData.capacity,
-      area: roomData.area,
-      type: roomData.type as Room['type'],
-      status: (roomData.status as Room['status']) || 'available',
-      description: roomData.description,
     });
 
     return newRoom.get({ plain: true }) as Room;
@@ -62,22 +51,9 @@ export class RoomService {
       if (!building) throw new HttpException(404, 'Không tìm thấy toà nhà');
     }
 
-    // Check if room code already exists
-    if (roomData.code && roomData.code !== room.code) {
-      const existingRoom = await DB.Rooms.findOne({ where: { code: roomData.code } });
-      if (existingRoom) throw new HttpException(409, `Mã phòng ${roomData.code} đã tồn tại`);
-    }
-
     const updateData: Partial<Room> = {};
     if (roomData.buildingId !== undefined) updateData.buildingId = roomData.buildingId;
     if (roomData.name !== undefined) updateData.name = roomData.name;
-    if (roomData.code !== undefined) updateData.code = roomData.code;
-    if (roomData.floor !== undefined) updateData.floor = roomData.floor;
-    if (roomData.capacity !== undefined) updateData.capacity = roomData.capacity;
-    if (roomData.area !== undefined) updateData.area = roomData.area;
-    if (roomData.type !== undefined) updateData.type = roomData.type as Room['type'];
-    if (roomData.status !== undefined) updateData.status = roomData.status as Room['status'];
-    if (roomData.description !== undefined) updateData.description = roomData.description;
 
     if (Object.keys(updateData).length === 0) {
       throw new HttpException(400, 'Không có thông tin nào để cập nhật');

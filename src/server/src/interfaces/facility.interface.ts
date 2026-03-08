@@ -1,12 +1,8 @@
 // Building Interface
 export interface Building {
   id?: number;
-  code: string;
   name: string;
-  floors?: number;
   description?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
 }
 
 // Room Interface
@@ -14,13 +10,14 @@ export interface Room {
   id?: number;
   buildingId: number;
   name: string;
-  code: string;
-  floor?: number;
-  capacity?: number;
-  area?: number;
-  type: 'classroom' | 'lab' | 'office' | 'meeting' | 'storage' | 'other';
-  status: 'available' | 'occupied' | 'maintenance' | 'unavailable';
-  description?: string;
+}
+
+// Device Interface
+export interface Device {
+  id?: number;
+  name: string;
+  roomId?: number;
+  status: 'active' | 'under_repair' | 'waiting_replacement' | 'broken';
   createdAt?: Date;
   updatedAt?: Date;
 }
