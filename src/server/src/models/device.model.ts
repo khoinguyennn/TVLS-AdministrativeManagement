@@ -6,7 +6,7 @@ export type DeviceCreationAttributes = Optional<Device, 'id' | 'createdAt' | 'up
 export class DeviceModel extends Model<Device, DeviceCreationAttributes> implements Device {
   public id: number;
   public name: string;
-  public roomId: number;
+  public roomId?: number;
   public status: 'active' | 'under_repair' | 'waiting_replacement' | 'broken';
 
   public readonly createdAt!: Date;

@@ -1,268 +1,276 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { Plus, Search, Loader2 } from "lucide-react";
 
-import {
-  Calendar,
-  CheckCircle,
-  ChevronRight,
-  Edit,
-  Eye,
-  Filter,
-  Plus,
-  XCircle
-} from "lucide-react";
-
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { PersonnelTable } from "@/components/personnel/personnel-table";
+import { ExcelImportExportDialog } from "@/components/personnel/excel-import-export-dialog";
+import { personnelService } from "@/services/personnel.service";
+import type { PersonnelRecord } from "@/types/personnel.types";
+import { toast } from "sonner";
 
-// Mock data
-const records = [
-  {
-    id: "REC-8291",
-    name: "Báo cáo tài chính Q3",
-    submitter: "Trần Duy",
-    initials: "TD",
-    date: "12/10/2023",
-    department: "Phòng Tài chính",
-    status: "pending"
-  },
-  {
-    id: "REC-7312",
-    name: "Đề xuất mua sắm thiết bị IT",
-    submitter: "Lê Hoa",
-    initials: "LH",
-    date: "11/10/2023",
-    department: "Phòng Kỹ thuật",
-    status: "approved"
-  },
-  {
-    id: "REC-9011",
-    name: "Hợp đồng đối tác ABC",
-    submitter: "Nguyễn Phong",
-    initials: "NP",
-    date: "10/10/2023",
-    department: "Phòng Kinh doanh",
-    status: "rejected"
-  },
-  {
-    id: "REC-6623",
-    name: "Kế hoạch marketing Tết",
-    submitter: "Phạm Thúy",
-    initials: "PT",
-    date: "08/10/2023",
-    department: "Phòng Marketing",
-    status: "submitted"
-  },
-  {
-    id: "REC-4412",
-    name: "Đơn xin nghỉ phép - Mai Anh",
-    submitter: "Mai Anh",
-    initials: "MA",
-    date: "05/10/2023",
-    department: "Phòng Hành chính",
-    status: "approved"
+export default function PersonnelPage() {
+  const [personnel, setPersonnel] = useState<PersonnelRecord[]>([]);
+  const [filteredPersonnel, setFilteredPersonnel] = useState<PersonnelRecord[]>(
+    []
+  );
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load personnel data
+  useEffect(() => {
+    loadPersonnel();
+  }, []);
+
+  // Filter personnel based on search query
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setFilteredPersonnel(personnel);
+      return;
+    }
+
+    const query = searchQuery.toLowerCase();
+    const filtered = personnel.filter(
+      (p) =>
+        p.fullName.toLowerCase().includes(query) ||
+        p.code.toLowerCase().includes(query) ||
+        p.email.toLowerCase().includes(query) ||
+        (p.contactAddress?.phone && p.contactAddress.phone.includes(query))
+    );
+    setFilteredPersonnel(filtered);
+  }, [searchQuery, personnel]);
+
+  async function loadPersonnel() {
+    try {
+      setIsLoading(true);
+      // Mock data - replace with API call when backend is ready
+      const mockData: PersonnelRecord[] = [
+        {
+          id: 1,
+          userId: 1,
+          code: "8401555613",
+          fullName: "Bùi Hữu Khánh",
+          email: "bhkhanh@tvu.edu.vn",
+          role: "teacher",
+          status: "active",
+          gender: "Nam",
+          dateOfBirth: "1987-05-12",
+          cccdNumber: "084087001648",
+          staffStatus: "working",
+          createdAt: "2024-01-01T00:00:00Z",
+          updatedAt: "2024-01-01T00:00:00Z",
+          contactAddress: {
+            phone: "0904789498"
+          }
+        },
+        {
+          id: 2,
+          userId: 2,
+          code: "8413375048",
+          fullName: "Bùi Quốc Tân",
+          email: "buitan@tvu.edu.vn",
+          role: "teacher",
+          status: "active",
+          gender: "Nam",
+          dateOfBirth: "1991-12-19",
+          cccdNumber: "084091001190",
+          staffStatus: "working",
+          createdAt: "2024-01-01T00:00:00Z",
+          updatedAt: "2024-01-01T00:00:00Z",
+          contactAddress: {
+            phone: "0982454710"
+          }
+        },
+        {
+          id: 3,
+          userId: 3,
+          code: "8400631101",
+          fullName: "Bùi Thế Ngân",
+          email: "btngan@tvu.edu.vn",
+          role: "teacher",
+          status: "active",
+          gender: "Nam",
+          dateOfBirth: "1984-12-08",
+          cccdNumber: "084084001944",
+          staffStatus: "working",
+          createdAt: "2024-01-01T00:00:00Z",
+          updatedAt: "2024-01-01T00:00:00Z",
+          contactAddress: {
+            phone: "0904542520"
+          }
+        },
+        {
+          id: 4,
+          userId: 4,
+          code: "8401979501",
+          fullName: "Bùi Thị Cẩm Loan",
+          email: "btcloan@tvu.edu.vn",
+          role: "teacher",
+          status: "active",
+          gender: "Nữ",
+          dateOfBirth: "1981-01-01",
+          cccdNumber: "084181002023",
+          staffStatus: "working",
+          createdAt: "2024-01-01T00:00:00Z",
+          updatedAt: "2024-01-01T00:00:00Z",
+          contactAddress: {
+            phone: "0914880571"
+          }
+        },
+        {
+          id: 5,
+          userId: 5,
+          code: "8413269448",
+          fullName: "Bùi Văn Cật",
+          email: "buicat@tvu.edu.vn",
+          role: "teacher",
+          status: "active",
+          gender: "Nam",
+          dateOfBirth: "1976-05-15",
+          cccdNumber: "084076001778",
+          staffStatus: "working",
+          createdAt: "2024-01-01T00:00:00Z",
+          updatedAt: "2024-01-01T00:00:00Z",
+          contactAddress: {
+            phone: "0909207380"
+          }
+        }
+      ];
+      setPersonnel(mockData);
+      setFilteredPersonnel(mockData);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Lỗi tải dữ liệu";
+      toast.error(message);
+    } finally {
+      setIsLoading(false);
+    }
   }
-];
 
-const statusConfig: Record<
-  string,
-  { label: string; variant: "default" | "secondary" | "destructive" | "outline" }
-> = {
-  pending: { label: "Đang chờ", variant: "secondary" },
-  approved: { label: "Đã duyệt", variant: "default" },
-  rejected: { label: "Từ chối", variant: "destructive" },
-  submitted: { label: "Đã gửi", variant: "outline" }
-};
+  async function handleDelete(id: number) {
+    if (!confirm("Bạn có chắc chắn muốn xóa nhân sự này?")) {
+      return;
+    }
 
-export default function DashboardRecordsPage() {
+    try {
+      // await personnelService.delete(id);
+      setPersonnel((prev) => prev.filter((p) => p.id !== id));
+      toast.success("Xóa nhân sự thành công");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Lỗi xóa dữ liệu";
+      toast.error(message);
+    }
+  }
+
+  async function handleImportExcel(file: File) {
+    try {
+      // const response = await personnelService.importExcel(file);
+      // After import, reload the data
+      await loadPersonnel();
+      toast.success("Nhập dữ liệu Excel thành công");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Lỗi nhập Excel";
+      toast.error(message);
+      throw error;
+    }
+  }
+
+  async function handleExportExcel() {
+    try {
+      // const blob = await personnelService.exportExcel();
+      // Create a mock export
+      const data = filteredPersonnel;
+      const csv = [
+        ["Mã định danh", "Họ và tên", "Giới tính", "Ngày sinh", "CCCD", "Email", "Điện thoại"]
+          .map((h) => `"${h}"`)
+          .join(","),
+        ...data.map((p) =>
+          [
+            p.code,
+            p.fullName,
+            p.gender,
+            p.dateOfBirth,
+            p.cccdNumber,
+            p.email,
+            p.contactAddress?.phone
+          ]
+            .map((v) => `"${v || ""}"`)
+            .join(",")
+        )
+      ].join("\n");
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `personnel-${new Date().toISOString().split("T")[0]}.csv`;
+      link.click();
+
+      toast.success("Xuất dữ liệu thành công");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Lỗi xuất Excel";
+      toast.error(message);
+      throw error;
+    }
+  }
+
   return (
-    <>
-      {/* Breadcrumbs */}
-      <nav className="mb-6 flex items-center gap-2 text-sm text-slate-500">
-        <Link href="/dashboard" className="hover:text-primary">
-          Trang chủ
-        </Link>
-        <ChevronRight className="size-3" />
-        <span className="font-medium text-slate-900 dark:text-slate-100">Hồ sơ hành chính</span>
-      </nav>
-
-      {/* Page Header */}
-      <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-center">
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="mb-1 text-3xl font-bold tracking-tight">Hồ sơ hành chính</h2>
-          <p className="text-slate-500">
-            Quản lý và phê duyệt các hồ sơ hành chính của doanh nghiệp
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Hồ sơ nhân sự</h1>
+          <p className="text-gray-600 mt-1 text-sm">
+            Quản lý thông tin chi tiết của nhân sự
           </p>
         </div>
-        <Button className="bg-primary text-white hover:bg-primary/90">
-          <Plus className="mr-2 size-5" />
-          Tạo hồ sơ mới
-        </Button>
+        <div className="flex gap-2">
+          <ExcelImportExportDialog
+            onImport={handleImportExcel}
+            onExport={handleExportExcel}
+          />
+          <Link href="/dashboard/records/add">
+            <Button className="gap-2 bg-blue-600 hover:bg-blue-700 shadow-sm">
+              <Plus className="h-4 w-4" />
+              Thêm nhân sự
+            </Button>
+          </Link>
+        </div>
       </div>
 
-      {/* Filters */}
-      <Card className="mb-6">
-        <CardContent className="p-4">
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="mr-2 flex items-center gap-2 text-xs font-bold tracking-wider text-slate-400 uppercase">
-              <Filter className="size-4" />
-              Bộ lọc
-            </div>
-
-            <Button variant="outline" size="sm" className="text-sm">
-              Trạng thái: <b className="ml-1">Tất cả</b>
-            </Button>
-
-            <Button variant="outline" size="sm" className="text-sm">
-              <Calendar className="mr-2 size-4" />
-              Thời gian: <b className="ml-1">Tháng này</b>
-            </Button>
-
-            <Button variant="outline" size="sm" className="text-sm">
-              Phòng ban: <b className="ml-1">Tất cả</b>
-            </Button>
-
-            <Button variant="link" size="sm" className="ml-auto font-medium text-primary">
-              Xóa bộ lọc
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Data Table */}
-      <Card>
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-slate-50 dark:bg-slate-800/50">
-                <TableHead className="font-bold">Tên hồ sơ</TableHead>
-                <TableHead className="font-bold">Người nộp</TableHead>
-                <TableHead className="font-bold">Ngày tạo</TableHead>
-                <TableHead className="font-bold">Phòng ban</TableHead>
-                <TableHead className="text-center font-bold">Trạng thái</TableHead>
-                <TableHead className="text-right font-bold">Thao tác</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {records.map((record) => {
-                const status = statusConfig[record.status];
-                const isActionDisabled =
-                  record.status === "approved" || record.status === "rejected";
-
-                return (
-                  <TableRow
-                    key={record.id}
-                    className="hover:bg-slate-50 dark:hover:bg-slate-800/30"
-                  >
-                    <TableCell>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-semibold">{record.name}</span>
-                        <span className="text-xs text-slate-400">ID: #{record.id}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Avatar className="size-6">
-                          <AvatarFallback className="bg-primary/10 text-[10px] font-bold text-primary">
-                            {record.initials}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="text-sm">{record.submitter}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-sm">{record.date}</TableCell>
-                    <TableCell className="text-sm text-slate-500">{record.department}</TableCell>
-                    <TableCell className="text-center">
-                      <Badge variant={status.variant}>{status.label}</Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="size-8 hover:text-primary"
-                          title="Xem"
-                        >
-                          <Eye className="size-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="size-8 hover:text-blue-500"
-                          title="Sửa"
-                          disabled={isActionDisabled}
-                        >
-                          <Edit className="size-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="size-8 hover:text-green-500"
-                          title="Phê duyệt"
-                          disabled={isActionDisabled}
-                        >
-                          <CheckCircle className="size-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="size-8 hover:text-red-500"
-                          title="Từ chối"
-                          disabled={isActionDisabled}
-                        >
-                          <XCircle className="size-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+      {/* Search Bar */}
+      <div>
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Input
+            placeholder="Tìm theo tên, mã, email hoặc điện thoại..."
+            className="pl-10 bg-white border border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
+      </div>
 
-        {/* Pagination */}
-        <div className="flex items-center justify-between border-t border-slate-200 bg-slate-50/50 px-6 py-4 dark:border-slate-800 dark:bg-slate-800/20">
-          <p className="text-sm text-slate-500">
-            Hiển thị <span className="font-medium">1-5</span> trong số{" "}
-            <span className="font-medium">84</span> hồ sơ
-          </p>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" disabled>
-              Trước
-            </Button>
-            <div className="flex items-center gap-1">
-              <Button size="sm" className="size-8 bg-primary text-white">
-                1
-              </Button>
-              <Button variant="ghost" size="sm" className="size-8">
-                2
-              </Button>
-              <Button variant="ghost" size="sm" className="size-8">
-                3
-              </Button>
-              <span className="px-1 text-slate-400">...</span>
-              <Button variant="ghost" size="sm" className="size-8">
-                17
-              </Button>
-            </div>
-            <Button variant="outline" size="sm">
-              Tiếp theo
-            </Button>
-          </div>
+      {/* Personnel Table */}
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
+        <div className="border-b border-gray-200 px-6 py-4">
+          <h2 className="text-lg font-semibold text-gray-900">Danh sách nhân sự</h2>
         </div>
-      </Card>
-    </>
+        <div className="p-6">
+          {isLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
+            </div>
+          ) : (
+            <PersonnelTable
+              data={filteredPersonnel}
+              onDelete={handleDelete}
+              isLoading={false}
+            />
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

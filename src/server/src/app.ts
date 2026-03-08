@@ -79,7 +79,7 @@ export class App {
     const options = {
       swaggerDefinition: {
         info: {
-          title: 'THSP Administrative Management API',
+          title: 'TVLS Administrative Management API',
           version: '1.0.0',
           description: 'API quản lý hành chính Trường Thực hành Sư phạm',
         },
