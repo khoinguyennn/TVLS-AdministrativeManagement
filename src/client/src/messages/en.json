@@ -21,7 +21,8 @@
   "Dashboard": {
     "title": "Administrative Management System",
     "description": "Administrative records management system for Practice Pedagogical School",
-    "welcome": "Welcome! Here is an overview of the administrative management system."
+    "welcome": "Welcome! Here is an overview of the administrative management system.",
+    "projectBy": "Project by"
   },
   "Sidebar": {
     "systemTitle": "ADMIN MANAGEMENT",
