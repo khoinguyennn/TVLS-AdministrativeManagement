@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Plus, Search, Loader2 } from "lucide-react";
+import { Plus, Search, Loader2, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,6 +14,8 @@ import type { PersonnelRecord } from "@/types/personnel.types";
 import { toast } from "sonner";
 
 export default function StaffPage() {
+  const tBreadcrumb = useTranslations("Breadcrumb");
+  const tSidebar = useTranslations("Sidebar");
   const [personnel, setPersonnel] = useState<PersonnelRecord[]>([]);
   const [filteredPersonnel, setFilteredPersonnel] = useState<PersonnelRecord[]>(
     []
@@ -182,19 +185,23 @@ export default function StaffPage() {
 
   return (
     <div className="space-y-6">
+      {/* Breadcrumb */}
+      <nav className="flex items-center gap-2 text-sm text-muted-foreground">
+        <Link href="/dashboard" className="hover:text-foreground transition-colors">
+          {tBreadcrumb("home")}
+        </Link>
+        <ChevronRight className="size-4" />
+        <span className="font-medium text-foreground">{tSidebar("staff")}</span>
+      </nav>
+
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Hồ sơ nhân sự</h1>
-          <p className="text-gray-600 mt-1 text-sm">
-            Quản lý thông tin chi tiết của nhân sự
-          </p>
+          <h2 className="text-2xl font-bold tracking-tight">{tSidebar("staff")}</h2>
+          <p className="text-gray-600 mt-1 text-sm">Quản lý thông tin chi tiết của nhân sự</p>
         </div>
         <div className="flex gap-2">
-          <ExcelImportExportDialog
-            onImport={handleImportExcel}
-            onExport={handleExportExcel}
-          />
+          <ExcelImportExportDialog onImport={handleImportExcel} onExport={handleExportExcel} />
           <Link href="/vi/dashboard/staff/add">
             <Button className="gap-2 bg-blue-600 hover:bg-blue-700 shadow-sm">
               <Plus className="h-4 w-4" />
