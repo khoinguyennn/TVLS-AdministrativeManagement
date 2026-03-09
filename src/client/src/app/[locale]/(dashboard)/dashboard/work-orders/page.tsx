@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Plus, Search, Loader2, Filter } from "lucide-react";
+import { Plus, Search, Loader2, Filter, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +21,8 @@ import type { PersonnelRecord } from "@/types/personnel.types";
 import { toast } from "sonner";
 
 export default function WorkOrdersPage() {
+  const tBreadcrumb = useTranslations("Breadcrumb");
+  const tSidebar = useTranslations("Sidebar");
   const [workOrders, setWorkOrders] = useState<WorkOrder[]>([]);
   const [filteredWorkOrders, setFilteredWorkOrders] = useState<WorkOrder[]>([]);
   const [personnel, setPersonnel] = useState<PersonnelRecord[]>([]);
@@ -695,13 +698,20 @@ export default function WorkOrdersPage() {
 
   return (
     <div className="space-y-6">
+      {/* Breadcrumb */}
+      <nav className="flex items-center gap-2 text-sm text-muted-foreground">
+        <Link href="/dashboard" className="hover:text-foreground transition-colors">
+          {tBreadcrumb("home")}
+        </Link>
+        <ChevronRight className="size-4" />
+        <span className="font-medium text-foreground">{tSidebar("workOrders")}</span>
+      </nav>
+
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Quản lý công lệnh</h1>
-          <p className="text-gray-600 mt-1 text-sm">
-            Tạo, phê duyệt và theo dõi các công việc được giao
-          </p>
+          <h2 className="text-2xl font-bold tracking-tight">{tSidebar("workOrders")}</h2>
+          <p className="text-gray-600 mt-1 text-sm">Tạo, phê duyệt và theo dõi các công việc được giao</p>
         </div>
         <div className="flex gap-2">
           <Link href="/vi/dashboard/work-orders/tao-moi">
