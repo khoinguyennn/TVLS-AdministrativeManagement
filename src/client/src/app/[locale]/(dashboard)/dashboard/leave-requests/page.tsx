@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
 import {
+  CalendarCheck2,
   CalendarDays,
   CheckCircle2,
   ChevronLeft,
@@ -20,10 +21,11 @@ import {
   Trash2,
   XCircle
 } from "lucide-react";
+import { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
 
-import type { LeaveRequest, LeaveRequestStats, LeaveType } from "@/types/leave.types";
+import type { LeaveBalance, LeaveRequest, LeaveRequestStats, LeaveType } from "@/types/leave.types";
 import { env } from "@/env";
 
 import { authStorage } from "@/lib/auth-storage";
@@ -87,6 +89,14 @@ function formatDate(dateStr?: string) {
   });
 }
 
+// ── Helper: extract API error message ──
+function getErrorMessage(err: unknown, fallback: string): string {
+  if (err instanceof AxiosError && err.response?.data?.message) {
+    return err.response.data.message;
+  }
+  return fallback;
+}
+
 // ═══════════════════════════════════════════════════════════
 export default function LeaveRequestsPage() {
   const t = useTranslations("LeaveRequest");
@@ -102,6 +112,7 @@ export default function LeaveRequestsPage() {
     rejected: 0
   });
   const [leaveTypes, setLeaveTypes] = useState<LeaveType[]>([]);
+  const [leaveBalance, setLeaveBalance] = useState<LeaveBalance | null>(null);
   const [loading, setLoading] = useState(true);
 
   // ── Filter state ──
@@ -159,12 +170,24 @@ export default function LeaveRequestsPage() {
       setRequests(requestsRes.data);
       setStats(statsRes.data);
       setLeaveTypes(typesRes.data);
+
+      // Fetch leave balance for current user
+      if (currentUserId) {
+        try {
+          const currentYear = new Date().getFullYear();
+          const balanceRes = await leaveRequestService.getBalance(currentUserId, currentYear);
+          setLeaveBalance(balanceRes.data);
+        } catch {
+          // No balance record yet — that's ok
+          setLeaveBalance(null);
+        }
+      }
     } catch {
       toast.error(t("toast.error"));
     } finally {
       setLoading(false);
     }
-  }, [t]);
+  }, [t, currentUserId]);
 
   useEffect(() => {
     fetchData();
@@ -232,6 +255,12 @@ export default function LeaveRequestsPage() {
 
   // ── Submit create ──
   const handleCreate = useCallback(async () => {
+    // Validate dates
+    if (formStartDate && formEndDate && new Date(formEndDate) < new Date(formStartDate)) {
+      toast.error("Ngày kết thúc không được trước ngày bắt đầu");
+      return;
+    }
+
     try {
       setFormLoading(true);
       const payload: CreateLeaveRequestPayload = {
@@ -246,8 +275,8 @@ export default function LeaveRequestsPage() {
       toast.success(t("toast.createSuccess"));
       setCreateDialogOpen(false);
       fetchData();
-    } catch {
-      toast.error(t("toast.error"));
+    } catch (err) {
+      toast.error(getErrorMessage(err, t("toast.error")));
     } finally {
       setFormLoading(false);
     }
@@ -264,8 +293,8 @@ export default function LeaveRequestsPage() {
       setApprovingRequest(null);
       setApprovePin("");
       fetchData();
-    } catch {
-      toast.error(t("toast.error"));
+    } catch (err) {
+      toast.error(getErrorMessage(err, t("toast.error")));
     } finally {
       setFormLoading(false);
     }
@@ -287,8 +316,8 @@ export default function LeaveRequestsPage() {
       setFormRejectedReason("");
       setRejectPin("");
       fetchData();
-    } catch {
-      toast.error(t("toast.error"));
+    } catch (err) {
+      toast.error(getErrorMessage(err, t("toast.error")));
     } finally {
       setFormLoading(false);
     }
@@ -304,8 +333,8 @@ export default function LeaveRequestsPage() {
       setDeleteDialogOpen(false);
       setDeletingRequest(null);
       fetchData();
-    } catch {
-      toast.error(t("toast.error"));
+    } catch (err) {
+      toast.error(getErrorMessage(err, t("toast.error")));
     } finally {
       setFormLoading(false);
     }
@@ -409,6 +438,13 @@ export default function LeaveRequestsPage() {
       icon: <XCircle className="size-5" />,
       bg: "bg-red-50 dark:bg-red-900/20",
       text: "text-red-600"
+    },
+    {
+      label: t("stats.remainingDays"),
+      value: leaveBalance ? `${leaveBalance.remainingDays}/${leaveBalance.totalDays}` : "—",
+      icon: <CalendarCheck2 className="size-5" />,
+      bg: "bg-blue-50 dark:bg-blue-900/20",
+      text: "text-blue-600"
     }
   ];
 
@@ -437,7 +473,7 @@ export default function LeaveRequestsPage() {
       </div>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-5">
         {statCards.map((card) => (
           <div key={card.label} className="rounded-xl border bg-card p-5 shadow-sm">
             <div className="mb-4 flex items-start justify-between">
@@ -892,7 +928,8 @@ export default function LeaveRequestsPage() {
                 type="number"
                 min="1"
                 value={formTotalDays}
-                onChange={(e) => setFormTotalDays(e.target.value)}
+                readOnly
+                className="bg-muted"
               />
             </div>
 

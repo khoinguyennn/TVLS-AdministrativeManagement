@@ -309,7 +309,8 @@
       "total": "Total Requests",
       "pending": "Pending",
       "approved": "Approved",
-      "rejected": "Rejected"
+      "rejected": "Rejected",
+      "remainingDays": "Remaining Days"
     },
     "form": {
       "leaveType": "Leave Type",

@@ -309,7 +309,8 @@
       "total": "Tổng yêu cầu",
       "pending": "Chờ duyệt",
       "approved": "Đã duyệt",
-      "rejected": "Từ chối"
+      "rejected": "Từ chối",
+      "remainingDays": "Ngày phép còn lại"
     },
     "form": {
       "leaveType": "Loại nghỉ phép",
