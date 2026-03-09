@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { DeviceController } from '@controllers/devices.controller';
+import { DeviceController } from '@controllers/device.controller';
 import { Routes } from '@interfaces/routes.interface';
 import { AuthMiddleware } from '@middlewares/auth.middleware';
 
@@ -13,6 +13,8 @@ export class DeviceRoute implements Routes {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}`, AuthMiddleware, this.controller.getAll);
+    this.router.get(`${this.path}`, AuthMiddleware, this.controller.getDevices);
+
+    this.router.post(`${this.path}`, AuthMiddleware, this.controller.createDevice);
   }
 }
