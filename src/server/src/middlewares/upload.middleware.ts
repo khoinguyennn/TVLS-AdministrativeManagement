@@ -3,21 +3,36 @@ import path from 'path';
 import fs from 'fs';
 import { HttpException } from '@exceptions/HttpException';
 
-const UPLOAD_DIR = path.join(__dirname, '../../uploads/avatars');
+const AVATAR_DIR = path.join(__dirname, '../../uploads/avatars');
+const REPORT_IMAGE_DIR = path.join(__dirname, '../../uploads/reports');
+const SIGNATURE_DIR = path.join(__dirname, '../../uploads/signatures');
 
-// Ensure upload directory exists
-if (!fs.existsSync(UPLOAD_DIR)) {
-  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-}
+// Ensure upload directories exist
+[AVATAR_DIR, REPORT_IMAGE_DIR, SIGNATURE_DIR].forEach(dir => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+});
 
-const storage = multer.diskStorage({
+const avatarStorage = multer.diskStorage({
   destination: (_req, _file, cb) => {
-    cb(null, UPLOAD_DIR);
+    cb(null, AVATAR_DIR);
   },
   filename: (_req, file, cb) => {
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
     const ext = path.extname(file.originalname).toLowerCase();
     cb(null, `avatar-${uniqueSuffix}${ext}`);
+  },
+});
+
+const reportImageStorage = multer.diskStorage({
+  destination: (_req, _file, cb) => {
+    cb(null, REPORT_IMAGE_DIR);
+  },
+  filename: (_req, file, cb) => {
+    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    const ext = path.extname(file.originalname).toLowerCase();
+    cb(null, `report-${uniqueSuffix}${ext}`);
   },
 });
 
@@ -31,9 +46,36 @@ const fileFilter = (_req: Express.Request, file: Express.Multer.File, cb: multer
 };
 
 export const uploadAvatar = multer({
-  storage,
+  storage: avatarStorage,
   fileFilter,
   limits: {
     fileSize: 2 * 1024 * 1024, // 2MB
   },
 }).single('avatar');
+
+export const uploadReportImage = multer({
+  storage: reportImageStorage,
+  fileFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB
+  },
+}).single('image');
+
+const signatureStorage = multer.diskStorage({
+  destination: (_req, _file, cb) => {
+    cb(null, SIGNATURE_DIR);
+  },
+  filename: (_req, file, cb) => {
+    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    const ext = path.extname(file.originalname).toLowerCase();
+    cb(null, `signature-${uniqueSuffix}${ext}`);
+  },
+});
+
+export const uploadSignatureImage = multer({
+  storage: signatureStorage,
+  fileFilter,
+  limits: {
+    fileSize: 2 * 1024 * 1024, // 2MB
+  },
+}).single('signatureImage');

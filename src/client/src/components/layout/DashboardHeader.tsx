@@ -43,7 +43,7 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-4 backdrop-blur-md lg:px-8 dark:border-slate-800 dark:bg-slate-900/80">
+    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border bg-card/80 px-4 backdrop-blur-md lg:px-8">
       {/* Mobile Menu Button + Search */}
       <div className="flex flex-1 items-center gap-2 lg:gap-4">
         {/* Hamburger Menu - Mobile Only */}
@@ -59,11 +59,11 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
 
         {/* Search */}
         <div className="relative hidden w-full max-w-md sm:block">
-          <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-400" />
+          <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="text"
             placeholder={t("searchPlaceholder")}
-            className="w-full rounded-lg border-none bg-slate-100 py-2 pr-4 pl-10 text-sm transition-all focus:ring-2 focus:ring-primary/20 dark:bg-slate-800"
+            className="w-full rounded-lg border-none bg-muted py-2 pr-4 pl-10 text-sm transition-all focus:ring-2 focus:ring-primary/20"
           />
         </div>
 
@@ -78,14 +78,14 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
         <Button
           variant="ghost"
           size="icon"
-          className="hidden size-9 rounded-lg text-slate-600 sm:flex dark:text-slate-400"
+          className="hidden size-9 rounded-lg text-muted-foreground sm:flex"
         >
           <Bell className="size-5" />
         </Button>
         <Button
           variant="ghost"
           size="icon"
-          className="hidden size-9 rounded-lg text-slate-600 sm:flex dark:text-slate-400"
+          className="hidden size-9 rounded-lg text-muted-foreground sm:flex"
         >
           <HelpCircle className="size-5" />
         </Button>
@@ -94,7 +94,7 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
         <Button
           variant="ghost"
           size="icon"
-          className="size-9 rounded-lg text-slate-600 dark:text-slate-400"
+          className="size-9 rounded-lg text-muted-foreground"
           onClick={() =>
             setTheme(document.documentElement.classList.contains("dark") ? "light" : "dark")
           }
@@ -104,7 +104,7 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
           <span className="sr-only">{t("toggleTheme")}</span>
         </Button>
 
-        <div className="mx-1 hidden h-6 w-px bg-slate-200 sm:block dark:bg-slate-800" />
+        <div className="mx-1 hidden h-6 w-px bg-border sm:block" />
 
         {/* Language Selector */}
         <DropdownMenu>
@@ -121,14 +121,14 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
           <DropdownMenuContent align="end">
             <DropdownMenuItem
               onClick={() => switchLocale("vi")}
-              className={locale === "vi" ? "bg-slate-100 dark:bg-slate-800" : ""}
+              className={locale === "vi" ? "bg-accent" : ""}
             >
               <VietnamFlag className="mr-2 size-5 rounded-sm" />
               {LOCALES.vi.label}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => switchLocale("en")}
-              className={locale === "en" ? "bg-slate-100 dark:bg-slate-800" : ""}
+              className={locale === "en" ? "bg-accent" : ""}
             >
               <USFlag className="mr-2 size-5 rounded-sm" />
               {LOCALES.en.label}

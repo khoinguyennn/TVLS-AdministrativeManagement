@@ -162,7 +162,7 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-slate-200 bg-white transition-transform duration-300 dark:border-slate-800 dark:bg-slate-900",
+          "fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-border bg-card transition-transform duration-300",
           // Mobile: hidden by default, slide in when open
           isOpen ? "translate-x-0" : "-translate-x-full",
           // Desktop: always visible
@@ -180,7 +180,7 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
         </Button>
 
         {/* Logo Section */}
-        <div className="flex items-center gap-3 border-b border-slate-100 p-4 dark:border-slate-800">
+        <div className="flex items-center gap-3 border-b border-border p-4">
         <Image
           src="/logo-thsp.png"
           alt="Logo"
@@ -189,10 +189,10 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
           className="size-10 shrink-0 object-contain"
         />
         <div className="min-w-0">
-          <h1 className="text-xs leading-tight font-bold whitespace-nowrap text-slate-900 uppercase dark:text-white">
+          <h1 className="text-xs leading-tight font-bold whitespace-nowrap text-foreground uppercase">
             {t("systemTitle")}
           </h1>
-          <p className="text-[10px] font-medium tracking-tight whitespace-nowrap text-slate-500 uppercase">
+          <p className="text-[10px] font-medium tracking-tight whitespace-nowrap text-muted-foreground uppercase">
             {t("schoolName")}
           </p>
         </div>
@@ -208,7 +208,7 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
               "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors",
               isActive(item.href)
                 ? "bg-primary/10 text-primary"
-                : "text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
+                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
             )}
           >
             <item.icon className="size-5" />
@@ -218,7 +218,7 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
 
         {/* Facility Section */}
         <div className="pt-4 pb-2">
-          <p className="px-3 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+          <p className="px-3 text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
             {t("facilitySection")}
           </p>
         </div>
@@ -231,7 +231,7 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
               "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors",
               isActive(item.href)
                 ? "bg-primary/10 text-primary"
-                : "text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
+                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
             )}
           >
             <item.icon className="size-5" />
@@ -241,7 +241,7 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
 
         {/* Other Section */}
         <div className="pt-4 pb-2">
-          <p className="px-3 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+          <p className="px-3 text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
             {t("otherSection")}
           </p>
         </div>
@@ -254,7 +254,7 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
               "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors",
               isActive(item.href)
                 ? "bg-primary/10 text-primary"
-                : "text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
+                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
             )}
           >
             <item.icon className="size-5" />
@@ -264,7 +264,7 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
 
         {/* System Section */}
         <div className="pt-4 pb-2">
-          <p className="px-3 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+          <p className="px-3 text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
             {t("system")}
           </p>
         </div>
@@ -277,7 +277,7 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
               "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors",
               isActive(item.href)
                 ? "bg-primary/10 text-primary"
-                : "text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
+                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
             )}
           >
             <item.icon className="size-5" />
@@ -287,7 +287,7 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
       </nav>
 
       {/* User Section */}
-      <div className="border-t border-slate-200 p-4 dark:border-slate-800">
+      <div className="border-t border-border p-4">
         <div className="flex items-center gap-3 px-2">
           <Avatar className="size-8">
             <AvatarImage
@@ -304,10 +304,10 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
           </Avatar>
           <div className="min-w-0 flex-1">
             <p className="truncate text-xs font-semibold">{user?.fullName || "Người dùng"}</p>
-            <p className="truncate text-[10px] text-slate-500">{getRoleLabel()}</p>
+            <p className="truncate text-[10px] text-muted-foreground">{getRoleLabel()}</p>
           </div>
           <button
-            className="text-slate-400 transition-colors hover:text-slate-600 dark:hover:text-slate-300"
+            className="text-muted-foreground transition-colors hover:text-foreground"
             aria-label={t("logout")}
             onClick={() => setShowLogoutDialog(true)}
           >

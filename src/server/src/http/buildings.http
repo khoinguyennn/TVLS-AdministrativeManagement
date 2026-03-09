@@ -1,0 +1,44 @@
+### Variables
+@baseUrl = http://localhost:5000
+@token = YOUR_ACCESS_TOKEN_HERE
+
+### Login to get token
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "admin@thsp.edu.vn",
+  "password": "Admin@123"
+}
+
+### Get all buildings
+GET {{baseUrl}}/buildings
+Authorization: Bearer {{token}}
+
+### Get building by ID
+GET {{baseUrl}}/buildings/1
+Authorization: Bearer {{token}}
+
+### Create new building
+POST {{baseUrl}}/buildings
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Toà nhà A",
+  "description": "Toà nhà chính của trường"
+}
+
+### Update building
+PUT {{baseUrl}}/buildings/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Toà nhà A - Cập nhật",
+  "description": "Toà nhà chính đã được cập nhật"
+}
+
+### Delete building
+DELETE {{baseUrl}}/buildings/1
+Authorization: Bearer {{token}}

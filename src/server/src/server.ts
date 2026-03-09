@@ -1,11 +1,30 @@
 import { App } from '@/app';
 import { AuthRoute } from '@routes/auth.route';
+import { DeviceReportRoute } from '@routes/device-reports.route';
+import { DeviceRoute } from '@routes/devices.route';
+import { DigitalSignatureRoute } from '@routes/digital-signature.route';
+import { LeaveRequestRoute } from '@routes/leave.route';
 import { PasswordResetRoute } from '@routes/password-reset.route';
 import { UserRoute } from '@routes/users.route';
+import { BuildingRoute } from '@routes/building.route';
+import { RoomRoute } from '@routes/room.route';
+import { EquipmentRoute } from '@routes/equipment.route';
 import { ValidateEnv } from '@utils/validateEnv';
+
 ValidateEnv();
 
-const app = new App([new AuthRoute(), new PasswordResetRoute(), new UserRoute()]);
+const app = new App([
+  new AuthRoute(),
+  new PasswordResetRoute(),
+  new UserRoute(),
+  new BuildingRoute(),
+  new RoomRoute(),
+  new EquipmentRoute(),
+  new DeviceRoute(),
+  new DeviceReportRoute(),
+  new LeaveRequestRoute(),
+  new DigitalSignatureRoute(),
+]);
 
 app.listen();
 
