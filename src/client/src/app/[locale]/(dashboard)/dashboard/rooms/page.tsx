@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight, DoorOpen, Edit, Loader2, Plus, Search, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -28,6 +29,8 @@ import type { Room, CreateRoomInput, UpdateRoomInput } from '@/types/facility.ty
 const PAGE_SIZE = 10;
 
 export default function RoomsPage() {
+  const t = useTranslations('Facilities.rooms');
+  const tBreadcrumb = useTranslations('Breadcrumb');
   const queryClient = useQueryClient();
 
   // Data fetching
@@ -61,11 +64,11 @@ export default function RoomsPage() {
     mutationFn: (data: CreateRoomInput) => roomService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['rooms'] });
-      toast.success('Tạo phòng thành công');
+      toast.success(t('toast.createSuccess'));
       setDialogOpen(false);
     },
     onError: () => {
-      toast.error('Có lỗi xảy ra khi tạo phòng');
+      toast.error(t('toast.error'));
     },
   });
 
@@ -73,11 +76,11 @@ export default function RoomsPage() {
     mutationFn: ({ id, data }: { id: number; data: UpdateRoomInput }) => roomService.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['rooms'] });
-      toast.success('Cập nhật phòng thành công');
+      toast.success(t('toast.updateSuccess'));
       setDialogOpen(false);
     },
     onError: () => {
-      toast.error('Có lỗi xảy ra khi cập nhật phòng');
+      toast.error(t('toast.error'));
     },
   });
 
@@ -85,11 +88,11 @@ export default function RoomsPage() {
     mutationFn: (id: number) => roomService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['rooms'] });
-      toast.success('Xoá phòng thành công');
+      toast.success(t('toast.deleteSuccess'));
       setDeleteDialogOpen(false);
     },
     onError: () => {
-      toast.error('Có lỗi xảy ra khi xoá phòng');
+      toast.error(t('toast.error'));
     },
   });
 
@@ -172,10 +175,10 @@ export default function RoomsPage() {
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-muted-foreground">
         <Link href="/dashboard" className="hover:text-foreground transition-colors">
-          Trang chủ
+          {tBreadcrumb('home')}
         </Link>
         <ChevronRight className="size-4" />
-        <span className="font-medium text-foreground">Quản lý Phòng</span>
+        <span className="font-medium text-foreground">{t('title')}</span>
       </nav>
 
       {/* Header */}
@@ -183,13 +186,13 @@ export default function RoomsPage() {
         <div>
           <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <DoorOpen className="size-6" />
-            Quản lý Phòng
+            {t('title')}
           </h2>
-          <p className="text-muted-foreground text-sm mt-1">Quản lý thông tin các phòng trong toà nhà</p>
+          <p className="text-muted-foreground text-sm mt-1">{t('description')}</p>
         </div>
         <Button onClick={handleOpenCreate} className="gap-2">
           <Plus className="size-4" />
-          Thêm phòng
+          {t('addRoom')}
         </Button>
       </div>
 
@@ -197,14 +200,14 @@ export default function RoomsPage() {
       <div className="bg-card border rounded-xl p-4 shadow-sm flex flex-wrap gap-4">
         <div className="relative flex-1 min-w-75">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Tìm kiếm theo tên phòng..." className="pl-10" />
+          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('searchPlaceholder')} className="pl-10" />
         </div>
         <Select value={buildingFilter} onValueChange={setBuildingFilter}>
           <SelectTrigger className="w-48">
-            <SelectValue placeholder="Tất cả toà nhà" />
+            <SelectValue placeholder={t('allBuildings')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Tất cả toà nhà</SelectItem>
+            <SelectItem value="all">{t('allBuildings')}</SelectItem>
             {buildings.map((b) => (
               <SelectItem key={b.id} value={b.id.toString()}>
                 {b.name}
@@ -219,19 +222,19 @@ export default function RoomsPage() {
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
             <Loader2 className="size-6 animate-spin text-muted-foreground" />
-            <span className="ml-2 text-sm text-muted-foreground">Đang tải...</span>
+            <span className="ml-2 text-sm text-muted-foreground">{t('loading')}</span>
           </div>
         ) : paginatedRooms.length === 0 ? (
-          <div className="text-center py-20 text-muted-foreground text-sm">Không tìm thấy phòng nào</div>
+          <div className="text-center py-20 text-muted-foreground text-sm">{t('noResults')}</div>
         ) : (
           <>
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/50">
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">STT</TableHead>
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Tên phòng</TableHead>
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Toà nhà</TableHead>
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-right">Hành động</TableHead>
+                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">{t('columns.no')}</TableHead>
+                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">{t('columns.name')}</TableHead>
+                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">{t('columns.building')}</TableHead>
+                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-right">{t('columns.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -266,7 +269,7 @@ export default function RoomsPage() {
             {/* Pagination */}
             <div className="px-6 py-4 bg-muted/50 border-t flex items-center justify-between">
               <p className="text-xs text-muted-foreground">
-                Hiển thị {(currentPage - 1) * PAGE_SIZE + 1} đến {Math.min(currentPage * PAGE_SIZE, filteredRooms.length)} trong tổng số {filteredRooms.length} phòng
+                {t('pagination.showing')} {(currentPage - 1) * PAGE_SIZE + 1} {t('pagination.to')} {Math.min(currentPage * PAGE_SIZE, filteredRooms.length)} {t('pagination.of')} {filteredRooms.length} {t('pagination.rooms')}
               </p>
               <div className="flex items-center gap-1">
                 <Button variant="outline" size="icon" className="size-8" disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)}>
@@ -296,18 +299,18 @@ export default function RoomsPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>{editingRoom ? 'Chỉnh sửa phòng' : 'Thêm phòng mới'}</DialogTitle>
-            <DialogDescription>{editingRoom ? 'Cập nhật thông tin phòng' : 'Nhập thông tin phòng mới'}</DialogDescription>
+            <DialogTitle>{editingRoom ? t('editRoom') : t('addRoom')}</DialogTitle>
+            <DialogDescription>{editingRoom ? t('form.update') : t('form.create')}</DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="building">
-                Toà nhà <span className="text-destructive">*</span>
+                {t('form.building')} <span className="text-destructive">*</span>
               </Label>
               <Select value={formBuildingId} onValueChange={setFormBuildingId}>
                 <SelectTrigger id="building">
-                  <SelectValue placeholder="Chọn toà nhà" />
+                  <SelectValue placeholder={t('form.selectBuilding')} />
                 </SelectTrigger>
                 <SelectContent>
                   {buildings.map((b) => (
@@ -321,19 +324,19 @@ export default function RoomsPage() {
 
             <div className="grid gap-2">
               <Label htmlFor="name">
-                Tên phòng <span className="text-destructive">*</span>
+                {t('form.name')} <span className="text-destructive">*</span>
               </Label>
-              <Input id="name" value={formName} onChange={(e) => setFormName(e.target.value)} placeholder="Ví dụ: Phòng 101" />
+              <Input id="name" value={formName} onChange={(e) => setFormName(e.target.value)} placeholder={t('form.namePlaceholder')} />
             </div>
           </div>
 
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Hủy</Button>
+              <Button variant="outline">{t('form.cancel')}</Button>
             </DialogClose>
             <Button onClick={handleSubmit} disabled={createMutation.isPending || updateMutation.isPending || !formName || !formBuildingId}>
               {(createMutation.isPending || updateMutation.isPending) && <Loader2 className="mr-2 size-4 animate-spin" />}
-              {editingRoom ? 'Cập nhật' : 'Tạo mới'}
+              {editingRoom ? t('form.update') : t('form.create')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -343,16 +346,16 @@ export default function RoomsPage() {
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Xác nhận xoá</DialogTitle>
-            <DialogDescription>Bạn có chắc chắn muốn xoá phòng "{deletingRoom?.name}"? Hành động này không thể hoàn tác.</DialogDescription>
+            <DialogTitle>{t('deleteConfirm.title')}</DialogTitle>
+            <DialogDescription>{t('deleteConfirm.description', { name: deletingRoom?.name })}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Hủy</Button>
+              <Button variant="outline">{t('deleteConfirm.cancel')}</Button>
             </DialogClose>
             <Button variant="destructive" onClick={handleDelete} disabled={deleteMutation.isPending}>
               {deleteMutation.isPending && <Loader2 className="mr-2 size-4 animate-spin" />}
-              Xoá
+              {t('deleteConfirm.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>
