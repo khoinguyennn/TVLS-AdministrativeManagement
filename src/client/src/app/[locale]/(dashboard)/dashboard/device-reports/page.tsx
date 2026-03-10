@@ -809,7 +809,7 @@ export default function DeviceReportsPage() {
         <DialogContent className="sm:max-w-130">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <ClipboardList className="size-5 text-primary" />#{viewingReport?.id}
+              <ClipboardList className="size-5 text-primary" />Phiếu báo hỏng #{viewingReport?.id}
             </DialogTitle>
             <DialogDescription>{t("description")}</DialogDescription>
           </DialogHeader>

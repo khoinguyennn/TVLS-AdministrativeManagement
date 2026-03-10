@@ -10,8 +10,12 @@ import { BuildingRoute } from '@routes/building.route';
 import { RoomRoute } from '@routes/room.route';
 import { EquipmentRoute } from '@routes/equipment.route';
 import { ValidateEnv } from '@utils/validateEnv';
+import { startDeviceReportsCron } from './crons/device-reports.cron';
 
 ValidateEnv();
+
+// Start background workers
+startDeviceReportsCron();
 
 const app = new App([
   new AuthRoute(),

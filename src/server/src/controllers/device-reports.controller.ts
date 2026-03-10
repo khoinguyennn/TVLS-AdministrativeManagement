@@ -74,9 +74,11 @@ export class DeviceReportController {
     }
   };
 
-  public getStats = async (req: Request, res: Response, next: NextFunction) => {
+  public getStats = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
-      const stats = await this.service.getStats();
+      const user = req.user;
+      const canSeeAll = user.role === 'admin' || user.role === 'technician';
+      const stats = await this.service.getStats(canSeeAll ? undefined : user.id);
       res.status(200).json({ success: true, data: stats, message: 'stats' });
     } catch (error) {
       next(error);
