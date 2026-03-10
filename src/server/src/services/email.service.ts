@@ -95,4 +95,64 @@ export class EmailService {
       return false;
     }
   }
+
+  /**
+   * Gửi email thông báo liên quan đến phiếu báo hỏng thiết bị.
+   */
+  public async sendDeviceReportEmail(to: string | string[], subject: string, bodyContent: string): Promise<boolean> {
+    try {
+      const recipients = Array.isArray(to) ? to.join(', ') : to;
+      const mailOptions = {
+        from: SMTP_FROM,
+        to: recipients,
+        subject: `📋 ${subject} - THSP Admin`,
+        html: `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+              <!-- Header -->
+              <tr>
+                <td style="background: linear-gradient(135deg, #2060df 0%, #1a4fc9 100%); padding: 30px; text-align: center;">
+                  <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Trường Thực hành Sư phạm</h1>
+                  <p style="color: #e0e0e0; margin: 10px 0 0 0; font-size: 14px;">Hệ thống Quản lý Hành chính</p>
+                </td>
+              </tr>
+
+              <!-- Content -->
+              <tr>
+                <td style="padding: 40px 30px;">
+                  ${bodyContent}
+                </td>
+              </tr>
+
+              <!-- Footer -->
+              <tr>
+                <td style="background-color: #f8f9fa; padding: 20px 30px; text-align: center; border-top: 1px solid #e0e0e0;">
+                  <p style="color: #999; margin: 0; font-size: 12px;">
+                    © 2026 Trường Thực hành Sư phạm. All rights reserved.
+                  </p>
+                  <p style="color: #999; margin: 10px 0 0 0; font-size: 12px;">
+                    Email này được gửi tự động, vui lòng không trả lời.
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </body>
+          </html>
+        `,
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      logger.info(`Device report email sent to ${recipients}`);
+      return true;
+    } catch (error) {
+      logger.error(`Failed to send device report email: ${error}`);
+      return false;
+    }
+  }
 }

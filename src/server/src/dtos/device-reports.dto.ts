@@ -7,6 +7,10 @@ export class CreateDeviceReportDto {
   @IsString()
   @IsNotEmpty()
   public description: string;
+
+  @IsOptional()
+  @IsString()
+  public imageUrl?: string;
 }
 
 export class UpdateDeviceReportDto {

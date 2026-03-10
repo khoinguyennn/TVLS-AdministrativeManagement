@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight, DoorOpen, Edit, Loader2, Plus, Search, Trash2 } from 'lucide-react';
 import Link from 'next/link';
-import { toast } from 'sonner';
+import { toast } from 'react-toastify';
 
 import { Button } from '@/components/ui/button';
 import {

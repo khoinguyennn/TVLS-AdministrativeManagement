@@ -6,9 +6,11 @@ import { DeviceReportService } from '@services/device-reports.service';
 export class DeviceReportController {
   public service = Container.get(DeviceReportService);
 
-  public getAll = async (req: Request, res: Response, next: NextFunction) => {
+  public getAll = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
-      const reports = await this.service.findAll();
+      const user = req.user;
+      const canSeeAll = user.role === 'admin' || user.role === 'technician';
+      const reports = await this.service.findAll(canSeeAll ? undefined : user.id);
       res.status(200).json({ success: true, data: reports, message: 'findAll' });
     } catch (error) {
       next(error);
@@ -76,6 +78,42 @@ export class DeviceReportController {
     try {
       const stats = await this.service.getStats();
       res.status(200).json({ success: true, data: stats, message: 'stats' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  // ── Workflow endpoints ──
+
+  public receive = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id);
+      const userId = req.user.id;
+      const report = await this.service.receive(id, userId);
+      res.status(200).json({ success: true, data: report, message: 'received' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public updateResult = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id);
+      const { status, technicianNote } = req.body;
+      const report = await this.service.updateResult(id, status, technicianNote);
+      res.status(200).json({ success: true, data: report, message: 'resultUpdated' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public confirm = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id);
+      const userId = req.user.id;
+      const { isWorking, description } = req.body;
+      const report = await this.service.confirm(id, userId, isWorking, description);
+      res.status(200).json({ success: true, data: report, message: 'confirmed' });
     } catch (error) {
       next(error);
     }
