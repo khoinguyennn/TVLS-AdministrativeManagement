@@ -1,5 +1,6 @@
-import { api } from "@/lib/api";
 import type { DeviceReport, DeviceReportStats } from "@/types/device-report.types";
+
+import { api } from "@/lib/api";
 
 // --- Request types ---
 export interface CreateDeviceReportPayload {
@@ -55,7 +56,7 @@ export const deviceReportService = {
       formData.append("image", data.image);
     }
     const response = await api.post<DeviceReportApiResponse>("/device-reports", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
+      headers: { "Content-Type": "multipart/form-data" }
     });
     return response.data;
   },
@@ -68,7 +69,7 @@ export const deviceReportService = {
     if (data.status !== undefined) formData.append("status", data.status);
     if (data.technicianNote !== undefined) formData.append("technicianNote", data.technicianNote);
     const response = await api.put<DeviceReportApiResponse>(`/device-reports/${id}`, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
+      headers: { "Content-Type": "multipart/form-data" }
     });
     return response.data;
   },
@@ -82,4 +83,35 @@ export const deviceReportService = {
     const response = await api.get<DeviceReportStatsApiResponse>("/device-reports/stats");
     return response.data;
   },
+
+  // ── Workflow ──
+
+  receive: async (id: number): Promise<DeviceReportApiResponse> => {
+    const response = await api.put<DeviceReportApiResponse>(`/device-reports/${id}/receive`);
+    return response.data;
+  },
+
+  updateResult: async (
+    id: number,
+    status: string,
+    technicianNote?: string
+  ): Promise<DeviceReportApiResponse> => {
+    const response = await api.put<DeviceReportApiResponse>(`/device-reports/${id}/result`, {
+      status,
+      technicianNote
+    });
+    return response.data;
+  },
+
+  confirm: async (
+    id: number,
+    isWorking: boolean,
+    description?: string
+  ): Promise<DeviceReportApiResponse> => {
+    const response = await api.put<DeviceReportApiResponse>(`/device-reports/${id}/confirm`, {
+      isWorking,
+      description
+    });
+    return response.data;
+  }
 };

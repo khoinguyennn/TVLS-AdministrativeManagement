@@ -72,72 +72,85 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
     }
   };
 
+  const userRole = user?.role || "";
+
   const mainNavItems = [
     {
       href: "/dashboard",
       label: t("dashboard"),
-      icon: LayoutDashboard
+      icon: LayoutDashboard,
+      roles: ["admin", "manager", "teacher", "technician"]
     },
     {
       href: "/dashboard/users",
       label: t("users"),
-      icon: Users
+      icon: Users,
+      roles: ["admin"]
     },
     {
       href: "/dashboard/staff",
       label: t("staff"),
-      icon: FileText
+      icon: FileText,
+      roles: ["admin", "manager"]
     },
     {
       href: "/dashboard/work-orders",
       label: t("workOrders"),
-      icon: ClipboardList
+      icon: ClipboardList,
+      roles: ["admin", "manager", "teacher", "technician"]
     }
-  ];
+  ].filter(item => item.roles.includes(userRole));
 
   const facilityNavItems = [
     {
       href: "/dashboard/buildings",
       label: t("buildings"),
-      icon: Building2
+      icon: Building2,
+      roles: ["admin", "manager"]
     },
     {
       href: "/dashboard/rooms",
       label: t("rooms"),
-      icon: DoorOpen
+      icon: DoorOpen,
+      roles: ["admin", "manager"]
     },
     {
       href: "/dashboard/devices",
       label: t("devices"),
-      icon: Monitor
+      icon: Monitor,
+      roles: ["admin", "manager"]
     }
-  ];
+  ].filter(item => item.roles.includes(userRole));
 
   const otherNavItems = [
     {
       href: "/dashboard/device-reports",
       label: t("deviceReports"),
-      icon: AlertTriangle
+      icon: AlertTriangle,
+      roles: ["admin", "manager", "teacher", "technician"]
     },
     {
       href: "/dashboard/leave-requests",
       label: t("leaveRequests"),
-      icon: CalendarOff
+      icon: CalendarOff,
+      roles: ["admin", "manager", "teacher", "technician"]
     },
     {
       href: "/dashboard/digital-signatures",
       label: t("digitalSignatures"),
-      icon: Fingerprint
+      icon: Fingerprint,
+      roles: ["admin", "manager", "teacher", "technician"]
     }
-  ];
+  ].filter(item => item.roles.includes(userRole));
 
   const systemNavItems = [
     {
       href: "/dashboard/settings",
       label: t("settings"),
-      icon: Settings
+      icon: Settings,
+      roles: ["admin", "manager", "teacher", "technician"]
     }
-  ];
+  ].filter(item => item.roles.includes(userRole));
 
   const isActive = (href: string) => {
     if (href === "/dashboard") {
@@ -199,7 +212,7 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 space-y-1 overflow-y-auto px-4 py-4">
+      <nav className="flex-1 space-y-1 overflow-y-auto px-4 py-4 scrollbar-hide">
         {mainNavItems.map((item) => (
           <Link
             key={item.href}
@@ -217,27 +230,31 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
         ))}
 
         {/* Facility Section */}
-        <div className="pt-4 pb-2">
-          <p className="px-3 text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
-            {t("facilitySection")}
-          </p>
-        </div>
+        {facilityNavItems.length > 0 && (
+          <>
+            <div className="pt-4 pb-2">
+              <p className="px-3 text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
+                {t("facilitySection")}
+              </p>
+            </div>
 
-        {facilityNavItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors",
-              isActive(item.href)
-                ? "bg-primary/10 text-primary"
-                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-            )}
-          >
-            <item.icon className="size-5" />
-            <span className="text-sm font-medium">{item.label}</span>
-          </Link>
-        ))}
+            {facilityNavItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors",
+                  isActive(item.href)
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                )}
+              >
+                <item.icon className="size-5" />
+                <span className="text-sm font-medium">{item.label}</span>
+              </Link>
+            ))}
+          </>
+        )}
 
         {/* Other Section */}
         <div className="pt-4 pb-2">
@@ -296,11 +313,11 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
                   ? user.avatar.startsWith("http")
                     ? user.avatar
                     : `${env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "")}${user.avatar}`
-                  : "/nice-avatar.png"
+                  : undefined
               }
               alt="User avatar"
             />
-            <AvatarFallback>{getInitials()}</AvatarFallback>
+            <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">{getInitials()}</AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
             <p className="truncate text-xs font-semibold">{user?.fullName || "Người dùng"}</p>

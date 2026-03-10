@@ -20,5 +20,10 @@ export class DeviceReportRoute implements Routes {
     this.router.post(`${this.path}`, AuthMiddleware, uploadReportImage, this.controller.create);
     this.router.put(`${this.path}/:id(\\d+)`, AuthMiddleware, uploadReportImage, this.controller.update);
     this.router.delete(`${this.path}/:id(\\d+)`, AuthMiddleware, this.controller.delete);
+
+    // Workflow endpoints
+    this.router.put(`${this.path}/:id(\\d+)/receive`, AuthMiddleware, this.controller.receive);
+    this.router.put(`${this.path}/:id(\\d+)/result`, AuthMiddleware, this.controller.updateResult);
+    this.router.put(`${this.path}/:id(\\d+)/confirm`, AuthMiddleware, this.controller.confirm);
   }
 }

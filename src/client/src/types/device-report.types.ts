@@ -12,7 +12,18 @@ export interface DeviceReport {
   updatedAt?: string;
   // Included relations
   reporter?: { id: number; fullName: string; avatar?: string };
-  device?: { id: number; name: string; roomId?: number; status: string };
+  device?: {
+    id: number;
+    name: string;
+    roomId?: number;
+    status: string;
+    room?: {
+      id: number;
+      name: string;
+      buildingId: number;
+      building?: { id: number; name: string };
+    };
+  };
   assignee?: { id: number; fullName: string; avatar?: string };
 }
 

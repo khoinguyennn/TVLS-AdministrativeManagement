@@ -255,6 +255,10 @@
       "descriptionPlaceholder": "Mô tả chi tiết tình trạng hư hỏng...",
       "image": "Ảnh minh họa",
       "imagePlaceholder": "Chọn hoặc kéo thả ảnh",
+      "building": "Tòa nhà",
+      "selectBuilding": "Chọn tòa nhà",
+      "room": "Phòng",
+      "selectRoom": "Chọn phòng",
       "status": "Trạng thái",
       "selectStatus": "Chọn trạng thái",
       "assignee": "Kỹ thuật viên phụ trách",
@@ -276,7 +280,26 @@
       "createSuccess": "Tạo phiếu báo hỏng thành công!",
       "updateSuccess": "Cập nhật phiếu thành công!",
       "deleteSuccess": "Xóa phiếu thành công!",
+      "receiveSuccess": "Đã tiếp nhận phiếu báo hỏng!",
+      "resultSuccess": "Đã cập nhật kết quả xử lý!",
+      "confirmSuccess": "Đã xác nhận tình trạng thiết bị!",
       "error": "Có lỗi xảy ra, vui lòng thử lại."
+    },
+    "workflow": {
+      "receive": "Tiếp nhận",
+      "receiveConfirm": "Bạn xác nhận tiếp nhận phiếu báo hỏng này?",
+      "startRepair": "Bắt đầu sửa",
+      "markRepaired": "Hoàn thành sửa chữa",
+      "markUnfixable": "Không sửa được",
+      "markWaiting": "Chờ thay thế",
+      "confirmWorking": "Xác nhận tình trạng",
+      "confirmNotWorking": "Chưa sử dụng được",
+      "resultTitle": "Cập nhật kết quả xử lý",
+      "resultDescription": "Chọn kết quả sửa chữa và nhập ghi chú (nếu có)",
+      "confirmTitle": "Xác nhận tình trạng thiết bị",
+      "confirmDescription": "Thiết bị đã được sửa xong. Vui lòng kiểm tra và xác nhận tình trạng.",
+      "notWorkingDescription": "Mô tả tình trạng còn lỗi...",
+      "technicianNotePlaceholder": "Nhập ghi chú kỹ thuật..."
     },
     "pagination": {
       "showing": "Hiển thị",
@@ -309,7 +332,8 @@
       "total": "Tổng yêu cầu",
       "pending": "Chờ duyệt",
       "approved": "Đã duyệt",
-      "rejected": "Từ chối"
+      "rejected": "Từ chối",
+      "remainingDays": "Ngày phép còn lại"
     },
     "form": {
       "leaveType": "Loại nghỉ phép",

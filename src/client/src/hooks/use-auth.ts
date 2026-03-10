@@ -7,7 +7,7 @@ import { subscribeUserChange } from "@/lib/auth-storage";
 
 const ROLE_LABELS: Record<User["role"], string> = {
   admin: "Quản trị viên",
-  manager: "Ban Giám hiệu",
+  manager: "Cán bộ quản lý",
   teacher: "Giáo viên",
   technician: "Kỹ thuật viên"
 };
