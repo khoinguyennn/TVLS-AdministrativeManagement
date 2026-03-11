@@ -14,7 +14,9 @@ export class DeviceRoute implements Routes {
 
   private initializeRoutes() {
     this.router.get(`${this.path}`, AuthMiddleware, this.controller.getDevices);
-
+    this.router.get(`${this.path}/:id(\\d+)`, AuthMiddleware, this.controller.getDeviceById);
     this.router.post(`${this.path}`, AuthMiddleware, this.controller.createDevice);
+    this.router.put(`${this.path}/:id(\\d+)`, AuthMiddleware, this.controller.updateDevice);
+    this.router.delete(`${this.path}/:id(\\d+)`, AuthMiddleware, this.controller.deleteDevice);
   }
 }
