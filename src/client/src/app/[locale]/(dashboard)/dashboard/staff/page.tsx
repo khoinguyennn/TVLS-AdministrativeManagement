@@ -57,10 +57,11 @@ export default function StaffPage() {
           fullName: "Bùi Hữu Khánh",
           gender: "Nam",
           dateOfBirth: "1987-05-12",
-          idNumber: "084087001648",
+          cccdNumber: "084087001648",
           email: "bhkhanh@tvu.edu.vn",
-          phoneNumber: "0904789498",
-          status: "active"
+          contactAddress: { phone: "0904789498" },
+          status: "active",
+          staffStatus: "working"
         },
         {
           id: 2,
@@ -68,10 +69,11 @@ export default function StaffPage() {
           fullName: "Bùi Quốc Tân",
           gender: "Nam",
           dateOfBirth: "1991-12-19",
-          idNumber: "084091001190",
+          cccdNumber: "084091001190",
           email: "buitan@tvu.edu.vn",
-          phoneNumber: "0982454710",
-          status: "active"
+          contactAddress: { phone: "0982454710" },
+          status: "active",
+          staffStatus: "working"
         },
         {
           id: 3,
@@ -79,10 +81,11 @@ export default function StaffPage() {
           fullName: "Bùi Thế Ngân",
           gender: "Nam",
           dateOfBirth: "1984-12-08",
-          idNumber: "084084001944",
+          cccdNumber: "084084001944",
           email: "btngan@tvu.edu.vn",
-          phoneNumber: "0904542520",
-          status: "active"
+          contactAddress: { phone: "0904542520" },
+          status: "active",
+          staffStatus: "working"
         },
         {
           id: 4,
@@ -90,10 +93,11 @@ export default function StaffPage() {
           fullName: "Bùi Thị Cẩm Loan",
           gender: "Nữ",
           dateOfBirth: "1981-01-01",
-          idNumber: "084181002023",
+          cccdNumber: "084181002023",
           email: "btcloan@tvu.edu.vn",
-          phoneNumber: "0914880571",
-          status: "active"
+          contactAddress: { phone: "0914880571" },
+          status: "active",
+          staffStatus: "working"
         },
         {
           id: 5,
@@ -101,12 +105,13 @@ export default function StaffPage() {
           fullName: "Bùi Văn Cật",
           gender: "Nam",
           dateOfBirth: "1976-05-15",
-          idNumber: "084076001778",
+          cccdNumber: "084076001778",
           email: "buicat@tvu.edu.vn",
-          phoneNumber: "0909207380",
-          status: "active"
+          contactAddress: { phone: "0909207380" },
+          status: "active",
+          staffStatus: "working"
         }
-      ];
+      ] as unknown as PersonnelRecord[];
       setPersonnel(mockData);
       setFilteredPersonnel(mockData);
     } catch (error) {
@@ -160,9 +165,9 @@ export default function StaffPage() {
             p.fullName,
             p.gender,
             p.dateOfBirth,
-            p.idNumber,
+            p.cccdNumber,
             p.email,
-            p.phoneNumber
+            p.contactAddress?.phone
           ]
             .map((v) => `"${v}"`)
             .join(",")
@@ -198,13 +203,13 @@ export default function StaffPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">{tSidebar("staff")}</h2>
-          <p className="text-gray-600 mt-1 text-sm">Quản lý thông tin chi tiết của nhân sự</p>
+          <p className="text-muted-foreground mt-1 text-sm">Quản lý thông tin chi tiết của nhân sự</p>
         </div>
         <div className="flex gap-2">
           <ExcelImportExportDialog onImport={handleImportExcel} onExport={handleExportExcel} />
-          <Link href="/vi/dashboard/staff/add">
-            <Button className="gap-2 bg-blue-600 hover:bg-blue-700 shadow-sm">
-              <Plus className="h-4 w-4" />
+          <Link href="/dashboard/staff/add">
+            <Button className="gap-2">
+              <Plus className="size-4" />
               Thêm nhân sự
             </Button>
           </Link>
@@ -214,10 +219,10 @@ export default function StaffPage() {
       {/* Search Bar */}
       <div>
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Tìm theo tên, mã, email hoặc điện thoại..."
-            className="pl-10 bg-white border border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="pl-10"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -225,14 +230,14 @@ export default function StaffPage() {
       </div>
 
       {/* Personnel Table */}
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
-        <div className="border-b border-gray-200 px-6 py-4">
-          <h2 className="text-lg font-semibold text-gray-900">Danh sách nhân sự</h2>
+      <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
+        <div className="border-b px-6 py-4">
+          <h2 className="text-lg font-semibold">Danh sách nhân sự</h2>
         </div>
         <div className="p-6">
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
+              <Loader2 className="size-6 animate-spin text-muted-foreground" />
             </div>
           ) : (
             <PersonnelTable

@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { PersonnelForm } from "@/components/personnel/personnel-form";
 import { personnelService } from "@/services/personnel.service";
 import type { CreatePersonnelPayload, PersonnelRecord } from "@/types/personnel.types";
-import { toast } from "sonner";
+import { toast } from "react-toastify";
 
 export default function EditStaffPage() {
   const router = useRouter();
@@ -52,7 +52,7 @@ export default function EditStaffPage() {
     } catch (error) {
       const message = error instanceof Error ? error.message : "Lỗi tải dữ liệu";
       toast.error(message);
-      router.push("/vi/dashboard/staff");
+      router.push("/dashboard/staff");
     } finally {
       setIsLoading(false);
     }
@@ -65,7 +65,7 @@ export default function EditStaffPage() {
       // For now, just simulate the submission
       await new Promise((resolve) => setTimeout(resolve, 1500));
       toast.success("Cập nhật nhân sự thành công");
-      router.push("/vi/dashboard/staff");
+      router.push("/dashboard/staff");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Có lỗi xảy ra";
       toast.error(message);
@@ -78,7 +78,7 @@ export default function EditStaffPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <Loader2 className="size-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -86,8 +86,8 @@ export default function EditStaffPage() {
   if (!personnel) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500">Không tìm thấy nhân sự</p>
-        <Link href="/vi/dashboard/staff" className="mt-4 inline-block">
+        <p className="text-muted-foreground">Không tìm thấy nhân sự</p>
+        <Link href="/dashboard/staff" className="mt-4 inline-block">
           <Button>Quay lại</Button>
         </Link>
       </div>
@@ -98,15 +98,15 @@ export default function EditStaffPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Link href="/vi/dashboard/staff">
+        <Link href="/dashboard/staff">
           <Button variant="ghost" size="sm" className="gap-2">
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="size-4" />
             Quay lại
           </Button>
         </Link>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Sửa thông tin nhân sự</h1>
-          <p className="text-gray-500 mt-1">Cập nhật thông tin của {personnel.fullName}</p>
+          <p className="text-muted-foreground mt-1">Cập nhật thông tin của {personnel.fullName}</p>
         </div>
       </div>
 

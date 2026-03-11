@@ -17,6 +17,7 @@ import {
   LogOut,
   Monitor,
   Settings,
+  UserRound,
   Users,
   X
 } from "lucide-react";
@@ -79,6 +80,12 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
       href: "/dashboard",
       label: t("dashboard"),
       icon: LayoutDashboard,
+      roles: ["admin", "manager", "teacher", "technician"]
+    },
+    {
+      href: "/dashboard/my-profile",
+      label: t("myProfile"),
+      icon: UserRound,
       roles: ["admin", "manager", "teacher", "technician"]
     },
     {
