@@ -8,7 +8,7 @@ import { PasswordResetRoute } from '@routes/password-reset.route';
 import { UserRoute } from '@routes/users.route';
 import { BuildingRoute } from '@routes/building.route';
 import { RoomRoute } from '@routes/room.route';
-import { EquipmentRoute } from '@routes/equipment.route';
+// import { EquipmentRoute } from '@routes/equipment.route'; // Not used - using DeviceRoute instead
 import { ValidateEnv } from '@utils/validateEnv';
 
 ValidateEnv();
@@ -19,7 +19,7 @@ const app = new App([
   new UserRoute(),
   new BuildingRoute(),
   new RoomRoute(),
-  new EquipmentRoute(),
+  // new EquipmentRoute(), // Not used - using DeviceRoute instead
   new DeviceRoute(),
   new DeviceReportRoute(),
   new LeaveRequestRoute(),

@@ -69,9 +69,9 @@ export class RoomService {
     const room = await DB.Rooms.findByPk(roomId);
     if (!room) throw new HttpException(404, 'Không tìm thấy phòng');
 
-    // Check if room has equipment
-    const equipmentCount = await DB.Equipment.count({ where: { roomId } });
-    if (equipmentCount > 0) {
+    // Check if room has devices
+    const deviceCount = await DB.Devices.count({ where: { roomId } });
+    if (deviceCount > 0) {
       throw new HttpException(400, 'Không thể xoá phòng đang có thiết bị');
     }
 

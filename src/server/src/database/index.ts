@@ -13,7 +13,7 @@ import UserModel from '@models/users.model';
 
 import BuildingModel from '@models/building.model';
 import RoomModel from '@models/room.model';
-import EquipmentModel from '@models/equipment.model';
+// import EquipmentModel from '@models/equipment.model'; // Not used - using devices instead
 import DeviceModel from '@models/device.model';
 
 import { logger } from '@utils/logger';
@@ -48,7 +48,7 @@ const OTPs = OTPModel(sequelize);
 
 const Buildings = BuildingModel(sequelize);
 const Rooms = RoomModel(sequelize);
-const Equipment = EquipmentModel(sequelize);
+// const Equipment = EquipmentModel(sequelize); // Not used - using devices instead
 const Devices = DevicesModel(sequelize);
 
 const DeviceReports = DeviceReportModel(sequelize);
@@ -69,9 +69,9 @@ OTPs.belongsTo(Users, { foreignKey: 'userId', as: 'user' });
 Buildings.hasMany(Rooms, { foreignKey: 'buildingId', as: 'rooms' });
 Rooms.belongsTo(Buildings, { foreignKey: 'buildingId', as: 'building' });
 
-// Room - Equipment
-Rooms.hasMany(Equipment, { foreignKey: 'roomId', as: 'equipment' });
-Equipment.belongsTo(Rooms, { foreignKey: 'roomId', as: 'room' });
+// Room - Equipment (commented out - using devices instead)
+// Rooms.hasMany(Equipment, { foreignKey: 'roomId', as: 'equipment' });
+// Equipment.belongsTo(Rooms, { foreignKey: 'roomId', as: 'room' });
 
 // Room - Device
 Rooms.hasMany(Devices, { foreignKey: 'roomId', as: 'devices' });
@@ -113,7 +113,7 @@ export const DB = {
   OTPs,
   Buildings,
   Rooms,
-  Equipment,
+  // Equipment, // Not used - using devices instead
   Devices,
   DeviceReports,
   LeaveTypes,
