@@ -1,7 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { IdCard, Info, Phone, MapPin, Home } from "lucide-react";
+
+import gradientLight from "@/assets/images/gradient1.jpg";
+import gradientDark from "@/assets/images/gradient2.jpg";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -56,8 +60,23 @@ export default function MyProfilePage() {
     <div className="space-y-6">
       {/* ── Profile Header Card ── */}
       <div className="bg-card rounded-xl border shadow-sm">
-        {/* Gradient banner */}
-        <div className="h-32 bg-gradient-to-r from-primary/80 to-primary rounded-t-xl" />
+        {/* Banner Images */}
+        <div className="h-32 relative z-0 rounded-t-xl overflow-hidden">
+          <Image
+            src={gradientLight}
+            alt="Profile Banner Light"
+            fill
+            className="object-cover dark:hidden"
+            priority
+          />
+          <Image
+            src={gradientDark}
+            alt="Profile Banner Dark"
+            fill
+            className="object-cover hidden dark:block"
+            priority
+          />
+        </div>
         <div className="px-8 pb-8">
           {/* Avatar + Name + Actions */}
           <div className="flex flex-col sm:flex-row items-start sm:items-end gap-6 -mt-12 mb-6">
