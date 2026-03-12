@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { IdCard, Info, Phone, MapPin, Home } from "lucide-react";
+import { ProfileSkeleton } from "@/components/skeletons";
 
 import gradientLight from "@/assets/images/gradient1.jpg";
 import gradientDark from "@/assets/images/gradient2.jpg";
@@ -55,6 +56,10 @@ export default function MyProfilePage() {
   const handleExport = () => {
     toast.info("Tính năng xuất hồ sơ đang được phát triển.");
   };
+
+  if (!user) {
+    return <ProfileSkeleton />;
+  }
 
   return (
     <div className="space-y-6">

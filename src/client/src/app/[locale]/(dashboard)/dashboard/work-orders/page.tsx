@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Plus, Search, Loader2, Filter, ChevronRight } from "lucide-react";
+import { TableSkeleton } from "@/components/skeletons";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
@@ -32,10 +33,12 @@ export default function WorkOrdersPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingWorkOrder, setEditingWorkOrder] = useState<WorkOrder | undefined>();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   // Load data
   useEffect(() => {
     loadData();
+    setMounted(true);
   }, []);
 
   // Filter work orders based on search query and status
@@ -47,8 +50,8 @@ export default function WorkOrdersPage() {
       filtered = filtered.filter(
         (wo) =>
           wo.code.toLowerCase().includes(query) ||
-          wo.workLocation.toLowerCase().includes(query) ||
-          wo.workContent.toLowerCase().includes(query)
+          (wo.location?.toLowerCase().includes(query) || false) ||
+          wo.content.toLowerCase().includes(query)
       );
     }
 
@@ -71,10 +74,15 @@ export default function WorkOrdersPage() {
           fullName: "Bùi Hữu Khánh",
           gender: "Nam",
           dateOfBirth: "1987-05-12",
-          idNumber: "084087001648",
+          cccdNumber: "084087001648",
           email: "bhkhanh@tvu.edu.vn",
-          phoneNumber: "0904789498",
-          status: "active"
+          contactAddress: { phone: "0904789498" },
+          status: "active",
+          userId: 101,
+          role: "technician",
+          staffStatus: "working",
+          createdAt: "2026-01-01T00:00:00Z",
+          updatedAt: "2026-01-01T00:00:00Z"
         },
         {
           id: 2,
@@ -82,10 +90,15 @@ export default function WorkOrdersPage() {
           fullName: "Bùi Quốc Tân",
           gender: "Nam",
           dateOfBirth: "1991-12-19",
-          idNumber: "084091001190",
+          cccdNumber: "084091001190",
           email: "buitan@tvu.edu.vn",
-          phoneNumber: "0982454710",
-          status: "active"
+          contactAddress: { phone: "0982454710" },
+          status: "active",
+          userId: 102,
+          role: "technician",
+          staffStatus: "working",
+          createdAt: "2026-01-01T00:00:00Z",
+          updatedAt: "2026-01-01T00:00:00Z"
         },
         {
           id: 3,
@@ -93,10 +106,15 @@ export default function WorkOrdersPage() {
           fullName: "Bùi Thế Ngân",
           gender: "Nam",
           dateOfBirth: "1984-12-08",
-          idNumber: "084084001944",
+          cccdNumber: "084084001944",
           email: "btngan@tvu.edu.vn",
-          phoneNumber: "0904542520",
-          status: "active"
+          contactAddress: { phone: "0904542520" },
+          status: "active",
+          userId: 103,
+          role: "technician",
+          staffStatus: "working",
+          createdAt: "2026-01-01T00:00:00Z",
+          updatedAt: "2026-01-01T00:00:00Z"
         }
       ];
       setPersonnel(personnelData);
@@ -106,45 +124,46 @@ export default function WorkOrdersPage() {
         {
           id: 1,
           code: "CL-2026-001",
-          workLocation: "Phòng 101, Tòa nhà A",
-          workContent: "Kiểm tra và bảo dưỡng hệ thống điện",
-          startTime: "2026-03-10T08:00:00Z",
-          endTime: "2026-03-10T12:00:00Z",
-          notes: "Cần mang theo dụng cụ kiểm tra điện",
+          title: "Bảo trì định kỳ",
+          location: "Phòng 101, Tòa nhà A",
+          content: "Kiểm tra và bảo dưỡng hệ thống điện",
+          startDate: "2026-03-10T08:00:00Z",
+          endDate: "2026-03-10T12:00:00Z",
+          note: "Cần mang theo dụng cụ kiểm tra điện",
           status: "pending",
           assignedTo: 1,
-          assignedBy: 1,
+          createdBy: 1,
           createdAt: "2026-03-06T10:00:00Z",
           updatedAt: "2026-03-06T10:00:00Z"
         },
         {
           id: 2,
           code: "CL-2026-002",
-          workLocation: "Phòng máy chủ",
-          workContent: "Cập nhật phần mềm bảo mật",
-          startTime: "2026-03-11T14:00:00Z",
-          endTime: "2026-03-11T16:00:00Z",
-          notes: "Đảm bảo backup dữ liệu trước khi cập nhật",
+          title: "Cập nhật hệ thống",
+          location: "Phòng máy chủ",
+          content: "Cập nhật phần mềm bảo mật",
+          startDate: "2026-03-11T14:00:00Z",
+          endDate: "2026-03-11T16:00:00Z",
+          note: "Đảm bảo backup dữ liệu trước khi cập nhật",
           status: "approved",
           assignedTo: 2,
-          assignedBy: 1,
+          createdBy: 1,
           createdAt: "2026-03-06T11:00:00Z",
           updatedAt: "2026-03-06T11:30:00Z"
         },
         {
           id: 3,
           code: "CL-2026-003",
-          workLocation: "Văn phòng Giám đốc",
-          workContent: "Sửa chữa máy in",
-          startTime: "2026-03-07T09:00:00Z",
-          endTime: "2026-03-07T11:00:00Z",
+          title: "Sửa chữa thiết bị",
+          location: "Văn phòng Giám đốc",
+          content: "Sửa chữa máy in",
+          startDate: "2026-03-07T09:00:00Z",
+          endDate: "2026-03-07T11:00:00Z",
           status: "completed",
           assignedTo: 3,
-          assignedBy: 1,
+          createdBy: 1,
           createdAt: "2026-03-05T15:00:00Z",
-          updatedAt: "2026-03-07T11:00:00Z",
-          completedAt: "2026-03-07T11:00:00Z",
-          evidencePhotos: ["/api/uploads/evidence/work-order-3-1.jpg"]
+          updatedAt: "2026-03-07T11:00:00Z"
         }
       ];
       setWorkOrders(mockWorkOrders);
@@ -166,7 +185,7 @@ export default function WorkOrdersPage() {
         code: `CL-2026-${String(workOrders.length + 1).padStart(3, "0")}`,
         ...data,
         status: "pending",
-        assignedBy: 1, // Current user ID
+        createdBy: 1, // Current user ID
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
@@ -229,7 +248,7 @@ export default function WorkOrdersPage() {
       }
 
       const assignedPerson = personnel.find(p => p.id === workOrder.assignedTo);
-      const assignedByPerson = personnel.find(p => p.id === workOrder.assignedBy);
+      const createdByPerson = personnel.find(p => p.id === workOrder.createdBy);
 
       const formatDate = (dateTime: string | undefined) => {
         if (!dateTime) return "-";
@@ -495,14 +514,14 @@ export default function WorkOrdersPage() {
               </div>
               <div class="info-line">
                 <span class="info-label">Được cử đi công tác tại:</span>
-                <span class="info-value">${workOrder.workLocation}</span>
+                <span class="info-value">${workOrder.location || ''}</span>
               </div>
               <div class="info-line">
                 <span class="info-label">Nội dung:</span>
-                <span class="info-value">${workOrder.workContent}</span>
+                <span class="info-value">${workOrder.content}</span>
               </div>
               <div class="info-line">
-                <span class="info-label">Từ ngày ${formatDate(workOrder.startTime)}</span>
+                <span class="info-label">Từ ngày ${formatDate(workOrder.startDate)}</span>
               </div>
             </div>
 
@@ -543,15 +562,15 @@ export default function WorkOrdersPage() {
               <tbody>
                 <tr>
                   <td class="col-location">Nơi đi: Trường Thực hành Sư phạm</td>
-                  <td class="col-date">${new Date(workOrder.startTime).getDate()}/${new Date(workOrder.startTime).getMonth() + 1}/${new Date(workOrder.startTime).getFullYear()}</td>
+                  <td class="col-date">${workOrder.startDate ? new Date(workOrder.startDate).getDate() : ''}/${workOrder.startDate ? new Date(workOrder.startDate).getMonth() + 1 : ''}/${workOrder.startDate ? new Date(workOrder.startDate).getFullYear() : ''}</td>
                   <td class="col-vehicle"></td>
                   <td class="col-days"></td>
                   <td class="col-reason"></td>
                   <td class="col-confirm"></td>
                 </tr>
                 <tr>
-                  <td class="col-location">Nơi đến: ${workOrder.workLocation}</td>
-                  <td class="col-date">${new Date(workOrder.endTime).getDate()}/${new Date(workOrder.endTime).getMonth() + 1}/${new Date(workOrder.endTime).getFullYear()}</td>
+                  <td class="col-location">Nơi đến: ${workOrder.location || ''}</td>
+                  <td class="col-date">${workOrder.endDate ? new Date(workOrder.endDate).getDate() : ''}/${workOrder.endDate ? new Date(workOrder.endDate).getMonth() + 1 : ''}/${workOrder.endDate ? new Date(workOrder.endDate).getFullYear() : ''}</td>
                   <td class="col-vehicle"></td>
                   <td class="col-days"></td>
                   <td class="col-reason"></td>
@@ -598,7 +617,7 @@ export default function WorkOrdersPage() {
               <div class="signature-box">
                 <div class="signature-label">Người cử công tác</div>
                 <div class="signature-subtext">(Ký, họ tên)</div>
-                <div class="signature-name">${assignedByPerson ? assignedByPerson.fullName : ''}</div>
+                <div class="signature-name">${createdByPerson ? createdByPerson.fullName : ''}</div>
               </div>
               <div class="signature-box">
                 <div class="signature-label">Kế Toán</div>
@@ -736,22 +755,34 @@ export default function WorkOrdersPage() {
             />
           </div>
         </div>
-        <div className="sm:w-48">
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="bg-white border border-gray-200 shadow-sm">
-              <Filter className="h-4 w-4 mr-2" />
-              <SelectValue placeholder="Lọc theo trạng thái" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Tất cả trạng thái</SelectItem>
-              <SelectItem value="pending">Chờ duyệt</SelectItem>
-              <SelectItem value="approved">Đã duyệt</SelectItem>
-              <SelectItem value="in_progress">Đang thực hiện</SelectItem>
-              <SelectItem value="completed">Hoàn thành</SelectItem>
-              <SelectItem value="rejected">Từ chối</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        {mounted ? (
+          <div className="sm:w-48">
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="bg-white border border-gray-200 shadow-sm">
+                <Filter className="h-4 w-4 mr-2" />
+                <SelectValue placeholder="Lọc theo trạng thái" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tất cả trạng thái</SelectItem>
+                <SelectItem value="pending">Chờ duyệt</SelectItem>
+                <SelectItem value="approved">Đã duyệt</SelectItem>
+                <SelectItem value="in_progress">Đang thực hiện</SelectItem>
+                <SelectItem value="completed">Hoàn thành</SelectItem>
+                <SelectItem value="rejected">Từ chối</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        ) : (
+          <div className="sm:w-48">
+            <div className="flex h-10 w-full items-center justify-between rounded-md border border-gray-200 bg-white px-3 py-2 text-sm shadow-sm ring-offset-background text-muted-foreground opacity-50 cursor-not-allowed">
+              <div className="flex items-center">
+                <Filter className="h-4 w-4 mr-2" />
+                <span>Lọc theo trạng thái</span>
+              </div>
+              <ChevronRight className="h-4 w-4 opacity-50 rotate-90" />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Work Orders Table */}
@@ -761,9 +792,7 @@ export default function WorkOrdersPage() {
         </div>
         <div className="p-6">
           {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
-            </div>
+            <TableSkeleton columns={7} rows={5} />
           ) : (
             <WorkOrderTable
               data={filteredWorkOrders}

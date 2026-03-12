@@ -95,7 +95,7 @@ export class App {
           },
         },
       },
-      apis: ['swagger.yaml'],
+      apis: ['swagger.yaml', 'swagger-extra.yaml'],
     };
 
     const specs = swaggerJSDoc(options);

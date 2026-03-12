@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight, Monitor, Edit, Loader2, Plus, Search, Trash2 } from 'lucide-react';
+import { TableSkeleton } from '@/components/skeletons';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
@@ -71,6 +72,7 @@ export default function DevicesPage() {
   const [roomFilter, setRoomFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState(1);
+  const [mounted, setMounted] = useState(false);
 
   // Dialog state
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -152,6 +154,10 @@ export default function DevicesPage() {
   useEffect(() => {
     setCurrentPage(1);
   }, [search, roomFilter, statusFilter]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Dialog handlers
   const handleOpenCreate = useCallback(() => {
@@ -249,41 +255,53 @@ export default function DevicesPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
           <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('searchPlaceholder')} className="pl-10" />
         </div>
-        <Select value={roomFilter} onValueChange={setRoomFilter}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder={t('allRooms')} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">{t('allRooms')}</SelectItem>
-            {rooms.map((r) => (
-              <SelectItem key={r.id} value={r.id.toString()}>
-                {r.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder={t('allStatuses')} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">{t('allStatuses')}</SelectItem>
-            {STATUSES.map((s) => (
-              <SelectItem key={s} value={s}>
-                {statusLabels[s]}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {mounted ? (
+          <>
+            <Select value={roomFilter} onValueChange={setRoomFilter}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder={t('allRooms')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('allRooms')}</SelectItem>
+                {rooms.map((r) => (
+                  <SelectItem key={r.id} value={r.id.toString()}>
+                    {r.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder={t('allStatuses')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('allStatuses')}</SelectItem>
+                {STATUSES.map((s) => (
+                  <SelectItem key={s} value={s}>
+                    {statusLabels[s]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </>
+        ) : (
+          <>
+            <div className="flex w-48 h-9 cursor-not-allowed items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm text-muted-foreground opacity-50 shadow-sm ring-offset-background">
+              <span>{t("allRooms")}</span>
+              <ChevronRight className="size-4 rotate-90 opacity-50" />
+            </div>
+            <div className="flex w-48 h-9 cursor-not-allowed items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm text-muted-foreground opacity-50 shadow-sm ring-offset-background">
+              <span>{t("allStatuses")}</span>
+              <ChevronRight className="size-4 rotate-90 opacity-50" />
+            </div>
+          </>
+        )}
       </div>
 
       {/* Data Table */}
       <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
         {isLoading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="size-6 animate-spin text-muted-foreground" />
-            <span className="ml-2 text-sm text-muted-foreground">{t('loading')}</span>
-          </div>
+          <TableSkeleton columns={6} rows={5} />
         ) : paginatedDevices.length === 0 ? (
           <div className="text-center py-20 text-muted-foreground text-sm">{t('noResults')}</div>
         ) : (
@@ -429,7 +447,7 @@ export default function DevicesPage() {
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>{t('deleteConfirm.title')}</DialogTitle>
-            <DialogDescription>{t('deleteConfirm.description', { name: deletingDevice?.name })}</DialogDescription>
+            <DialogDescription>{t('deleteConfirm.description', { name: deletingDevice?.name || '' })}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>

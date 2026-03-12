@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight, DoorOpen, Edit, Loader2, Plus, Search, Trash2 } from 'lucide-react';
+import { TableSkeleton } from '@/components/skeletons';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
@@ -48,6 +49,7 @@ export default function RoomsPage() {
   const [search, setSearch] = useState('');
   const [buildingFilter, setBuildingFilter] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState(1);
+  const [mounted, setMounted] = useState(false);
 
   // Dialog state
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -121,6 +123,10 @@ export default function RoomsPage() {
   useEffect(() => {
     setCurrentPage(1);
   }, [search, buildingFilter]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Dialog handlers
   const handleOpenCreate = useCallback(() => {
@@ -202,28 +208,32 @@ export default function RoomsPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
           <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('searchPlaceholder')} className="pl-10" />
         </div>
-        <Select value={buildingFilter} onValueChange={setBuildingFilter}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder={t('allBuildings')} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">{t('allBuildings')}</SelectItem>
-            {buildings.map((b) => (
-              <SelectItem key={b.id} value={b.id.toString()}>
-                {b.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {mounted ? (
+          <Select value={buildingFilter} onValueChange={setBuildingFilter}>
+            <SelectTrigger className="w-48">
+              <SelectValue placeholder={t('allBuildings')} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t('allBuildings')}</SelectItem>
+              {buildings.map((b) => (
+                <SelectItem key={b.id} value={b.id.toString()}>
+                  {b.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        ) : (
+          <div className="flex w-48 h-9 cursor-not-allowed items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm text-muted-foreground opacity-50 shadow-sm ring-offset-background">
+            <span>{t("allBuildings")}</span>
+            <ChevronRight className="size-4 rotate-90 opacity-50" />
+          </div>
+        )}
       </div>
 
       {/* Data Table */}
       <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
         {isLoading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="size-6 animate-spin text-muted-foreground" />
-            <span className="ml-2 text-sm text-muted-foreground">{t('loading')}</span>
-          </div>
+          <TableSkeleton columns={4} rows={5} />
         ) : paginatedRooms.length === 0 ? (
           <div className="text-center py-20 text-muted-foreground text-sm">{t('noResults')}</div>
         ) : (
@@ -347,7 +357,7 @@ export default function RoomsPage() {
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>{t('deleteConfirm.title')}</DialogTitle>
-            <DialogDescription>{t('deleteConfirm.description', { name: deletingRoom?.name })}</DialogDescription>
+            <DialogDescription>{t('deleteConfirm.description', { name: deletingRoom?.name || '' })}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>

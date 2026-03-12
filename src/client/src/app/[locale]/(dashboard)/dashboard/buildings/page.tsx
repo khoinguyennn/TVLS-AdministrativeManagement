@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Building2, ChevronLeft, ChevronRight, Edit, Loader2, Plus, Search, Trash2 } from 'lucide-react';
+import { TableSkeleton } from '@/components/skeletons';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
@@ -191,10 +192,7 @@ export default function BuildingsPage() {
       {/* Data Table */}
       <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
         {isLoading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="size-6 animate-spin text-muted-foreground" />
-            <span className="ml-2 text-sm text-muted-foreground">{t('loading')}</span>
-          </div>
+          <TableSkeleton columns={4} rows={5} />
         ) : paginatedBuildings.length === 0 ? (
           <div className="text-center py-20 text-muted-foreground text-sm">{t('noResults')}</div>
         ) : (
@@ -305,7 +303,7 @@ export default function BuildingsPage() {
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>{t('deleteConfirm.title')}</DialogTitle>
-            <DialogDescription>{t('deleteConfirm.description', { name: deletingBuilding?.name })}</DialogDescription>
+            <DialogDescription>{t('deleteConfirm.description', { name: deletingBuilding?.name || '' })}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>

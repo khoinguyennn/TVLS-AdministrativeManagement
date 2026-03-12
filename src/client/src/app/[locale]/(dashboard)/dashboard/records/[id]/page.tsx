@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronLeft, Loader2, Mail, Phone, MapPin, Calendar } from "lucide-react";
+import { DetailPageSkeleton } from "@/components/skeletons";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -74,11 +75,7 @@ export default function ViewPersonnelPage({ params }: PageProps) {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-      </div>
-    );
+    return <DetailPageSkeleton />;
   }
 
   if (!personnel) {

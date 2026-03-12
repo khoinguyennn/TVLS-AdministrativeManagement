@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Plus, Search, Loader2 } from "lucide-react";
+import { TableSkeleton } from "@/components/skeletons";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -259,9 +260,7 @@ export default function PersonnelPage() {
         </div>
         <div className="p-6">
           {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
-            </div>
+            <TableSkeleton columns={7} rows={5} />
           ) : (
             <PersonnelTable
               data={filteredPersonnel}

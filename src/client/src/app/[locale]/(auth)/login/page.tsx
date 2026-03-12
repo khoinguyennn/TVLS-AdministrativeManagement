@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -15,6 +15,7 @@ import { authStorage } from "@/lib/auth-storage";
 import { authService } from "@/services/auth.service";
 import type { AuthError } from "@/types/auth.types";
 import { Button, Card, CardContent, CardFooter, Input, Label, Separator } from "@/ui";
+import { LoginSkeleton } from "@/components/skeletons";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -23,6 +24,11 @@ export default function LoginPage() {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,6 +104,10 @@ export default function LoginPage() {
   const handleGoogleLogin = () => {
     googleLogin();
   };
+
+  if (!mounted) {
+    return <LoginSkeleton />;
+  }
 
   return (
     <div className="flex min-h-screen flex-col">

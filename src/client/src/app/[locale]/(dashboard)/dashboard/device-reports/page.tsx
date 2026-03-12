@@ -19,6 +19,7 @@ import {
   Settings2,
   Trash2
 } from "lucide-react";
+import { TableSkeleton } from "@/components/skeletons";
 import { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
@@ -150,6 +151,7 @@ export default function DeviceReportsPage() {
 
   // ── Pagination ──
   const [currentPage, setCurrentPage] = useState(1);
+  const [mounted, setMounted] = useState(false);
 
   // ── Dialog state ──
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -193,6 +195,7 @@ export default function DeviceReportsPage() {
     const user = authStorage.getUser();
     if (user?.role) setUserRole(user.role);
     if (user?.id) setCurrentUserId(user.id);
+    setMounted(true);
   }, []);
 
   // ── Fetch data ──
@@ -519,28 +522,32 @@ export default function DeviceReportsPage() {
             className="pl-10"
           />
         </div>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder={t("allStatuses")} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">{t("allStatuses")}</SelectItem>
-            {STATUSES.map((s) => (
-              <SelectItem key={s} value={s}>
-                {t(`statuses.${s}`)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {mounted ? (
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-48">
+              <SelectValue placeholder={t("allStatuses")} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t("allStatuses")}</SelectItem>
+              {STATUSES.map((s) => (
+                <SelectItem key={s} value={s}>
+                  {t(`statuses.${s}`)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        ) : (
+          <div className="flex items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background w-48 h-9 text-muted-foreground opacity-50 cursor-not-allowed">
+            <span>{t("allStatuses")}</span>
+            <ChevronRight className="size-4 opacity-50 rotate-90" />
+          </div>
+        )}
       </div>
 
       {/* Data Table */}
       <div className="overflow-hidden rounded-xl border bg-card shadow-sm">
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="size-6 animate-spin text-muted-foreground" />
-            <span className="ml-2 text-sm text-muted-foreground">{t("loading")}</span>
-          </div>
+          <TableSkeleton columns={7} rows={5} />
         ) : paginatedReports.length === 0 ? (
           <div className="py-20 text-center text-sm text-muted-foreground">{t("noResults")}</div>
         ) : (
