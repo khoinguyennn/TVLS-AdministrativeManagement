@@ -15,6 +15,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { WorkOrderTable, WorkOrderDialog } from "@/components/work-orders";
+import { TablePagination } from "@/components/shared/table-pagination";
+import { workOrderService } from "@/services/work-order.service";
 import { personnelService } from "@/services/personnel.service";
 import type { WorkOrder, CreateWorkOrderPayload, UpdateWorkOrderPayload } from "@/types/work-order.types";
 import type { PersonnelRecord } from "@/types/personnel.types";
@@ -32,6 +34,8 @@ export default function WorkOrdersPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingWorkOrder, setEditingWorkOrder] = useState<WorkOrder | undefined>();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_SIZE = 8;
 
   // Load data
   useEffect(() => {
@@ -47,8 +51,8 @@ export default function WorkOrdersPage() {
       filtered = filtered.filter(
         (wo) =>
           wo.code.toLowerCase().includes(query) ||
-          wo.workLocation.toLowerCase().includes(query) ||
-          wo.workContent.toLowerCase().includes(query)
+          (wo.location ?? "").toLowerCase().includes(query) ||
+          wo.content.toLowerCase().includes(query)
       );
     }
 
@@ -57,98 +61,24 @@ export default function WorkOrdersPage() {
     }
 
     setFilteredWorkOrders(filtered);
+    setCurrentPage(1);
   }, [searchQuery, statusFilter, workOrders]);
+
+  const pagedWorkOrders = filteredWorkOrders.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
 
   async function loadData() {
     try {
       setIsLoading(true);
-
-      // Load personnel data
-      const personnelData: PersonnelRecord[] = [
-        {
-          id: 1,
-          code: "8401555613",
-          fullName: "Bùi Hữu Khánh",
-          gender: "Nam",
-          dateOfBirth: "1987-05-12",
-          idNumber: "084087001648",
-          email: "bhkhanh@tvu.edu.vn",
-          phoneNumber: "0904789498",
-          status: "active"
-        },
-        {
-          id: 2,
-          code: "8413375048",
-          fullName: "Bùi Quốc Tân",
-          gender: "Nam",
-          dateOfBirth: "1991-12-19",
-          idNumber: "084091001190",
-          email: "buitan@tvu.edu.vn",
-          phoneNumber: "0982454710",
-          status: "active"
-        },
-        {
-          id: 3,
-          code: "8400631101",
-          fullName: "Bùi Thế Ngân",
-          gender: "Nam",
-          dateOfBirth: "1984-12-08",
-          idNumber: "084084001944",
-          email: "btngan@tvu.edu.vn",
-          phoneNumber: "0904542520",
-          status: "active"
-        }
-      ];
-      setPersonnel(personnelData);
-
-      // Mock work orders data
-      const mockWorkOrders: WorkOrder[] = [
-        {
-          id: 1,
-          code: "CL-2026-001",
-          workLocation: "Phòng 101, Tòa nhà A",
-          workContent: "Kiểm tra và bảo dưỡng hệ thống điện",
-          startTime: "2026-03-10T08:00:00Z",
-          endTime: "2026-03-10T12:00:00Z",
-          notes: "Cần mang theo dụng cụ kiểm tra điện",
-          status: "pending",
-          assignedTo: 1,
-          assignedBy: 1,
-          createdAt: "2026-03-06T10:00:00Z",
-          updatedAt: "2026-03-06T10:00:00Z"
-        },
-        {
-          id: 2,
-          code: "CL-2026-002",
-          workLocation: "Phòng máy chủ",
-          workContent: "Cập nhật phần mềm bảo mật",
-          startTime: "2026-03-11T14:00:00Z",
-          endTime: "2026-03-11T16:00:00Z",
-          notes: "Đảm bảo backup dữ liệu trước khi cập nhật",
-          status: "approved",
-          assignedTo: 2,
-          assignedBy: 1,
-          createdAt: "2026-03-06T11:00:00Z",
-          updatedAt: "2026-03-06T11:30:00Z"
-        },
-        {
-          id: 3,
-          code: "CL-2026-003",
-          workLocation: "Văn phòng Giám đốc",
-          workContent: "Sửa chữa máy in",
-          startTime: "2026-03-07T09:00:00Z",
-          endTime: "2026-03-07T11:00:00Z",
-          status: "completed",
-          assignedTo: 3,
-          assignedBy: 1,
-          createdAt: "2026-03-05T15:00:00Z",
-          updatedAt: "2026-03-07T11:00:00Z",
-          completedAt: "2026-03-07T11:00:00Z",
-          evidencePhotos: ["/api/uploads/evidence/work-order-3-1.jpg"]
-        }
-      ];
-      setWorkOrders(mockWorkOrders);
-      setFilteredWorkOrders(mockWorkOrders);
+      const [data, staff] = await Promise.all([
+        workOrderService.getAll(),
+        personnelService.getAll().catch(() => [] as PersonnelRecord[]),
+      ]);
+      setWorkOrders(data);
+      setFilteredWorkOrders(data);
+      setPersonnel(staff);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Lỗi tải dữ liệu";
       toast.error(message);
@@ -160,18 +90,8 @@ export default function WorkOrdersPage() {
   async function handleCreate(data: CreateWorkOrderPayload) {
     try {
       setIsSubmitting(true);
-      // Mock API call
-      const newWorkOrder: WorkOrder = {
-        id: Date.now(),
-        code: `CL-2026-${String(workOrders.length + 1).padStart(3, "0")}`,
-        ...data,
-        status: "pending",
-        assignedBy: 1, // Current user ID
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
-
-      setWorkOrders(prev => [...prev, newWorkOrder]);
+      const newWO = await workOrderService.create(data);
+      setWorkOrders(prev => [...prev, newWO]);
       toast.success("Tạo công lệnh thành công");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Lỗi tạo công lệnh";
@@ -187,14 +107,8 @@ export default function WorkOrdersPage() {
 
     try {
       setIsSubmitting(true);
-      // Mock API call
-      setWorkOrders(prev =>
-        prev.map(wo =>
-          wo.id === editingWorkOrder.id
-            ? { ...wo, ...data, updatedAt: new Date().toISOString() }
-            : wo
-        )
-      );
+      const updated = await workOrderService.update(editingWorkOrder.id, data);
+      setWorkOrders(prev => prev.map(wo => (wo.id === updated.id ? updated : wo)));
       toast.success("Cập nhật công lệnh thành công");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Lỗi cập nhật công lệnh";
@@ -211,7 +125,7 @@ export default function WorkOrdersPage() {
     }
 
     try {
-      // Mock API call
+      await workOrderService.delete(id);
       setWorkOrders(prev => prev.filter(wo => wo.id !== id));
       toast.success("Xóa công lệnh thành công");
     } catch (error) {
@@ -228,8 +142,8 @@ export default function WorkOrdersPage() {
         return;
       }
 
-      const assignedPerson = personnel.find(p => p.id === workOrder.assignedTo);
-      const assignedByPerson = personnel.find(p => p.id === workOrder.assignedBy);
+      const assignedPersonName = workOrder.assignedToUser?.fullName || '';
+      const assignedByPersonName = workOrder.createdByUser?.fullName || '';
 
       const formatDate = (dateTime: string | undefined) => {
         if (!dateTime) return "-";
@@ -487,7 +401,7 @@ export default function WorkOrdersPage() {
             <div class="info-section">
               <div class="info-line">
                 <span class="info-label">Cấp cho (Ông/Bà):</span>
-                <span class="info-value">${assignedPerson ? assignedPerson.fullName : ''}</span>
+                <span class="info-value">${assignedPersonName}</span>
               </div>
               <div class="info-line">
                 <span class="info-label">Chức vụ:</span>
@@ -495,14 +409,14 @@ export default function WorkOrdersPage() {
               </div>
               <div class="info-line">
                 <span class="info-label">Được cử đi công tác tại:</span>
-                <span class="info-value">${workOrder.workLocation}</span>
+                <span class="info-value">${workOrder.location ?? ''}</span>
               </div>
               <div class="info-line">
                 <span class="info-label">Nội dung:</span>
-                <span class="info-value">${workOrder.workContent}</span>
+                <span class="info-value">${workOrder.content}</span>
               </div>
               <div class="info-line">
-                <span class="info-label">Từ ngày ${formatDate(workOrder.startTime)}</span>
+                <span class="info-label">Từ ngày ${formatDate(workOrder.startDate)}</span>
               </div>
             </div>
 
@@ -543,15 +457,15 @@ export default function WorkOrdersPage() {
               <tbody>
                 <tr>
                   <td class="col-location">Nơi đi: Trường Thực hành Sư phạm</td>
-                  <td class="col-date">${new Date(workOrder.startTime).getDate()}/${new Date(workOrder.startTime).getMonth() + 1}/${new Date(workOrder.startTime).getFullYear()}</td>
+                  <td class="col-date">${workOrder.startDate ? new Date(workOrder.startDate).getDate() + '/' + (new Date(workOrder.startDate).getMonth() + 1) + '/' + new Date(workOrder.startDate).getFullYear() : ''}</td>
                   <td class="col-vehicle"></td>
                   <td class="col-days"></td>
                   <td class="col-reason"></td>
                   <td class="col-confirm"></td>
                 </tr>
                 <tr>
-                  <td class="col-location">Nơi đến: ${workOrder.workLocation}</td>
-                  <td class="col-date">${new Date(workOrder.endTime).getDate()}/${new Date(workOrder.endTime).getMonth() + 1}/${new Date(workOrder.endTime).getFullYear()}</td>
+                  <td class="col-location">Nơi đến: ${workOrder.location ?? ''}</td>
+                  <td class="col-date">${workOrder.endDate ? new Date(workOrder.endDate).getDate() + '/' + (new Date(workOrder.endDate).getMonth() + 1) + '/' + new Date(workOrder.endDate).getFullYear() : ''}</td>
                   <td class="col-vehicle"></td>
                   <td class="col-days"></td>
                   <td class="col-reason"></td>
@@ -598,7 +512,7 @@ export default function WorkOrdersPage() {
               <div class="signature-box">
                 <div class="signature-label">Người cử công tác</div>
                 <div class="signature-subtext">(Ký, họ tên)</div>
-                <div class="signature-name">${assignedByPerson ? assignedByPerson.fullName : ''}</div>
+                <div class="signature-name">${assignedByPersonName}</div>
               </div>
               <div class="signature-box">
                 <div class="signature-label">Kế Toán</div>
@@ -607,7 +521,7 @@ export default function WorkOrdersPage() {
               <div class="signature-box">
                 <div class="signature-label">Hiệu Trưởng</div>
                 <div class="signature-subtext">(Ký, họ tên)</div>
-                <div class="signature-name">${assignedPerson ? assignedPerson.fullName : ''}</div>
+                <div class="signature-name">${assignedPersonName}</div>
               </div>
             </div>
           </div>
@@ -631,16 +545,12 @@ export default function WorkOrdersPage() {
 
   async function handleApprove(id: number) {
     try {
-      setWorkOrders(prev =>
-        prev.map(wo =>
-          wo.id === id
-            ? { ...wo, status: "approved" as const, updatedAt: new Date().toISOString() }
-            : wo
-        )
-      );
+      const updated = await workOrderService.approve(id);
+      setWorkOrders(prev => prev.map(wo => (wo.id === updated.id ? updated : wo)));
       toast.success("Duyệt công lệnh thành công");
     } catch (error) {
-      toast.error("Lỗi duyệt công lệnh");
+      const message = error instanceof Error ? error.message : "Lỗi duyệt công lệnh";
+      toast.error(message);
     }
   }
 
@@ -649,41 +559,23 @@ export default function WorkOrdersPage() {
     if (!reason) return;
 
     try {
-      setWorkOrders(prev =>
-        prev.map(wo =>
-          wo.id === id
-            ? {
-                ...wo,
-                status: "rejected" as const,
-                rejectionReason: reason,
-                updatedAt: new Date().toISOString()
-              }
-            : wo
-        )
-      );
+      const updated = await workOrderService.reject(id);
+      setWorkOrders(prev => prev.map(wo => (wo.id === updated.id ? updated : wo)));
       toast.success("Từ chối công lệnh thành công");
     } catch (error) {
-      toast.error("Lỗi từ chối công lệnh");
+      const message = error instanceof Error ? error.message : "Lỗi từ chối công lệnh";
+      toast.error(message);
     }
   }
 
   async function handleComplete(id: number) {
     try {
-      setWorkOrders(prev =>
-        prev.map(wo =>
-          wo.id === id
-            ? {
-                ...wo,
-                status: "completed" as const,
-                completedAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-              }
-            : wo
-        )
-      );
+      const updated = await workOrderService.update(id, { status: "completed" });
+      setWorkOrders(prev => prev.map(wo => (wo.id === updated.id ? updated : wo)));
       toast.success("Hoàn thành công lệnh thành công");
     } catch (error) {
-      toast.error("Lỗi hoàn thành công lệnh");
+      const message = error instanceof Error ? error.message : "Lỗi hoàn thành công lệnh";
+      toast.error(message);
     }
   }
 
@@ -765,21 +657,31 @@ export default function WorkOrdersPage() {
               <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
             </div>
           ) : (
-            <WorkOrderTable
-              data={filteredWorkOrders}
-              personnel={personnel}
-              onEdit={(id) => {
-                const workOrder = workOrders.find(wo => wo.id === id);
-                setEditingWorkOrder(workOrder);
-                setIsDialogOpen(true);
-              }}
-              onDelete={handleDelete}
-              onApprove={handleApprove}
-              onReject={handleReject}
-              onComplete={handleComplete}
-              onPrint={handlePrint}
-              isLoading={false}
-            />
+            <>
+              <WorkOrderTable
+                data={pagedWorkOrders}
+                personnel={personnel}
+                onEdit={(id) => {
+                  const workOrder = workOrders.find(wo => wo.id === id);
+                  setEditingWorkOrder(workOrder);
+                  setIsDialogOpen(true);
+                }}
+                onDelete={handleDelete}
+                onApprove={handleApprove}
+                onReject={handleReject}
+                onComplete={handleComplete}
+                onPrint={handlePrint}
+                isLoading={false}
+                startIndex={(currentPage - 1) * PAGE_SIZE + 1}
+              />
+              <TablePagination
+                total={filteredWorkOrders.length}
+                page={currentPage}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+                label="công lệnh"
+              />
+            </>
           )}
         </div>
       </div>

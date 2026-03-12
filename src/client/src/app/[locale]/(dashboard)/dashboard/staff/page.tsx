@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PersonnelTable } from "@/components/personnel/personnel-table";
+import { TablePagination } from "@/components/shared/table-pagination";
 import { ExcelImportExportDialog } from "@/components/personnel/excel-import-export-dialog";
 import { personnelService } from "@/services/personnel.service";
 import type { PersonnelRecord } from "@/types/personnel.types";
@@ -22,6 +23,8 @@ export default function StaffPage() {
   );
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_SIZE = 8;
 
   // Load personnel data
   useEffect(() => {
@@ -32,83 +35,31 @@ export default function StaffPage() {
   useEffect(() => {
     if (!searchQuery.trim()) {
       setFilteredPersonnel(personnel);
-      return;
+    } else {
+      const query = searchQuery.toLowerCase();
+      const filtered = personnel.filter(
+        (p) =>
+          p.fullName.toLowerCase().includes(query) ||
+          p.code.toLowerCase().includes(query) ||
+          p.email.toLowerCase().includes(query) ||
+          (p.contactAddress?.phone && p.contactAddress.phone.includes(query))
+      );
+      setFilteredPersonnel(filtered);
     }
-
-    const query = searchQuery.toLowerCase();
-    const filtered = personnel.filter(
-      (p) =>
-        p.fullName.toLowerCase().includes(query) ||
-        p.code.toLowerCase().includes(query) ||
-        p.email.toLowerCase().includes(query) ||
-        (p.contactAddress?.phone && p.contactAddress.phone.includes(query))
-    );
-    setFilteredPersonnel(filtered);
+    setCurrentPage(1);
   }, [searchQuery, personnel]);
+
+  const pagedPersonnel = filteredPersonnel.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
 
   async function loadPersonnel() {
     try {
       setIsLoading(true);
-      // Mock data - replace with API call when backend is ready
-      const mockData: PersonnelRecord[] = [
-        {
-          id: 1,
-          code: "8401555613",
-          fullName: "Bùi Hữu Khánh",
-          gender: "Nam",
-          dateOfBirth: "1987-05-12",
-          idNumber: "084087001648",
-          email: "bhkhanh@tvu.edu.vn",
-          phoneNumber: "0904789498",
-          status: "active"
-        },
-        {
-          id: 2,
-          code: "8413375048",
-          fullName: "Bùi Quốc Tân",
-          gender: "Nam",
-          dateOfBirth: "1991-12-19",
-          idNumber: "084091001190",
-          email: "buitan@tvu.edu.vn",
-          phoneNumber: "0982454710",
-          status: "active"
-        },
-        {
-          id: 3,
-          code: "8400631101",
-          fullName: "Bùi Thế Ngân",
-          gender: "Nam",
-          dateOfBirth: "1984-12-08",
-          idNumber: "084084001944",
-          email: "btngan@tvu.edu.vn",
-          phoneNumber: "0904542520",
-          status: "active"
-        },
-        {
-          id: 4,
-          code: "8401979501",
-          fullName: "Bùi Thị Cẩm Loan",
-          gender: "Nữ",
-          dateOfBirth: "1981-01-01",
-          idNumber: "084181002023",
-          email: "btcloan@tvu.edu.vn",
-          phoneNumber: "0914880571",
-          status: "active"
-        },
-        {
-          id: 5,
-          code: "8413269448",
-          fullName: "Bùi Văn Cật",
-          gender: "Nam",
-          dateOfBirth: "1976-05-15",
-          idNumber: "084076001778",
-          email: "buicat@tvu.edu.vn",
-          phoneNumber: "0909207380",
-          status: "active"
-        }
-      ];
-      setPersonnel(mockData);
-      setFilteredPersonnel(mockData);
+      const data = await personnelService.getAll();
+      setPersonnel(data);
+      setFilteredPersonnel(data);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Lỗi tải dữ liệu";
       toast.error(message);
@@ -123,7 +74,7 @@ export default function StaffPage() {
     }
 
     try {
-      // await personnelService.delete(id);
+      await personnelService.delete(id);
       setPersonnel((prev) => prev.filter((p) => p.id !== id));
       toast.success("Xóa nhân sự thành công");
     } catch (error) {
@@ -134,10 +85,9 @@ export default function StaffPage() {
 
   async function handleImportExcel(file: File) {
     try {
-      // const response = await personnelService.importExcel(file);
-      // After import, reload the data
+      const result = await personnelService.importExcel(file);
       await loadPersonnel();
-      toast.success("Nhập dữ liệu Excel thành công");
+      toast.success(`Nhập thành công ${result.success} hồ sơ`);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Lỗi nhập Excel";
       toast.error(message);
@@ -147,34 +97,11 @@ export default function StaffPage() {
 
   async function handleExportExcel() {
     try {
-      // const blob = await personnelService.exportExcel();
-      // Create a mock export
-      const data = filteredPersonnel;
-      const csv = [
-        ["Mã định danh", "Họ và tên", "Giới tính", "Ngày sinh", "CCCD", "Email", "Điện thoại"]
-          .map((h) => `"${h}"`)
-          .join(","),
-        ...data.map((p) =>
-          [
-            p.code,
-            p.fullName,
-            p.gender,
-            p.dateOfBirth,
-            p.idNumber,
-            p.email,
-            p.phoneNumber
-          ]
-            .map((v) => `"${v}"`)
-            .join(",")
-        )
-      ].join("\n");
-
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const blob = await personnelService.exportExcel();
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = `personnel-${new Date().toISOString().split("T")[0]}.csv`;
+      link.download = `ho-so-nhan-su-${new Date().toISOString().split("T")[0]}.xlsx`;
       link.click();
-
       toast.success("Xuất dữ liệu thành công");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Lỗi xuất Excel";
@@ -235,11 +162,21 @@ export default function StaffPage() {
               <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
             </div>
           ) : (
-            <PersonnelTable
-              data={filteredPersonnel}
-              onDelete={handleDelete}
-              isLoading={false}
-            />
+            <>
+              <PersonnelTable
+                data={pagedPersonnel}
+                onDelete={handleDelete}
+                isLoading={false}
+                startIndex={(currentPage - 1) * PAGE_SIZE + 1}
+              />
+              <TablePagination
+                total={filteredPersonnel.length}
+                page={currentPage}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+                label="nhân sự"
+              />
+            </>
           )}
         </div>
       </div>

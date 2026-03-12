@@ -28,27 +28,8 @@ export default function EditStaffPage() {
   async function loadPersonnel() {
     try {
       setIsLoading(true);
-      // await personnelService.getById(id);
-      // Mock data for now
-      const mockData: PersonnelRecord = {
-        id,
-        userId: id,
-        code: "8401555613",
-        fullName: "Bùi Hữu Khánh",
-        email: "bhkhanh@tvu.edu.vn",
-        role: "teacher",
-        status: "active",
-        gender: "Nam",
-        dateOfBirth: "1987-05-12",
-        cccdNumber: "084087001648",
-        staffStatus: "working",
-        createdAt: "2024-01-01T00:00:00Z",
-        updatedAt: "2024-01-01T00:00:00Z",
-        contactAddress: {
-          phone: "0904789498"
-        }
-      };
-      setPersonnel(mockData);
+      const data = await personnelService.getById(id);
+      setPersonnel(data);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Lỗi tải dữ liệu";
       toast.error(message);
@@ -61,9 +42,7 @@ export default function EditStaffPage() {
   async function handleSubmit(data: CreatePersonnelPayload) {
     setIsSaving(true);
     try {
-      // await personnelService.update(id, data);
-      // For now, just simulate the submission
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await personnelService.update(id, data);
       toast.success("Cập nhật nhân sự thành công");
       router.push("/vi/dashboard/staff");
     } catch (error) {

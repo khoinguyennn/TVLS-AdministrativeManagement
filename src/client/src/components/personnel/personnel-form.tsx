@@ -204,14 +204,14 @@ export function PersonnelForm({
         status: data.status,
         staffCode: data.staffCode,
         gender: data.gender,
-        dateOfBirth: data.dateOfBirth,
-        cccdNumber: data.cccdNumber,
-        cccdIssueDate: data.cccdIssueDate,
-        cccdIssuePlace: data.cccdIssuePlace,
-        ethnicity: data.ethnicity,
-        religion: data.religion,
+        dateOfBirth: data.dateOfBirth || undefined,
+        cccdNumber: data.cccdNumber || undefined,
+        cccdIssueDate: data.cccdIssueDate || undefined,
+        cccdIssuePlace: data.cccdIssuePlace || undefined,
+        ethnicity: data.ethnicity || undefined,
+        religion: data.religion || undefined,
         staffStatus: data.staffStatus,
-        recruitmentDate: data.recruitmentDate,
+        recruitmentDate: data.recruitmentDate || undefined,
 
         contactAddress: {
           province: data.contactProvince,
@@ -230,9 +230,9 @@ export function PersonnelForm({
 
         organizations: {
           isUnionMember: data.isUnionMember,
-          unionJoinDate: data.unionJoinDate,
+          unionJoinDate: data.unionJoinDate || undefined,
           isPartyMember: data.isPartyMember,
-          partyJoinDate: data.partyJoinDate,
+          partyJoinDate: data.partyJoinDate || undefined,
         },
 
         bankAccounts: data.bankName || data.bankBranch || data.accountNumber ? [{
@@ -277,8 +277,11 @@ export function PersonnelForm({
       };
 
       await onSubmit(payload);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "Có lỗi xảy ra";
+    } catch (err: unknown) {
+      // Show actual server error message when available
+      const axiosErr = err as { response?: { data?: { message?: string } }; message?: string };
+      const message = axiosErr?.response?.data?.message
+        ?? (err instanceof Error ? err.message : "Có lỗi xảy ra");
       setError(message);
     }
   }

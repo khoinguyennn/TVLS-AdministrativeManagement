@@ -9,6 +9,8 @@ import { UserRoute } from '@routes/users.route';
 import { BuildingRoute } from '@routes/building.route';
 import { RoomRoute } from '@routes/room.route';
 import { EquipmentRoute } from '@routes/equipment.route';
+import { WorkOrderRoute } from '@routes/work-orders.route';
+import { StaffRoute } from '@routes/staff.route';
 import { ValidateEnv } from '@utils/validateEnv';
 
 ValidateEnv();
@@ -24,6 +26,8 @@ const app = new App([
   new DeviceReportRoute(),
   new LeaveRequestRoute(),
   new DigitalSignatureRoute(),
+  new WorkOrderRoute(),
+  new StaffRoute(),
 ]);
 
 app.listen();

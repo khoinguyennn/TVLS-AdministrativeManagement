@@ -26,6 +26,7 @@ interface WorkOrderTableProps {
   onPrint?: (id: number) => void;
   isLoading?: boolean;
   showActions?: boolean;
+  startIndex?: number;
 }
 
 export function WorkOrderTable({
@@ -38,7 +39,8 @@ export function WorkOrderTable({
   onComplete,
   onPrint,
   isLoading = false,
-  showActions = true
+  showActions = true,
+  startIndex = 1,
 }: WorkOrderTableProps) {
   const formatDateTime = (dateTime: string | undefined) => {
     if (!dateTime) return "-";
@@ -62,7 +64,8 @@ export function WorkOrderTable({
 
   const getPersonnelName = (id: number | undefined): string => {
     if (!id) return "N/A";
-    const person = personnel.find(p => p.id === id);
+    // Chỉ tìm theo userId (users.id) - không fallback theo profile.id vì gây nhầm lẫn
+    const person = personnel.find(p => p.userId === id);
     return person ? person.fullName : "N/A";
   };
 
@@ -116,7 +119,7 @@ export function WorkOrderTable({
         <TableBody>
           {data.map((workOrder, index) => (
             <TableRow key={workOrder.id}>
-              <TableCell className="font-medium">{index + 1}</TableCell>
+              <TableCell className="font-medium">{startIndex + index}</TableCell>
               <TableCell className="font-mono text-sm">{workOrder.code}</TableCell>
               <TableCell className="max-w-xs truncate" title={workOrder.title}>
                 {workOrder.title}
@@ -131,7 +134,7 @@ export function WorkOrderTable({
                 {formatDateTime(workOrder.endDate)}
               </TableCell>
               <TableCell className="text-sm">
-                {workOrder.createdByUser?.fullName || getPersonnelName(workOrder.createdBy)}
+                {workOrder.createdByUser?.fullName || "N/A"}
               </TableCell>
               <TableCell className="text-sm">
                 {workOrder.assignedToUser?.fullName || getPersonnelName(workOrder.assignedTo)}

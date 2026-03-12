@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { ChevronLeft, Loader2, Mail, Phone, MapPin, Calendar } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,14 +13,9 @@ import { personnelService } from "@/services/personnel.service";
 import type { PersonnelRecord } from "@/types/personnel.types";
 import { toast } from "sonner";
 
-interface PageProps {
-  params: {
-    id: string;
-  };
-}
-
-export default function ViewStaffPage({ params }: PageProps) {
-  const id = parseInt(params.id);
+export default function ViewStaffPage() {
+  const params = useParams();
+  const id = parseInt(params.id as string);
   const [personnel, setPersonnel] = useState<PersonnelRecord | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -30,31 +26,8 @@ export default function ViewStaffPage({ params }: PageProps) {
   async function loadPersonnel() {
     try {
       setIsLoading(true);
-      // await personnelService.getById(id);
-      // Mock data for now
-      const mockData: PersonnelRecord = {
-        id,
-        userId: id,
-        code: "8401555613",
-        fullName: "Bùi Hữu Khánh",
-        email: "bhkhanh@tvu.edu.vn",
-        role: "teacher",
-        status: "active",
-        gender: "Nam",
-        dateOfBirth: "1987-05-12",
-        cccdNumber: "084087001648",
-        cccdIssueDate: "2017-06-15",
-        cccdIssuePlace: "Công an TP.Hồ Chí Minh",
-        staffStatus: "working",
-        recruitmentDate: "2020-01-15",
-        createdAt: "2024-01-01T00:00:00Z",
-        updatedAt: "2024-01-01T00:00:00Z",
-        contactAddress: {
-          phone: "0904789498",
-          detailAddress: "123 Đường Nguyễn Huệ"
-        }
-      };
-      setPersonnel(mockData);
+      const data = await personnelService.getById(id);
+      setPersonnel(data);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Lỗi tải dữ liệu";
       toast.error(message);

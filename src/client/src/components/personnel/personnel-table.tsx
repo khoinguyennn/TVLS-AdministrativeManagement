@@ -19,13 +19,15 @@ interface PersonnelTableProps {
   onEdit?: (id: number) => void;
   onDelete?: (id: number) => void;
   isLoading?: boolean;
+  startIndex?: number;
 }
 
 export function PersonnelTable({
   data,
   onEdit,
   onDelete,
-  isLoading = false
+  isLoading = false,
+  startIndex = 1,
 }: PersonnelTableProps) {
   const formatDate = (date: string | undefined) => {
     if (!date) return "-";
@@ -61,7 +63,7 @@ export function PersonnelTable({
         <TableBody>
           {data.map((personnel, index) => (
             <TableRow key={personnel.id}>
-              <TableCell className="font-medium">{index + 1}</TableCell>
+              <TableCell className="font-medium">{startIndex + index}</TableCell>
               <TableCell>{personnel.code}</TableCell>
               <TableCell className="font-medium">{personnel.fullName}</TableCell>
               <TableCell>{personnel.gender}</TableCell>
@@ -92,14 +94,11 @@ export function PersonnelTable({
                       <Eye className="h-4 w-4" />
                     </Button>
                   </Link>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onEdit?.(personnel.id)}
-                    title="Sửa"
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
+                  <Link href={`/vi/dashboard/staff/${personnel.id}/edit`}>
+                    <Button variant="ghost" size="sm" title="Sửa">
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  </Link>
                   <Button
                     variant="ghost"
                     size="sm"

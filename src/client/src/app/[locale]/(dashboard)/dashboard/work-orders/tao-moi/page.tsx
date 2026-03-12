@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import type { PersonnelRecord } from "@/types/personnel.types";
 import type { CreateWorkOrderPayload } from "@/types/work-order.types";
+import { workOrderService } from "@/services/work-order.service";
+import { personnelService } from "@/services/personnel.service";
 
 export default function CreateWorkOrderAdminPage() {
   const router = useRouter();
@@ -19,16 +21,10 @@ export default function CreateWorkOrderAdminPage() {
     loadPersonnel();
   }, []);
 
-  const loadPersonnel = () => {
+  const loadPersonnel = async () => {
     try {
-      const mockPersonnel: PersonnelRecord[] = [
-        { id: 1, code: "NV001", fullName: "Bùi Hữu Khánh", gender: "Nam", dateOfBirth: "1990-01-15", idNumber: "123456789", email: "bui.khanh@example.com", phoneNumber: "0123456789" },
-        { id: 2, code: "NV002", fullName: "Bùi Quốc Tân", gender: "Nam", dateOfBirth: "1992-03-20", idNumber: "123456790", email: "bui.tan@example.com", phoneNumber: "0123456789" },
-        { id: 3, code: "NV003", fullName: "Bùi Quốc Toàn", gender: "Nam", dateOfBirth: "1988-05-10", idNumber: "123456791", email: "bui.toan@example.com", phoneNumber: "0123456789" },
-        { id: 4, code: "NV004", fullName: "Bùi Tú Cảm Loan", gender: "Nữ", dateOfBirth: "1995-07-25", idNumber: "123456792", email: "bui.loan@example.com", phoneNumber: "0123456789" },
-        { id: 5, code: "NV005", fullName: "Bùi Văn Cảm", gender: "Nam", dateOfBirth: "1991-09-30", idNumber: "123456793", email: "bui.cam@example.com", phoneNumber: "0123456789" },
-      ];
-      setPersonnel(mockPersonnel);
+      const data = await personnelService.getAll();
+      setPersonnel(data);
     } catch (error) {
       toast.error("Lỗi tải danh sách nhân sự");
     }
@@ -37,13 +33,13 @@ export default function CreateWorkOrderAdminPage() {
   const handleSubmit = async (data: CreateWorkOrderPayload) => {
     setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
+      await workOrderService.create(data);
       toast.success("Tạo công lệnh thành công");
+      router.refresh();
       router.push("/vi/dashboard/work-orders");
     } catch (error) {
-      toast.error("Lỗi tạo công lệnh");
+      const message = error instanceof Error ? error.message : "Lỗi tạo công lệnh";
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
