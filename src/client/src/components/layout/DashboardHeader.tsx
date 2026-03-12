@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { Bell, HelpCircle, Menu, Moon, Search, Sun } from "lucide-react";
@@ -35,6 +36,11 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
   const t = useTranslations("Header");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const switchLocale = (newLocale: string) => {
     // Replace the locale in the pathname
@@ -107,34 +113,45 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
         <div className="mx-1 hidden h-6 w-px bg-border sm:block" />
 
         {/* Language Selector */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 sm:gap-2 sm:px-3"
-            >
-              <FlagIcon locale={locale} className="size-4 rounded-sm sm:size-5" />
-              <span className="hidden text-xs font-medium uppercase sm:inline">{locale}</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={() => switchLocale("vi")}
-              className={locale === "vi" ? "bg-accent" : ""}
-            >
-              <VietnamFlag className="mr-2 size-5 rounded-sm" />
-              {LOCALES.vi.label}
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => switchLocale("en")}
-              className={locale === "en" ? "bg-accent" : ""}
-            >
-              <USFlag className="mr-2 size-5 rounded-sm" />
-              {LOCALES.en.label}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {mounted ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 sm:gap-2 sm:px-3"
+              >
+                <FlagIcon locale={locale} className="size-4 rounded-sm sm:size-5" />
+                <span className="hidden text-xs font-medium uppercase sm:inline">{locale}</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={() => switchLocale("vi")}
+                className={locale === "vi" ? "bg-accent" : ""}
+              >
+                <VietnamFlag className="mr-2 size-5 rounded-sm" />
+                {LOCALES.vi.label}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => switchLocale("en")}
+                className={locale === "en" ? "bg-accent" : ""}
+              >
+                <USFlag className="mr-2 size-5 rounded-sm" />
+                {LOCALES.en.label}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 sm:gap-2 sm:px-3"
+          >
+            <FlagIcon locale={locale} className="size-4 rounded-sm sm:size-5" />
+            <span className="hidden text-xs font-medium uppercase sm:inline">{locale}</span>
+          </Button>
+        )}
       </div>
     </header>
   );

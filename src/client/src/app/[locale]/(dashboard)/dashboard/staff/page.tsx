@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Plus, Search, Loader2, ChevronRight } from "lucide-react";
+import { TableSkeleton } from "@/components/skeletons";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
@@ -125,13 +126,13 @@ export default function StaffPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">{tSidebar("staff")}</h2>
-          <p className="text-gray-600 mt-1 text-sm">Quản lý thông tin chi tiết của nhân sự</p>
+          <p className="text-muted-foreground mt-1 text-sm">Quản lý thông tin chi tiết của nhân sự</p>
         </div>
         <div className="flex gap-2">
           <ExcelImportExportDialog onImport={handleImportExcel} onExport={handleExportExcel} />
-          <Link href="/vi/dashboard/staff/add">
-            <Button className="gap-2 bg-blue-600 hover:bg-blue-700 shadow-sm">
-              <Plus className="h-4 w-4" />
+          <Link href="/dashboard/staff/add">
+            <Button className="gap-2">
+              <Plus className="size-4" />
               Thêm nhân sự
             </Button>
           </Link>
@@ -141,10 +142,10 @@ export default function StaffPage() {
       {/* Search Bar */}
       <div>
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Tìm theo tên, mã, email hoặc điện thoại..."
-            className="pl-10 bg-white border border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="pl-10"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -152,15 +153,13 @@ export default function StaffPage() {
       </div>
 
       {/* Personnel Table */}
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
-        <div className="border-b border-gray-200 px-6 py-4">
-          <h2 className="text-lg font-semibold text-gray-900">Danh sách nhân sự</h2>
+      <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
+        <div className="border-b px-6 py-4">
+          <h2 className="text-lg font-semibold">Danh sách nhân sự</h2>
         </div>
         <div className="p-6">
           {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
-            </div>
+            <TableSkeleton columns={7} rows={5} />
           ) : (
             <>
               <PersonnelTable

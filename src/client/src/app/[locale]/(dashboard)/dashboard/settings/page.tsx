@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Camera, ChevronRight, Eye, EyeOff, Loader2, Save, X } from "lucide-react";
+import { SettingsSkeleton } from "@/components/skeletons";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
@@ -200,6 +201,10 @@ export default function SettingsPage() {
       setIsSaving(false);
     }
   }, [fullName, email, avatarFile, currentPassword, newPassword, confirmPassword, user, t]);
+
+  if (!user) {
+    return <SettingsSkeleton />;
+  }
 
   return (
     <div className="mx-auto max-w-5xl">

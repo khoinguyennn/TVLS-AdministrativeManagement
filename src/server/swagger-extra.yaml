@@ -1,0 +1,640 @@
+tags:
+  - name: buildings
+    description: Buildings API
+  - name: rooms
+    description: Rooms API
+  - name: equipment
+    description: Equipment API
+  - name: leave-requests
+    description: Leave Requests API
+  - name: digital-signatures
+    description: Digital Signatures API
+
+paths:
+  # ==================== BUILDINGS ====================
+  /buildings:
+    get:
+      tags: [buildings]
+      summary: Lấy danh sách tòa nhà
+      security: [{ BearerAuth: [] }]
+      responses:
+        200:
+          description: 'OK'
+    post:
+      tags: [buildings]
+      summary: Thêm tòa nhà
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CreateBuilding'
+      responses:
+        201:
+          description: 'Created'
+  /buildings/{id}:
+    get:
+      tags: [buildings]
+      summary: Lấy tòa nhà theo ID
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 'OK'
+    put:
+      tags: [buildings]
+      summary: Cập nhật tòa nhà
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateBuilding'
+      responses:
+        200:
+          description: 'OK'
+    delete:
+      tags: [buildings]
+      summary: Xóa tòa nhà
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 'OK'
+
+  # ==================== ROOMS ====================
+  /rooms:
+    get:
+      tags: [rooms]
+      summary: Lấy danh sách phòng
+      security: [{ BearerAuth: [] }]
+      responses:
+        200:
+          description: 'OK'
+    post:
+      tags: [rooms]
+      summary: Thêm phòng
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CreateRoom'
+      responses:
+        201:
+          description: 'Created'
+  /rooms/{id}:
+    get:
+      tags: [rooms]
+      summary: Lấy phòng theo ID
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 'OK'
+    put:
+      tags: [rooms]
+      summary: Cập nhật phòng
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateRoom'
+      responses:
+        200:
+          description: 'OK'
+    delete:
+      tags: [rooms]
+      summary: Xóa phòng
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 'OK'
+
+  # ==================== EQUIPMENT ====================
+  /equipment:
+    get:
+      tags: [equipment]
+      summary: Lấy danh sách thiết bị
+      security: [{ BearerAuth: [] }]
+      responses:
+        200:
+          description: 'OK'
+    post:
+      tags: [equipment]
+      summary: Thêm thiết bị
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CreateEquipment'
+      responses:
+        201:
+          description: 'Created'
+  /equipment/{id}:
+    get:
+      tags: [equipment]
+      summary: Lấy thiết bị theo ID
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 'OK'
+    put:
+      tags: [equipment]
+      summary: Cập nhật thiết bị
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateEquipment'
+      responses:
+        200:
+          description: 'OK'
+    delete:
+      tags: [equipment]
+      summary: Xóa thiết bị
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 'OK'
+
+  # ==================== LEAVE REQUESTS ====================
+  /leave-requests/stats:
+    get:
+      tags: [leave-requests]
+      summary: Lấy thống kê đơn xin nghỉ phép
+      security: [{ BearerAuth: [] }]
+      responses:
+        200:
+          description: 'OK'
+  /leave-requests/leave-types:
+    get:
+      tags: [leave-requests]
+      summary: Lấy danh sách loại nghỉ phép
+      security: [{ BearerAuth: [] }]
+      responses:
+        200:
+          description: 'OK'
+    post:
+      tags: [leave-requests]
+      summary: Tạo loại nghỉ phép
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CreateLeaveType'
+      responses:
+        201:
+          description: 'Created'
+  /leave-requests/leave-balances/{userId}/{year}:
+    get:
+      tags: [leave-requests]
+      summary: Lấy số dư phép của nhân viên theo năm
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: integer
+        - name: year
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 'OK'
+  /leave-requests/leave-balances:
+    post:
+      tags: [leave-requests]
+      summary: Cập nhật số dư nghỉ phép
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CreateLeaveBalance'
+      responses:
+        201:
+          description: 'Created'
+  /leave-requests:
+    get:
+      tags: [leave-requests]
+      summary: Lấy tất cả đơn xin nghỉ phép
+      security: [{ BearerAuth: [] }]
+      responses:
+        200:
+          description: 'OK'
+    post:
+      tags: [leave-requests]
+      summary: Tạo đơn xin nghỉ phép mới
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CreateLeaveRequest'
+      responses:
+        201:
+          description: 'Created'
+  /leave-requests/{id}:
+    get:
+      tags: [leave-requests]
+      summary: Chi tiết đơn xin nghỉ phép
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 'OK'
+    delete:
+      tags: [leave-requests]
+      summary: Xóa đơn xin nghỉ phép
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 'OK'
+  /leave-requests/{id}/approve:
+    put:
+      tags: [leave-requests]
+      summary: Duyệt đơn xin nghỉ phép
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 'OK'
+  /leave-requests/{id}/reject:
+    put:
+      tags: [leave-requests]
+      summary: Từ chối đơn xin nghỉ phép
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 'OK'
+  /leave-requests/{id}/sign:
+    put:
+      tags: [leave-requests]
+      summary: Ký đơn xin nghỉ phép
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 'OK'
+  /leave-requests/{id}/pdf:
+    get:
+      tags: [leave-requests]
+      summary: Xuất pdf đơn xin nghỉ phép
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 'OK'
+
+  # ==================== DIGITAL SIGNATURES ====================
+  /digital-signatures/config:
+    get:
+      tags: [digital-signatures]
+      summary: Lấy cấu hình chữ ký
+      security: [{ BearerAuth: [] }]
+      responses:
+        200:
+          description: 'OK'
+  /digital-signatures/upload:
+    post:
+      tags: [digital-signatures]
+      summary: Tải lên ảnh chữ ký
+      security: [{ BearerAuth: [] }]
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: signature
+          in: formData
+          required: true
+          type: file
+      responses:
+        200:
+          description: 'OK'
+  /digital-signatures/draw:
+    post:
+      tags: [digital-signatures]
+      summary: Lưu chữ ký vẽ tay
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              signatureDataUrl:
+                type: string
+      responses:
+        200:
+          description: 'OK'
+  /digital-signatures/image:
+    delete:
+      tags: [digital-signatures]
+      summary: Xóa ảnh chữ ký
+      security: [{ BearerAuth: [] }]
+      responses:
+        200:
+          description: 'OK'
+  /digital-signatures/pin/set:
+    post:
+      tags: [digital-signatures]
+      summary: Cài đặt mã PIN chữ ký
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SetSignaturePin'
+      responses:
+        200:
+          description: 'OK'
+  /digital-signatures/pin/change:
+    put:
+      tags: [digital-signatures]
+      summary: Đổi mã PIN chữ ký
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ChangeSignaturePin'
+      responses:
+        200:
+          description: 'OK'
+  /digital-signatures/pin/verify:
+    post:
+      tags: [digital-signatures]
+      summary: Xác thực mã PIN chữ ký
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/VerifySignaturePin'
+      responses:
+        200:
+          description: 'OK'
+
+definitions:
+  CreateBuilding:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        example: 'Tòa A'
+      description:
+        type: string
+  UpdateBuilding:
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+  CreateRoom:
+    type: object
+    required:
+      - buildingId
+      - name
+    properties:
+      buildingId:
+        type: integer
+      name:
+        type: string
+        example: 'Phòng 101'
+  UpdateRoom:
+    type: object
+    properties:
+      buildingId:
+        type: integer
+      name:
+        type: string
+  CreateEquipment:
+    type: object
+    required:
+      - roomId
+      - name
+      - code
+      - category
+    properties:
+      roomId:
+        type: integer
+      name:
+        type: string
+      code:
+        type: string
+      category:
+        type: string
+        enum: ['computer', 'projector', 'furniture', 'lab-equipment', 'other']
+      brand:
+        type: string
+      model:
+        type: string
+      serialNumber:
+        type: string
+      purchaseDate:
+        type: string
+        format: date
+      warrantyExpiry:
+        type: string
+        format: date
+      price:
+        type: number
+      status:
+        type: string
+        enum: ['working', 'broken', 'maintenance', 'disposed']
+      description:
+        type: string
+  UpdateEquipment:
+    type: object
+    properties:
+      roomId:
+        type: integer
+      name:
+        type: string
+      code:
+        type: string
+      category:
+        type: string
+        enum: ['computer', 'projector', 'furniture', 'lab-equipment', 'other']
+      brand:
+        type: string
+      model:
+        type: string
+      serialNumber:
+        type: string
+      purchaseDate:
+        type: string
+        format: date
+      warrantyExpiry:
+        type: string
+        format: date
+      price:
+        type: number
+      status:
+        type: string
+        enum: ['working', 'broken', 'maintenance', 'disposed']
+      description:
+        type: string
+
+  CreateLeaveRequest:
+    type: object
+    required:
+      - leaveTypeId
+      - startDate
+      - endDate
+      - totalDays
+    properties:
+      leaveTypeId:
+        type: integer
+      startDate:
+        type: string
+        format: date
+      endDate:
+        type: string
+        format: date
+      totalDays:
+        type: number
+      reason:
+        type: string
+  UpdateLeaveRequest:
+    type: object
+    properties:
+      status:
+        type: string
+        enum: ['approved', 'rejected']
+      rejectedReason:
+        type: string
+  CreateLeaveType:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+      maxDaysPerYear:
+        type: integer
+  CreateLeaveBalance:
+    type: object
+    required:
+      - userId
+      - year
+      - totalDays
+    properties:
+      userId:
+        type: integer
+      year:
+        type: integer
+      totalDays:
+        type: number
+
+  SetSignaturePin:
+    type: object
+    required:
+      - pin
+    properties:
+      pin:
+        type: string
+        example: '123456'
+  ChangeSignaturePin:
+    type: object
+    required:
+      - currentPin
+      - newPin
+    properties:
+      currentPin:
+        type: string
+      newPin:
+        type: string
+  VerifySignaturePin:
+    type: object
+    required:
+      - pin
+    properties:
+      pin:
+        type: string

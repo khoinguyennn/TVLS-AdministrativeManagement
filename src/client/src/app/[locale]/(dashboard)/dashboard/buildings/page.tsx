@@ -3,8 +3,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Building2, ChevronLeft, ChevronRight, Edit, Loader2, Plus, Search, Trash2 } from 'lucide-react';
+import { TableSkeleton } from '@/components/skeletons';
 import Link from 'next/link';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -26,6 +28,8 @@ import type { Building, CreateBuildingInput, UpdateBuildingInput } from '@/types
 const PAGE_SIZE = 10;
 
 export default function BuildingsPage() {
+  const t = useTranslations('Facilities.buildings');
+  const tBreadcrumb = useTranslations('Breadcrumb');
   const queryClient = useQueryClient();
 
   // Data fetching
@@ -53,11 +57,11 @@ export default function BuildingsPage() {
     mutationFn: (data: CreateBuildingInput) => buildingService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['buildings'] });
-      toast.success('Tạo toà nhà thành công');
+      toast.success(t('toast.createSuccess'));
       setDialogOpen(false);
     },
     onError: () => {
-      toast.error('Có lỗi xảy ra khi tạo toà nhà');
+      toast.error(t('toast.error'));
     },
   });
 
@@ -65,11 +69,11 @@ export default function BuildingsPage() {
     mutationFn: ({ id, data }: { id: number; data: UpdateBuildingInput }) => buildingService.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['buildings'] });
-      toast.success('Cập nhật toà nhà thành công');
+      toast.success(t('toast.updateSuccess'));
       setDialogOpen(false);
     },
     onError: () => {
-      toast.error('Có lỗi xảy ra khi cập nhật toà nhà');
+      toast.error(t('toast.error'));
     },
   });
 
@@ -77,11 +81,11 @@ export default function BuildingsPage() {
     mutationFn: (id: number) => buildingService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['buildings'] });
-      toast.success('Xoá toà nhà thành công');
+      toast.success(t('toast.deleteSuccess'));
       setDeleteDialogOpen(false);
     },
     onError: () => {
-      toast.error('Có lỗi xảy ra khi xoá toà nhà');
+      toast.error(t('toast.error'));
     },
   });
 
@@ -156,10 +160,10 @@ export default function BuildingsPage() {
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-muted-foreground">
         <Link href="/dashboard" className="hover:text-foreground transition-colors">
-          Trang chủ
+          {tBreadcrumb('home')}
         </Link>
         <ChevronRight className="size-4" />
-        <span className="font-medium text-foreground">Quản lý Toà nhà</span>
+        <span className="font-medium text-foreground">{t('title')}</span>
       </nav>
 
       {/* Header */}
@@ -167,13 +171,13 @@ export default function BuildingsPage() {
         <div>
           <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <Building2 className="size-6" />
-            Quản lý Toà nhà
+            {t('title')}
           </h2>
-          <p className="text-muted-foreground text-sm mt-1">Quản lý thông tin các toà nhà trong trường</p>
+          <p className="text-muted-foreground text-sm mt-1">{t('description')}</p>
         </div>
         <Button onClick={handleOpenCreate} className="gap-2">
           <Plus className="size-4" />
-          Thêm toà nhà
+          {t('addBuilding')}
         </Button>
       </div>
 
@@ -181,28 +185,25 @@ export default function BuildingsPage() {
       <div className="bg-card border rounded-xl p-4 shadow-sm flex gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Tìm kiếm theo tên toà nhà..." className="pl-10" />
+          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('searchPlaceholder')} className="pl-10" />
         </div>
       </div>
 
       {/* Data Table */}
       <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
         {isLoading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="size-6 animate-spin text-muted-foreground" />
-            <span className="ml-2 text-sm text-muted-foreground">Đang tải...</span>
-          </div>
+          <TableSkeleton columns={4} rows={5} />
         ) : paginatedBuildings.length === 0 ? (
-          <div className="text-center py-20 text-muted-foreground text-sm">Không tìm thấy toà nhà nào</div>
+          <div className="text-center py-20 text-muted-foreground text-sm">{t('noResults')}</div>
         ) : (
           <>
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/50">
                   <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">ID</TableHead>
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Tên toà nhà</TableHead>
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Mô tả</TableHead>
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-right">Hành động</TableHead>
+                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">{t('columns.name')}</TableHead>
+                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">{t('columns.description')}</TableHead>
+                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-right">{t('columns.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -237,7 +238,7 @@ export default function BuildingsPage() {
             {/* Pagination */}
             <div className="px-6 py-4 bg-muted/50 border-t flex items-center justify-between">
               <p className="text-xs text-muted-foreground">
-                Hiển thị {(currentPage - 1) * PAGE_SIZE + 1} đến {Math.min(currentPage * PAGE_SIZE, filteredBuildings.length)} trong tổng số {filteredBuildings.length} toà nhà
+                {t('pagination.showing')} {(currentPage - 1) * PAGE_SIZE + 1} {t('pagination.to')} {Math.min(currentPage * PAGE_SIZE, filteredBuildings.length)} {t('pagination.of')} {filteredBuildings.length} {t('pagination.buildings')}
               </p>
               <div className="flex items-center gap-1">
                 <Button variant="outline" size="icon" className="size-8" disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)}>
@@ -267,31 +268,31 @@ export default function BuildingsPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>{editingBuilding ? 'Chỉnh sửa toà nhà' : 'Thêm toà nhà mới'}</DialogTitle>
-            <DialogDescription>{editingBuilding ? 'Cập nhật thông tin toà nhà' : 'Nhập thông tin toà nhà mới'}</DialogDescription>
+            <DialogTitle>{editingBuilding ? t('editBuilding') : t('addBuilding')}</DialogTitle>
+            <DialogDescription>{editingBuilding ? t('form.update') : t('form.create')}</DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="name">
-                Tên toà nhà <span className="text-destructive">*</span>
+                {t('form.name')} <span className="text-destructive">*</span>
               </Label>
-              <Input id="name" value={formName} onChange={(e) => setFormName(e.target.value)} placeholder="Ví dụ: Toà A" />
+              <Input id="name" value={formName} onChange={(e) => setFormName(e.target.value)} placeholder={t('form.namePlaceholder')} />
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="description">Mô tả</Label>
-              <Input id="description" value={formDescription} onChange={(e) => setFormDescription(e.target.value)} placeholder="Nhập mô tả (tùy chọn)" />
+              <Label htmlFor="description">{t('form.description')}</Label>
+              <Input id="description" value={formDescription} onChange={(e) => setFormDescription(e.target.value)} placeholder={t('form.descriptionPlaceholder')} />
             </div>
           </div>
 
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Hủy</Button>
+              <Button variant="outline">{t('form.cancel')}</Button>
             </DialogClose>
             <Button onClick={handleSubmit} disabled={createMutation.isPending || updateMutation.isPending || !formName}>
               {(createMutation.isPending || updateMutation.isPending) && <Loader2 className="mr-2 size-4 animate-spin" />}
-              {editingBuilding ? 'Cập nhật' : 'Tạo mới'}
+              {editingBuilding ? t('form.update') : t('form.create')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -301,16 +302,16 @@ export default function BuildingsPage() {
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Xác nhận xoá</DialogTitle>
-            <DialogDescription>Bạn có chắc chắn muốn xoá toà nhà "{deletingBuilding?.name}"? Hành động này không thể hoàn tác.</DialogDescription>
+            <DialogTitle>{t('deleteConfirm.title')}</DialogTitle>
+            <DialogDescription>{t('deleteConfirm.description', { name: deletingBuilding?.name || '' })}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Hủy</Button>
+              <Button variant="outline">{t('deleteConfirm.cancel')}</Button>
             </DialogClose>
             <Button variant="destructive" onClick={handleDelete} disabled={deleteMutation.isPending}>
               {deleteMutation.isPending && <Loader2 className="mr-2 size-4 animate-spin" />}
-              Xoá
+              {t('deleteConfirm.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>

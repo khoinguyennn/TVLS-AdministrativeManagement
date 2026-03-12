@@ -11,6 +11,7 @@ import {
   Search,
   Trash2,
 } from "lucide-react";
+import { TableSkeleton } from "@/components/skeletons";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
@@ -111,6 +112,7 @@ export default function UsersPage() {
 
   // ── Pagination ──
   const [currentPage, setCurrentPage] = useState(1);
+  const [mounted, setMounted] = useState(false);
 
   // ── Dialog state ──
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -141,6 +143,7 @@ export default function UsersPage() {
 
   useEffect(() => {
     fetchUsers();
+    setMounted(true);
   }, [fetchUsers]);
 
   // ── Filtered & paginated data ──
@@ -307,41 +310,53 @@ export default function UsersPage() {
             className="pl-10"
           />
         </div>
-        <Select value={roleFilter} onValueChange={setRoleFilter}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder={t("allRoles")} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">{t("allRoles")}</SelectItem>
-            {ROLES.map((r) => (
-              <SelectItem key={r} value={r}>
-                {t(`roles.${r}`)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder={t("allStatuses")} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">{t("allStatuses")}</SelectItem>
-            {STATUSES.map((s) => (
-              <SelectItem key={s} value={s}>
-                {t(`statuses.${s}`)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {mounted ? (
+          <>
+            <Select value={roleFilter} onValueChange={setRoleFilter}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder={t("allRoles")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t("allRoles")}</SelectItem>
+                {ROLES.map((r) => (
+                  <SelectItem key={r} value={r}>
+                    {t(`roles.${r}`)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder={t("allStatuses")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t("allStatuses")}</SelectItem>
+                {STATUSES.map((s) => (
+                  <SelectItem key={s} value={s}>
+                    {t(`statuses.${s}`)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </>
+        ) : (
+          <>
+            <div className="flex items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background w-48 h-9 text-muted-foreground opacity-50 cursor-not-allowed">
+              <span>{t("allRoles")}</span>
+              <ChevronRight className="size-4 opacity-50 rotate-90" />
+            </div>
+            <div className="flex items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background w-48 h-9 text-muted-foreground opacity-50 cursor-not-allowed">
+              <span>{t("allStatuses")}</span>
+              <ChevronRight className="size-4 opacity-50 rotate-90" />
+            </div>
+          </>
+        )}
       </div>
 
       {/* Data Table */}
       <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="size-6 animate-spin text-muted-foreground" />
-            <span className="ml-2 text-sm text-muted-foreground">{t("loading")}</span>
-          </div>
+          <TableSkeleton columns={6} rows={5} />
         ) : paginatedUsers.length === 0 ? (
           <div className="text-center py-20 text-muted-foreground text-sm">
             {t("noResults")}

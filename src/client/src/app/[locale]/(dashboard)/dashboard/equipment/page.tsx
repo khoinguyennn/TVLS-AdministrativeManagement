@@ -3,8 +3,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight, Edit, Loader2, Monitor, Plus, Search, Trash2 } from 'lucide-react';
+import { TableSkeleton } from '@/components/skeletons';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import { useTranslations } from 'next-intl';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -30,21 +32,6 @@ const PAGE_SIZE = 10;
 const CATEGORIES = ['computer', 'projector', 'furniture', 'lab-equipment', 'other'] as const;
 const STATUSES = ['working', 'broken', 'maintenance', 'disposed'] as const;
 
-const categoryLabels: Record<string, string> = {
-  computer: 'Máy tính',
-  projector: 'Máy chiếu',
-  furniture: 'Nội thất',
-  'lab-equipment': 'Thiết bị thí nghiệm',
-  other: 'Khác',
-};
-
-const statusLabels: Record<string, string> = {
-  working: 'Hoạt động',
-  broken: 'Hỏng',
-  maintenance: 'Bảo trì',
-  disposed: 'Đã thanh lý',
-};
-
 const statusBadgeClass: Record<string, string> = {
   working: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-transparent',
   broken: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border-transparent',
@@ -53,6 +40,7 @@ const statusBadgeClass: Record<string, string> = {
 };
 
 export default function EquipmentPage() {
+  const t = useTranslations('Facilities.equipment');
   const queryClient = useQueryClient();
 
   // Data fetching
@@ -72,6 +60,7 @@ export default function EquipmentPage() {
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState(1);
+  const [mounted, setMounted] = useState(false);
 
   // Dialog state
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -98,11 +87,11 @@ export default function EquipmentPage() {
     mutationFn: (data: CreateEquipmentInput) => equipmentService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['equipment'] });
-      toast.success('Tạo thiết bị thành công');
+      toast.success(t('toast.createSuccess'));
       setDialogOpen(false);
     },
     onError: () => {
-      toast.error('Có lỗi xảy ra khi tạo thiết bị');
+      toast.error(t('toast.error'));
     },
   });
 
@@ -110,11 +99,11 @@ export default function EquipmentPage() {
     mutationFn: ({ id, data }: { id: number; data: UpdateEquipmentInput }) => equipmentService.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['equipment'] });
-      toast.success('Cập nhật thiết bị thành công');
+      toast.success(t('toast.updateSuccess'));
       setDialogOpen(false);
     },
     onError: () => {
-      toast.error('Có lỗi xảy ra khi cập nhật thiết bị');
+      toast.error(t('toast.error'));
     },
   });
 
@@ -122,11 +111,11 @@ export default function EquipmentPage() {
     mutationFn: (id: number) => equipmentService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['equipment'] });
-      toast.success('Xoá thiết bị thành công');
+      toast.success(t('toast.deleteSuccess'));
       setDeleteDialogOpen(false);
     },
     onError: () => {
-      toast.error('Có lỗi xảy ra khi xoá thiết bị');
+      toast.error(t('toast.error'));
     },
   });
 
@@ -163,6 +152,10 @@ export default function EquipmentPage() {
   useEffect(() => {
     setCurrentPage(1);
   }, [search, roomFilter, categoryFilter, statusFilter]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Dialog handlers
   const handleOpenCreate = useCallback(() => {
@@ -263,10 +256,10 @@ export default function EquipmentPage() {
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-muted-foreground">
         <Link href="/dashboard" className="hover:text-foreground transition-colors">
-          Trang chủ
+          {t('breadcrumb.home')}
         </Link>
         <ChevronRight className="size-4" />
-        <span className="font-medium text-foreground">Quản lý Thiết bị</span>
+        <span className="font-medium text-foreground">{t('breadcrumb.equipment')}</span>
       </nav>
 
       {/* Header */}
@@ -274,13 +267,13 @@ export default function EquipmentPage() {
         <div>
           <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <Monitor className="size-6" />
-            Quản lý Thiết bị
+            {t('title')}
           </h2>
-          <p className="text-muted-foreground text-sm mt-1">Quản lý thông tin các thiết bị trong phòng</p>
+          <p className="text-muted-foreground text-sm mt-1">{t('description')}</p>
         </div>
         <Button onClick={handleOpenCreate} className="gap-2">
           <Plus className="size-4" />
-          Thêm thiết bị
+          {t('addEquipment')}
         </Button>
       </div>
 
@@ -288,73 +281,89 @@ export default function EquipmentPage() {
       <div className="bg-card border rounded-xl p-4 shadow-sm flex flex-wrap gap-4">
         <div className="relative flex-1 min-w-75">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Tìm kiếm theo tên, mã hoặc hãng..." className="pl-10" />
+          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('searchPlaceholder')} className="pl-10" />
         </div>
-        <Select value={roomFilter} onValueChange={setRoomFilter}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Tất cả phòng" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tất cả phòng</SelectItem>
-            {rooms.map((r) => (
-              <SelectItem key={r.id} value={r.id.toString()}>
-                {r.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Tất cả loại" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tất cả loại</SelectItem>
-            {CATEGORIES.map((c) => (
-              <SelectItem key={c} value={c}>
-                {categoryLabels[c]}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Tất cả trạng thái" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tất cả trạng thái</SelectItem>
-            {STATUSES.map((s) => (
-              <SelectItem key={s} value={s}>
-                {statusLabels[s]}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {mounted ? (
+          <>
+            <Select value={roomFilter} onValueChange={setRoomFilter}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder={t('allRooms')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('allRooms')}</SelectItem>
+                {rooms.map((r) => (
+                  <SelectItem key={r.id} value={r.id.toString()}>
+                    {r.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder={t('allCategories')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('allCategories')}</SelectItem>
+                {CATEGORIES.map((c) => (
+                  <SelectItem key={c} value={c}>
+                    {t(`categories.${c}`)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder={t('allStatuses')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('allStatuses')}</SelectItem>
+                {STATUSES.map((s) => (
+                  <SelectItem key={s} value={s}>
+                    {t(`statuses.${s}`)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </>
+        ) : (
+          <div className="flex gap-4">
+            <div className="flex w-48 h-9 cursor-not-allowed items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm text-muted-foreground opacity-50 shadow-sm ring-offset-background">
+              <span>{t("allRooms")}</span>
+              <ChevronRight className="size-4 rotate-90 opacity-50" />
+            </div>
+            <div className="flex w-48 h-9 cursor-not-allowed items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm text-muted-foreground opacity-50 shadow-sm ring-offset-background">
+              <span>{t("allCategories")}</span>
+              <ChevronRight className="size-4 rotate-90 opacity-50" />
+            </div>
+            <div className="flex w-48 h-9 cursor-not-allowed items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm text-muted-foreground opacity-50 shadow-sm ring-offset-background">
+              <span>{t("allStatuses")}</span>
+              <ChevronRight className="size-4 rotate-90 opacity-50" />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Data Table */}
       <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
         {isLoading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="size-6 animate-spin text-muted-foreground" />
-            <span className="ml-2 text-sm text-muted-foreground">Đang tải...</span>
-          </div>
+          <TableSkeleton columns={9} rows={5} />
         ) : paginatedEquipment.length === 0 ? (
-          <div className="text-center py-20 text-muted-foreground text-sm">Không tìm thấy thiết bị nào</div>
+          <div className="text-center py-20 text-muted-foreground text-sm">{t('noResults')}</div>
         ) : (
           <>
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow className="bg-muted/50">
-                    <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Mã</TableHead>
-                    <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Tên thiết bị</TableHead>
-                    <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Loại</TableHead>
-                    <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Phòng</TableHead>
-                    <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Hãng</TableHead>
-                    <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Model</TableHead>
-                    <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Giá</TableHead>
-                    <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Trạng thái</TableHead>
-                    <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-right">Hành động</TableHead>
+                    <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">{t('columns.code')}</TableHead>
+                    <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">{t('columns.name')}</TableHead>
+                    <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">{t('columns.category')}</TableHead>
+                    <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">{t('columns.room')}</TableHead>
+                    <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">{t('columns.brand')}</TableHead>
+                    <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">{t('columns.model')}</TableHead>
+                    <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">{t('columns.price')}</TableHead>
+                    <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">{t('columns.status')}</TableHead>
+                    <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-right">{t('columns.actions')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -363,14 +372,14 @@ export default function EquipmentPage() {
                       <TableCell className="px-6 py-4 font-mono text-sm">{item.code}</TableCell>
                       <TableCell className="px-6 py-4 font-semibold">{item.name}</TableCell>
                       <TableCell className="px-6 py-4">
-                        <Badge variant="outline">{categoryLabels[item.category]}</Badge>
+                        <Badge variant="outline">{t(`categories.${item.category}`)}</Badge>
                       </TableCell>
                       <TableCell className="px-6 py-4 text-sm">{getRoomName(item.roomId)}</TableCell>
                       <TableCell className="px-6 py-4 text-sm text-muted-foreground">{item.brand || '-'}</TableCell>
                       <TableCell className="px-6 py-4 text-sm text-muted-foreground">{item.model || '-'}</TableCell>
                       <TableCell className="px-6 py-4 text-sm">{item.price ? `${item.price.toLocaleString('vi-VN')} đ` : '-'}</TableCell>
                       <TableCell className="px-6 py-4">
-                        <Badge className={statusBadgeClass[item.status]}>{statusLabels[item.status]}</Badge>
+                        <Badge className={statusBadgeClass[item.status]}>{t(`statuses.${item.status}`)}</Badge>
                       </TableCell>
                       <TableCell className="px-6 py-4 text-right">
                         <div className="flex justify-end gap-1">
@@ -399,7 +408,7 @@ export default function EquipmentPage() {
             {/* Pagination */}
             <div className="px-6 py-4 bg-muted/50 border-t flex items-center justify-between">
               <p className="text-xs text-muted-foreground">
-                Hiển thị {(currentPage - 1) * PAGE_SIZE + 1} đến {Math.min(currentPage * PAGE_SIZE, filteredEquipment.length)} trong tổng số {filteredEquipment.length} thiết bị
+                {t('pagination.showing')} {(currentPage - 1) * PAGE_SIZE + 1} {t('pagination.to')} {Math.min(currentPage * PAGE_SIZE, filteredEquipment.length)} {t('pagination.of')} {filteredEquipment.length} {t('pagination.equipment')}
               </p>
               <div className="flex items-center gap-1">
                 <Button variant="outline" size="icon" className="size-8" disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)}>
@@ -429,34 +438,34 @@ export default function EquipmentPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editingEquipment ? 'Chỉnh sửa thiết bị' : 'Thêm thiết bị mới'}</DialogTitle>
-            <DialogDescription>{editingEquipment ? 'Cập nhật thông tin thiết bị' : 'Nhập thông tin thiết bị mới'}</DialogDescription>
+            <DialogTitle>{editingEquipment ? t('editEquipment') : t('addEquipment')}</DialogTitle>
+            <DialogDescription>{editingEquipment ? t('form.update') : t('form.create')}</DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="name">
-                  Tên thiết bị <span className="text-destructive">*</span>
+                  {t('form.name')} <span className="text-destructive">{t('form.required')}</span>
                 </Label>
-                <Input id="name" value={formName} onChange={(e) => setFormName(e.target.value)} placeholder="Ví dụ: Máy tính Dell" />
+                <Input id="name" value={formName} onChange={(e) => setFormName(e.target.value)} placeholder={t('form.namePlaceholder')} />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="code">
-                  Mã thiết bị <span className="text-destructive">*</span>
+                  {t('form.code')} <span className="text-destructive">{t('form.required')}</span>
                 </Label>
-                <Input id="code" value={formCode} onChange={(e) => setFormCode(e.target.value)} placeholder="Ví dụ: TB001" disabled={!!editingEquipment} />
+                <Input id="code" value={formCode} onChange={(e) => setFormCode(e.target.value)} placeholder={t('form.codePlaceholder')} disabled={!!editingEquipment} />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="room">
-                  Phòng <span className="text-destructive">*</span>
+                  {t('form.room')} <span className="text-destructive">{t('form.required')}</span>
                 </Label>
                 <Select value={formRoomId} onValueChange={setFormRoomId}>
                   <SelectTrigger id="room">
-                    <SelectValue placeholder="Chọn phòng" />
+                    <SelectValue placeholder={t('form.selectRoom')} />
                   </SelectTrigger>
                   <SelectContent>
                     {rooms.map((r) => (
@@ -469,7 +478,7 @@ export default function EquipmentPage() {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="category">
-                  Loại thiết bị <span className="text-destructive">*</span>
+                  {t('form.category')} <span className="text-destructive">{t('form.required')}</span>
                 </Label>
                 <Select value={formCategory} onValueChange={setFormCategory}>
                   <SelectTrigger id="category">
@@ -478,7 +487,7 @@ export default function EquipmentPage() {
                   <SelectContent>
                     {CATEGORIES.map((c) => (
                       <SelectItem key={c} value={c}>
-                        {categoryLabels[c]}
+                        {t(`categories.${c}`)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -488,36 +497,36 @@ export default function EquipmentPage() {
 
             <div className="grid grid-cols-3 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="brand">Hãng</Label>
-                <Input id="brand" value={formBrand} onChange={(e) => setFormBrand(e.target.value)} placeholder="Ví dụ: Dell" />
+                <Label htmlFor="brand">{t('form.brand')}</Label>
+                <Input id="brand" value={formBrand} onChange={(e) => setFormBrand(e.target.value)} placeholder={t('form.brandPlaceholder')} />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="model">Model</Label>
-                <Input id="model" value={formModel} onChange={(e) => setFormModel(e.target.value)} placeholder="Ví dụ: Latitude 5420" />
+                <Label htmlFor="model">{t('form.model')}</Label>
+                <Input id="model" value={formModel} onChange={(e) => setFormModel(e.target.value)} placeholder={t('form.modelPlaceholder')} />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="serialNumber">Số serial</Label>
-                <Input id="serialNumber" value={formSerialNumber} onChange={(e) => setFormSerialNumber(e.target.value)} placeholder="Ví dụ: SN123456" />
+                <Label htmlFor="serialNumber">{t('form.serialNumber')}</Label>
+                <Input id="serialNumber" value={formSerialNumber} onChange={(e) => setFormSerialNumber(e.target.value)} placeholder={t('form.serialNumberPlaceholder')} />
               </div>
             </div>
 
             <div className="grid grid-cols-3 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="purchaseDate">Ngày mua</Label>
+                <Label htmlFor="purchaseDate">{t('form.purchaseDate')}</Label>
                 <Input id="purchaseDate" type="date" value={formPurchaseDate} onChange={(e) => setFormPurchaseDate(e.target.value)} />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="warrantyExpiry">Hết bảo hành</Label>
+                <Label htmlFor="warrantyExpiry">{t('form.warrantyExpiry')}</Label>
                 <Input id="warrantyExpiry" type="date" value={formWarrantyExpiry} onChange={(e) => setFormWarrantyExpiry(e.target.value)} />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="price">Giá (VNĐ)</Label>
-                <Input id="price" type="number" min="0" value={formPrice} onChange={(e) => setFormPrice(e.target.value)} placeholder="Ví dụ: 15000000" />
+                <Label htmlFor="price">{t('form.price')}</Label>
+                <Input id="price" type="number" min="0" value={formPrice} onChange={(e) => setFormPrice(e.target.value)} placeholder={t('form.pricePlaceholder')} />
               </div>
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="status">Trạng thái</Label>
+              <Label htmlFor="status">{t('form.status')}</Label>
               <Select value={formStatus} onValueChange={setFormStatus}>
                 <SelectTrigger id="status">
                   <SelectValue />
@@ -525,7 +534,7 @@ export default function EquipmentPage() {
                 <SelectContent>
                   {STATUSES.map((s) => (
                     <SelectItem key={s} value={s}>
-                      {statusLabels[s]}
+                      {t(`statuses.${s}`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -533,18 +542,18 @@ export default function EquipmentPage() {
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="description">Ghi chú</Label>
-              <Input id="description" value={formDescription} onChange={(e) => setFormDescription(e.target.value)} placeholder="Nhập ghi chú (tùy chọn)" />
+              <Label htmlFor="description">{t('form.description')}</Label>
+              <Input id="description" value={formDescription} onChange={(e) => setFormDescription(e.target.value)} placeholder={t('form.descriptionPlaceholder')} />
             </div>
           </div>
 
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Hủy</Button>
+              <Button variant="outline">{t('form.cancel')}</Button>
             </DialogClose>
             <Button onClick={handleSubmit} disabled={createMutation.isPending || updateMutation.isPending || !formName || !formCode || !formRoomId}>
               {(createMutation.isPending || updateMutation.isPending) && <Loader2 className="mr-2 size-4 animate-spin" />}
-              {editingEquipment ? 'Cập nhật' : 'Tạo mới'}
+              {editingEquipment ? t('form.update') : t('form.create')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -554,16 +563,15 @@ export default function EquipmentPage() {
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Xác nhận xoá</DialogTitle>
-            <DialogDescription>Bạn có chắc chắn muốn xoá thiết bị "{deletingEquipment?.name}"? Hành động này không thể hoàn tác.</DialogDescription>
+            <DialogTitle>{t('deleteConfirm.title')}</DialogTitle>
+            <DialogDescription>{t('deleteConfirm.description', { name: deletingEquipment?.name || '' })}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Hủy</Button>
+              <Button variant="outline">{t('deleteConfirm.cancel')}</Button>
             </DialogClose>
             <Button variant="destructive" onClick={handleDelete} disabled={deleteMutation.isPending}>
               {deleteMutation.isPending && <Loader2 className="mr-2 size-4 animate-spin" />}
-              Xoá
             </Button>
           </DialogFooter>
         </DialogContent>

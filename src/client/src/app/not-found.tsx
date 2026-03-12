@@ -1,11 +1,11 @@
-import Link from "next/link";
+"use no memo";
 
 export default function NotFound() {
   return (
     <div>
       <h2>Not Found</h2>
       <p>Could not find requested resource</p>
-      <Link href="/">Return Home</Link>
+      <a href="/">Return Home</a>
     </div>
   );
 }

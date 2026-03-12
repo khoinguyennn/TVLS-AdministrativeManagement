@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft, Loader2 } from "lucide-react";
+import { FormSkeleton } from "@/components/skeletons";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -76,11 +77,7 @@ export default function EditPersonnelPage() {
   }
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-      </div>
-    );
+    return <FormSkeleton fields={10} columns={2} />;
   }
 
   if (!personnel) {

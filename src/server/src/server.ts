@@ -12,8 +12,12 @@ import { EquipmentRoute } from '@routes/equipment.route';
 import { WorkOrderRoute } from '@routes/work-orders.route';
 import { StaffRoute } from '@routes/staff.route';
 import { ValidateEnv } from '@utils/validateEnv';
+import { startDeviceReportsCron } from './crons/device-reports.cron';
 
 ValidateEnv();
+
+// Start background workers
+startDeviceReportsCron();
 
 const app = new App([
   new AuthRoute(),
@@ -21,7 +25,7 @@ const app = new App([
   new UserRoute(),
   new BuildingRoute(),
   new RoomRoute(),
-  new EquipmentRoute(),
+  // new EquipmentRoute(), // Not used - using DeviceRoute instead
   new DeviceRoute(),
   new DeviceReportRoute(),
   new LeaveRequestRoute(),

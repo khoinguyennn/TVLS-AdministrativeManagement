@@ -64,11 +64,14 @@ export class DeviceReportService {
     return report.get({ plain: true });
   }
 
-  public async getStats(): Promise<{ total: number; pending: number; repairing: number; completed: number }> {
-    const total = await DB.DeviceReports.count();
-    const pending = await DB.DeviceReports.count({ where: { status: 'pending' } });
-    const repairing = await DB.DeviceReports.count({ where: { status: ['received', 'repairing', 'recheck_required'] } });
-    const completed = await DB.DeviceReports.count({ where: { status: 'completed' } });
+  public async getStats(reporterId?: number): Promise<{ total: number; pending: number; repairing: number; completed: number }> {
+    const where: any = {};
+    if (reporterId) where.reporterId = reporterId;
+
+    const total = await DB.DeviceReports.count({ where });
+    const pending = await DB.DeviceReports.count({ where: { ...where, status: 'pending' } });
+    const repairing = await DB.DeviceReports.count({ where: { ...where, status: ['received', 'repairing', 'recheck_required'] } });
+    const completed = await DB.DeviceReports.count({ where: { ...where, status: 'completed' } });
     return { total, pending, repairing, completed };
   }
 
@@ -86,6 +89,15 @@ export class DeviceReportService {
     });
 
     // Gửi email thông báo cho kỹ thuật viên
+    const attachments = data.imageUrl
+      ? [
+          {
+            filename: data.imageUrl.split('/').pop() || 'image.jpg',
+            path: require('path').join(__dirname, '../../', data.imageUrl), // Resolves to /uploads/reports/...
+          },
+        ]
+      : undefined;
+
     this.sendEmailToTechnicians(
       'Phiếu báo hỏng mới',
       `
@@ -94,9 +106,11 @@ export class DeviceReportService {
         <div style="background-color: #f8f9fa; border-radius: 10px; padding: 20px; margin: 20px 0;">
           <p style="margin: 5px 0;"><strong>Thiết bị:</strong> ${device.name}</p>
           <p style="margin: 5px 0;"><strong>Mô tả:</strong> ${data.description}</p>
+          ${data.imageUrl ? `<p style="margin: 5px 0;"><strong>Ảnh đính kèm:</strong> (xem tệp đính kèm bên dưới)</p>` : ''}
         </div>
         <p style="color: #666;">Vui lòng truy cập hệ thống để tiếp nhận và xử lý.</p>
       `,
+      attachments
     );
 
     return created.get({ plain: true }) as DeviceReport;
@@ -336,11 +350,15 @@ export class DeviceReportService {
   /**
    * Gửi email cho tất cả kỹ thuật viên (fire-and-forget).
    */
-  private async sendEmailToTechnicians(subject: string, bodyContent: string): Promise<void> {
+  private async sendEmailToTechnicians(
+    subject: string,
+    bodyContent: string,
+    attachments?: { filename: string; path: string }[]
+  ): Promise<void> {
     try {
       const emails = await this.getTechnicianEmails();
       if (emails.length > 0) {
-        await this.emailService.sendDeviceReportEmail(emails, subject, bodyContent);
+        await this.emailService.sendDeviceReportEmail(emails, subject, bodyContent, attachments);
       }
     } catch (error) {
       logger.error(`Failed to send email to technicians: ${error}`);

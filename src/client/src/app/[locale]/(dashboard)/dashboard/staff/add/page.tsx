@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { PersonnelForm } from "@/components/personnel/personnel-form";
 import { personnelService } from "@/services/personnel.service";
 import type { CreatePersonnelPayload } from "@/types/personnel.types";
-import { toast } from "sonner";
+import { toast } from "react-toastify";
 
 export default function AddStaffPage() {
   const router = useRouter();
@@ -38,15 +38,15 @@ export default function AddStaffPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Link href="/vi/dashboard/staff">
+        <Link href="/dashboard/staff">
           <Button variant="ghost" size="sm" className="gap-2">
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="size-4" />
             Quay lại
           </Button>
         </Link>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Thêm nhân sự</h1>
-          <p className="text-gray-500 mt-1">Điền thông tin chi tiết của nhân sự mới</p>
+          <p className="text-muted-foreground mt-1">Điền thông tin chi tiết của nhân sự mới</p>
         </div>
       </div>
 

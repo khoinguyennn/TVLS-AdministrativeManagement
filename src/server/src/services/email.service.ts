@@ -16,6 +16,9 @@ export class EmailService {
         user: SMTP_USER,
         pass: SMTP_PASS,
       },
+      tls: {
+        rejectUnauthorized: false
+      }
     });
   }
 
@@ -168,13 +171,14 @@ export class EmailService {
     }
   }
 
-  public async sendDeviceReportEmail(to: string | string[], subject: string, bodyContent: string): Promise<boolean> {
+  public async sendDeviceReportEmail(to: string | string[], subject: string, bodyContent: string, attachments?: nodemailer.SendMailOptions['attachments']): Promise<boolean> {
     try {
       const recipients = Array.isArray(to) ? to.join(', ') : to;
-      const mailOptions = {
+      const mailOptions: nodemailer.SendMailOptions = {
         from: SMTP_FROM,
         to: recipients,
         subject: `📋 ${subject} - THSP Admin`,
+        attachments,
         html: `
           <!DOCTYPE html>
           <html>

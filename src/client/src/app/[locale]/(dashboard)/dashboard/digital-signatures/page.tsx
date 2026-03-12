@@ -15,6 +15,7 @@ import {
   Undo2,
   Upload,
 } from "lucide-react";
+import { SignatureSkeleton } from "@/components/skeletons";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
@@ -316,12 +317,7 @@ export default function DigitalSignaturesPage() {
 
   // ═══════════════════════════════════════════════════════════
   if (loading) {
-    return (
-      <div className="flex items-center justify-center py-32">
-        <Loader2 className="size-6 animate-spin text-muted-foreground" />
-        <span className="ml-2 text-sm text-muted-foreground">{t("loading")}</span>
-      </div>
-    );
+    return <SignatureSkeleton />;
   }
 
   return (

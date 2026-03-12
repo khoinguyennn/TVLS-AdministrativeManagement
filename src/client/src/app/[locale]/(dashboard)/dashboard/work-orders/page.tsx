@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Plus, Search, Loader2, Filter, ChevronRight } from "lucide-react";
+import { TableSkeleton } from "@/components/skeletons";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
@@ -36,10 +37,12 @@ export default function WorkOrdersPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const PAGE_SIZE = 8;
+  const [mounted, setMounted] = useState(false);
 
   // Load data
   useEffect(() => {
     loadData();
+    setMounted(true);
   }, []);
 
   // Filter work orders based on search query and status
@@ -628,22 +631,34 @@ export default function WorkOrdersPage() {
             />
           </div>
         </div>
-        <div className="sm:w-48">
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="bg-white border border-gray-200 shadow-sm">
-              <Filter className="h-4 w-4 mr-2" />
-              <SelectValue placeholder="Lọc theo trạng thái" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Tất cả trạng thái</SelectItem>
-              <SelectItem value="pending">Chờ duyệt</SelectItem>
-              <SelectItem value="approved">Đã duyệt</SelectItem>
-              <SelectItem value="in_progress">Đang thực hiện</SelectItem>
-              <SelectItem value="completed">Hoàn thành</SelectItem>
-              <SelectItem value="rejected">Từ chối</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        {mounted ? (
+          <div className="sm:w-48">
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="bg-white border border-gray-200 shadow-sm">
+                <Filter className="h-4 w-4 mr-2" />
+                <SelectValue placeholder="Lọc theo trạng thái" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tất cả trạng thái</SelectItem>
+                <SelectItem value="pending">Chờ duyệt</SelectItem>
+                <SelectItem value="approved">Đã duyệt</SelectItem>
+                <SelectItem value="in_progress">Đang thực hiện</SelectItem>
+                <SelectItem value="completed">Hoàn thành</SelectItem>
+                <SelectItem value="rejected">Từ chối</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        ) : (
+          <div className="sm:w-48">
+            <div className="flex h-10 w-full items-center justify-between rounded-md border border-gray-200 bg-white px-3 py-2 text-sm shadow-sm ring-offset-background text-muted-foreground opacity-50 cursor-not-allowed">
+              <div className="flex items-center">
+                <Filter className="h-4 w-4 mr-2" />
+                <span>Lọc theo trạng thái</span>
+              </div>
+              <ChevronRight className="h-4 w-4 opacity-50 rotate-90" />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Work Orders Table */}
@@ -653,9 +668,7 @@ export default function WorkOrdersPage() {
         </div>
         <div className="p-6">
           {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
-            </div>
+            <TableSkeleton columns={7} rows={5} />
           ) : (
             <>
               <WorkOrderTable

@@ -3,8 +3,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight, Monitor, Edit, Loader2, Plus, Search, Trash2 } from 'lucide-react';
+import { TableSkeleton } from '@/components/skeletons';
 import Link from 'next/link';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
+import { useTranslations } from 'next-intl';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -30,13 +32,6 @@ import type { Device, CreateDeviceInput, UpdateDeviceInput } from '@/types/facil
 const PAGE_SIZE = 10;
 const STATUSES = ['active', 'under_repair', 'waiting_replacement', 'broken'] as const;
 
-const statusLabels: Record<string, string> = {
-  active: 'Hoạt động',
-  under_repair: 'Đang sửa chữa',
-  waiting_replacement: 'Chờ thay thế',
-  broken: 'Hỏng',
-};
-
 const statusBadgeClass: Record<string, string> = {
   active: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-transparent',
   under_repair: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border-transparent',
@@ -45,7 +40,16 @@ const statusBadgeClass: Record<string, string> = {
 };
 
 export default function DevicesPage() {
+  const t = useTranslations('Facilities.devices');
+  const tCommon = useTranslations('Breadcrumb');
   const queryClient = useQueryClient();
+
+  const statusLabels: Record<string, string> = {
+    active: t('statuses.active'),
+    under_repair: t('statuses.under_repair'),
+    waiting_replacement: t('statuses.waiting_replacement'),
+    broken: t('statuses.broken'),
+  };
 
   // Data fetching
   const { data: devices = [], isLoading } = useQuery({
@@ -68,6 +72,7 @@ export default function DevicesPage() {
   const [roomFilter, setRoomFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState(1);
+  const [mounted, setMounted] = useState(false);
 
   // Dialog state
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -85,12 +90,12 @@ export default function DevicesPage() {
     mutationFn: (data: CreateDeviceInput) => deviceService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['devices'] });
-      toast.success('Tạo thiết bị thành công');
+      toast.success(t('toast.createSuccess'));
       setDialogOpen(false);
     },
     onError: (error: any) => {
       console.error('Create device error:', error);
-      const errorMessage = error?.response?.data?.message || 'Có lỗi xảy ra khi tạo thiết bị';
+      const errorMessage = error?.response?.data?.message || t('toast.error');
       toast.error(errorMessage);
     },
   });
@@ -99,11 +104,11 @@ export default function DevicesPage() {
     mutationFn: ({ id, data }: { id: number; data: UpdateDeviceInput }) => deviceService.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['devices'] });
-      toast.success('Cập nhật thiết bị thành công');
+      toast.success(t('toast.updateSuccess'));
       setDialogOpen(false);
     },
     onError: () => {
-      toast.error('Có lỗi xảy ra khi cập nhật thiết bị');
+      toast.error(t('toast.error'));
     },
   });
 
@@ -111,11 +116,11 @@ export default function DevicesPage() {
     mutationFn: (id: number) => deviceService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['devices'] });
-      toast.success('Xoá thiết bị thành công');
+      toast.success(t('toast.deleteSuccess'));
       setDeleteDialogOpen(false);
     },
     onError: () => {
-      toast.error('Có lỗi xảy ra khi xoá thiết bị');
+      toast.error(t('toast.error'));
     },
   });
 
@@ -150,6 +155,10 @@ export default function DevicesPage() {
     setCurrentPage(1);
   }, [search, roomFilter, statusFilter]);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Dialog handlers
   const handleOpenCreate = useCallback(() => {
     setEditingDevice(null);
@@ -169,7 +178,7 @@ export default function DevicesPage() {
 
   const handleSubmit = useCallback(() => {
     if (!formRoomId) {
-      toast.error('Vui lòng chọn phòng');
+      toast.error(t('form.selectRoom'));
       return;
     }
 
@@ -179,14 +188,12 @@ export default function DevicesPage() {
       status: formStatus as Device['status'],
     };
 
-    console.log('Submitting device data:', data);
-
     if (editingDevice) {
       updateMutation.mutate({ id: editingDevice.id, data });
     } else {
       createMutation.mutate(data);
     }
-  }, [editingDevice, formName, formRoomId, formStatus, createMutation, updateMutation]);
+  }, [editingDevice, formName, formRoomId, formStatus, createMutation, updateMutation, t]);
 
   const handleDelete = useCallback(() => {
     if (deletingDevice) {
@@ -195,7 +202,7 @@ export default function DevicesPage() {
   }, [deletingDevice, deleteMutation]);
 
   const getRoomName = (roomId?: number) => {
-    if (!roomId) return 'Chưa gán';
+    if (!roomId) return t('notAssigned');
     return rooms.find((r) => r.id === roomId)?.name || 'N/A';
   };
 
@@ -221,10 +228,10 @@ export default function DevicesPage() {
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-muted-foreground">
         <Link href="/dashboard" className="hover:text-foreground transition-colors">
-          Trang chủ
+          {tCommon('home')}
         </Link>
         <ChevronRight className="size-4" />
-        <span className="font-medium text-foreground">Quản lý Thiết bị</span>
+        <span className="font-medium text-foreground">{t('title')}</span>
       </nav>
 
       {/* Header */}
@@ -232,13 +239,13 @@ export default function DevicesPage() {
         <div>
           <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <Monitor className="size-6" />
-            Quản lý Thiết bị
+            {t('title')}
           </h2>
-          <p className="text-muted-foreground text-sm mt-1">Quản lý thông tin các thiết bị trong phòng</p>
+          <p className="text-muted-foreground text-sm mt-1">{t('description')}</p>
         </div>
         <Button onClick={handleOpenCreate} className="gap-2">
           <Plus className="size-4" />
-          Thêm thiết bị
+          {t('addDevice')}
         </Button>
       </div>
 
@@ -246,56 +253,68 @@ export default function DevicesPage() {
       <div className="bg-card border rounded-xl p-4 shadow-sm flex flex-wrap gap-4">
         <div className="relative flex-1 min-w-75">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Tìm kiếm theo tên thiết bị..." className="pl-10" />
+          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('searchPlaceholder')} className="pl-10" />
         </div>
-        <Select value={roomFilter} onValueChange={setRoomFilter}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Tất cả phòng" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tất cả phòng</SelectItem>
-            {rooms.map((r) => (
-              <SelectItem key={r.id} value={r.id.toString()}>
-                {r.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Tất cả trạng thái" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tất cả trạng thái</SelectItem>
-            {STATUSES.map((s) => (
-              <SelectItem key={s} value={s}>
-                {statusLabels[s]}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {mounted ? (
+          <>
+            <Select value={roomFilter} onValueChange={setRoomFilter}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder={t('allRooms')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('allRooms')}</SelectItem>
+                {rooms.map((r) => (
+                  <SelectItem key={r.id} value={r.id.toString()}>
+                    {r.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder={t('allStatuses')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('allStatuses')}</SelectItem>
+                {STATUSES.map((s) => (
+                  <SelectItem key={s} value={s}>
+                    {statusLabels[s]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </>
+        ) : (
+          <>
+            <div className="flex w-48 h-9 cursor-not-allowed items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm text-muted-foreground opacity-50 shadow-sm ring-offset-background">
+              <span>{t("allRooms")}</span>
+              <ChevronRight className="size-4 rotate-90 opacity-50" />
+            </div>
+            <div className="flex w-48 h-9 cursor-not-allowed items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm text-muted-foreground opacity-50 shadow-sm ring-offset-background">
+              <span>{t("allStatuses")}</span>
+              <ChevronRight className="size-4 rotate-90 opacity-50" />
+            </div>
+          </>
+        )}
       </div>
 
       {/* Data Table */}
       <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
         {isLoading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="size-6 animate-spin text-muted-foreground" />
-            <span className="ml-2 text-sm text-muted-foreground">Đang tải...</span>
-          </div>
+          <TableSkeleton columns={6} rows={5} />
         ) : paginatedDevices.length === 0 ? (
-          <div className="text-center py-20 text-muted-foreground text-sm">Không tìm thấy thiết bị nào</div>
+          <div className="text-center py-20 text-muted-foreground text-sm">{t('noResults')}</div>
         ) : (
           <>
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/50">
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">STT</TableHead>
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Tên thiết bị</TableHead>
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Phòng</TableHead>
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Toà nhà</TableHead>
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Trạng thái</TableHead>
-                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-right">Hành động</TableHead>
+                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">{t('columns.no')}</TableHead>
+                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">{t('columns.name')}</TableHead>
+                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">{t('columns.room')}</TableHead>
+                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">{t('columns.building')}</TableHead>
+                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">{t('columns.status')}</TableHead>
+                  <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-right">{t('columns.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -334,7 +353,7 @@ export default function DevicesPage() {
             {/* Pagination */}
             <div className="px-6 py-4 bg-muted/50 border-t flex items-center justify-between">
               <p className="text-xs text-muted-foreground">
-                Hiển thị {(currentPage - 1) * PAGE_SIZE + 1} đến {Math.min(currentPage * PAGE_SIZE, filteredDevices.length)} trong tổng số {filteredDevices.length} thiết bị
+                {t('pagination.showing')} {(currentPage - 1) * PAGE_SIZE + 1} {t('pagination.to')} {Math.min(currentPage * PAGE_SIZE, filteredDevices.length)} {t('pagination.of')} {filteredDevices.length} {t('pagination.devices')}
               </p>
               <div className="flex items-center gap-1">
                 <Button variant="outline" size="icon" className="size-8" disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)}>
@@ -364,25 +383,25 @@ export default function DevicesPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>{editingDevice ? 'Chỉnh sửa thiết bị' : 'Thêm thiết bị mới'}</DialogTitle>
-            <DialogDescription>{editingDevice ? 'Cập nhật thông tin thiết bị' : 'Nhập thông tin thiết bị mới'}</DialogDescription>
+            <DialogTitle>{editingDevice ? t('editDevice') : t('addDevice')}</DialogTitle>
+            <DialogDescription>{editingDevice ? t('form.update') : t('form.create')}</DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="name">
-                Tên thiết bị <span className="text-destructive">*</span>
+                {t('form.name')} <span className="text-destructive">*</span>
               </Label>
-              <Input id="name" value={formName} onChange={(e) => setFormName(e.target.value)} placeholder="Ví dụ: Máy chiếu Epson" />
+              <Input id="name" value={formName} onChange={(e) => setFormName(e.target.value)} placeholder={t('form.namePlaceholder')} />
             </div>
 
             <div className="grid gap-2">
               <Label htmlFor="room">
-                Phòng <span className="text-destructive">*</span>
+                {t('form.room')} <span className="text-destructive">*</span>
               </Label>
               <Select value={formRoomId || undefined} onValueChange={setFormRoomId}>
                 <SelectTrigger id="room">
-                  <SelectValue placeholder="Chọn phòng" />
+                  <SelectValue placeholder={t('form.selectRoom')} />
                 </SelectTrigger>
                 <SelectContent>
                   {rooms.map((r) => (
@@ -395,7 +414,7 @@ export default function DevicesPage() {
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="status">Trạng thái</Label>
+              <Label htmlFor="status">{t('form.status')}</Label>
               <Select value={formStatus} onValueChange={setFormStatus}>
                 <SelectTrigger id="status">
                   <SelectValue />
@@ -413,11 +432,11 @@ export default function DevicesPage() {
 
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Hủy</Button>
+              <Button variant="outline">{t('form.cancel')}</Button>
             </DialogClose>
             <Button onClick={handleSubmit} disabled={createMutation.isPending || updateMutation.isPending || !formName || !formRoomId}>
               {(createMutation.isPending || updateMutation.isPending) && <Loader2 className="mr-2 size-4 animate-spin" />}
-              {editingDevice ? 'Cập nhật' : 'Tạo mới'}
+              {editingDevice ? t('form.update') : t('form.create')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -427,16 +446,16 @@ export default function DevicesPage() {
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Xác nhận xoá</DialogTitle>
-            <DialogDescription>Bạn có chắc chắn muốn xoá thiết bị "{deletingDevice?.name}"? Hành động này không thể hoàn tác.</DialogDescription>
+            <DialogTitle>{t('deleteConfirm.title')}</DialogTitle>
+            <DialogDescription>{t('deleteConfirm.description', { name: deletingDevice?.name || '' })}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Hủy</Button>
+              <Button variant="outline">{t('deleteConfirm.cancel')}</Button>
             </DialogClose>
             <Button variant="destructive" onClick={handleDelete} disabled={deleteMutation.isPending}>
               {deleteMutation.isPending && <Loader2 className="mr-2 size-4 animate-spin" />}
-              Xoá
+              {t('deleteConfirm.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>

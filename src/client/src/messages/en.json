@@ -30,6 +30,7 @@
     "dashboard": "Dashboard",
     "users": "User Management",
     "staff": "Staff Profiles",
+    "myProfile": "My Profile",
     "workOrders": "Work Orders",
     "facilitySection": "Facilities",
     "buildings": "Buildings",
@@ -484,5 +485,236 @@
       "fileTooLarge": "Maximum file size is 2MB"
     },
     "loading": "Loading..."
+  },
+  "Facilities": {
+    "buildings": {
+      "title": "Building Management",
+      "description": "Manage information about buildings in the school",
+      "addBuilding": "Add Building",
+      "editBuilding": "Edit Building",
+      "deleteBuilding": "Delete Building",
+      "searchPlaceholder": "Search by building name...",
+      "columns": {
+        "no": "No.",
+        "name": "Building Name",
+        "description": "Description",
+        "actions": "Actions"
+      },
+      "form": {
+        "name": "Building Name",
+        "namePlaceholder": "E.g., Building A",
+        "description": "Description",
+        "descriptionPlaceholder": "Enter description (optional)",
+        "cancel": "Cancel",
+        "create": "Create",
+        "update": "Update"
+      },
+      "deleteConfirm": {
+        "title": "Confirm Delete",
+        "description": "Are you sure you want to delete building \"{name}\"? This action cannot be undone.",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "toast": {
+        "createSuccess": "Building created successfully!",
+        "updateSuccess": "Building updated successfully!",
+        "deleteSuccess": "Building deleted successfully!",
+        "error": "An error occurred, please try again."
+      },
+      "pagination": {
+        "showing": "Showing",
+        "to": "to",
+        "of": "of",
+        "buildings": "buildings"
+      },
+      "noResults": "No buildings found.",
+      "loading": "Loading..."
+    },
+    "rooms": {
+      "title": "Room Management",
+      "description": "Manage information about rooms in buildings",
+      "addRoom": "Add Room",
+      "editRoom": "Edit Room",
+      "deleteRoom": "Delete Room",
+      "searchPlaceholder": "Search by room name...",
+      "allBuildings": "All buildings",
+      "columns": {
+        "no": "No.",
+        "name": "Room Name",
+        "building": "Building",
+        "actions": "Actions"
+      },
+      "form": {
+        "building": "Building",
+        "selectBuilding": "Select building",
+        "name": "Room Name",
+        "namePlaceholder": "E.g., Room 101",
+        "cancel": "Cancel",
+        "create": "Create",
+        "update": "Update"
+      },
+      "deleteConfirm": {
+        "title": "Confirm Delete",
+        "description": "Are you sure you want to delete room \"{name}\"? This action cannot be undone.",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "toast": {
+        "createSuccess": "Room created successfully!",
+        "updateSuccess": "Room updated successfully!",
+        "deleteSuccess": "Room deleted successfully!",
+        "error": "An error occurred, please try again."
+      },
+      "pagination": {
+        "showing": "Showing",
+        "to": "to",
+        "of": "of",
+        "rooms": "rooms"
+      },
+      "noResults": "No rooms found.",
+      "loading": "Loading..."
+    },
+    "devices": {
+      "title": "Device Management",
+      "description": "Manage information about devices in rooms",
+      "addDevice": "Add Device",
+      "editDevice": "Edit Device",
+      "deleteDevice": "Delete Device",
+      "searchPlaceholder": "Search by device name...",
+      "allRooms": "All rooms",
+      "allStatuses": "All statuses",
+      "columns": {
+        "no": "No.",
+        "name": "Device Name",
+        "room": "Room",
+        "building": "Building",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "statuses": {
+        "active": "Active",
+        "under_repair": "Under Repair",
+        "waiting_replacement": "Waiting Replacement",
+        "broken": "Broken"
+      },
+      "form": {
+        "name": "Device Name",
+        "namePlaceholder": "E.g., Epson Projector",
+        "room": "Room",
+        "selectRoom": "Select room (optional)",
+        "noRoom": "No room selected",
+        "status": "Status",
+        "cancel": "Cancel",
+        "create": "Create",
+        "update": "Update"
+      },
+      "deleteConfirm": {
+        "title": "Confirm Delete",
+        "description": "Are you sure you want to delete device \"{name}\"? This action cannot be undone.",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "toast": {
+        "createSuccess": "Device created successfully!",
+        "updateSuccess": "Device updated successfully!",
+        "deleteSuccess": "Device deleted successfully!",
+        "error": "An error occurred, please try again."
+      },
+      "pagination": {
+        "showing": "Showing",
+        "to": "to",
+        "of": "of",
+        "devices": "devices"
+      },
+      "noResults": "No devices found.",
+      "notAssigned": "Not assigned",
+      "loading": "Loading..."
+    },
+    "equipment": {
+      "title": "Equipment Management",
+      "description": "Manage information about equipment in rooms",
+      "addEquipment": "Add Equipment",
+      "editEquipment": "Edit Equipment",
+      "deleteEquipment": "Delete Equipment",
+      "searchPlaceholder": "Search by name, code or brand...",
+      "allRooms": "All rooms",
+      "allCategories": "All categories",
+      "allStatuses": "All statuses",
+      "columns": {
+        "code": "Code",
+        "name": "Equipment Name",
+        "category": "Category",
+        "room": "Room",
+        "brand": "Brand",
+        "model": "Model",
+        "price": "Price",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "categories": {
+        "computer": "Computer",
+        "projector": "Projector",
+        "furniture": "Furniture",
+        "lab-equipment": "Lab Equipment",
+        "other": "Other"
+      },
+      "statuses": {
+        "working": "Working",
+        "broken": "Broken",
+        "maintenance": "Maintenance",
+        "disposed": "Disposed"
+      },
+      "form": {
+        "name": "Equipment Name",
+        "namePlaceholder": "E.g., Dell Computer",
+        "code": "Equipment Code",
+        "codePlaceholder": "E.g., TB001",
+        "room": "Room",
+        "selectRoom": "Select room",
+        "category": "Equipment Category",
+        "brand": "Brand",
+        "brandPlaceholder": "E.g., Dell",
+        "model": "Model",
+        "modelPlaceholder": "E.g., Latitude 5420",
+        "serialNumber": "Serial Number",
+        "serialNumberPlaceholder": "E.g., SN123456",
+        "purchaseDate": "Purchase Date",
+        "warrantyExpiry": "Warranty Expiry",
+        "price": "Price (VND)",
+        "pricePlaceholder": "E.g., 15000000",
+        "status": "Status",
+        "description": "Notes",
+        "descriptionPlaceholder": "Enter notes (optional)",
+        "cancel": "Cancel",
+        "create": "Create",
+        "update": "Update",
+        "required": "*"
+      },
+      "deleteConfirm": {
+        "title": "Confirm Delete",
+        "description": "Are you sure you want to delete equipment \"{name}\"? This action cannot be undone.",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "toast": {
+        "createSuccess": "Equipment created successfully!",
+        "updateSuccess": "Equipment updated successfully!",
+        "deleteSuccess": "Equipment deleted successfully!",
+        "error": "An error occurred, please try again."
+      },
+      "pagination": {
+        "showing": "Showing",
+        "to": "to",
+        "of": "of",
+        "equipment": "equipment"
+      },
+      "noResults": "No equipment found.",
+      "loading": "Loading...",
+      "breadcrumb": {
+        "home": "Home",
+        "equipment": "Equipment Management"
+      }
+    }
   }
+
 }

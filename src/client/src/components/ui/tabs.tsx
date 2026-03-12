@@ -32,6 +32,7 @@ function TabsTrigger({ value, children, className }: { value: string; children: 
       type="button"
       role="tab"
       aria-selected={active}
+      data-state={active ? "active" : "inactive"}
       onClick={() => ctx.setValue(value)}
       className={className}
     >

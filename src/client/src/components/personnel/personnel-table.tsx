@@ -89,9 +89,9 @@ export function PersonnelTable({
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
-                  <Link href={`/vi/dashboard/staff/${personnel.id}`}>
+                  <Link href={`/dashboard/staff/${personnel.id}`}>
                     <Button variant="ghost" size="sm" title="Xem chi tiết">
-                      <Eye className="h-4 w-4" />
+                      <Eye className="size-4" />
                     </Button>
                   </Link>
                   <Link href={`/vi/dashboard/staff/${personnel.id}/edit`}>
@@ -103,10 +103,10 @@ export function PersonnelTable({
                     variant="ghost"
                     size="sm"
                     onClick={() => onDelete?.(personnel.id)}
-                    className="text-red-500 hover:text-red-700"
+                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
                     title="Xóa"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="size-4" />
                   </Button>
                 </div>
               </TableCell>
