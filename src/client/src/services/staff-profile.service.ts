@@ -11,37 +11,14 @@ export interface StaffProfileData {
   cccdIssuePlace?: string;
   ethnicity?: string;
   religion?: string;
-  staffStatus?: "working" | "resigned" | "transferred" | "maternity_leave" | "unpaid_leave";
+  staffStatus?: string;
   recruitmentDate?: string;
   createdAt?: string;
   updatedAt?: string;
-  contactAddress?: {
+
+  // Singular associations (hasOne)
+  position?: {
     id?: number;
-    province?: string;
-    ward?: string;
-    hamlet?: string;
-    detailAddress?: string;
-    phone?: string;
-  };
-  hometownAddress?: {
-    id?: number;
-    province?: string;
-    ward?: string;
-    hamlet?: string;
-    detailAddress?: string;
-  };
-  organizations?: {
-    isUnionMember?: boolean;
-    unionJoinDate?: string;
-    isPartyMember?: boolean;
-    partyJoinDate?: string;
-  };
-  bankAccounts?: Array<{
-    bankName?: string;
-    branch?: string;
-    accountNumber?: string;
-  }>;
-  positions?: Array<{
     jobPosition?: string;
     positionGroup?: string;
     recruitmentAgency?: string;
@@ -51,8 +28,9 @@ export interface StaffProfileData {
     rankCode?: string;
     subjectGroup?: string;
     contractType?: string;
-  }>;
-  qualifications?: Array<{
+  };
+  qualification?: {
+    id?: number;
     generalEducationLevel?: string;
     professionalLevel?: string;
     major?: string;
@@ -60,8 +38,29 @@ export interface StaffProfileData {
     graduationYear?: number;
     itLevel?: string;
     foreignLanguageLevel?: string;
-  }>;
-  salaries?: Array<{
+  };
+  bankAccount?: {
+    id?: number;
+    bankName?: string;
+    branch?: string;
+    accountNumber?: string;
+  };
+  evaluation?: {
+    id?: number;
+    civilServantRating?: string;
+    excellentTeacher?: boolean;
+    evaluationYear?: number;
+    note?: string;
+  };
+  organization?: {
+    id?: number;
+    isUnionMember?: boolean;
+    unionJoinDate?: string;
+    isPartyMember?: boolean;
+    partyJoinDate?: string;
+  };
+  salary?: {
+    id?: number;
     salaryCoefficient?: number;
     salaryLevel?: number;
     baseSalary?: number;
@@ -71,13 +70,28 @@ export interface StaffProfileData {
     incentiveAllowancePercent?: number;
     positionAllowancePercent?: number;
     salaryNote?: string;
+  };
+
+  // Addresses remain as array
+  addresses?: Array<{
+    id?: number;
+    addressType: "contact" | "hometown";
+    province?: string;
+    ward?: string;
+    hamlet?: string;
+    detailAddress?: string;
+    phone?: string;
   }>;
-  evaluations?: Array<{
-    civilServantRating?: string;
-    excellentTeacher?: boolean;
-    evaluationYear?: number;
-    note?: string;
-  }>;
+
+  // User info (included from backend)
+  user?: {
+    id: number;
+    fullName?: string;
+    email?: string;
+    role?: string;
+    status?: string;
+    avatar?: string;
+  };
 }
 
 export interface UpdateStaffProfilePayload {
@@ -91,31 +105,21 @@ export interface UpdateStaffProfilePayload {
   religion?: string;
   staffStatus?: string;
   recruitmentDate?: string;
-  contactAddress?: {
+  addresses?: Array<{
+    addressType: string;
     province?: string;
     ward?: string;
     hamlet?: string;
     detailAddress?: string;
     phone?: string;
-  };
-  hometownAddress?: {
-    province?: string;
-    ward?: string;
-    hamlet?: string;
-    detailAddress?: string;
-  };
-  organizations?: {
+  }>;
+  organization?: {
     isUnionMember?: boolean;
     unionJoinDate?: string;
     isPartyMember?: boolean;
     partyJoinDate?: string;
   };
-  bankAccounts?: Array<{
-    bankName?: string;
-    branch?: string;
-    accountNumber?: string;
-  }>;
-  positions?: Array<{
+  position?: {
     jobPosition?: string;
     positionGroup?: string;
     recruitmentAgency?: string;
@@ -125,8 +129,8 @@ export interface UpdateStaffProfilePayload {
     rankCode?: string;
     subjectGroup?: string;
     contractType?: string;
-  }>;
-  qualifications?: Array<{
+  };
+  qualification?: {
     generalEducationLevel?: string;
     professionalLevel?: string;
     major?: string;
@@ -134,8 +138,13 @@ export interface UpdateStaffProfilePayload {
     graduationYear?: number;
     itLevel?: string;
     foreignLanguageLevel?: string;
-  }>;
-  salaries?: Array<{
+  };
+  bankAccount?: {
+    bankName?: string;
+    branch?: string;
+    accountNumber?: string;
+  };
+  salary?: {
     salaryCoefficient?: number;
     salaryLevel?: number;
     baseSalary?: number;
@@ -145,13 +154,13 @@ export interface UpdateStaffProfilePayload {
     incentiveAllowancePercent?: number;
     positionAllowancePercent?: number;
     salaryNote?: string;
-  }>;
-  evaluations?: Array<{
+  };
+  evaluation?: {
     civilServantRating?: string;
     excellentTeacher?: boolean;
     evaluationYear?: number;
     note?: string;
-  }>;
+  };
 }
 
 export interface StaffProfileApiResponse {
@@ -161,13 +170,13 @@ export interface StaffProfileApiResponse {
 }
 
 export const staffProfileService = {
-  getMyProfile: async (): Promise<StaffProfileApiResponse> => {
-    const response = await api.get<StaffProfileApiResponse>("/staff-profiles/me");
+  getMyProfile: async (userId: number): Promise<StaffProfileApiResponse> => {
+    const response = await api.get<StaffProfileApiResponse>(`/staff/user/${userId}`);
     return response.data;
   },
 
-  updateMyProfile: async (data: UpdateStaffProfilePayload): Promise<StaffProfileApiResponse> => {
-    const response = await api.put<StaffProfileApiResponse>("/staff-profiles/me", data);
+  updateMyProfile: async (profileId: number, data: UpdateStaffProfilePayload): Promise<StaffProfileApiResponse> => {
+    const response = await api.put<StaffProfileApiResponse>(`/staff/${profileId}`, data);
     return response.data;
   },
 };

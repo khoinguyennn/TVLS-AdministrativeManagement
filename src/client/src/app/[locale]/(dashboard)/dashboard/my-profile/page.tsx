@@ -32,6 +32,7 @@ import { env } from "@/env";
 
 // ── Default empty profile state ──
 const EMPTY_PROFILE = {
+  id: 0,
   code: "",
   gender: "",
   dateOfBirth: "",
@@ -55,15 +56,27 @@ const EMPTY_PROFILE = {
   unionJoinDate: "",
   isPartyMember: false,
   partyJoinDate: "",
-  bankAccounts: [{ bankName: "", branch: "", accountNumber: "" }],
-  positions: [{ jobPosition: "", positionGroup: "", recruitmentAgency: "", professionWhenRecruited: "", rankLevel: "", educationLevel: "", rankCode: "", subjectGroup: "", contractType: "" }],
-  qualifications: [{ generalEducationLevel: "", professionalLevel: "", major: "", trainingPlace: "", graduationYear: "" as number | string, itLevel: "", foreignLanguageLevel: "" }],
-  salaries: [{ salaryCoefficient: "" as number | string, salaryLevel: "" as number | string, baseSalary: "" as number | string, salaryStartDate: "", unionAllowancePercent: "" as number | string, seniorityAllowancePercent: "" as number | string, incentiveAllowancePercent: "" as number | string, positionAllowancePercent: "" as number | string, salaryNote: "" }],
-  evaluations: [{ civilServantRating: "", excellentTeacher: false, evaluationYear: "" as number | string, note: "" }]
+  // Singular objects
+  position: { jobPosition: "", positionGroup: "", recruitmentAgency: "", professionWhenRecruited: "", rankLevel: "", educationLevel: "", rankCode: "", subjectGroup: "", contractType: "" },
+  qualification: { generalEducationLevel: "", professionalLevel: "", major: "", trainingPlace: "", graduationYear: "" as number | string, itLevel: "", foreignLanguageLevel: "" },
+  salary: { salaryCoefficient: "" as number | string, salaryLevel: "" as number | string, baseSalary: "" as number | string, salaryStartDate: "", unionAllowancePercent: "" as number | string, seniorityAllowancePercent: "" as number | string, incentiveAllowancePercent: "" as number | string, positionAllowancePercent: "" as number | string, salaryNote: "" },
+  evaluation: { civilServantRating: "", excellentTeacher: false, evaluationYear: "" as number | string, note: "" },
+  bankAccount: { bankName: "", branch: "", accountNumber: "" },
 };
 
 function mapApiToState(data: StaffProfileData) {
+  const addresses = data.addresses || [];
+  const contactAddr = addresses.find(a => a.addressType === "contact");
+  const hometownAddr = addresses.find(a => a.addressType === "hometown");
+  const p = data.position;
+  const q = data.qualification;
+  const s = data.salary;
+  const e = data.evaluation;
+  const b = data.bankAccount;
+  const o = data.organization;
+
   return {
+    id: data.id || 0,
     code: data.staffCode || "",
     gender: data.gender === "male" ? "Nam" : data.gender === "female" ? "Nữ" : data.gender === "other" ? "Khác" : "",
     dateOfBirth: data.dateOfBirth || "",
@@ -74,34 +87,34 @@ function mapApiToState(data: StaffProfileData) {
     religion: data.religion || "",
     staffStatus: data.staffStatus || "working",
     recruitmentDate: data.recruitmentDate || "",
-    phone: data.contactAddress?.phone || "",
-    contactProvince: data.contactAddress?.province || "",
-    contactWard: data.contactAddress?.ward || "",
-    contactHamlet: data.contactAddress?.hamlet || "",
-    contactDetail: data.contactAddress?.detailAddress || "",
-    hometownProvince: data.hometownAddress?.province || "",
-    hometownWard: data.hometownAddress?.ward || "",
-    hometownHamlet: data.hometownAddress?.hamlet || "",
-    hometownDetail: data.hometownAddress?.detailAddress || "",
-    isUnionMember: data.organizations?.isUnionMember || false,
-    unionJoinDate: data.organizations?.unionJoinDate || "",
-    isPartyMember: data.organizations?.isPartyMember || false,
-    partyJoinDate: data.organizations?.partyJoinDate || "",
-    bankAccounts: data.bankAccounts?.length ? data.bankAccounts.map(b => ({
-      bankName: b.bankName || "", branch: b.branch || "", accountNumber: b.accountNumber || ""
-    })) : EMPTY_PROFILE.bankAccounts,
-    positions: data.positions?.length ? data.positions.map(p => ({
-      jobPosition: p.jobPosition || "", positionGroup: p.positionGroup || "", recruitmentAgency: p.recruitmentAgency || "", professionWhenRecruited: p.professionWhenRecruited || "", rankLevel: p.rankLevel || "", educationLevel: p.educationLevel || "", rankCode: p.rankCode || "", subjectGroup: p.subjectGroup || "", contractType: p.contractType || ""
-    })) : EMPTY_PROFILE.positions,
-    qualifications: data.qualifications?.length ? data.qualifications.map(q => ({
-      generalEducationLevel: q.generalEducationLevel || "", professionalLevel: q.professionalLevel || "", major: q.major || "", trainingPlace: q.trainingPlace || "", graduationYear: q.graduationYear ? String(q.graduationYear) : "", itLevel: q.itLevel || "", foreignLanguageLevel: q.foreignLanguageLevel || ""
-    })) : EMPTY_PROFILE.qualifications,
-    salaries: data.salaries?.length ? data.salaries.map(s => ({
-      salaryCoefficient: s.salaryCoefficient ? String(s.salaryCoefficient) : "", salaryLevel: s.salaryLevel ? String(s.salaryLevel) : "", baseSalary: s.baseSalary ? String(s.baseSalary) : "", salaryStartDate: s.salaryStartDate || "", unionAllowancePercent: s.unionAllowancePercent ? String(s.unionAllowancePercent) : "", seniorityAllowancePercent: s.seniorityAllowancePercent ? String(s.seniorityAllowancePercent) : "", incentiveAllowancePercent: s.incentiveAllowancePercent ? String(s.incentiveAllowancePercent) : "", positionAllowancePercent: s.positionAllowancePercent ? String(s.positionAllowancePercent) : "", salaryNote: s.salaryNote || ""
-    })) : EMPTY_PROFILE.salaries,
-    evaluations: data.evaluations?.length ? data.evaluations.map(e => ({
-      civilServantRating: e.civilServantRating || "", excellentTeacher: e.excellentTeacher || false, evaluationYear: e.evaluationYear ? String(e.evaluationYear) : "", note: e.note || ""
-    })) : EMPTY_PROFILE.evaluations,
+    phone: contactAddr?.phone || "",
+    contactProvince: contactAddr?.province || "",
+    contactWard: contactAddr?.ward || "",
+    contactHamlet: contactAddr?.hamlet || "",
+    contactDetail: contactAddr?.detailAddress || "",
+    hometownProvince: hometownAddr?.province || "",
+    hometownWard: hometownAddr?.ward || "",
+    hometownHamlet: hometownAddr?.hamlet || "",
+    hometownDetail: hometownAddr?.detailAddress || "",
+    isUnionMember: o?.isUnionMember || false,
+    unionJoinDate: o?.unionJoinDate || "",
+    isPartyMember: o?.isPartyMember || false,
+    partyJoinDate: o?.partyJoinDate || "",
+    position: {
+      jobPosition: p?.jobPosition || "", positionGroup: p?.positionGroup || "", recruitmentAgency: p?.recruitmentAgency || "", professionWhenRecruited: p?.professionWhenRecruited || "", rankLevel: p?.rankLevel || "", educationLevel: p?.educationLevel || "", rankCode: p?.rankCode || "", subjectGroup: p?.subjectGroup || "", contractType: p?.contractType || "",
+    },
+    qualification: {
+      generalEducationLevel: q?.generalEducationLevel || "", professionalLevel: q?.professionalLevel || "", major: q?.major || "", trainingPlace: q?.trainingPlace || "", graduationYear: q?.graduationYear ? String(q.graduationYear) : "", itLevel: q?.itLevel || "", foreignLanguageLevel: q?.foreignLanguageLevel || "",
+    },
+    salary: {
+      salaryCoefficient: s?.salaryCoefficient ? String(s.salaryCoefficient) : "", salaryLevel: s?.salaryLevel ? String(s.salaryLevel) : "", baseSalary: s?.baseSalary ? String(s.baseSalary) : "", salaryStartDate: s?.salaryStartDate || "", unionAllowancePercent: s?.unionAllowancePercent ? String(s.unionAllowancePercent) : "", seniorityAllowancePercent: s?.seniorityAllowancePercent ? String(s.seniorityAllowancePercent) : "", incentiveAllowancePercent: s?.incentiveAllowancePercent ? String(s.incentiveAllowancePercent) : "", positionAllowancePercent: s?.positionAllowancePercent ? String(s.positionAllowancePercent) : "", salaryNote: s?.salaryNote || "",
+    },
+    evaluation: {
+      civilServantRating: e?.civilServantRating || "", excellentTeacher: e?.excellentTeacher || false, evaluationYear: e?.evaluationYear ? String(e.evaluationYear) : "", note: e?.note || "",
+    },
+    bankAccount: {
+      bankName: b?.bankName || "", branch: b?.branch || "", accountNumber: b?.accountNumber || "",
+    },
   };
 }
 
@@ -119,20 +132,20 @@ export default function MyProfilePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  const pos = profile.positions[0];
-  const updatePos = (updates: Partial<typeof pos>) => setProfile({ ...profile, positions: [{ ...pos, ...updates }] });
+  const pos = profile.position;
+  const updatePos = (updates: Partial<typeof pos>) => setProfile({ ...profile, position: { ...pos, ...updates } });
 
-  const qual = profile.qualifications[0];
-  const updateQual = (updates: Partial<typeof qual>) => setProfile({ ...profile, qualifications: [{ ...qual, ...updates }] });
+  const qual = profile.qualification;
+  const updateQual = (updates: Partial<typeof qual>) => setProfile({ ...profile, qualification: { ...qual, ...updates } });
 
-  const sal = profile.salaries[0];
-  const updateSal = (updates: Partial<typeof sal>) => setProfile({ ...profile, salaries: [{ ...sal, ...updates }] });
+  const sal = profile.salary;
+  const updateSal = (updates: Partial<typeof sal>) => setProfile({ ...profile, salary: { ...sal, ...updates } });
 
-  const eval_ = profile.evaluations[0];
-  const updateEval = (updates: Partial<typeof eval_>) => setProfile({ ...profile, evaluations: [{ ...eval_, ...updates }] });
+  const eval_ = profile.evaluation;
+  const updateEval = (updates: Partial<typeof eval_>) => setProfile({ ...profile, evaluation: { ...eval_, ...updates } });
 
-  const bank = profile.bankAccounts[0];
-  const updateBank = (updates: Partial<typeof bank>) => setProfile({ ...profile, bankAccounts: [{ ...bank, ...updates }] });
+  const bank = profile.bankAccount;
+  const updateBank = (updates: Partial<typeof bank>) => setProfile({ ...profile, bankAccount: { ...bank, ...updates } });
 
   // Build full avatar URL from server path
   const getAvatarUrl = useCallback((src: string | null | undefined) => {
@@ -146,7 +159,8 @@ export default function MyProfilePage() {
     async function fetchProfile() {
       try {
         setLoading(true);
-        const res = await staffProfileService.getMyProfile();
+        if (!user?.id) return;
+        const res = await staffProfileService.getMyProfile(user.id);
         if (res.data) {
           setProfile(mapApiToState(res.data));
         }
@@ -157,7 +171,7 @@ export default function MyProfilePage() {
       }
     }
     fetchProfile();
-  }, []);
+  }, [user?.id]);
 
   // ── Save profile to API ──
   const handleSave = async () => {
@@ -165,10 +179,14 @@ export default function MyProfilePage() {
       toast.error("Mã định danh là bắt buộc");
       return;
     }
+    if (!profile.id) {
+      toast.error("Chưa có hồ sơ nhân sự. Vui lòng liên hệ quản trị viên.");
+      return;
+    }
 
     setSaving(true);
     try {
-      await staffProfileService.updateMyProfile({
+      await staffProfileService.updateMyProfile(profile.id, {
         staffCode: profile.code,
         gender: mapGenderToApi(profile.gender),
         dateOfBirth: profile.dateOfBirth || undefined,
@@ -179,67 +197,71 @@ export default function MyProfilePage() {
         religion: profile.religion || undefined,
         staffStatus: profile.staffStatus || undefined,
         recruitmentDate: profile.recruitmentDate || undefined,
-        contactAddress: {
-          province: profile.contactProvince || undefined,
-          ward: profile.contactWard || undefined,
-          hamlet: profile.contactHamlet || undefined,
-          detailAddress: profile.contactDetail || undefined,
-          phone: profile.phone || undefined,
-        },
-        hometownAddress: {
-          province: profile.hometownProvince || undefined,
-          ward: profile.hometownWard || undefined,
-          hamlet: profile.hometownHamlet || undefined,
-          detailAddress: profile.hometownDetail || undefined,
-        },
-        organizations: {
+        addresses: [
+          {
+            addressType: "contact",
+            province: profile.contactProvince || undefined,
+            ward: profile.contactWard || undefined,
+            hamlet: profile.contactHamlet || undefined,
+            detailAddress: profile.contactDetail || undefined,
+            phone: profile.phone || undefined,
+          },
+          {
+            addressType: "hometown",
+            province: profile.hometownProvince || undefined,
+            ward: profile.hometownWard || undefined,
+            hamlet: profile.hometownHamlet || undefined,
+            detailAddress: profile.hometownDetail || undefined,
+          },
+        ],
+        organization: {
           isUnionMember: profile.isUnionMember,
           unionJoinDate: profile.unionJoinDate || undefined,
           isPartyMember: profile.isPartyMember,
           partyJoinDate: profile.partyJoinDate || undefined,
         },
-        bankAccounts: profile.bankAccounts.map(b => ({
-          bankName: b.bankName || undefined,
-          branch: b.branch || undefined,
-          accountNumber: b.accountNumber || undefined,
-        })),
-        positions: profile.positions.map(p => ({
-          jobPosition: p.jobPosition || undefined,
-          positionGroup: p.positionGroup || undefined,
-          recruitmentAgency: p.recruitmentAgency || undefined,
-          professionWhenRecruited: p.professionWhenRecruited || undefined,
-          rankLevel: p.rankLevel || undefined,
-          educationLevel: p.educationLevel || undefined,
-          rankCode: p.rankCode || undefined,
-          subjectGroup: p.subjectGroup || undefined,
-          contractType: p.contractType || undefined,
-        })),
-        qualifications: profile.qualifications.map(q => ({
-          generalEducationLevel: q.generalEducationLevel || undefined,
-          professionalLevel: q.professionalLevel || undefined,
-          major: q.major || undefined,
-          trainingPlace: q.trainingPlace || undefined,
-          graduationYear: q.graduationYear ? Number(q.graduationYear) : undefined,
-          itLevel: q.itLevel || undefined,
-          foreignLanguageLevel: q.foreignLanguageLevel || undefined,
-        })),
-        salaries: profile.salaries.map(s => ({
-          salaryCoefficient: s.salaryCoefficient ? Number(s.salaryCoefficient) : undefined,
-          salaryLevel: s.salaryLevel ? Number(s.salaryLevel) : undefined,
-          baseSalary: s.baseSalary ? Number(s.baseSalary) : undefined,
-          salaryStartDate: s.salaryStartDate || undefined,
-          unionAllowancePercent: s.unionAllowancePercent ? Number(s.unionAllowancePercent) : undefined,
-          seniorityAllowancePercent: s.seniorityAllowancePercent ? Number(s.seniorityAllowancePercent) : undefined,
-          incentiveAllowancePercent: s.incentiveAllowancePercent ? Number(s.incentiveAllowancePercent) : undefined,
-          positionAllowancePercent: s.positionAllowancePercent ? Number(s.positionAllowancePercent) : undefined,
-          salaryNote: s.salaryNote || undefined,
-        })),
-        evaluations: profile.evaluations.map(e => ({
-          civilServantRating: e.civilServantRating || undefined,
-          excellentTeacher: e.excellentTeacher,
-          evaluationYear: e.evaluationYear ? Number(e.evaluationYear) : undefined,
-          note: e.note || undefined,
-        })),
+        position: {
+          jobPosition: pos.jobPosition || undefined,
+          positionGroup: pos.positionGroup || undefined,
+          recruitmentAgency: pos.recruitmentAgency || undefined,
+          professionWhenRecruited: pos.professionWhenRecruited || undefined,
+          rankLevel: pos.rankLevel || undefined,
+          educationLevel: pos.educationLevel || undefined,
+          rankCode: pos.rankCode || undefined,
+          subjectGroup: pos.subjectGroup || undefined,
+          contractType: pos.contractType || undefined,
+        },
+        qualification: {
+          generalEducationLevel: qual.generalEducationLevel || undefined,
+          professionalLevel: qual.professionalLevel || undefined,
+          major: qual.major || undefined,
+          trainingPlace: qual.trainingPlace || undefined,
+          graduationYear: qual.graduationYear ? Number(qual.graduationYear) : undefined,
+          itLevel: qual.itLevel || undefined,
+          foreignLanguageLevel: qual.foreignLanguageLevel || undefined,
+        },
+        salary: {
+          salaryCoefficient: sal.salaryCoefficient ? Number(sal.salaryCoefficient) : undefined,
+          salaryLevel: sal.salaryLevel ? Number(sal.salaryLevel) : undefined,
+          baseSalary: sal.baseSalary ? Number(sal.baseSalary) : undefined,
+          salaryStartDate: sal.salaryStartDate || undefined,
+          unionAllowancePercent: sal.unionAllowancePercent ? Number(sal.unionAllowancePercent) : undefined,
+          seniorityAllowancePercent: sal.seniorityAllowancePercent ? Number(sal.seniorityAllowancePercent) : undefined,
+          incentiveAllowancePercent: sal.incentiveAllowancePercent ? Number(sal.incentiveAllowancePercent) : undefined,
+          positionAllowancePercent: sal.positionAllowancePercent ? Number(sal.positionAllowancePercent) : undefined,
+          salaryNote: sal.salaryNote || undefined,
+        },
+        bankAccount: {
+          bankName: bank.bankName || undefined,
+          branch: bank.branch || undefined,
+          accountNumber: bank.accountNumber || undefined,
+        },
+        evaluation: {
+          civilServantRating: eval_.civilServantRating || undefined,
+          excellentTeacher: eval_.excellentTeacher,
+          evaluationYear: eval_.evaluationYear ? Number(eval_.evaluationYear) : undefined,
+          note: eval_.note || undefined,
+        },
       });
       toast.success("Đã lưu thay đổi thành công!");
     } catch (error: unknown) {
@@ -742,13 +764,38 @@ export default function MyProfilePage() {
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Chức vụ
                       </Label>
-                      <Input placeholder="Ví dụ: Giáo viên" value={pos.jobPosition} onChange={(e) => updatePos({ jobPosition: e.target.value })} />
+                      <Select value={pos.jobPosition} onValueChange={(v) => updatePos({ jobPosition: v })}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="-- Chọn vị trí --" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Giáo viên">Giáo viên</SelectItem>
+                          <SelectItem value="Giáo viên HĐ">Giáo viên HĐ</SelectItem>
+                          <SelectItem value="Nhân viên">Nhân viên</SelectItem>
+                          <SelectItem value="Cán bộ quản lý (CBQL)">Cán bộ quản lý (CBQL)</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Nhóm chức vụ
                       </Label>
-                      <Input placeholder="Ví dụ: Giáo viên" value={pos.positionGroup} onChange={(e) => updatePos({ positionGroup: e.target.value })} />
+                      <Select value={pos.positionGroup} onValueChange={(v) => updatePos({ positionGroup: v })}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="-- Chọn nhóm chức vụ --" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Hiệu trưởng">Hiệu trưởng</SelectItem>
+                          <SelectItem value="Phó hiệu trưởng">Phó hiệu trưởng</SelectItem>
+                          <SelectItem value="Tổ trưởng">Tổ trưởng</SelectItem>
+                          <SelectItem value="Phó tổ trưởng">Phó tổ trưởng</SelectItem>
+                          <SelectItem value="Bí thư đoàn">Bí thư đoàn</SelectItem>
+                          <SelectItem value="Phó bí thư đoàn">Phó bí thư đoàn</SelectItem>
+                          <SelectItem value="Chủ tịch Hội Liên hiệp Thanh niên">Chủ tịch Hội Liên hiệp Thanh niên</SelectItem>
+                          <SelectItem value="Phó Chủ tịch Hội Liên hiệp Thanh niên">Phó Chủ tịch Hội Liên hiệp Thanh niên</SelectItem>
+                          <SelectItem value="Tổng phụ trách">Tổng phụ trách</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -765,25 +812,85 @@ export default function MyProfilePage() {
                       <Input value={pos.professionWhenRecruited} onChange={(e) => updatePos({ professionWhenRecruited: e.target.value })} />
                     </div>
                   </div>
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        Cấp bậc
-                      </Label>
-                      <Input value={pos.rankLevel} onChange={(e) => updatePos({ rankLevel: e.target.value })} />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        Mã ngạch
-                      </Label>
-                      <Input value={pos.rankCode} onChange={(e) => updatePos({ rankCode: e.target.value })} />
-                    </div>
+                  <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Loại hợp đồng
                       </Label>
-                      <Input value={pos.contractType} onChange={(e) => updatePos({ contractType: e.target.value })} />
+                      <Select value={pos.contractType} onValueChange={(v) => updatePos({ contractType: v })}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="-- Chọn hình thức hợp đồng --" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Hợp đồng xác định thời hạn">Hợp đồng xác định thời hạn</SelectItem>
+                          <SelectItem value="Hợp đồng không xác định thời hạn">Hợp đồng không xác định thời hạn</SelectItem>
+                          <SelectItem value="Hợp đồng theo Nghị định 111">Hợp đồng theo Nghị định 111</SelectItem>
+                          <SelectItem value="Hợp đồng khoán">Hợp đồng khoán</SelectItem>
+                          <SelectItem value="Hợp đồng lương vùng theo Nghị định 74/2024/NĐ-CP">Hợp đồng lương vùng theo Nghị định 74/2024/NĐ-CP</SelectItem>
+                          <SelectItem value="Hợp đồng thỉnh giảng">Hợp đồng thỉnh giảng</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-[13px] font-semibold text-muted-foreground">
+                        Ngạch hạng
+                      </Label>
+                      <Input value={pos.rankCode} onChange={(e) => updatePos({ rankCode: e.target.value })} />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <Label className="text-[13px] font-semibold text-muted-foreground">
+                        Tổ bộ môn
+                      </Label>
+                      <Select value={pos.subjectGroup} onValueChange={(v) => updatePos({ subjectGroup: v })}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="-- Chọn tổ bộ môn --" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Tổ Văn phòng">Tổ Văn phòng</SelectItem>
+                          <SelectItem value="Tổ Chồi - Lá">Tổ Chồi - Lá</SelectItem>
+                          <SelectItem value="Tổ Khối Một">Tổ Khối Một</SelectItem>
+                          <SelectItem value="Tổ Khối Hai">Tổ Khối Hai</SelectItem>
+                          <SelectItem value="Tổ Khối Ba">Tổ Khối Ba</SelectItem>
+                          <SelectItem value="Tổ Khối Bốn">Tổ Khối Bốn</SelectItem>
+                          <SelectItem value="Tổ Khối Năm">Tổ Khối Năm</SelectItem>
+                          <SelectItem value="Tổ Khoa Học Tự Nhiên">Tổ Khoa Học Tự Nhiên</SelectItem>
+                          <SelectItem value="Tổ Lý - Hoá - Sinh - Công nghệ">Tổ Lý - Hoá - Sinh - Công nghệ</SelectItem>
+                          <SelectItem value="Tổ Toán - Tin THCS">Tổ Toán - Tin THCS</SelectItem>
+                          <SelectItem value="Tổ Toán - Tin THPT">Tổ Toán - Tin THPT</SelectItem>
+                          <SelectItem value="Tổ Ngoại Ngữ - Ngữ Văn THCS">Tổ Ngoại Ngữ - Ngữ Văn THCS</SelectItem>
+                          <SelectItem value="Tổ Ngoại Ngữ - Ngữ Văn THPT">Tổ Ngoại Ngữ - Ngữ Văn THPT</SelectItem>
+                          <SelectItem value="Tổ Nghệ Thuật - Sử - Địa - GDCD - GDTC">Tổ Nghệ Thuật - Sử - Địa - GDCD - GDTC</SelectItem>
+                          <SelectItem value="Tổ Sử - Địa - GDKTPL - GDQP - GDTC">Tổ Sử - Địa - GDKTPL - GDQP - GDTC</SelectItem>
+                          <SelectItem value="Tổ Cấp Dưỡng">Tổ Cấp Dưỡng</SelectItem>
+                          <SelectItem value="Ban Giám Hiệu">Ban Giám Hiệu</SelectItem>
+                          <SelectItem value="Tổ Nhóm - Mầm">Tổ Nhóm - Mầm</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-[13px] font-semibold text-muted-foreground">
+                        Cấp học
+                      </Label>
+                      <Select value={pos.educationLevel} onValueChange={(v) => updatePos({ educationLevel: v })}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="-- Chọn cấp học --" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Mầm non">Mầm non</SelectItem>
+                          <SelectItem value="Tiểu học">Tiểu học</SelectItem>
+                          <SelectItem value="THCS">THCS</SelectItem>
+                          <SelectItem value="THPT">THPT</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-muted-foreground">
+                      Cấp bậc
+                    </Label>
+                    <Input value={pos.rankLevel} onChange={(e) => updatePos({ rankLevel: e.target.value })} />
                   </div>
                 </div>
               </div>
