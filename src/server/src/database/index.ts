@@ -69,6 +69,7 @@ const LeaveBalances = LeaveBalanceModel(sequelize);
 const DigitalSignatures = DigitalSignatureModel(sequelize);
 const SignatureConfigs = SignatureConfigModel(sequelize);
 
+
 const WorkOrders = WorkOrderModel(sequelize);
 const WorkOrderAttachments = WorkOrderAttachmentModel(sequelize);
 
@@ -130,6 +131,7 @@ DigitalSignatures.belongsTo(Users, { foreignKey: 'signedBy', as: 'signer' });
 Users.hasOne(SignatureConfigs, { foreignKey: 'userId', as: 'signatureConfig' });
 SignatureConfigs.belongsTo(Users, { foreignKey: 'userId', as: 'user' });
 
+
 // Work Orders
 Users.hasMany(WorkOrders, { foreignKey: 'createdBy', as: 'createdWorkOrders' });
 WorkOrders.belongsTo(Users, { foreignKey: 'createdBy', as: 'creator' });
@@ -184,6 +186,7 @@ export const DB = {
   LeaveBalances,
   DigitalSignatures,
   SignatureConfigs,
+
   WorkOrders,
   WorkOrderAttachments,
   StaffProfiles,

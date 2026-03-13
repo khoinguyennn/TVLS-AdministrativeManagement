@@ -17,7 +17,9 @@ import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
@@ -984,9 +986,20 @@ export function PersonnelForm({
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Trình độ tin học</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Ví dụ: A, B, C..." {...field} />
-                          </FormControl>
+                          <Select value={field.value} onValueChange={field.onChange}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="-- Chọn trình độ tin học --" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="Tin học A (cũ)">Tin học A (cũ)</SelectItem>
+                              <SelectItem value="Tin học B (cũ)">Tin học B (cũ)</SelectItem>
+                              <SelectItem value="Tin học C (cũ)">Tin học C (cũ)</SelectItem>
+                              <SelectItem value="Ứng dụng CNTT cơ bản">Ứng dụng CNTT cơ bản</SelectItem>
+                              <SelectItem value="Ứng dụng CNTT nâng cao">Ứng dụng CNTT nâng cao</SelectItem>
+                            </SelectContent>
+                          </Select>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -997,9 +1010,38 @@ export function PersonnelForm({
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Trình độ ngoại ngữ</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Ví dụ: TOEIC 600, IELTS 6.0..." {...field} />
-                          </FormControl>
+                          <Select value={field.value} onValueChange={field.onChange}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="-- Chọn trình độ ngoại ngữ --" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectGroup>
+                                <SelectLabel>Khung năng lực ngoại ngữ 6 bậc (Việt Nam)</SelectLabel>
+                                <SelectItem value="Bậc 1 (A1)">Bậc 1 (A1)</SelectItem>
+                                <SelectItem value="Bậc 2 (A2)">Bậc 2 (A2)</SelectItem>
+                                <SelectItem value="Bậc 3 (B1)">Bậc 3 (B1)</SelectItem>
+                                <SelectItem value="Bậc 4 (B2)">Bậc 4 (B2)</SelectItem>
+                                <SelectItem value="Bậc 5 (C1)">Bậc 5 (C1)</SelectItem>
+                                <SelectItem value="Bậc 6 (C2)">Bậc 6 (C2)</SelectItem>
+                              </SelectGroup>
+                              <SelectGroup>
+                                <SelectLabel>Chứng chỉ tiếng Anh quốc tế</SelectLabel>
+                                <SelectItem value="TOEIC">TOEIC</SelectItem>
+                                <SelectItem value="IELTS">IELTS</SelectItem>
+                                <SelectItem value="TOEFL iBT">TOEFL iBT</SelectItem>
+                                <SelectItem value="Cambridge (KET, PET, FCE, CAE, CPE)">Cambridge (KET, PET, FCE, CAE, CPE)</SelectItem>
+                              </SelectGroup>
+                              <SelectGroup>
+                                <SelectLabel>Chứng chỉ các ngoại ngữ khác</SelectLabel>
+                                <SelectItem value="Tiếng Nhật (JLPT N1-N5)">Tiếng Nhật (JLPT N1-N5)</SelectItem>
+                                <SelectItem value="Tiếng Hàn (TOPIK I-VI)">Tiếng Hàn (TOPIK I-VI)</SelectItem>
+                                <SelectItem value="Tiếng Trung (HSK 1-6)">Tiếng Trung (HSK 1-6)</SelectItem>
+                                <SelectItem value="Tiếng Pháp (DELF/DALF)">Tiếng Pháp (DELF/DALF)</SelectItem>
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -1166,6 +1208,20 @@ export function PersonnelForm({
                     />
                   </div>
 
+                  <FormField
+                    control={form.control}
+                    name="salaryNote"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Ghi chú lương</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Nhập ghi chú về lương" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
@@ -1247,20 +1303,6 @@ export function PersonnelForm({
                       )}
                     />
                   </div>
-
-                  <FormField
-                    control={form.control}
-                    name="salaryNote"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Ghi chú lương</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Nhập ghi chú về lương" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
                 </CardContent>
               </Card>
             </TabsContent>

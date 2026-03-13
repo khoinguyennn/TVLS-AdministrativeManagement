@@ -1,3 +1,4 @@
+
 import { IsString, IsNotEmpty, IsOptional, IsInt, IsIn, IsDateString, IsBoolean, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -158,8 +159,7 @@ export class UpdateStaffProfileDto {
   @IsInt()
   public userId?: number;
 
-  @IsOptional()
-  @IsString()
+  @IsOptional()  @IsString()
   public staffCode?: string;
 
   @IsOptional()
@@ -170,6 +170,7 @@ export class UpdateStaffProfileDto {
   @IsDateString()
   public dateOfBirth?: string;
 
+
   @IsOptional() @IsString() public cccdNumber?: string;
   @IsOptional() @IsDateString() public cccdIssueDate?: string;
   @IsOptional() @IsString() public cccdIssuePlace?: string;
@@ -177,12 +178,12 @@ export class UpdateStaffProfileDto {
   @IsOptional() @IsString() public religion?: string;
 
   @IsOptional()
-  @IsIn(['working', 'probation', 'maternity_leave', 'retired', 'resigned'])
-  public staffStatus?: string;
+  @IsIn(['working', 'probation', 'maternity_leave', 'retired', 'resigned'])  public staffStatus?: string;
 
   @IsOptional()
   @IsDateString()
   public recruitmentDate?: string;
+
 
   @IsOptional()
   @ValidateNested()
@@ -217,5 +218,4 @@ export class UpdateStaffProfileDto {
   @IsOptional()
   @ValidateNested()
   @Type(() => StaffSalaryDto)
-  public salary?: StaffSalaryDto;
-}
+  public salary?: StaffSalaryDto;}

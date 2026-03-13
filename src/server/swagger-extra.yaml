@@ -3,8 +3,8 @@ tags:
     description: Buildings API
   - name: rooms
     description: Rooms API
-  - name: equipment
-    description: Equipment API
+  - name: devices
+    description: Devices API
   - name: leave-requests
     description: Leave Requests API
   - name: digital-signatures
@@ -141,17 +141,17 @@ paths:
         200:
           description: 'OK'
 
-  # ==================== EQUIPMENT ====================
-  /equipment:
+  # ==================== DEVICES ====================
+  /devices:
     get:
-      tags: [equipment]
+      tags: [devices]
       summary: Lấy danh sách thiết bị
       security: [{ BearerAuth: [] }]
       responses:
         200:
           description: 'OK'
     post:
-      tags: [equipment]
+      tags: [devices]
       summary: Thêm thiết bị
       security: [{ BearerAuth: [] }]
       parameters:
@@ -163,9 +163,9 @@ paths:
       responses:
         201:
           description: 'Created'
-  /equipment/{id}:
+  /devices/{id}:
     get:
-      tags: [equipment]
+      tags: [devices]
       summary: Lấy thiết bị theo ID
       security: [{ BearerAuth: [] }]
       parameters:
@@ -177,7 +177,7 @@ paths:
         200:
           description: 'OK'
     put:
-      tags: [equipment]
+      tags: [devices]
       summary: Cập nhật thiết bị
       security: [{ BearerAuth: [] }]
       parameters:
@@ -194,7 +194,7 @@ paths:
         200:
           description: 'OK'
     delete:
-      tags: [equipment]
+      tags: [devices]
       summary: Xóa thiết bị
       security: [{ BearerAuth: [] }]
       parameters:

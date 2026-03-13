@@ -1,4 +1,5 @@
 import { Service } from 'typedi';
+
 import * as XLSX from 'xlsx';
 import { hash } from 'bcrypt';
 import { DB } from '@database';
@@ -416,6 +417,5 @@ export class StaffService {
     const ws = XLSX.utils.json_to_sheet([example], { header: headers });
     XLSX.utils.book_append_sheet(wb, ws, 'Mẫu nhập liệu');
 
-    return XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' }) as Buffer;
-  }
+    return XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' }) as Buffer;  }
 }

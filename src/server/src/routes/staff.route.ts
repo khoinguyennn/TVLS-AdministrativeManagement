@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 import multer from 'multer';
 import { StaffController } from '@controllers/staff.controller';
 import { CreateStaffProfileDto, UpdateStaffProfileDto } from '@dtos/staff.dto';
@@ -27,13 +28,13 @@ const upload = multer({
 export class StaffRoute implements Routes {
   public path = '/staff';
   public router = Router();
-  public controller = new StaffController();
-
+  public controller = new StaffController();
   constructor() {
     this.initializeRoutes();
   }
 
   private initializeRoutes() {
+
     // Excel template download & import
     this.router.get(`${this.path}/excel/template`, AuthMiddleware, RoleMiddleware('admin', 'manager'), this.controller.downloadTemplate);
     this.router.get(`${this.path}/excel/export`, AuthMiddleware, RoleMiddleware('admin', 'manager'), this.controller.exportExcel);
@@ -65,6 +66,5 @@ export class StaffRoute implements Routes {
       ValidationMiddleware(UpdateStaffProfileDto, true),
       this.controller.update,
     );
-    this.router.delete(`${this.path}/:id(\\d+)`, AuthMiddleware, RoleMiddleware('admin', 'manager'), this.controller.delete);
-  }
+    this.router.delete(`${this.path}/:id(\\d+)`, AuthMiddleware, RoleMiddleware('admin', 'manager'), this.controller.delete);  }
 }

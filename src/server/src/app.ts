@@ -50,6 +50,12 @@ export class App {
     // Database schema đã được tạo sẵn, không cần sync
     // Chỉ cần kiểm tra kết nối
     await DB.sequelize.authenticate();
+    await DB.StaffOrganizations.sync();
+    await DB.StaffBankAccounts.sync();
+    await DB.StaffPositions.sync();
+    await DB.StaffQualifications.sync();
+    await DB.StaffSalaries.sync();
+    await DB.StaffEvaluations.sync();
     await seedAdminUser();
   }
 

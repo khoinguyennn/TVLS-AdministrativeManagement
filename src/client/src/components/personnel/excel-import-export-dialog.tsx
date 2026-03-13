@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { Download, Upload, X, AlertCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   Dialog,
   DialogContent,
@@ -21,6 +22,7 @@ export function ExcelImportExportDialog({
   onImport,
   onExport
 }: ExcelImportExportDialogProps) {
+  const t = useTranslations("ExcelImportExport");
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>("");
@@ -88,7 +90,7 @@ export function ExcelImportExportDialog({
       <DialogTrigger asChild>
         <Button variant="outline" className="gap-2">
           <Download className="h-4 w-4" />
-          Nhập/Xuất Excel
+          {t("importExport")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">

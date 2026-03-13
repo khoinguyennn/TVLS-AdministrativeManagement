@@ -486,7 +486,7 @@
     },
     "loading": "Đang tải..."
   },
-   "Facilities": {
+  "Facilities": {
     "buildings": {
       "title": "Quản lý Toà nhà",
       "description": "Quản lý thông tin các toà nhà trong trường",
@@ -630,5 +630,86 @@
       "notAssigned": "Chưa gán",
       "loading": "Đang tải..."
     }
+  },
+  "Staff": {
+    "title": "Hồ sơ nhân sự",
+    "description": "Quản lý thông tin chi tiết của nhân sự",
+    "addStaff": "Thêm nhân sự",
+    "searchPlaceholder": "Tìm theo tên, mã, email hoặc điện thoại..."
+  },
+  "WorkOrders": {
+    "title": "Quản lý công lệnh",
+    "description": "Tạo, phê duyệt và theo dõi các công việc được giao",
+    "createWorkOrder": "Tạo công lênh",
+    "searchPlaceholder": "Tìm theo mã công lệnh, nơi công tác, nội dung...",
+    "filterStatus": "Lọc theo trạng thái",
+    "allStatuses": "Tất cả trạng thái",
+    "pending": "Chờ duyệt",
+    "approved": "Đã duyệt",
+    "inProgress": "Đang thực hiện",
+    "completed": "Hoàn thành",
+    "rejected": "Từ chối"
+  },
+  "ExcelImportExport": {
+    "importExport": "Nhập/Xuất Excel"
+  },
+  "DashboardHome": {
+    "goodMorning": "Chào buổi sáng",
+    "goodAfternoon": "Chào buổi chiều",
+    "goodEvening": "Chào buổi tối",
+    "todayIs": "Hôm nay là {date} - Chúc thầy/cô một ngày làm việc hiệu quả!",
+    "deviceReports": "Phiếu báo hỏng",
+    "leaveRequests": "Đơn nghỉ phép",
+    "pendingReception": "Chờ tiếp nhận",
+    "repairing": "Đang sửa chữa",
+    "completed": "Đã hoàn thành",
+    "pendingApproval": "Chờ duyệt",
+    "approved": "Đã duyệt",
+    "quickActions": "Thao tác nhanh",
+    "manageUsers": "Quản lý người dùng",
+    "staffProfiles": "Hồ sơ nhân sự",
+    "workOrders": "Quản lý công lệnh",
+    "manageBuildings": "Quản lý tòa nhà",
+    "manageDevices": "Quản lý thiết bị",
+    "leaveManagement": "Quản lý nghỉ phép",
+    "digitalSignatures": "Chữ ký số"
+  },
+  "MyProfile": {
+    "exportProfile": "Xuất hồ sơ",
+    "saveChanges": "Lưu thay đổi",
+    "personalInfo": "Thông tin cá nhân",
+    "organization": "Tổ chức",
+    "workInfo": "Công tác",
+    "salaryAllowance": "Phụ cấp lương",
+    "qualifications": "Trình độ",
+    "evaluation": "Đánh giá",
+    "bankInfo": "Ngân hàng",
+    "basicInfo": "THÔNG TIN CƠ BẢN",
+    "characteristicsAndStatus": "ĐẶC ĐIỂM & TRẠNG THÁI",
+    "contactAndAddress": "LIÊN HỆ & ĐỊA CHỈ",
+    "identifier": "Mã định danh",
+    "gender": "Giới tính",
+    "male": "Nam",
+    "female": "Nữ",
+    "other": "Khác",
+    "birthDate": "Ngày sinh",
+    "idCardNumber": "Số CMT/CCCD",
+    "issueDate": "Ngày cấp",
+    "issuePlace": "Nơi cấp",
+    "ethnicity": "Dân tộc",
+    "religion": "Tôn giáo",
+    "status": "Trạng thái CB",
+    "working": "Đang làm việc",
+    "onLeave": "Đang nghỉ cữ / phép dài",
+    "resigned": "Đã nghỉ việc",
+    "hireDate": "Ngày tuyển dụng",
+    "hometown": "Quê quán",
+    "provinceCity": "Tỉnh / Thành phố",
+    "district": "Quận / Huyện",
+    "ward": "Phường / Xã",
+    "streetAddress": "Số nhà, Tên đường",
+    "phoneNumber": "Số điện thoại",
+    "permanentAddress": "Địa chỉ thường trú",
+    "verifyIdCardAlert": "Vui lòng kiểm tra kỹ các thông tin định danh (CCCD, Ngày sinh) trước khi lưu. Các thay đổi quan trọng sẽ cần được phê duyệt bởi quản trị viên."
   }
 }

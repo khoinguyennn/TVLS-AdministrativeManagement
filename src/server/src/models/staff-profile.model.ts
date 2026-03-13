@@ -28,8 +28,8 @@ export class StaffProfileModel extends Model<StaffProfile, StaffProfileCreationA
   public cccdIssuePlace: string;
   public ethnicity: string;
   public religion: string;
-  public staffStatus: 'working' | 'probation' | 'maternity_leave' | 'retired' | 'resigned';
-  public recruitmentDate: string;
+
+  public staffStatus: 'working' | 'probation' | 'maternity_leave' | 'retired' | 'resigned';  public recruitmentDate: string;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -39,6 +39,7 @@ export default function (sequelize: Sequelize): typeof StaffProfileModel {
   StaffProfileModel.init(
     {
       id: { autoIncrement: true, primaryKey: true, type: DataTypes.INTEGER },
+
       userId: {
         allowNull: false,
         unique: true,
@@ -94,8 +95,7 @@ export default function (sequelize: Sequelize): typeof StaffProfileModel {
         allowNull: true,
         type: DataTypes.DATEONLY,
         field: 'recruitment_date',
-      },
-    },
+      },    },
     {
       tableName: 'staff_profiles',
       sequelize,

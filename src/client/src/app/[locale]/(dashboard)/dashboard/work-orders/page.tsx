@@ -26,6 +26,7 @@ import { toast } from "sonner";
 export default function WorkOrdersPage() {
   const tBreadcrumb = useTranslations("Breadcrumb");
   const tSidebar = useTranslations("Sidebar");
+  const tWorkOrders = useTranslations("WorkOrders");
   const [workOrders, setWorkOrders] = useState<WorkOrder[]>([]);
   const [filteredWorkOrders, setFilteredWorkOrders] = useState<WorkOrder[]>([]);
   const [personnel, setPersonnel] = useState<PersonnelRecord[]>([]);
@@ -606,13 +607,13 @@ export default function WorkOrdersPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">{tSidebar("workOrders")}</h2>
-          <p className="text-gray-600 mt-1 text-sm">Tạo, phê duyệt và theo dõi các công việc được giao</p>
+          <p className="text-gray-600 mt-1 text-sm">{tWorkOrders("description")}</p>
         </div>
         <div className="flex gap-2">
           <Link href="/vi/dashboard/work-orders/tao-moi">
             <Button variant="default" className="gap-2 bg-blue-600 hover:bg-blue-700">
               <Plus className="h-4 w-4" />
-              Tạo công lệnh
+              {tWorkOrders("createWorkOrder")}
             </Button>
           </Link>
         </div>
@@ -624,7 +625,7 @@ export default function WorkOrdersPage() {
           <div className="relative">
             <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <Input
-              placeholder="Tìm theo mã công lệnh, nơi công tác, nội dung..."
+              placeholder={tWorkOrders("searchPlaceholder")}
               className="pl-10 bg-white border border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -636,15 +637,15 @@ export default function WorkOrdersPage() {
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="bg-white border border-gray-200 shadow-sm">
                 <Filter className="h-4 w-4 mr-2" />
-                <SelectValue placeholder="Lọc theo trạng thái" />
+                <SelectValue placeholder={tWorkOrders("filterStatus")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tất cả trạng thái</SelectItem>
-                <SelectItem value="pending">Chờ duyệt</SelectItem>
-                <SelectItem value="approved">Đã duyệt</SelectItem>
-                <SelectItem value="in_progress">Đang thực hiện</SelectItem>
-                <SelectItem value="completed">Hoàn thành</SelectItem>
-                <SelectItem value="rejected">Từ chối</SelectItem>
+                <SelectItem value="all">{tWorkOrders("allStatuses")}</SelectItem>
+                <SelectItem value="pending">{tWorkOrders("pending")}</SelectItem>
+                <SelectItem value="approved">{tWorkOrders("approved")}</SelectItem>
+                <SelectItem value="in_progress">{tWorkOrders("inProgress")}</SelectItem>
+                <SelectItem value="completed">{tWorkOrders("completed")}</SelectItem>
+                <SelectItem value="rejected">{tWorkOrders("rejected")}</SelectItem>
               </SelectContent>
             </Select>
           </div>

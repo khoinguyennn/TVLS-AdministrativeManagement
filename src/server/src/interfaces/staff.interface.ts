@@ -9,8 +9,8 @@ export interface StaffProfile {
   cccdIssuePlace?: string;
   ethnicity?: string;
   religion?: string;
-  staffStatus?: 'working' | 'probation' | 'maternity_leave' | 'retired' | 'resigned';
-  recruitmentDate?: string;
+
+  staffStatus?: 'working' | 'probation' | 'maternity_leave' | 'retired' | 'resigned';  recruitmentDate?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -40,6 +40,7 @@ export interface StaffQualification {
   itLevel?: string;
   foreignLanguageLevel?: string;
 }
+
 
 export interface StaffAddress {
   id?: number;
@@ -77,8 +78,7 @@ export interface StaffOrganization {
   isPartyMember?: boolean;
   partyJoinDate?: string;
 }
-
-export interface StaffSalary {
+export interface StaffSalary {
   id?: number;
   staffProfileId: number;
   salaryCoefficient?: number;

@@ -18,6 +18,7 @@ import { toast } from "sonner";
 export default function StaffPage() {
   const tBreadcrumb = useTranslations("Breadcrumb");
   const tSidebar = useTranslations("Sidebar");
+  const tStaff = useTranslations("Staff");
   const [personnel, setPersonnel] = useState<PersonnelRecord[]>([]);
   const [filteredPersonnel, setFilteredPersonnel] = useState<PersonnelRecord[]>(
     []
@@ -126,14 +127,14 @@ export default function StaffPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">{tSidebar("staff")}</h2>
-          <p className="text-muted-foreground mt-1 text-sm">Quản lý thông tin chi tiết của nhân sự</p>
+          <p className="text-muted-foreground mt-1 text-sm">{tStaff("description")}</p>
         </div>
         <div className="flex gap-2">
           <ExcelImportExportDialog onImport={handleImportExcel} onExport={handleExportExcel} />
           <Link href="/dashboard/staff/add">
             <Button className="gap-2">
               <Plus className="size-4" />
-              Thêm nhân sự
+              {tStaff("addStaff")}
             </Button>
           </Link>
         </div>
@@ -144,7 +145,7 @@ export default function StaffPage() {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Tìm theo tên, mã, email hoặc điện thoại..."
+            placeholder={tStaff("searchPlaceholder")}
             className="pl-10"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}

@@ -1,3 +1,4 @@
+
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { StaffService } from '@services/staff.service';
@@ -9,11 +10,11 @@ export class StaffController {
   public getAll = async (_req: Request, res: Response, next: NextFunction) => {
     try {
       const data = await this.service.findAll();
-      res.status(200).json({ success: true, data, message: 'OK' });
-    } catch (error) {
+      res.status(200).json({ success: true, data, message: 'OK' });    } catch (error) {
       next(error);
     }
   };
+
 
   public getById = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -99,8 +100,7 @@ export class StaffController {
         success: true,
         data: result,
         message: `Nhập thành công ${result.success} hồ sơ`,
-      });
-    } catch (error) {
+      });    } catch (error) {
       next(error);
     }
   };
