@@ -4,18 +4,11 @@ import { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Search } from "lucide-react";
+import { BriefcaseBusiness, CalendarClock, CircleAlert, MapPin, Search, UserRound } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Form,
   FormControl,
@@ -29,13 +22,24 @@ import type { PersonnelRecord } from "@/types/personnel.types";
 
 const adminWorkOrderSchema = z.object({
   assignedTo: z.number().optional(),
-  workContent: z.string().min(1, "Vui lòng nhập nội dung công lệnh"),
-  workUsage: z.string().min(1, "Vui lòng nhập nội dùng công tác"),
-  workLocation: z.string().optional(),
-  startTime: z.string().min(1, "Vui lòng chọn ngày bắt đầu"),
-  endTime: z.string().min(1, "Vui lòng chọn ngày kết thúc"),
+  title: z.string().min(1, "Vui lòng nhập tiêu đề công lệnh"),
+  content: z.string().min(1, "Vui lòng nhập nội dung công tác"),
+  location: z.string().optional(),
+  startDate: z.string().min(1, "Vui lòng chọn ngày bắt đầu"),
+  endDate: z.string().min(1, "Vui lòng chọn ngày kết thúc"),
   workDays: z.string().optional(),
   notes: z.string().optional(),
+}).superRefine((value, ctx) => {
+  if (!value.startDate || !value.endDate) return;
+  const start = new Date(value.startDate);
+  const end = new Date(value.endDate);
+  if (end < start) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["endDate"],
+      message: "Ngày kết thúc phải bằng hoặc sau ngày bắt đầu",
+    });
+  }
 });
 
 type AdminWorkOrderFormData = z.infer<typeof adminWorkOrderSchema>;
@@ -60,11 +64,11 @@ export function AdminWorkOrderForm({
     resolver: zodResolver(adminWorkOrderSchema),
     defaultValues: {
       assignedTo: undefined,
-      workContent: "",
-      workUsage: "",
-      workLocation: "",
-      startTime: "",
-      endTime: "",
+      title: "",
+      content: "",
+      location: "",
+      startDate: "",
+      endDate: "",
       workDays: "",
       notes: "",
     },
@@ -80,17 +84,18 @@ export function AdminWorkOrderForm({
     if (!startDate || !endDate) return 0;
     const start = new Date(startDate);
     const end = new Date(endDate);
-    const diffTime = Math.abs(end.getTime() - start.getTime());
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    if (end < start) return 0;
+    const diffTime = end.getTime() - start.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
     return diffDays;
   };
 
   const handleDateChange = () => {
-    const startDate = form.getValues("startTime");
-    const endDate = form.getValues("endTime");
+    const startDate = form.getValues("startDate");
+    const endDate = form.getValues("endDate");
     if (startDate && endDate) {
       const days = calculateWorkDays(startDate, endDate);
-      form.setValue("workDays", days.toString());
+      form.setValue("workDays", days > 0 ? days.toString() : "");
     }
   };
 
@@ -101,13 +106,13 @@ export function AdminWorkOrderForm({
   };
 
   const handleSubmit = async (data: AdminWorkOrderFormData) => {
-    const startDate = new Date(data.startTime);
-    const endDate = new Date(data.endTime);
+    const startDate = new Date(data.startDate);
+    const endDate = new Date(data.endDate);
 
     const submitData: CreateWorkOrderPayload = {
-      title: data.workUsage,
-      content: data.workContent,
-      location: data.workLocation || undefined,
+      title: data.title,
+      content: data.content,
+      location: data.location || undefined,
       startDate: startDate.toISOString(),
       endDate: endDate.toISOString(),
       note: data.notes,
@@ -118,170 +123,134 @@ export function AdminWorkOrderForm({
   };
 
   const selectedPerson = personnel.find(p => (p.userId ?? p.id) === form.watch("assignedTo"));
+  const currentRole = selectedPerson?.role ?? "";
+  const roleLabel = currentRole
+    ? { admin: "Quản trị viên", manager: "Quản lý", teacher: "Giáo viên", technician: "Kỹ thuật" }[currentRole] ?? currentRole
+    : "Chưa chọn";
+  const primaryPosition = selectedPerson?.positions?.[0];
+  const jobPosition = primaryPosition?.jobPosition || "Chưa cập nhật";
+  const positionGroup = primaryPosition?.positionGroup || "Chưa cập nhật";
+  const contractType = primaryPosition?.contractType || "Chưa cập nhật";
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-        {/* Info Alert */}
-        <div className="bg-blue-50 border border-blue-200 rounded-md p-4 flex items-start gap-3">
-          <div className="text-blue-600 mt-0.5">ℹ️</div>
-          <div className="text-sm text-blue-800">
-            Vui lòng điền thông tin vào phiếu bên dưới rồi nhấn <strong>Gửi công lệnh</strong>.
-          </div>
-        </div>
-
-        {/* Personnel Info Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex items-center justify-between bg-gray-50 rounded-lg p-4 border border-gray-200">
-            <div>
-              <p className="text-xs text-gray-600 mb-1">👤 Họ và tên:</p>
-              <p className="font-medium text-gray-900">
-                {selectedPerson ? selectedPerson.fullName : "Không xác định"}
-              </p>
+        <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 shadow-sm">
+          <div className="flex items-start gap-3">
+            <div className="rounded-full bg-white p-2 text-blue-700 shadow-sm">
+              <CircleAlert className="h-4 w-4" />
             </div>
-          </div>
-
-          <div className="flex items-center justify-between bg-gray-50 rounded-lg p-4 border border-gray-200">
             <div>
-              <p className="text-xs text-gray-600 mb-1">💼 Chức vụ:</p>
-              <p className="font-medium text-gray-900">Không xác định</p>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between bg-gray-50 rounded-lg p-4 border border-gray-200">
-            <div>
-              <p className="text-xs text-gray-600 mb-1">📋 Tổ chuyên môn:</p>
-              <p className="font-medium text-gray-900">Không xác định</p>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between bg-gray-50 rounded-lg p-4 border border-gray-200">
-            <div>
-              <p className="text-xs text-gray-600 mb-1">📍 Vị trí việc làm:</p>
-              <p className="font-medium text-gray-900">Không xác định</p>
+              <p className="text-sm font-semibold text-blue-900">Phiếu công lệnh công tác</p>
+              <p className="text-sm text-blue-800">Điền thông tin bên dưới để tạo công lệnh theo đúng dữ liệu hệ thống work_orders.</p>
             </div>
           </div>
         </div>
 
-        {/* Personnel Search */}
-        <div className="space-y-2">
-          <FormLabel className="text-sm font-medium text-gray-700">
-            🔍 Tìm nhân sự
-          </FormLabel>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-            <Input
-              placeholder="Nhập tên để tìm..."
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setShowPersonnelList(true);
-              }}
-              onFocus={() => setShowPersonnelList(true)}
-              className="pl-10 bg-white border-gray-300"
-            />
+        <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="mb-4 flex items-center justify-between">
+            <div className="flex items-center gap-2 text-slate-900">
+              <UserRound className="h-4 w-4 text-blue-600" />
+              <p className="text-sm font-semibold">Nhân sự thực hiện</p>
+            </div>
+            <p className="text-xs text-slate-500">Nguồn dữ liệu từ hồ sơ nhân sự</p>
           </div>
 
-          {showPersonnelList && filteredPersonnel.length > 0 && (
-            <div className="absolute bg-white border border-gray-300 rounded-md shadow-lg z-50 w-full mt-1 max-h-64 overflow-y-auto">
-              {filteredPersonnel.map((person) => (
-                <button
-                  key={person.id}
-                  type="button"
-                  onClick={() => handlePersonnelSelect(person)}
-                  className="w-full text-left px-4 py-2 hover:bg-gray-100 border-b border-gray-100 last:border-b-0"
-                >
-                  <p className="text-sm font-medium text-gray-900">{person.fullName}</p>
-                  <p className="text-xs text-gray-500">{person.code}</p>
-                </button>
-              ))}
+          <div className="space-y-2">
+            <FormLabel className="text-sm font-medium text-slate-700">Tìm và chọn nhân sự</FormLabel>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <Input
+                placeholder="Nhập tên hoặc mã nhân sự..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setShowPersonnelList(true);
+                }}
+                onFocus={() => setShowPersonnelList(true)}
+                className="h-10 border-gray-300 pl-10"
+              />
+            </div>
+          </div>
+
+          {showPersonnelList && (
+            <div className="mt-3 rounded-md border border-gray-200 bg-gray-50 p-2">
+              <div className="max-h-52 space-y-1 overflow-y-auto pr-1">
+                {filteredPersonnel.length > 0 ? (
+                  filteredPersonnel.map((person) => {
+                    const personKey = person.userId ?? person.id;
+                    const isSelected = form.watch("assignedTo") === personKey;
+                    return (
+                      <button
+                        key={person.id}
+                        type="button"
+                        onClick={() => handlePersonnelSelect(person)}
+                        className={`w-full rounded-md border px-3 py-2 text-left transition ${
+                          isSelected
+                            ? "border-blue-300 bg-blue-50"
+                            : "border-transparent bg-white hover:border-slate-200 hover:bg-slate-50"
+                        }`}
+                      >
+                        <p className="text-sm font-medium text-slate-900">{person.fullName}</p>
+                        <p className="text-xs text-slate-500">{person.code} • {person.role}</p>
+                      </button>
+                    );
+                  })
+                ) : (
+                  <p className="px-2 py-5 text-center text-sm text-slate-500">Không tìm thấy nhân sự phù hợp.</p>
+                )}
+              </div>
             </div>
           )}
-        </div>
 
-        {/* Personnel List */}
-        {personnel.length > 0 && (
-          <div className="space-y-2">
-            <FormLabel className="text-sm font-medium text-gray-700">
-              👥 Chọn viên chức đi công tác
-            </FormLabel>
-            <div className="bg-gray-50 rounded-lg border border-gray-200 max-h-48 overflow-y-auto">
-              {personnel.map((person) => (
-                <button
-                  key={person.id}
-                  type="button"
-                  onClick={() => handlePersonnelSelect(person)}
-                  className={`w-full text-left px-4 py-2 hover:bg-blue-50 border-b border-gray-200 last:border-b-0 transition-colors ${
-                    form.watch("assignedTo") === (person.userId ?? person.id) ? "bg-blue-100" : ""
-                  }`}
-                >
-                  <p className="text-sm font-medium text-gray-900">{person.fullName}</p>
-                </button>
-              ))}
+          <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+            <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
+              <p className="mb-1 flex items-center gap-2 text-xs text-slate-500">
+                <UserRound className="h-3.5 w-3.5" /> Họ và tên
+              </p>
+              <p className="text-sm font-semibold text-slate-900">{selectedPerson?.fullName ?? "Chưa chọn"}</p>
+            </div>
+            <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
+              <p className="mb-1 flex items-center gap-2 text-xs text-slate-500">
+                <BriefcaseBusiness className="h-3.5 w-3.5" /> Vai trò
+              </p>
+              <p className="text-sm font-semibold text-slate-900">{roleLabel}</p>
+            </div>
+            <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
+              <p className="mb-1 text-xs text-slate-500">Chức vụ</p>
+              <p className="text-sm font-semibold text-slate-900">{jobPosition}</p>
+            </div>
+            <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
+              <p className="mb-1 text-xs text-slate-500">Tổ/nhóm</p>
+              <p className="text-sm font-semibold text-slate-900">{positionGroup}</p>
+            </div>
+            <div className="rounded-md border border-gray-200 bg-gray-50 p-4 md:col-span-2">
+              <p className="mb-1 text-xs text-slate-500">Loại hợp đồng</p>
+              <p className="text-sm font-semibold text-slate-900">{contractType}</p>
             </div>
           </div>
-        )}
+        </div>
 
-        {/* Form Fields */}
-        <div className="space-y-4 pt-4 border-t border-gray-200">
-          <FormField
-            control={form.control}
-            name="workContent"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-sm font-medium text-gray-700">
-                  Nội dung <span className="text-red-500">*</span>
-                </FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Nhập nội dung công tác"
-                    className="min-h-[80px] bg-white border-gray-300 resize-none"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="mb-5 flex items-center gap-2 text-slate-900">
+            <CalendarClock className="h-4 w-4 text-indigo-600" />
+            <p className="text-sm font-semibold">Thông tin công lệnh</p>
+          </div>
 
-          <FormField
-            control={form.control}
-            name="workUsage"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-sm font-medium text-gray-700">
-                  Nội dung công tác <span className="text-red-500">*</span>
-                </FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Vì đây dự hội nghị chuyên môn..."
-                    className="min-h-[80px] bg-white border-gray-300 resize-none"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-4">
             <FormField
               control={form.control}
-              name="startTime"
+              name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium text-gray-700">
-                    Từ ngày <span className="text-red-500">*</span>
+                  <FormLabel className="text-sm font-medium text-slate-700">
+                    Tiêu đề công lệnh <span className="text-rose-500">*</span>
                   </FormLabel>
                   <FormControl>
                     <Input
-                      type="date"
-                      className="bg-white border-gray-300"
+                      placeholder="Ví dụ: Cử viên chức tham dự hội nghị chuyên môn"
+                      className="h-10 border-gray-300"
                       {...field}
-                      onChange={(e) => {
-                        field.onChange(e);
-                        setTimeout(handleDateChange, 0);
-                      }}
                     />
                   </FormControl>
                   <FormMessage />
@@ -291,21 +260,126 @@ export function AdminWorkOrderForm({
 
             <FormField
               control={form.control}
-              name="endTime"
+              name="content"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium text-gray-700">
-                    Đến ngày <span className="text-red-500">*</span>
+                  <FormLabel className="text-sm font-medium text-slate-700">
+                    Nội dung công tác <span className="text-rose-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Mô tả chi tiết nhiệm vụ, mục tiêu và yêu cầu thực hiện..."
+                      className="min-h-[96px] resize-none border-gray-300"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="startDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-slate-700">
+                      Từ ngày <span className="text-rose-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="date"
+                        className="h-10 border-gray-300"
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setTimeout(handleDateChange, 0);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="endDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-slate-700">
+                      Đến ngày <span className="text-rose-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="date"
+                        className="h-10 border-gray-300"
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setTimeout(handleDateChange, 0);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="workDays"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm font-medium text-slate-700">Số ngày công tác</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Tự động tính"
+                      className="h-10 border-gray-300 bg-gray-100"
+                      readOnly
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                    <MapPin className="h-4 w-4 text-slate-500" />
+                    Nơi công tác
                   </FormLabel>
                   <FormControl>
                     <Input
-                      type="date"
-                      className="bg-white border-gray-300"
+                      placeholder="Ví dụ: Trường THSP - Cơ sở A2"
+                      className="h-10 border-gray-300"
                       {...field}
-                      onChange={(e) => {
-                        field.onChange(e);
-                        setTimeout(handleDateChange, 0);
-                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="notes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm font-medium text-slate-700">Ghi chú thêm</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Thông tin bổ sung (nếu có)..."
+                      className="min-h-[88px] resize-none border-gray-300"
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
@@ -313,85 +387,22 @@ export function AdminWorkOrderForm({
               )}
             />
           </div>
-
-          <FormField
-            control={form.control}
-            name="workDays"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-sm font-medium text-gray-700">
-                  Số ngày công tác
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="Tự động tính"
-                    className="bg-gray-100 border-gray-300"
-                    readOnly
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="workLocation"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-sm font-medium text-gray-700">
-                  Nơi công tác
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Địa điểm đi công tác..."
-                    className="bg-white border-gray-300"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="notes"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-sm font-medium text-gray-700">
-                  Ghi chú (nếu có)
-                </FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Ghi chú thêm..."
-                    className="min-h-[80px] bg-white border-gray-300 resize-none"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </div>
 
-        {/* Buttons */}
-        <div className="flex justify-end gap-3 pt-6 border-t border-gray-200">
+        <div className="flex justify-end gap-3 border-t border-gray-200 pt-4">
           <Button
             type="button"
             variant="outline"
             onClick={onCancel}
             disabled={isLoading}
-            className="px-6"
+            className="h-10 border-gray-300 px-6"
           >
             Hủy
           </Button>
           <Button
             type="submit"
             disabled={isLoading}
-            className="px-6 bg-blue-600 hover:bg-blue-700"
+            className="h-10 bg-blue-600 px-6 hover:bg-blue-700"
           >
             {isLoading ? "Đang gửi..." : "Gửi công lệnh"}
           </Button>
