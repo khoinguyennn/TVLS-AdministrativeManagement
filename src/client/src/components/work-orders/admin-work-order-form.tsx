@@ -28,9 +28,10 @@ import type { CreateWorkOrderPayload } from "@/types/work-order.types";
 import type { PersonnelRecord } from "@/types/personnel.types";
 
 const adminWorkOrderSchema = z.object({
-  assignedTo: z.number().min(1, "Vui lòng chọn nhân sự"),
+  assignedTo: z.number().optional(),
   workContent: z.string().min(1, "Vui lòng nhập nội dung công lệnh"),
   workUsage: z.string().min(1, "Vui lòng nhập nội dùng công tác"),
+  workLocation: z.string().optional(),
   startTime: z.string().min(1, "Vui lòng chọn ngày bắt đầu"),
   endTime: z.string().min(1, "Vui lòng chọn ngày kết thúc"),
   workDays: z.string().optional(),
@@ -58,9 +59,10 @@ export function AdminWorkOrderForm({
   const form = useForm<AdminWorkOrderFormData>({
     resolver: zodResolver(adminWorkOrderSchema),
     defaultValues: {
-      assignedTo: 0,
+      assignedTo: undefined,
       workContent: "",
       workUsage: "",
+      workLocation: "",
       startTime: "",
       endTime: "",
       workDays: "",
@@ -92,9 +94,9 @@ export function AdminWorkOrderForm({
     }
   };
 
-  const handlePersonnelSelect = (personId: number, personName: string) => {
-    form.setValue("assignedTo", personId);
-    setSearchQuery(personName);
+  const handlePersonnelSelect = (person: PersonnelRecord) => {
+    form.setValue("assignedTo", person.userId ?? person.id);
+    setSearchQuery(person.fullName);
     setShowPersonnelList(false);
   };
 
@@ -103,18 +105,19 @@ export function AdminWorkOrderForm({
     const endDate = new Date(data.endTime);
 
     const submitData: CreateWorkOrderPayload = {
-      workLocation: "",
-      workContent: data.workContent,
-      startTime: startDate.toISOString(),
-      endTime: endDate.toISOString(),
-      notes: data.notes,
-      assignedTo: data.assignedTo,
+      title: data.workUsage,
+      content: data.workContent,
+      location: data.workLocation || undefined,
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+      note: data.notes,
+      assignedTo: data.assignedTo || undefined,
     };
 
     await onSubmit(submitData);
   };
 
-  const selectedPerson = personnel.find(p => p.id === form.watch("assignedTo"));
+  const selectedPerson = personnel.find(p => (p.userId ?? p.id) === form.watch("assignedTo"));
 
   return (
     <Form {...form}>
@@ -185,7 +188,7 @@ export function AdminWorkOrderForm({
                 <button
                   key={person.id}
                   type="button"
-                  onClick={() => handlePersonnelSelect(person.id, person.fullName)}
+                  onClick={() => handlePersonnelSelect(person)}
                   className="w-full text-left px-4 py-2 hover:bg-gray-100 border-b border-gray-100 last:border-b-0"
                 >
                   <p className="text-sm font-medium text-gray-900">{person.fullName}</p>
@@ -207,9 +210,9 @@ export function AdminWorkOrderForm({
                 <button
                   key={person.id}
                   type="button"
-                  onClick={() => handlePersonnelSelect(person.id, person.fullName)}
+                  onClick={() => handlePersonnelSelect(person)}
                   className={`w-full text-left px-4 py-2 hover:bg-blue-50 border-b border-gray-200 last:border-b-0 transition-colors ${
-                    form.watch("assignedTo") === person.id ? "bg-blue-100" : ""
+                    form.watch("assignedTo") === (person.userId ?? person.id) ? "bg-blue-100" : ""
                   }`}
                 >
                   <p className="text-sm font-medium text-gray-900">{person.fullName}</p>
@@ -325,6 +328,26 @@ export function AdminWorkOrderForm({
                     placeholder="Tự động tính"
                     className="bg-gray-100 border-gray-300"
                     readOnly
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="workLocation"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-sm font-medium text-gray-700">
+                  Nơi công tác
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Địa điểm đi công tác..."
+                    className="bg-white border-gray-300"
                     {...field}
                   />
                 </FormControl>

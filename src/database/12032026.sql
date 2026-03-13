@@ -21,7 +21,8 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup 
 --
 
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '732882d0-1837-11f1-9b0a-e0db55bdce6e:1-1128';
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '0a7d13ba-188e-11f1-9590-1a2a86231e2b:1-1065,
+732882d0-1837-11f1-9b0a-e0db55bdce6e:1-1024';
 
 --
 -- Table structure for table `buildings`
@@ -35,7 +36,7 @@ CREATE TABLE `buildings` (
   `name` varchar(100) NOT NULL,
   `description` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -109,7 +110,7 @@ CREATE TABLE `device_reports` (
 
 LOCK TABLES `device_reports` WRITE;
 /*!40000 ALTER TABLE `device_reports` DISABLE KEYS */;
-INSERT INTO `device_reports` VALUES (1,10,4,'Kêu tít tít ',NULL,11,'waiting_replacement',NULL,NULL,'2026-03-09 10:30:45','2026-03-11 10:22:49'),(2,10,12,'Hư màn hình ',NULL,4,'repairing',NULL,NULL,'2026-03-12 08:45:48','2026-03-12 09:00:40'),(3,14,1,'Không hoạt động',NULL,13,'unfixable',NULL,NULL,'2026-03-12 09:00:04','2026-03-12 09:01:08');
+INSERT INTO `device_reports` VALUES (1,10,4,'Kêu tít tít ',NULL,NULL,'pending',NULL,NULL,'2026-03-09 10:30:45','2026-03-09 10:30:45'),(2,5,3,'hư',NULL,8,'repairing',NULL,NULL,'2026-03-09 13:45:11','2026-03-10 16:24:55'),(3,13,3,'không lên',NULL,8,'completed','ok','2026-03-10 16:25:58','2026-03-10 16:20:00','2026-03-10 16:25:58');
 /*!40000 ALTER TABLE `device_reports` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -130,7 +131,7 @@ CREATE TABLE `devices` (
   PRIMARY KEY (`id`),
   KEY `room_id` (`room_id`),
   CONSTRAINT `devices_ibfk_1` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -139,7 +140,7 @@ CREATE TABLE `devices` (
 
 LOCK TABLES `devices` WRITE;
 /*!40000 ALTER TABLE `devices` DISABLE KEYS */;
-INSERT INTO `devices` VALUES (1,'Máy lạnh',69,'broken','2026-03-09 10:28:20','2026-03-12 09:01:08'),(2,'Máy in',33,'broken','2026-03-09 10:28:41','2026-03-09 10:28:41'),(3,'Máy tính ',68,'waiting_replacement','2026-03-09 10:29:00','2026-03-09 10:29:00'),(4,'Camera',4,'waiting_replacement','2026-03-09 10:29:21','2026-03-11 10:22:49'),(5,'Máy lạnh',23,'waiting_replacement','2026-03-11 08:05:51','2026-03-11 08:05:51'),(6,'Tivi',51,'under_repair','2026-03-11 08:06:10','2026-03-11 08:09:54'),(11,'Máy chiếu',69,'active','2026-03-12 08:39:08','2026-03-12 08:39:08'),(12,'Tivi',69,'under_repair','2026-03-12 08:41:26','2026-03-12 08:46:36'),(13,'Máy quạt',61,'active','2026-03-12 08:41:39','2026-03-12 08:41:39'),(14,'Máy quạt',60,'active','2026-03-12 08:41:54','2026-03-12 08:41:54'),(15,'Máy quạt',59,'active','2026-03-12 08:42:05','2026-03-12 08:42:05'),(16,'Máy quạt',58,'active','2026-03-12 08:42:15','2026-03-12 08:42:15'),(17,'Máy quạt',56,'active','2026-03-12 08:42:27','2026-03-12 08:42:27'),(18,'Máy quạt',55,'active','2026-03-12 08:42:37','2026-03-12 08:42:37'),(19,'Máy quạt',54,'active','2026-03-12 08:42:48','2026-03-12 08:42:48'),(20,'Máy photo',49,'active','2026-03-12 08:43:39','2026-03-12 08:43:39'),(21,'Máy in',48,'active','2026-03-12 08:43:52','2026-03-12 08:43:52'),(22,'Máy tính',46,'active','2026-03-12 08:44:10','2026-03-12 08:44:10'),(23,'Máy lạnh',62,'active','2026-03-12 08:44:34','2026-03-12 08:44:34');
+INSERT INTO `devices` VALUES (1,'Máy lạnh',69,'active','2026-03-09 10:28:20','2026-03-09 10:28:20'),(2,'Máy in',33,'broken','2026-03-09 10:28:41','2026-03-09 10:28:41'),(3,'Máy tính ',68,'active','2026-03-09 10:29:00','2026-03-10 16:25:58'),(4,'Camera',4,'active','2026-03-09 10:29:21','2026-03-09 10:29:21');
 /*!40000 ALTER TABLE `devices` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -190,7 +191,7 @@ CREATE TABLE `leave_balances` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`year`),
   CONSTRAINT `leave_balances_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -199,7 +200,7 @@ CREATE TABLE `leave_balances` (
 
 LOCK TABLES `leave_balances` WRITE;
 /*!40000 ALTER TABLE `leave_balances` DISABLE KEYS */;
-INSERT INTO `leave_balances` VALUES (1,4,2026,12,0),(2,12,2026,12,0),(3,10,2026,12,0),(4,13,2026,12,0);
+INSERT INTO `leave_balances` VALUES (1,5,2026,12,0),(2,12,2026,12,0),(3,10,2026,12,0),(4,8,2026,12,0),(5,14,2026,12,0),(6,13,2026,12,0),(7,29,2026,12,0);
 /*!40000 ALTER TABLE `leave_balances` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -232,7 +233,7 @@ CREATE TABLE `leave_requests` (
   CONSTRAINT `leave_requests_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `leave_requests_ibfk_2` FOREIGN KEY (`leave_type_id`) REFERENCES `leave_types` (`id`),
   CONSTRAINT `leave_requests_ibfk_3` FOREIGN KEY (`approved_by`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -241,7 +242,7 @@ CREATE TABLE `leave_requests` (
 
 LOCK TABLES `leave_requests` WRITE;
 /*!40000 ALTER TABLE `leave_requests` DISABLE KEYS */;
-INSERT INTO `leave_requests` VALUES (8,1,1,'2026-03-09','2026-03-10',2,'test','approved',7,NULL,'2026-03-08 13:50:44','2026-03-08 13:51:35','2026-03-08 13:51:12','2026-03-08 13:51:35'),(9,1,9,'2026-03-18','2026-03-20',3,'abc','rejected',7,'test từ chối','2026-03-08 13:53:38','2026-03-08 13:58:16','2026-03-08 13:57:54','2026-03-08 13:58:16'),(10,1,4,'2026-03-20','2026-03-22',3,'abc','rejected',7,'ạdjaisdjoiasjd','2026-03-08 14:01:59','2026-03-08 14:02:35','2026-03-08 14:02:09','2026-03-08 14:02:35'),(13,10,6,'2026-03-09','2026-03-10',2,'Đám cưới','approved',4,NULL,'2026-03-09 07:49:21','2026-03-09 07:53:07','2026-03-09 07:52:22','2026-03-09 07:53:07'),(14,10,9,'2026-03-12','2026-03-13',2,NULL,'rejected',12,'Ngày đó đi công tác','2026-03-11 10:51:46','2026-03-11 10:52:59',NULL,'2026-03-11 10:52:59'),(15,10,4,'2026-03-12','2026-03-14',3,NULL,'pending',NULL,NULL,'2026-03-12 08:18:53','2026-03-12 08:19:04','2026-03-12 08:19:04',NULL),(16,13,2,'2026-03-13','2026-03-14',2,'Sốt cao','approved',12,NULL,'2026-03-12 09:02:10','2026-03-12 09:03:50','2026-03-12 09:02:23','2026-03-12 09:03:50');
+INSERT INTO `leave_requests` VALUES (8,1,1,'2026-03-09','2026-03-10',2,'test','approved',7,NULL,'2026-03-08 13:50:44','2026-03-08 13:51:35','2026-03-08 13:51:12','2026-03-08 13:51:35'),(9,1,9,'2026-03-18','2026-03-20',3,'abc','rejected',7,'test từ chối','2026-03-08 13:53:38','2026-03-08 13:58:16','2026-03-08 13:57:54','2026-03-08 13:58:16'),(10,1,4,'2026-03-20','2026-03-22',3,'abc','rejected',7,'ạdjaisdjoiasjd','2026-03-08 14:01:59','2026-03-08 14:02:35','2026-03-08 14:02:09','2026-03-08 14:02:35'),(13,10,6,'2026-03-09','2026-03-10',2,'Đám cưới','approved',4,NULL,'2026-03-09 07:49:21','2026-03-09 07:53:07','2026-03-09 07:52:22','2026-03-09 07:53:07');
 /*!40000 ALTER TABLE `leave_requests` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -316,7 +317,7 @@ CREATE TABLE `rooms` (
   PRIMARY KEY (`id`),
   KEY `building_id` (`building_id`),
   CONSTRAINT `rooms_ibfk_1` FOREIGN KEY (`building_id`) REFERENCES `buildings` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -370,7 +371,7 @@ CREATE TABLE `signature_configs` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`),
   CONSTRAINT `signature_configs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -379,7 +380,7 @@ CREATE TABLE `signature_configs` (
 
 LOCK TABLES `signature_configs` WRITE;
 /*!40000 ALTER TABLE `signature_configs` DISABLE KEYS */;
-INSERT INTO `signature_configs` VALUES (3,7,'/uploads/signatures/signature-1772939157665-390763047.png','$2b$10$HYFdiUE4SANMCCn/dNeiVudnlqubXCvq6f.z8WqFLbPDYdvCjSzTa','2026-03-08 10:05:57','2026-03-08 10:05:57'),(4,1,'/uploads/signatures/signature-1-1772939237355.png','$2b$10$zjaLAYs.0Y/L3IEq4eWNLeouCL0VlgG2twFdt33z7aRt5YDnDfF4a','2026-03-08 10:07:17','2026-03-08 10:07:17'),(5,4,'/uploads/signatures/signature-4-1773017078967.png','$2b$10$IUpU9oNd.oZtXLBwpyYnyO90jP8hJiK8np.ioXr0Fx6PXX9M1Vd.i','2026-03-09 07:44:38','2026-03-09 07:44:39'),(6,10,'/uploads/signatures/signature-10-1773017530444.png','$2b$10$1Y8.MScz8ip6SgMjfBac5uIgujNqOnXLXGRjYgPIMw0frIChafeB.','2026-03-09 07:52:10','2026-03-09 07:52:10'),(7,12,'/uploads/signatures/signature-1773281113865-697752464.png','$2b$10$6WNI672PfHvKkJS5Q9u67eeog1wEqaJv3l/RRR1xI/whEW9DntQYe','2026-03-11 10:49:28','2026-03-12 09:05:13'),(8,14,'/uploads/signatures/signature-14-1773280720332.png','$2b$10$rWsR55ow2rY.vIpCkB7HQO7PGkQELdQ4bS5t769woZyOXJFq3xRVC','2026-03-12 08:58:40','2026-03-12 08:58:40'),(9,13,'/uploads/signatures/signature-13-1773280901868.png','$2b$10$TwovSoTNK5ZY/XUklS4LP.r5FoixjIqql4/6rDRg60uZrvzWK2ryO','2026-03-12 09:01:41','2026-03-12 09:01:42');
+INSERT INTO `signature_configs` VALUES (3,7,'/uploads/signatures/signature-1772939157665-390763047.png','$2b$10$HYFdiUE4SANMCCn/dNeiVudnlqubXCvq6f.z8WqFLbPDYdvCjSzTa','2026-03-08 10:05:57','2026-03-08 10:05:57'),(4,1,'/uploads/signatures/signature-1-1772939237355.png','$2b$10$zjaLAYs.0Y/L3IEq4eWNLeouCL0VlgG2twFdt33z7aRt5YDnDfF4a','2026-03-08 10:07:17','2026-03-08 10:07:17'),(5,4,'/uploads/signatures/signature-4-1773017078967.png','$2b$10$IUpU9oNd.oZtXLBwpyYnyO90jP8hJiK8np.ioXr0Fx6PXX9M1Vd.i','2026-03-09 07:44:38','2026-03-09 07:44:39'),(6,10,'/uploads/signatures/signature-10-1773017530444.png','$2b$10$1Y8.MScz8ip6SgMjfBac5uIgujNqOnXLXGRjYgPIMw0frIChafeB.','2026-03-09 07:52:10','2026-03-09 07:52:10');
 /*!40000 ALTER TABLE `signature_configs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -402,7 +403,7 @@ CREATE TABLE `staff_addresses` (
   PRIMARY KEY (`id`),
   KEY `staff_profile_id` (`staff_profile_id`),
   CONSTRAINT `staff_addresses_ibfk_1` FOREIGN KEY (`staff_profile_id`) REFERENCES `staff_profiles` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -411,6 +412,7 @@ CREATE TABLE `staff_addresses` (
 
 LOCK TABLES `staff_addresses` WRITE;
 /*!40000 ALTER TABLE `staff_addresses` DISABLE KEYS */;
+INSERT INTO `staff_addresses` VALUES (7,5,'contact','','','','','0904542520'),(8,5,'hometown','','','','',NULL),(9,6,'contact','','','','','0904789498'),(10,6,'hometown','','','','',NULL),(11,7,'contact','','','','','0982454710'),(12,7,'hometown','','','','',NULL),(15,9,'contact','','','','','0909207380'),(16,9,'hometown','','','','',NULL),(19,11,'contact','','','','','0939902502'),(20,11,'hometown','','','','',NULL),(21,12,'contact','','','','','0814688629	'),(22,12,'hometown','','','','',NULL),(25,13,'contact','','','','','0983669655'),(26,13,'hometown','','','','',NULL),(29,10,'contact','','','','','0944087766'),(30,10,'hometown','','','','',NULL),(31,8,'contact','','','','','0914880571'),(32,8,'hometown','','','','',NULL),(33,14,'contact','','','','','0972462627'),(34,14,'hometown','','','','',NULL),(35,15,'contact','','','','','0947235791'),(36,15,'hometown','','','','',NULL),(37,16,'contact','','','','','0983639025'),(38,16,'hometown','','','','',NULL),(39,17,'contact','','','','','0973983428'),(40,17,'hometown','','','','',NULL),(49,20,'contact','','','','','0987589249'),(50,20,'hometown','','','','',NULL),(51,21,'contact','','','','','0987589249'),(52,21,'hometown','','','','',NULL);
 /*!40000 ALTER TABLE `staff_addresses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -488,7 +490,7 @@ CREATE TABLE `staff_organizations` (
   PRIMARY KEY (`id`),
   KEY `staff_profile_id` (`staff_profile_id`),
   CONSTRAINT `staff_organizations_ibfk_1` FOREIGN KEY (`staff_profile_id`) REFERENCES `staff_profiles` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -497,6 +499,7 @@ CREATE TABLE `staff_organizations` (
 
 LOCK TABLES `staff_organizations` WRITE;
 /*!40000 ALTER TABLE `staff_organizations` DISABLE KEYS */;
+INSERT INTO `staff_organizations` VALUES (4,5,0,NULL,0,NULL),(5,6,0,NULL,0,NULL),(6,7,0,NULL,0,NULL),(7,8,0,NULL,0,NULL),(8,9,0,NULL,0,NULL),(9,10,0,NULL,0,NULL),(10,11,0,NULL,0,NULL),(11,12,0,NULL,0,NULL),(12,13,0,NULL,0,NULL),(13,13,0,NULL,0,NULL),(14,10,0,NULL,0,NULL),(15,10,0,NULL,0,NULL),(16,8,0,NULL,0,NULL),(17,14,0,NULL,0,NULL),(18,15,0,NULL,0,NULL),(19,16,0,NULL,0,NULL),(20,17,0,NULL,0,NULL),(25,20,0,NULL,0,NULL),(26,21,0,NULL,0,NULL);
 /*!40000 ALTER TABLE `staff_organizations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -522,7 +525,7 @@ CREATE TABLE `staff_positions` (
   PRIMARY KEY (`id`),
   KEY `staff_profile_id` (`staff_profile_id`),
   CONSTRAINT `staff_positions_ibfk_1` FOREIGN KEY (`staff_profile_id`) REFERENCES `staff_profiles` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -531,6 +534,7 @@ CREATE TABLE `staff_positions` (
 
 LOCK TABLES `staff_positions` WRITE;
 /*!40000 ALTER TABLE `staff_positions` DISABLE KEYS */;
+INSERT INTO `staff_positions` VALUES (2,5,'Giáo viên','','','','','','','',''),(3,6,'Giáo viên','','','','','','','',''),(4,7,'Giáo viên','','','','','','','',''),(5,8,'Giáo viên','','','','','','','',''),(6,9,'Giáo viên','','','','','','','',''),(7,10,'Giáo viên','','','','','','','',''),(8,11,'Giáo viên','','','','','','','',''),(9,12,'Giáo viên','','','','','','','',''),(10,13,'Giáo viên','','','','','','','',''),(11,13,'Giáo viên','','','','','','','',''),(12,10,'Giáo viên','','','','','','','',''),(13,10,'Giáo viên','','','','','','','',''),(14,8,'Giáo viên','','','','','','','',''),(15,14,'Giáo viên','','','','','','','',''),(16,15,'Giáo viên','','','','','','','',''),(17,16,'Giáo viên','','','','','','','',''),(18,17,'Giáo viên','','','','','','','',''),(23,20,'Giáo viên','','','','','','','',''),(24,21,'Giáo viên','','','','','','','','');
 /*!40000 ALTER TABLE `staff_positions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -560,7 +564,7 @@ CREATE TABLE `staff_profiles` (
   UNIQUE KEY `user_id` (`user_id`),
   UNIQUE KEY `staff_code` (`staff_code`),
   CONSTRAINT `staff_profiles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -569,6 +573,7 @@ CREATE TABLE `staff_profiles` (
 
 LOCK TABLES `staff_profiles` WRITE;
 /*!40000 ALTER TABLE `staff_profiles` DISABLE KEYS */;
+INSERT INTO `staff_profiles` VALUES (5,18,'NV003','male','1984-08-12','084084001944',NULL,NULL,NULL,NULL,'working',NULL,'2026-03-12 13:29:25','2026-03-12 13:29:25'),(6,16,'NV001','male','1987-12-05','084087001648',NULL,NULL,NULL,NULL,'working',NULL,'2026-03-12 13:34:32','2026-03-12 13:34:32'),(7,17,'NV002','male','1991-12-12','084091001190',NULL,NULL,NULL,NULL,'working',NULL,'2026-03-12 13:38:14','2026-03-12 13:38:14'),(8,19,'NV004','female','1984-01-01','084181002023',NULL,NULL,NULL,NULL,'working',NULL,'2026-03-12 13:40:01','2026-03-12 13:56:43'),(9,20,'NV005','male','1976-12-09','084076001778',NULL,NULL,NULL,NULL,'working',NULL,'2026-03-12 13:43:24','2026-03-12 13:43:24'),(10,21,'NV006','female','1989-04-09','086189001273',NULL,NULL,NULL,NULL,'working','1989-04-09','2026-03-12 13:47:04','2026-03-12 13:56:32'),(11,22,'NV007','male','1980-02-25','084090000539',NULL,NULL,NULL,NULL,'working',NULL,'2026-03-12 13:49:47','2026-03-12 13:49:47'),(12,23,'NV008','female','1994-04-24','084194005255',NULL,NULL,NULL,NULL,'working',NULL,'2026-03-12 13:51:00','2026-03-12 13:51:00'),(13,24,'NV009','female','1982-04-10','084182002135',NULL,NULL,NULL,NULL,'working',NULL,'2026-03-12 13:52:09','2026-03-12 13:55:50'),(14,25,'NV010','male','1981-03-02','084081014493',NULL,NULL,NULL,NULL,'working',NULL,'2026-03-12 13:58:34','2026-03-12 13:58:34'),(15,26,'NV011','female','1978-09-15','084178002010',NULL,NULL,NULL,NULL,'working',NULL,'2026-03-12 14:00:49','2026-03-12 14:00:49'),(16,27,'NV012','female','1974-04-11','084174001431',NULL,NULL,NULL,NULL,'working',NULL,'2026-03-12 14:03:02','2026-03-12 14:03:02'),(17,28,'NV013','female','1994-01-01','084194001177',NULL,NULL,NULL,NULL,'working',NULL,'2026-03-12 14:07:43','2026-03-12 14:07:43'),(20,12,'NV020','female',NULL,'084304003503',NULL,NULL,NULL,NULL,'working',NULL,'2026-03-12 15:57:12','2026-03-12 15:57:12'),(21,30,'NV022','female','2004-02-26','084304003503',NULL,NULL,NULL,NULL,'working',NULL,'2026-03-12 16:02:51','2026-03-12 16:02:51');
 /*!40000 ALTER TABLE `staff_profiles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -658,7 +663,7 @@ CREATE TABLE `users` (
   `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -667,7 +672,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'tramkhoinguyen27122@gmail.com','$2b$10$.5aTrQnrpUgVLmPlOgyl0ORBUKiw82/kmG1MVX9BVtqFC0YcIB3Fi','2026-02-19 13:25:01','2026-03-08 13:30:54','Khôi Nguyên','teacher','active','2026-03-08 13:30:54','/uploads/avatars/avatar-1772692826191-990826819.jpg'),(3,'admin@thsp.edu.vn','$2b$10$DRvoUodQBxoIFOypWPSWxuuDxzAGp3hJpXLzYwpkGJwyPghGjtw46','2026-03-03 20:46:48','2026-03-06 14:18:04','Quản trị viên','admin','active','2026-03-06 14:18:04',NULL),(4,'trinhfokko@gmail.com','$2b$10$14smnhiT1lPXX4KSQqZ6wOSP3JjkUjkUUXGfGHCZ1pQJGY9cBsWl6','2026-03-04 08:32:11','2026-03-12 08:40:50','Huệ Trinh','admin','active','2026-03-12 08:40:50','/uploads/avatars/avatar-1773027741664-458164425.jpg'),(5,'nhi96942@gmail.com','$2b$10$M0yCbiHPUkUbjcKoA3S0S.orbq2YvCHQxVSIROR81jzuW3IcIVGFa','2026-03-04 08:34:26','2026-03-06 10:04:30','Yến Nhi','teacher','active',NULL,NULL),(6,'reisoh2771@gmail.com','$2b$10$0BKdNtkiLBLE0wlaCdTL/ueicMISernxEbuqQ0NbVEc5lYb8J/U86','2026-03-04 08:38:27','2026-03-05 15:17:57','Khôi Nguyên','teacher','active','2026-03-04 09:49:32',NULL),(7,'tramkhoinguyen.dev@gmail.com','$2b$10$cobvd8OLJn7kvxmc8nwOoub6AA2XA3FNPi4UyKxYL9XX1oT91YciK','2026-03-04 15:22:03','2026-03-08 14:33:03','Trầm Khôi Nguyên','admin','active','2026-03-08 14:33:03','/uploads/avatars/avatar-1772692875649-70945503.jpg'),(8,'minh@gmail.com','$2b$10$o0x6YjQ5TftuE5OqeOERtOEamdlS.LkQKiqEbgH4V6saws1iSne3u','2026-03-05 15:33:41','2026-03-08 14:05:34','Nguyễn Văn Minh','technician','active','2026-03-08 14:05:34',NULL),(9,'vodangkhoa@tvu.edu.vn','$2b$10$l2I8tBYtj1QCzGodaoQzkOMACweUwUfmoPc0YZ7Em31/cfF48/Kp2','2026-03-05 15:37:04','2026-03-05 15:37:04','Võ Đăng Khoa','manager','active',NULL,NULL),(10,'meomeo@gmail.com','$2b$10$PFjgDJckTVWQix4Ei9HrnuWB5HHxsEBVp4mtnTJ5XABOsGY.xQyXe','2026-03-09 07:48:16','2026-03-12 08:39:25','Meo Meo','teacher','active','2026-03-12 08:39:25','/uploads/avatars/avatar-1773027525927-779504110.jpg'),(11,'meokt@gmail.com','$2b$10$N/QE2AJOf4OEl.RLEtFvReZktwkyLd1S90nTlClkJdyDy0/PjmGEO','2026-03-09 10:33:11','2026-03-11 10:22:14','Mèo Kỹ thuật','technician','active','2026-03-11 10:22:14','/uploads/avatars/avatar-1773027335827-445151863.jpg'),(12,'meoql@gmail.com','$2b$10$LbsPr61CR.WDgGBPJJcIQ.cwLeqzuZn8mMY/qNejBHxHGScRGNy7S','2026-03-11 10:43:07','2026-03-12 09:03:33','Meo Quản Lý','manager','active','2026-03-12 09:03:33','/uploads/avatars/avatar-1773278083798-259581012.jpg'),(13,'dinhkhoiktv@gmail.com','$2b$10$MT8DEyHTnfcKzRai5pFxUOblbUx/71vIVioQ6FthOulE7n7e999qi','2026-03-12 08:49:43','2026-03-12 09:03:01','Lâm Đình Khôi','technician','active','2026-03-12 09:00:24','/uploads/avatars/avatar-1773280402243-219239787.jpg'),(14,'lamchigv@gmail.com','$2b$10$.a55W4x1d/CpKEXXS29tdevyAh.6aHUYJaOVcSfqBQz1rOBOuabj2','2026-03-12 08:55:33','2026-03-12 08:58:03','Lam Chi','teacher','active','2026-03-12 08:56:58','/uploads/avatars/avatar-1773280683125-662176310.jpg');
+INSERT INTO `users` VALUES (1,'tramkhoinguyen27122@gmail.com','$2b$10$.5aTrQnrpUgVLmPlOgyl0ORBUKiw82/kmG1MVX9BVtqFC0YcIB3Fi','2026-02-19 13:25:01','2026-03-08 13:30:54','Khôi Nguyên','teacher','active','2026-03-08 13:30:54','/uploads/avatars/avatar-1772692826191-990826819.jpg'),(3,'admin@thsp.edu.vn','$2b$10$DRvoUodQBxoIFOypWPSWxuuDxzAGp3hJpXLzYwpkGJwyPghGjtw46','2026-03-03 20:46:48','2026-03-12 08:33:43','Quản trị viên','admin','active','2026-03-12 08:33:43',NULL),(4,'trinhfokko@gmail.com','$2b$10$14smnhiT1lPXX4KSQqZ6wOSP3JjkUjkUUXGfGHCZ1pQJGY9cBsWl6','2026-03-04 08:32:11','2026-03-09 10:42:21','Huệ Trinh','admin','active','2026-03-09 10:39:40','/uploads/avatars/avatar-1773027741664-458164425.jpg'),(5,'nhi96942@gmail.com','$2b$10$M0yCbiHPUkUbjcKoA3S0S.orbq2YvCHQxVSIROR81jzuW3IcIVGFa','2026-03-04 08:34:26','2026-03-12 16:09:14','Yến Nhi','admin','active','2026-03-12 16:09:14',NULL),(6,'reisoh2771@gmail.com','$2b$10$0BKdNtkiLBLE0wlaCdTL/ueicMISernxEbuqQ0NbVEc5lYb8J/U86','2026-03-04 08:38:27','2026-03-05 15:17:57','Khôi Nguyên','teacher','active','2026-03-04 09:49:32',NULL),(7,'tramkhoinguyen.dev@gmail.com','$2b$10$cobvd8OLJn7kvxmc8nwOoub6AA2XA3FNPi4UyKxYL9XX1oT91YciK','2026-03-04 15:22:03','2026-03-08 14:33:03','Trầm Khôi Nguyên','admin','active','2026-03-08 14:33:03','/uploads/avatars/avatar-1772692875649-70945503.jpg'),(8,'minh@gmail.com','$2b$10$o0x6YjQ5TftuE5OqeOERtOEamdlS.LkQKiqEbgH4V6saws1iSne3u','2026-03-05 15:33:41','2026-03-10 15:55:02','Nguyễn Văn Minh','technician','active','2026-03-10 15:55:02',NULL),(9,'vodangkhoa@tvu.edu.vn','$2b$10$l2I8tBYtj1QCzGodaoQzkOMACweUwUfmoPc0YZ7Em31/cfF48/Kp2','2026-03-05 15:37:04','2026-03-05 15:37:04','Võ Đăng Khoa','manager','active',NULL,NULL),(10,'meomeo@gmail.com','$2b$10$PFjgDJckTVWQix4Ei9HrnuWB5HHxsEBVp4mtnTJ5XABOsGY.xQyXe','2026-03-09 07:48:16','2026-03-10 15:44:30','Meo Meo','teacher','active','2026-03-10 15:44:30','/uploads/avatars/avatar-1773027525927-779504110.jpg'),(11,'meokt@gmail.com','$2b$10$N/QE2AJOf4OEl.RLEtFvReZktwkyLd1S90nTlClkJdyDy0/PjmGEO','2026-03-09 10:33:11','2026-03-09 10:35:35','Mèo Kỹ thuật','technician','active','2026-03-09 10:33:36','/uploads/avatars/avatar-1773027335827-445151863.jpg'),(12,'tynhi2600@gmail.com','$2b$10$8b0o6aRG8WCEJG0bYmrZyupR9SkSa2nPzwJKbZrqA9yPaHtMJC2zy','2026-03-09 13:47:33','2026-03-12 16:00:15','Trần Yến Nhi','admin','active','2026-03-12 16:00:15',NULL),(13,'lethic@gmail.com','$2b$10$DN2CPIGWybaForaCoKMsJuiFD50a1sYH.iYCT.61ntk13NQlZgm8G','2026-03-10 15:16:53','2026-03-10 15:54:08','Lê Thị C','teacher','active','2026-03-10 15:54:08',NULL),(14,'tranvand@gmail.com','$2b$10$TvkZ2t2oDHoXcOUDZbFFOuAEC0oGxwYtbYs1XJ22k4RqGYdRwO8ZC','2026-03-10 15:17:29','2026-03-10 15:56:06','Trần Văn D','manager','active','2026-03-10 15:56:06',NULL),(15,'teststaff@thsp.edu.vn','$2b$10$ofxJOBg4JfiH2sxssVG.SOkGY.ZGhztu7elJjvhS/HGcKOdFpl9Im','2026-03-12 08:33:44','2026-03-12 08:33:44','Nguyen Van Test','teacher','active',NULL,NULL),(16,'bhkhanh@tvu.edu.vn','$2b$10$2B1zNvAdLCU3p/qw15VQoe54vTOpAck4NmtaGK5AYFa3iR5.o9HDe','2026-03-12 13:24:10','2026-03-12 13:24:10','Bùi Hữu Khánh','teacher','active',NULL,NULL),(17,'buitan@tvu.edu.vn','$2b$10$gGXeJZtHxy.FvocrNdrxg.1K7y6LNZshwucyL3R6Moz.yV/aZyk.u','2026-03-12 13:26:09','2026-03-12 13:26:09','Bùi Quốc Tần','teacher','active',NULL,NULL),(18,'btngan@tvu.edu.vn','$2b$10$lhty465NBre1bC/CSLWaX.6/qHxWKWYqA7d/m2R/SeBuwsbcK96CK','2026-03-12 13:29:25','2026-03-12 13:29:25','Bùi Thế Ngân','teacher','active',NULL,NULL),(19,'btcloan@tvu.edu.vn','$2b$10$objd4SZIFWUGXRgCMWzewOeq1obrV6BYWKxdWEk0AIZSUdUjbI9zu','2026-03-12 13:40:01','2026-03-12 13:40:01','Bùi Thị Cẩm Loan','teacher','active',NULL,NULL),(20,'buicat@tvu.edu.vn','$2b$10$K4giwqrRj9JhhMNCX/koUO/EX48PDZxDKJhaG4GUOgMouXycn66um','2026-03-12 13:43:24','2026-03-12 13:43:24','Bùi Văn Cất','teacher','active',NULL,NULL),(21,'ctbtram@tvu.edu.vn','$2b$10$hNG3EN4iVOGGNgdm7K/ZWOhDlspF.Iz8XaQ9t5eial1WQAzItsp4i','2026-03-12 13:47:04','2026-03-12 13:47:04','Châu Thị Bích Trâm	','teacher','active',NULL,NULL),(22,'Cvngoan@tvu.edu.vn','$2b$10$hxvGzCA2BNH9LG7RxOwjB.VXh9R17lEYlVvyEMYyP59fGG3WgMVK.','2026-03-12 13:49:47','2026-03-12 13:49:47','Châu Văn Ngoan','teacher','active',NULL,NULL),(23,'cttrang@tvu.edu.vn','$2b$10$Qt3lpu7zbbX2qyAHQzQ.lOV35y7fpTrjGDbwMb46G8Y.1oE/WFk0a','2026-03-12 13:51:00','2026-03-12 13:51:00','Chung Thùy Trang','teacher','active',NULL,NULL),(24,'dhnlan@tvu.edu.vn','$2b$10$3.XnNILK0UpFq5i0rrJjEuIE0Ju3JT5H.Eww0ZgDxoi.XvX9vcZhu','2026-03-12 13:52:09','2026-03-12 13:52:09','Dương Hiền Ngọc Lan','teacher','active',NULL,NULL),(25,'dhvu@tvu.edu.vn','$2b$10$s0w4JkjIEm9DCXi3ccY8n.WyPzcnVM0b0ws09UWI2aStE2N6vLhmK','2026-03-12 13:58:34','2026-03-12 13:58:34','Dương Hồ Vũ','teacher','active',NULL,NULL),(26,'dnpthao@tvu.edu.vn','$2b$10$VEf4nxxWwt0K.MkuoSZTSOTcCvIu7omrD3E5N8yriZGGDhUWPJHB2','2026-03-12 14:00:49','2026-03-12 14:00:49','Dương Ngọc Phương Thảo','teacher','active',NULL,NULL),(27,'dtgioi@tvu.edu.vn','$2b$10$ck7ksbY9pFFpJcJusRFGd.2u7WR0m.1M75QbbHcZAIr.Po39Ih0Gm','2026-03-12 14:03:02','2026-03-12 14:03:02','Dương Thị Giới','teacher','active',NULL,NULL),(28,'httruc@tvu.edu.vn','$2b$10$hzh3iJU/i5wJOjnKlRzseOym0B1t326CWkRfWP6h5c.V8Cc9XfcLy','2026-03-12 14:07:43','2026-03-12 14:07:43','Hồ Thanh Trúc','teacher','active',NULL,NULL),(29,'CKSODK@gmail.com','$2b$10$ptFTgTl2WQeP2S2vRFjKy.jGvaSfhjzDAeQnzNzU3vIvHk3gJzhy.','2026-03-12 14:20:50','2026-03-12 14:21:00','yn','manager','active','2026-03-12 14:21:00',NULL),(30,'110122133@st.tvu.edu.vn','$2b$10$0CbFt/vumWwnoqALKtJzfu9hzKxXZIzLB0fX7x/xikvtNFn5QPr/.','2026-03-12 16:01:46','2026-03-12 16:04:57','Trần Yến Nhi','teacher','active','2026-03-12 16:04:57',NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -731,7 +736,7 @@ CREATE TABLE `work_orders` (
   CONSTRAINT `work_orders_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`),
   CONSTRAINT `work_orders_ibfk_2` FOREIGN KEY (`approved_by`) REFERENCES `users` (`id`),
   CONSTRAINT `work_orders_ibfk_3` FOREIGN KEY (`assigned_to`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -740,6 +745,7 @@ CREATE TABLE `work_orders` (
 
 LOCK TABLES `work_orders` WRITE;
 /*!40000 ALTER TABLE `work_orders` DISABLE KEYS */;
+INSERT INTO `work_orders` VALUES (20,'WO-20260312-0001','Tham gia Hội thi Viết chữ đẹp cấp tỉnh dành cho học sinh tiểu học Năm học 2025-2026','Tham gia Hội thi Viết chữ đẹp cấp tỉnh dành cho học sinh tiểu học Năm học 2025-2026','Hội trường Sở GDĐT Vĩnh Long.','2026-03-13 07:00:00','2026-03-18 07:00:00','',5,NULL,12,'pending','2026-03-12 15:57:50','2026-03-12 15:57:50'),(21,'WO-20260312-0002','Hội giảng cấp tỉnh','Hội giảng cấp tỉnh','Trường THCS Tiểu Cần','2026-03-14 07:00:00','2026-03-17 07:00:00','',5,NULL,12,'pending','2026-03-12 15:59:46','2026-03-12 15:59:46'),(22,'WO-20260312-0003','bb','bb','nn','2026-03-18 07:00:00','2026-03-24 07:00:00','',5,NULL,30,'pending','2026-03-12 16:03:23','2026-03-12 16:03:23'),(23,'WO-20260312-0004','bb','bb','bb','2026-03-13 07:00:00','2026-03-16 07:00:00','',5,NULL,26,'pending','2026-03-12 16:04:32','2026-03-12 16:04:32'),(24,'WO-20260312-0005','mm','mm','mm','2026-03-13 07:00:00','2026-03-17 07:00:00','',5,NULL,30,'pending','2026-03-12 16:12:54','2026-03-12 16:12:54');
 /*!40000 ALTER TABLE `work_orders` ENABLE KEYS */;
 UNLOCK TABLES;
 SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
@@ -753,4 +759,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-03-12  9:09:50
+-- Dump completed on 2026-03-12 16:27:17

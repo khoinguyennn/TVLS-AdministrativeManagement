@@ -11,6 +11,7 @@ export interface WorkOrder {
   approvedBy?: number; // ID người phê duyệt
   assignedTo?: number; // ID nhân viên được giao
   status: "pending" | "approved" | "in_progress" | "completed" | "rejected" | "cancelled";
+  rejectionReason?: string; // Lý do từ chối
   createdAt: string;
   updatedAt: string;
 

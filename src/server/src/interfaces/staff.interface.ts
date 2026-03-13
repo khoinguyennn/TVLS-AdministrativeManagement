@@ -9,38 +9,10 @@ export interface StaffProfile {
   cccdIssuePlace?: string;
   ethnicity?: string;
   religion?: string;
-  staffStatus?: 'working' | 'resigned' | 'transferred' | 'maternity_leave' | 'unpaid_leave';
-  recruitmentDate?: string;
+
+  staffStatus?: 'working' | 'probation' | 'maternity_leave' | 'retired' | 'resigned';  recruitmentDate?: string;
   createdAt?: Date;
   updatedAt?: Date;
-}
-
-export interface StaffAddress {
-  id?: number;
-  staffProfileId: number;
-  addressType: 'contact' | 'hometown';
-  province?: string;
-  ward?: string;
-  hamlet?: string;
-  detailAddress?: string;
-  phone?: string;
-}
-
-export interface StaffBankAccount {
-  id?: number;
-  staffProfileId: number;
-  bankName?: string;
-  branch?: string;
-  accountNumber?: string;
-}
-
-export interface StaffOrganization {
-  id?: number;
-  staffProfileId: number;
-  isUnionMember?: boolean;
-  unionJoinDate?: string;
-  isPartyMember?: boolean;
-  partyJoinDate?: string;
 }
 
 export interface StaffPosition {
@@ -69,7 +41,44 @@ export interface StaffQualification {
   foreignLanguageLevel?: string;
 }
 
-export interface StaffSalary {
+
+export interface StaffAddress {
+  id?: number;
+  staffProfileId: number;
+  addressType: 'contact' | 'hometown';
+  province?: string;
+  ward?: string;
+  hamlet?: string;
+  detailAddress?: string;
+  phone?: string;
+}
+
+export interface StaffBankAccount {
+  id?: number;
+  staffProfileId: number;
+  bankName?: string;
+  branch?: string;
+  accountNumber?: string;
+}
+
+export interface StaffEvaluation {
+  id?: number;
+  staffProfileId: number;
+  civilServantRating?: string;
+  excellentTeacher?: boolean;
+  evaluationYear?: number;
+  note?: string;
+}
+
+export interface StaffOrganization {
+  id?: number;
+  staffProfileId: number;
+  isUnionMember?: boolean;
+  unionJoinDate?: string;
+  isPartyMember?: boolean;
+  partyJoinDate?: string;
+}
+export interface StaffSalary {
   id?: number;
   staffProfileId: number;
   salaryCoefficient?: number;
@@ -81,13 +90,4 @@ export interface StaffSalary {
   incentiveAllowancePercent?: number;
   positionAllowancePercent?: number;
   salaryNote?: string;
-}
-
-export interface StaffEvaluation {
-  id?: number;
-  staffProfileId: number;
-  civilServantRating?: string;
-  excellentTeacher?: boolean;
-  evaluationYear?: number;
-  note?: string;
 }

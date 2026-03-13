@@ -18,9 +18,18 @@ export default function (sequelize: Sequelize): typeof StaffAddressModel {
   StaffAddressModel.init(
     {
       id: { autoIncrement: true, primaryKey: true, type: DataTypes.INTEGER },
-      staffProfileId: { allowNull: false, type: DataTypes.INTEGER, field: 'staff_profile_id', references: { model: 'staff_profiles', key: 'id' } },
-      addressType: { allowNull: false, type: DataTypes.ENUM('contact', 'hometown'), field: 'address_type' },
-      province: { allowNull: true, type: DataTypes.STRING(100) },
+
+      staffProfileId: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        field: 'staff_profile_id',
+        references: { model: 'staff_profiles', key: 'id' },
+      },
+      addressType: {
+        allowNull: false,
+        type: DataTypes.ENUM('contact', 'hometown'),
+        field: 'address_type',
+      },      province: { allowNull: true, type: DataTypes.STRING(100) },
       ward: { allowNull: true, type: DataTypes.STRING(100) },
       hamlet: { allowNull: true, type: DataTypes.STRING(100) },
       detailAddress: { allowNull: true, type: DataTypes.STRING(255), field: 'detail_address' },

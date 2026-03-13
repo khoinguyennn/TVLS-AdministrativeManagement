@@ -715,6 +715,86 @@
         "equipment": "Equipment Management"
       }
     }
+  },
+  "Staff": {
+    "title": "Staff Profiles",
+    "description": "Manage detailed staff information",
+    "addStaff": "Add Staff",
+    "searchPlaceholder": "Search by name, code, email, or phone..."
+  },
+  "WorkOrders": {
+    "title": "Work Orders",
+    "description": "Create, approve, and track assigned tasks",
+    "createWorkOrder": "Create Work Order",
+    "searchPlaceholder": "Search by work order code, location, content...",
+    "filterStatus": "Filter by status",
+    "allStatuses": "All statuses",
+    "pending": "Pending",
+    "approved": "Approved",
+    "inProgress": "In Progress",
+    "completed": "Completed",
+    "rejected": "Rejected"
+  },
+  "ExcelImportExport": {
+    "importExport": "Import/Export Excel"
+  },
+  "DashboardHome": {
+    "goodMorning": "Good morning",
+    "goodAfternoon": "Good afternoon",
+    "goodEvening": "Good evening",
+    "todayIs": "Today is {date} - Have a productive day!",
+    "deviceReports": "Device Reports",
+    "leaveRequests": "Leave Requests",
+    "pendingReception": "Pending Receipt",
+    "repairing": "In Repair",
+    "completed": "Completed",
+    "pendingApproval": "Pending Approval",
+    "approved": "Approved",
+    "quickActions": "Quick Actions",
+    "manageUsers": "User Management",
+    "staffProfiles": "Staff Profiles",
+    "workOrders": "Work Orders",
+    "manageBuildings": "Building Management",
+    "manageDevices": "Device Management",
+    "leaveManagement": "Leave Management",
+    "digitalSignatures": "Digital Signatures"
+  },
+  "MyProfile": {
+    "exportProfile": "Export Profile",
+    "saveChanges": "Save Changes",
+    "personalInfo": "Personal Info",
+    "organization": "Organization",
+    "workInfo": "Work Info",
+    "salaryAllowance": "Salary Allowance",
+    "qualifications": "Qualifications",
+    "evaluation": "Evaluation",
+    "bankInfo": "Bank Info",
+    "basicInfo": "BASIC INFORMATION",
+    "characteristicsAndStatus": "CHARACTERISTICS & STATUS",
+    "contactAndAddress": "CONTACT & ADDRESS",
+    "identifier": "Identifier",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+    "birthDate": "Date of Birth",
+    "idCardNumber": "ID Card Number",
+    "issueDate": "Issue Date",
+    "issuePlace": "Issue Place",
+    "ethnicity": "Ethnicity",
+    "religion": "Religion",
+    "status": "Status",
+    "working": "Working",
+    "onLeave": "On Leave",
+    "resigned": "Resigned",
+    "hireDate": "Hire Date",
+    "hometown": "Hometown",
+    "provinceCity": "Province / City",
+    "district": "District",
+    "ward": "Ward / Commune",
+    "streetAddress": "House Number, Street",
+    "phoneNumber": "Phone Number",
+    "permanentAddress": "Permanent Address",
+    "verifyIdCardAlert": "Please verify identification information carefully before saving. Important changes may require administrator approval."
   }
-
 }

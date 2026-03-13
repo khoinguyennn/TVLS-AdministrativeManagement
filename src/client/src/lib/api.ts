@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } fro
 
 import { env } from "@/env";
 import { authStorage } from "@/lib/auth-storage";
+import { DEFAULT_LOCALE, LOCALE_TAGS, type LocaleCode } from "@/constants/i18n.constants";
 
 export const api = axios.create({
   baseURL: env.NEXT_PUBLIC_API_URL,
@@ -17,6 +18,19 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = authStorage.getAccessToken();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+  }
+  // Attach current client locale as Accept-Language so backend can return localized content
+  try {
+    if (typeof window !== "undefined") {
+      const docLang = document.documentElement.lang;
+      const short = docLang ? docLang.split("-")[0] : DEFAULT_LOCALE;
+      const tag = LOCALE_TAGS[short as LocaleCode] ?? LOCALE_TAGS[DEFAULT_LOCALE];
+      config.headers["Accept-Language"] = tag;
+    } else {
+      config.headers["Accept-Language"] = LOCALE_TAGS[DEFAULT_LOCALE];
+    }
+  } catch {
+    config.headers["Accept-Language"] = LOCALE_TAGS[DEFAULT_LOCALE];
   }
   return config;
 });

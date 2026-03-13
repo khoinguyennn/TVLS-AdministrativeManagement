@@ -125,7 +125,7 @@ export function WorkOrderForm({
                   </FormControl>
                   <SelectContent>
                     {personnel.map((person) => (
-                      <SelectItem key={person.id} value={person.id.toString()}>
+                    <SelectItem key={person.id} value={(person.userId ?? person.id).toString()}>
                         {person.fullName} ({person.code})
                       </SelectItem>
                     ))}

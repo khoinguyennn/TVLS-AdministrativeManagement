@@ -33,20 +33,21 @@ interface DashboardStats {
 
 // ── Quick action definitions per role ──
 const allQuickActions = [
-  { href: "/dashboard/users", label: "Quản lý người dùng", icon: Users, color: "text-primary", roles: ["admin"] },
-  { href: "/dashboard/staff", label: "Hồ sơ nhân sự", icon: FileText, color: "text-violet-500", roles: ["admin", "manager"] },
-  { href: "/dashboard/work-orders", label: "Quản lý công lệnh", icon: ClipboardList, color: "text-blue-500", roles: ["admin", "manager", "teacher", "technician"] },
-  { href: "/dashboard/buildings", label: "Quản lý tòa nhà", icon: Building2, color: "text-orange-500", roles: ["admin", "manager"] },
-  { href: "/dashboard/devices", label: "Quản lý thiết bị", icon: Monitor, color: "text-cyan-500", roles: ["admin", "manager"] },
-  { href: "/dashboard/device-reports", label: "Phiếu báo hỏng", icon: AlertTriangle, color: "text-amber-500", roles: ["admin", "manager", "teacher", "technician"] },
-  { href: "/dashboard/leave-requests", label: "Quản lý nghỉ phép", icon: CalendarOff, color: "text-rose-500", roles: ["admin", "manager", "teacher", "technician"] },
-  { href: "/dashboard/digital-signatures", label: "Chữ ký số", icon: Fingerprint, color: "text-emerald-500", roles: ["admin", "manager", "teacher", "technician"] },
-  { href: "/dashboard/settings", label: "Cài đặt", icon: Settings, color: "text-slate-500", roles: ["admin", "manager", "teacher", "technician"] },
+  { href: "/dashboard/users", labelKey: "manageUsers", icon: Users, color: "text-primary", roles: ["admin"] },
+  { href: "/dashboard/staff", labelKey: "staffProfiles", icon: FileText, color: "text-violet-500", roles: ["admin", "manager"] },
+  { href: "/dashboard/work-orders", labelKey: "workOrders", icon: ClipboardList, color: "text-blue-500", roles: ["admin", "manager", "teacher", "technician"] },
+  { href: "/dashboard/buildings", labelKey: "manageBuildings", icon: Building2, color: "text-orange-500", roles: ["admin", "manager"] },
+  { href: "/dashboard/devices", labelKey: "manageDevices", icon: Monitor, color: "text-cyan-500", roles: ["admin", "manager"] },
+  { href: "/dashboard/device-reports", labelKey: "deviceReports", icon: AlertTriangle, color: "text-amber-500", roles: ["admin", "manager", "teacher", "technician"] },
+  { href: "/dashboard/leave-requests", labelKey: "leaveManagement", icon: CalendarOff, color: "text-rose-500", roles: ["admin", "manager", "teacher", "technician"] },
+  { href: "/dashboard/digital-signatures", labelKey: "digitalSignatures", icon: Fingerprint, color: "text-emerald-500", roles: ["admin", "manager", "teacher", "technician"] },
+  { href: "/dashboard/settings", labelKey: "settings", icon: Settings, color: "text-slate-500", roles: ["admin", "manager", "teacher", "technician"] },
 ];
 
 export default function DashboardPage() {
+  const tHome = useTranslations("DashboardHome");
   const { user } = useAuth();
-  const t = useTranslations("Sidebar");
+  const tSidebar = useTranslations("Sidebar");
   const userRole = user?.role || "";
 
   const [stats, setStats] = useState<DashboardStats>({
@@ -73,7 +74,12 @@ export default function DashboardPage() {
     fetchStats();
   }, [fetchStats]);
 
-  const quickActions = allQuickActions.filter((a) => a.roles.includes(userRole));
+  const quickActions = allQuickActions
+    .filter((a) => a.roles.includes(userRole))
+    .map((action) => ({
+      ...action,
+      label: action.labelKey === "settings" ? tSidebar("settings") : tHome(action.labelKey),
+    }));
 
   // ── Role label ──
   const roleLabels: Record<string, string> = {
@@ -88,28 +94,28 @@ export default function DashboardPage() {
     ...(["admin", "manager", "technician"].includes(userRole)
       ? [
           {
-            title: "Phiếu báo hỏng",
+            title: tHome("deviceReports"),
             value: stats.deviceReports.total,
             icon: AlertTriangle,
             color: "text-amber-500",
             bgColor: "bg-amber-500/10",
           },
           {
-            title: "Chờ tiếp nhận",
+            title: tHome("pendingReception"),
             value: stats.deviceReports.pending,
             icon: Clock,
             color: "text-orange-500",
             bgColor: "bg-orange-500/10",
           },
           {
-            title: "Đang sửa chữa",
+            title: tHome("repairing"),
             value: stats.deviceReports.repairing,
             icon: Wrench,
             color: "text-blue-500",
             bgColor: "bg-blue-500/10",
           },
           {
-            title: "Đã hoàn thành",
+            title: tHome("completed"),
             value: stats.deviceReports.completed,
             icon: CheckCircle,
             color: "text-emerald-500",
@@ -120,21 +126,21 @@ export default function DashboardPage() {
     ...(["admin", "manager", "teacher"].includes(userRole)
       ? [
           {
-            title: "Đơn nghỉ phép",
+            title: tHome("leaveRequests"),
             value: stats.leaveRequests.total,
             icon: CalendarOff,
             color: "text-rose-500",
             bgColor: "bg-rose-500/10",
           },
           {
-            title: "Chờ duyệt",
+            title: tHome("pendingApproval"),
             value: stats.leaveRequests.pending,
             icon: Clock,
             color: "text-amber-500",
             bgColor: "bg-amber-500/10",
           },
           {
-            title: "Đã duyệt",
+            title: tHome("approved"),
             value: stats.leaveRequests.approved,
             icon: CheckCircle,
             color: "text-green-500",
@@ -151,10 +157,10 @@ export default function DashboardPage() {
         <h2 className="mb-1 text-2xl font-bold tracking-tight sm:text-3xl">
           {(() => {
             const hour = new Date().getHours();
-            if (hour < 12) return "Chào buổi sáng";
-            if (hour < 18) return "Chào buổi chiều";
-            return "Chào buổi tối";
-          })()}, {user?.fullName || "Người dùng"}! 👋
+            if (hour < 12) return tHome("goodMorning");
+            if (hour < 18) return tHome("goodAfternoon");
+            return tHome("goodEvening");
+          })()}, {user?.fullName || "User"}! 👋
         </h2>
         <p className="text-sm text-muted-foreground sm:text-base">
           {(() => {
@@ -162,9 +168,8 @@ export default function DashboardPage() {
             const days = ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"];
             const dayName = days[now.getDay()];
             const dateStr = now.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" });
-            return `Hôm nay là ${dayName}, ${dateStr}`;
-          })()}{" "}
-          - Chúc thầy/cô một ngày làm việc hiệu quả!
+            return tHome("todayIs", { date: `${dayName}, ${dateStr}` });
+          })()}
         </p>
       </div>
 
@@ -192,7 +197,7 @@ export default function DashboardPage() {
       {/* Quick Actions */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg font-semibold">Thao tác nhanh</CardTitle>
+          <CardTitle className="text-lg font-semibold">{tHome("quickActions")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">

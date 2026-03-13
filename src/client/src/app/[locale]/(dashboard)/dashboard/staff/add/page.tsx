@@ -19,13 +19,14 @@ export default function AddStaffPage() {
   async function handleSubmit(data: CreatePersonnelPayload) {
     setIsLoading(true);
     try {
-      // await personnelService.create(data);
-      // For now, just simulate the submission
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await personnelService.create(data);
       toast.success("Thêm nhân sự thành công");
-      router.push("/dashboard/staff");
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Có lỗi xảy ra";
+      router.refresh();
+      router.push("/vi/dashboard/staff");
+    } catch (error: unknown) {
+      const axiosErr = error as { response?: { data?: { message?: string } }; message?: string };
+      const message = axiosErr?.response?.data?.message
+        ?? (error instanceof Error ? error.message : "Có lỗi xảy ra");
       toast.error(message);
       throw error;
     } finally {

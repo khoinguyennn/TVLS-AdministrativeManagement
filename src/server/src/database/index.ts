@@ -15,15 +15,16 @@ import BuildingModel from '@models/building.model';
 import RoomModel from '@models/room.model';
 // import EquipmentModel from '@models/equipment.model'; // Not used - using devices instead
 import DeviceModel from '@models/device.model';
-
+import WorkOrderModel from '@models/work-orders.model';
+import WorkOrderAttachmentModel from '@models/work-order-attachments.model';
 import StaffProfileModel from '@models/staff-profile.model';
+import StaffPositionModel from '@models/staff-position.model';
+import StaffQualificationModel from '@models/staff-qualification.model';
 import StaffAddressModel from '@models/staff-address.model';
-import StaffOrganizationModel from '@models/staff-organizations.model';
 import StaffBankAccountModel from '@models/staff-bank-account.model';
-import StaffPositionModel from '@models/staff-positions.model';
-import StaffQualificationModel from '@models/staff-qualifications.model';
-import StaffSalaryModel from '@models/staff-salaries.model';
-import StaffEvaluationModel from '@models/staff-evaluations.model';
+import StaffEvaluationModel from '@models/staff-evaluation.model';
+import StaffOrganizationModel from '@models/staff-organization.model';
+import StaffSalaryModel from '@models/staff-salary.model';
 
 import { logger } from '@utils/logger';
 
@@ -68,14 +69,18 @@ const LeaveBalances = LeaveBalanceModel(sequelize);
 const DigitalSignatures = DigitalSignatureModel(sequelize);
 const SignatureConfigs = SignatureConfigModel(sequelize);
 
+
+const WorkOrders = WorkOrderModel(sequelize);
+const WorkOrderAttachments = WorkOrderAttachmentModel(sequelize);
+
 const StaffProfiles = StaffProfileModel(sequelize);
-const StaffAddresses = StaffAddressModel(sequelize);
-const StaffOrganizations = StaffOrganizationModel(sequelize);
-const StaffBankAccounts = StaffBankAccountModel(sequelize);
 const StaffPositions = StaffPositionModel(sequelize);
 const StaffQualifications = StaffQualificationModel(sequelize);
-const StaffSalaries = StaffSalaryModel(sequelize);
+const StaffAddresses = StaffAddressModel(sequelize);
+const StaffBankAccounts = StaffBankAccountModel(sequelize);
 const StaffEvaluations = StaffEvaluationModel(sequelize);
+const StaffOrganizations = StaffOrganizationModel(sequelize);
+const StaffSalaries = StaffSalaryModel(sequelize);
 
 // ================= Associations =================
 
@@ -126,37 +131,47 @@ DigitalSignatures.belongsTo(Users, { foreignKey: 'signedBy', as: 'signer' });
 Users.hasOne(SignatureConfigs, { foreignKey: 'userId', as: 'signatureConfig' });
 SignatureConfigs.belongsTo(Users, { foreignKey: 'userId', as: 'user' });
 
-// Staff Profile
-Users.hasOne(StaffProfiles, { foreignKey: 'userId', as: 'staffProfile' });
+
+// Work Orders
+Users.hasMany(WorkOrders, { foreignKey: 'createdBy', as: 'createdWorkOrders' });
+WorkOrders.belongsTo(Users, { foreignKey: 'createdBy', as: 'creator' });
+
+Users.hasMany(WorkOrders, { foreignKey: 'approvedBy', as: 'approvedWorkOrders' });
+WorkOrders.belongsTo(Users, { foreignKey: 'approvedBy', as: 'approver' });
+
+Users.hasMany(WorkOrders, { foreignKey: 'assignedTo', as: 'assignedWorkOrders' });
+WorkOrders.belongsTo(Users, { foreignKey: 'assignedTo', as: 'assignee' });
+
+WorkOrders.hasMany(WorkOrderAttachments, { foreignKey: 'workOrderId', as: 'attachments', onDelete: 'CASCADE' });
+WorkOrderAttachments.belongsTo(WorkOrders, { foreignKey: 'workOrderId', as: 'workOrder' });
+
+Users.hasMany(WorkOrderAttachments, { foreignKey: 'uploadedBy', as: 'uploadedAttachments' });
+WorkOrderAttachments.belongsTo(Users, { foreignKey: 'uploadedBy', as: 'uploader' });
+
+// Staff Profiles
+Users.hasOne(StaffProfiles, { foreignKey: 'userId', as: 'staffProfile', onDelete: 'CASCADE' });
 StaffProfiles.belongsTo(Users, { foreignKey: 'userId', as: 'user' });
 
-// Staff Profile - Addresses
+StaffProfiles.hasOne(StaffPositions, { foreignKey: 'staffProfileId', as: 'position', onDelete: 'CASCADE' });
+StaffPositions.belongsTo(StaffProfiles, { foreignKey: 'staffProfileId', as: 'staffProfile' });
+
+StaffProfiles.hasOne(StaffQualifications, { foreignKey: 'staffProfileId', as: 'qualification', onDelete: 'CASCADE' });
+StaffQualifications.belongsTo(StaffProfiles, { foreignKey: 'staffProfileId', as: 'staffProfile' });
+
 StaffProfiles.hasMany(StaffAddresses, { foreignKey: 'staffProfileId', as: 'addresses', onDelete: 'CASCADE' });
 StaffAddresses.belongsTo(StaffProfiles, { foreignKey: 'staffProfileId', as: 'staffProfile' });
 
-// Staff Profile - Organizations
-StaffProfiles.hasOne(StaffOrganizations, { foreignKey: 'staffProfileId', as: 'organizations', onDelete: 'CASCADE' });
-StaffOrganizations.belongsTo(StaffProfiles, { foreignKey: 'staffProfileId', as: 'staffProfile' });
-
-// Staff Profile - Bank Accounts
-StaffProfiles.hasMany(StaffBankAccounts, { foreignKey: 'staffProfileId', as: 'bankAccounts', onDelete: 'CASCADE' });
+StaffProfiles.hasOne(StaffBankAccounts, { foreignKey: 'staffProfileId', as: 'bankAccount', onDelete: 'CASCADE' });
 StaffBankAccounts.belongsTo(StaffProfiles, { foreignKey: 'staffProfileId', as: 'staffProfile' });
 
-// Staff Profile - Positions
-StaffProfiles.hasMany(StaffPositions, { foreignKey: 'staffProfileId', as: 'positions', onDelete: 'CASCADE' });
-StaffPositions.belongsTo(StaffProfiles, { foreignKey: 'staffProfileId', as: 'staffProfile' });
-
-// Staff Profile - Qualifications
-StaffProfiles.hasMany(StaffQualifications, { foreignKey: 'staffProfileId', as: 'qualifications', onDelete: 'CASCADE' });
-StaffQualifications.belongsTo(StaffProfiles, { foreignKey: 'staffProfileId', as: 'staffProfile' });
-
-// Staff Profile - Salaries
-StaffProfiles.hasMany(StaffSalaries, { foreignKey: 'staffProfileId', as: 'salaries', onDelete: 'CASCADE' });
-StaffSalaries.belongsTo(StaffProfiles, { foreignKey: 'staffProfileId', as: 'staffProfile' });
-
-// Staff Profile - Evaluations
-StaffProfiles.hasMany(StaffEvaluations, { foreignKey: 'staffProfileId', as: 'evaluations', onDelete: 'CASCADE' });
+StaffProfiles.hasOne(StaffEvaluations, { foreignKey: 'staffProfileId', as: 'evaluation', onDelete: 'CASCADE' });
 StaffEvaluations.belongsTo(StaffProfiles, { foreignKey: 'staffProfileId', as: 'staffProfile' });
+
+StaffProfiles.hasOne(StaffOrganizations, { foreignKey: 'staffProfileId', as: 'organization', onDelete: 'CASCADE' });
+StaffOrganizations.belongsTo(StaffProfiles, { foreignKey: 'staffProfileId', as: 'staffProfile' });
+
+StaffProfiles.hasOne(StaffSalaries, { foreignKey: 'staffProfileId', as: 'salary', onDelete: 'CASCADE' });
+StaffSalaries.belongsTo(StaffProfiles, { foreignKey: 'staffProfileId', as: 'staffProfile' });
 
 export const DB = {
   Users,
@@ -171,14 +186,17 @@ export const DB = {
   LeaveBalances,
   DigitalSignatures,
   SignatureConfigs,
+
+  WorkOrders,
+  WorkOrderAttachments,
   StaffProfiles,
-  StaffAddresses,
-  StaffOrganizations,
-  StaffBankAccounts,
   StaffPositions,
   StaffQualifications,
-  StaffSalaries,
+  StaffAddresses,
+  StaffBankAccounts,
   StaffEvaluations,
+  StaffOrganizations,
+  StaffSalaries,
   sequelize,
   Sequelize,
 };
