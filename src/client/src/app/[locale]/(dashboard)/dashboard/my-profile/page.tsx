@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import { IdCard, Info, Phone, MapPin, Home } from "lucide-react";
+import { IdCard, Info, Loader2, Phone, MapPin, Home } from "lucide-react";
 import { ProfileSkeleton } from "@/components/skeletons";
 
 import gradientLight from "@/assets/images/gradient1.jpg";
@@ -15,49 +15,246 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "react-toastify";
+import {
+  staffProfileService,
+  type StaffProfileData,
+} from "@/services/staff-profile.service";
+import { env } from "@/env";
+
+// ── Default empty profile state ──
+const EMPTY_PROFILE = {
+  code: "",
+  gender: "",
+  dateOfBirth: "",
+  cccdNumber: "",
+  cccdIssueDate: "",
+  cccdIssuePlace: "",
+  ethnicity: "",
+  religion: "",
+  staffStatus: "working",
+  recruitmentDate: "",
+  phone: "",
+  contactProvince: "",
+  contactWard: "",
+  contactHamlet: "",
+  contactDetail: "",
+  hometownProvince: "",
+  hometownWard: "",
+  hometownHamlet: "",
+  hometownDetail: "",
+  isUnionMember: false,
+  unionJoinDate: "",
+  isPartyMember: false,
+  partyJoinDate: "",
+  bankAccounts: [{ bankName: "", branch: "", accountNumber: "" }],
+  positions: [{ jobPosition: "", positionGroup: "", recruitmentAgency: "", professionWhenRecruited: "", rankLevel: "", educationLevel: "", rankCode: "", subjectGroup: "", contractType: "" }],
+  qualifications: [{ generalEducationLevel: "", professionalLevel: "", major: "", trainingPlace: "", graduationYear: "" as number | string, itLevel: "", foreignLanguageLevel: "" }],
+  salaries: [{ salaryCoefficient: "" as number | string, salaryLevel: "" as number | string, baseSalary: "" as number | string, salaryStartDate: "", unionAllowancePercent: "" as number | string, seniorityAllowancePercent: "" as number | string, incentiveAllowancePercent: "" as number | string, positionAllowancePercent: "" as number | string, salaryNote: "" }],
+  evaluations: [{ civilServantRating: "", excellentTeacher: false, evaluationYear: "" as number | string, note: "" }]
+};
+
+function mapApiToState(data: StaffProfileData) {
+  return {
+    code: data.staffCode || "",
+    gender: data.gender === "male" ? "Nam" : data.gender === "female" ? "Nữ" : data.gender === "other" ? "Khác" : "",
+    dateOfBirth: data.dateOfBirth || "",
+    cccdNumber: data.cccdNumber || "",
+    cccdIssueDate: data.cccdIssueDate || "",
+    cccdIssuePlace: data.cccdIssuePlace || "",
+    ethnicity: data.ethnicity || "",
+    religion: data.religion || "",
+    staffStatus: data.staffStatus || "working",
+    recruitmentDate: data.recruitmentDate || "",
+    phone: data.contactAddress?.phone || "",
+    contactProvince: data.contactAddress?.province || "",
+    contactWard: data.contactAddress?.ward || "",
+    contactHamlet: data.contactAddress?.hamlet || "",
+    contactDetail: data.contactAddress?.detailAddress || "",
+    hometownProvince: data.hometownAddress?.province || "",
+    hometownWard: data.hometownAddress?.ward || "",
+    hometownHamlet: data.hometownAddress?.hamlet || "",
+    hometownDetail: data.hometownAddress?.detailAddress || "",
+    isUnionMember: data.organizations?.isUnionMember || false,
+    unionJoinDate: data.organizations?.unionJoinDate || "",
+    isPartyMember: data.organizations?.isPartyMember || false,
+    partyJoinDate: data.organizations?.partyJoinDate || "",
+    bankAccounts: data.bankAccounts?.length ? data.bankAccounts.map(b => ({
+      bankName: b.bankName || "", branch: b.branch || "", accountNumber: b.accountNumber || ""
+    })) : EMPTY_PROFILE.bankAccounts,
+    positions: data.positions?.length ? data.positions.map(p => ({
+      jobPosition: p.jobPosition || "", positionGroup: p.positionGroup || "", recruitmentAgency: p.recruitmentAgency || "", professionWhenRecruited: p.professionWhenRecruited || "", rankLevel: p.rankLevel || "", educationLevel: p.educationLevel || "", rankCode: p.rankCode || "", subjectGroup: p.subjectGroup || "", contractType: p.contractType || ""
+    })) : EMPTY_PROFILE.positions,
+    qualifications: data.qualifications?.length ? data.qualifications.map(q => ({
+      generalEducationLevel: q.generalEducationLevel || "", professionalLevel: q.professionalLevel || "", major: q.major || "", trainingPlace: q.trainingPlace || "", graduationYear: q.graduationYear ? String(q.graduationYear) : "", itLevel: q.itLevel || "", foreignLanguageLevel: q.foreignLanguageLevel || ""
+    })) : EMPTY_PROFILE.qualifications,
+    salaries: data.salaries?.length ? data.salaries.map(s => ({
+      salaryCoefficient: s.salaryCoefficient ? String(s.salaryCoefficient) : "", salaryLevel: s.salaryLevel ? String(s.salaryLevel) : "", baseSalary: s.baseSalary ? String(s.baseSalary) : "", salaryStartDate: s.salaryStartDate || "", unionAllowancePercent: s.unionAllowancePercent ? String(s.unionAllowancePercent) : "", seniorityAllowancePercent: s.seniorityAllowancePercent ? String(s.seniorityAllowancePercent) : "", incentiveAllowancePercent: s.incentiveAllowancePercent ? String(s.incentiveAllowancePercent) : "", positionAllowancePercent: s.positionAllowancePercent ? String(s.positionAllowancePercent) : "", salaryNote: s.salaryNote || ""
+    })) : EMPTY_PROFILE.salaries,
+    evaluations: data.evaluations?.length ? data.evaluations.map(e => ({
+      civilServantRating: e.civilServantRating || "", excellentTeacher: e.excellentTeacher || false, evaluationYear: e.evaluationYear ? String(e.evaluationYear) : "", note: e.note || ""
+    })) : EMPTY_PROFILE.evaluations,
+  };
+}
+
+function mapGenderToApi(gender: string): "male" | "female" | "other" | undefined {
+  if (gender === "Nam") return "male";
+  if (gender === "Nữ") return "female";
+  if (gender === "Khác") return "other";
+  return undefined;
+}
 
 export default function MyProfilePage() {
   const { user, getInitials } = useAuth();
 
-  // Mock profile data — replace with API call later
-  const [profile, setProfile] = useState({
-    code: "NS12345",
-    gender: "Nam",
-    dateOfBirth: "1990-01-01",
-    cccdNumber: "001234567890",
-    cccdIssueDate: "2020-05-15",
-    cccdIssuePlace: "Cục CS QLHC về TTXH",
-    ethnicity: "Kinh",
-    religion: "Không",
-    staffStatus: "working",
-    recruitmentDate: "2018-09-01",
-    phone: "0987654321",
-    contactProvince: "Thành phố Hà Nội",
-    contactDistrict: "Quận Cầu Giấy",
-    contactWard: "Dịch Vọng",
-    contactDetail: "Số 12, Ngõ 45, Đường Xuân Thủy",
-    hometownProvince: "Hà Nội",
-    hometownDistrict: "Ba Đình",
-    hometownWard: "Quán Thánh",
-    hometownHamlet: "Số 10",
-  });
+  const [profile, setProfile] = useState(EMPTY_PROFILE);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  const handleSave = () => {
-    toast.success("Đã lưu thay đổi thành công!");
+  const pos = profile.positions[0];
+  const updatePos = (updates: Partial<typeof pos>) => setProfile({ ...profile, positions: [{ ...pos, ...updates }] });
+
+  const qual = profile.qualifications[0];
+  const updateQual = (updates: Partial<typeof qual>) => setProfile({ ...profile, qualifications: [{ ...qual, ...updates }] });
+
+  const sal = profile.salaries[0];
+  const updateSal = (updates: Partial<typeof sal>) => setProfile({ ...profile, salaries: [{ ...sal, ...updates }] });
+
+  const eval_ = profile.evaluations[0];
+  const updateEval = (updates: Partial<typeof eval_>) => setProfile({ ...profile, evaluations: [{ ...eval_, ...updates }] });
+
+  const bank = profile.bankAccounts[0];
+  const updateBank = (updates: Partial<typeof bank>) => setProfile({ ...profile, bankAccounts: [{ ...bank, ...updates }] });
+
+  // Build full avatar URL from server path
+  const getAvatarUrl = useCallback((src: string | null | undefined) => {
+    if (!src) return undefined;
+    if (src.startsWith("blob:") || src.startsWith("http")) return src;
+    return `${env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "")}${src}`;
+  }, []);
+
+  // ── Fetch profile from API ──
+  useEffect(() => {
+    async function fetchProfile() {
+      try {
+        setLoading(true);
+        const res = await staffProfileService.getMyProfile();
+        if (res.data) {
+          setProfile(mapApiToState(res.data));
+        }
+      } catch {
+        // No profile yet — keep defaults
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchProfile();
+  }, []);
+
+  // ── Save profile to API ──
+  const handleSave = async () => {
+    if (!profile.code.trim()) {
+      toast.error("Mã định danh là bắt buộc");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      await staffProfileService.updateMyProfile({
+        staffCode: profile.code,
+        gender: mapGenderToApi(profile.gender),
+        dateOfBirth: profile.dateOfBirth || undefined,
+        cccdNumber: profile.cccdNumber || undefined,
+        cccdIssueDate: profile.cccdIssueDate || undefined,
+        cccdIssuePlace: profile.cccdIssuePlace || undefined,
+        ethnicity: profile.ethnicity || undefined,
+        religion: profile.religion || undefined,
+        staffStatus: profile.staffStatus || undefined,
+        recruitmentDate: profile.recruitmentDate || undefined,
+        contactAddress: {
+          province: profile.contactProvince || undefined,
+          ward: profile.contactWard || undefined,
+          hamlet: profile.contactHamlet || undefined,
+          detailAddress: profile.contactDetail || undefined,
+          phone: profile.phone || undefined,
+        },
+        hometownAddress: {
+          province: profile.hometownProvince || undefined,
+          ward: profile.hometownWard || undefined,
+          hamlet: profile.hometownHamlet || undefined,
+          detailAddress: profile.hometownDetail || undefined,
+        },
+        organizations: {
+          isUnionMember: profile.isUnionMember,
+          unionJoinDate: profile.unionJoinDate || undefined,
+          isPartyMember: profile.isPartyMember,
+          partyJoinDate: profile.partyJoinDate || undefined,
+        },
+        bankAccounts: profile.bankAccounts.map(b => ({
+          bankName: b.bankName || undefined,
+          branch: b.branch || undefined,
+          accountNumber: b.accountNumber || undefined,
+        })),
+        positions: profile.positions.map(p => ({
+          jobPosition: p.jobPosition || undefined,
+          positionGroup: p.positionGroup || undefined,
+          recruitmentAgency: p.recruitmentAgency || undefined,
+          professionWhenRecruited: p.professionWhenRecruited || undefined,
+          rankLevel: p.rankLevel || undefined,
+          educationLevel: p.educationLevel || undefined,
+          rankCode: p.rankCode || undefined,
+          subjectGroup: p.subjectGroup || undefined,
+          contractType: p.contractType || undefined,
+        })),
+        qualifications: profile.qualifications.map(q => ({
+          generalEducationLevel: q.generalEducationLevel || undefined,
+          professionalLevel: q.professionalLevel || undefined,
+          major: q.major || undefined,
+          trainingPlace: q.trainingPlace || undefined,
+          graduationYear: q.graduationYear ? Number(q.graduationYear) : undefined,
+          itLevel: q.itLevel || undefined,
+          foreignLanguageLevel: q.foreignLanguageLevel || undefined,
+        })),
+        salaries: profile.salaries.map(s => ({
+          salaryCoefficient: s.salaryCoefficient ? Number(s.salaryCoefficient) : undefined,
+          salaryLevel: s.salaryLevel ? Number(s.salaryLevel) : undefined,
+          baseSalary: s.baseSalary ? Number(s.baseSalary) : undefined,
+          salaryStartDate: s.salaryStartDate || undefined,
+          unionAllowancePercent: s.unionAllowancePercent ? Number(s.unionAllowancePercent) : undefined,
+          seniorityAllowancePercent: s.seniorityAllowancePercent ? Number(s.seniorityAllowancePercent) : undefined,
+          incentiveAllowancePercent: s.incentiveAllowancePercent ? Number(s.incentiveAllowancePercent) : undefined,
+          positionAllowancePercent: s.positionAllowancePercent ? Number(s.positionAllowancePercent) : undefined,
+          salaryNote: s.salaryNote || undefined,
+        })),
+        evaluations: profile.evaluations.map(e => ({
+          civilServantRating: e.civilServantRating || undefined,
+          excellentTeacher: e.excellentTeacher,
+          evaluationYear: e.evaluationYear ? Number(e.evaluationYear) : undefined,
+          note: e.note || undefined,
+        })),
+      });
+      toast.success("Đã lưu thay đổi thành công!");
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || "Lỗi khi lưu thông tin");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleExport = () => {
     toast.info("Tính năng xuất hồ sơ đang được phát triển.");
   };
 
-  if (!user) {
+  if (!user || loading) {
     return <ProfileSkeleton />;
   }
 
@@ -89,11 +286,7 @@ export default function MyProfilePage() {
             <div className="relative z-10">
               <Avatar className="size-32 border-4 border-white shadow-lg">
                 <AvatarImage
-                  src={
-                    user?.avatar
-                      ? `${process.env.NEXT_PUBLIC_API_URL}${user.avatar}`
-                      : undefined
-                  }
+                  src={getAvatarUrl(user?.avatar)}
                   alt={user?.fullName}
                 />
                 <AvatarFallback className="bg-primary/10 text-primary text-3xl font-bold">
@@ -116,7 +309,10 @@ export default function MyProfilePage() {
               <Button variant="outline" onClick={handleExport}>
                 Xuất hồ sơ
               </Button>
-              <Button onClick={handleSave}>Lưu thay đổi</Button>
+              <Button onClick={handleSave} disabled={saving}>
+                {saving && <Loader2 className="size-4 animate-spin mr-2" />}
+                Lưu thay đổi
+              </Button>
             </div>
           </div>
 
@@ -256,12 +452,21 @@ export default function MyProfilePage() {
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Dân tộc
                       </Label>
-                      <Input
+                      <Select
                         value={profile.ethnicity}
-                        onChange={(e) =>
-                          setProfile({ ...profile, ethnicity: e.target.value })
+                        onValueChange={(v) =>
+                          setProfile({ ...profile, ethnicity: v })
                         }
-                      />
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Chọn dân tộc" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Kinh">Kinh</SelectItem>
+                          <SelectItem value="Hoa">Hoa</SelectItem>
+                          <SelectItem value="Khmer">Khmer</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-muted-foreground">
@@ -290,13 +495,13 @@ export default function MyProfilePage() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="working">Đang làm việc</SelectItem>
-                        <SelectItem value="probation">Thử việc</SelectItem>
+                        <SelectItem value="working">Đang công tác</SelectItem>
+                        <SelectItem value="resigned">Nghỉ việc</SelectItem>
+                        <SelectItem value="transferred">Chuyển công tác</SelectItem>
                         <SelectItem value="maternity_leave">
-                          Nghỉ thai sản
+                          Nghỉ hậu sản
                         </SelectItem>
-                        <SelectItem value="retired">Đã nghỉ hưu</SelectItem>
-                        <SelectItem value="resigned">Đã nghỉ việc</SelectItem>
+                        <SelectItem value="unpaid_leave">Nghỉ không lương</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -335,16 +540,6 @@ export default function MyProfilePage() {
                         }
                       />
                       <Input
-                        placeholder="Quận/Huyện"
-                        value={profile.hometownDistrict}
-                        onChange={(e) =>
-                          setProfile({
-                            ...profile,
-                            hometownDistrict: e.target.value,
-                          })
-                        }
-                      />
-                      <Input
                         placeholder="Xã/Phường"
                         value={profile.hometownWard}
                         onChange={(e) =>
@@ -361,6 +556,16 @@ export default function MyProfilePage() {
                           setProfile({
                             ...profile,
                             hometownHamlet: e.target.value,
+                          })
+                        }
+                      />
+                      <Input
+                        placeholder="Địa chỉ chi tiết"
+                        value={profile.hometownDetail}
+                        onChange={(e) =>
+                          setProfile({
+                            ...profile,
+                            hometownDetail: e.target.value,
                           })
                         }
                       />
@@ -410,28 +615,28 @@ export default function MyProfilePage() {
                           }
                         />
                         <Input
-                          placeholder="Quận/Huyện"
-                          value={profile.contactDistrict}
+                          placeholder="Phường/Xã"
+                          value={profile.contactWard}
                           onChange={(e) =>
                             setProfile({
                               ...profile,
-                              contactDistrict: e.target.value,
+                              contactWard: e.target.value,
                             })
                           }
                         />
                       </div>
                       <Input
-                        placeholder="Phường/Xã"
-                        value={profile.contactWard}
+                        placeholder="Tổ/Thôn"
+                        value={profile.contactHamlet}
                         onChange={(e) =>
                           setProfile({
                             ...profile,
-                            contactWard: e.target.value,
+                            contactHamlet: e.target.value,
                           })
                         }
                       />
                       <Input
-                        placeholder="Số nhà, Tên đường, Tổ/Thôn"
+                        placeholder="Số nhà, Tên đường (địa chỉ chi tiết)"
                         value={profile.contactDetail}
                         onChange={(e) =>
                           setProfile({
@@ -468,7 +673,10 @@ export default function MyProfilePage() {
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Đoàn viên
                       </Label>
-                      <Select defaultValue="yes">
+                      <Select 
+                        value={profile.isUnionMember ? "yes" : "no"}
+                        onValueChange={(val) => setProfile({...profile, isUnionMember: val === "yes"})}
+                      >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
@@ -482,7 +690,11 @@ export default function MyProfilePage() {
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Ngày vào Đoàn
                       </Label>
-                      <Input type="date" />
+                      <Input 
+                        type="date" 
+                        value={profile.unionJoinDate}
+                        onChange={(e) => setProfile({...profile, unionJoinDate: e.target.value})}
+                      />
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -490,7 +702,10 @@ export default function MyProfilePage() {
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Đảng viên
                       </Label>
-                      <Select defaultValue="no">
+                      <Select 
+                        value={profile.isPartyMember ? "yes" : "no"}
+                        onValueChange={(val) => setProfile({...profile, isPartyMember: val === "yes"})}
+                      >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
@@ -504,7 +719,11 @@ export default function MyProfilePage() {
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Ngày vào Đảng
                       </Label>
-                      <Input type="date" />
+                      <Input 
+                        type="date" 
+                        value={profile.partyJoinDate}
+                        onChange={(e) => setProfile({...profile, partyJoinDate: e.target.value})}
+                      />
                     </div>
                   </div>
                 </div>
@@ -523,13 +742,13 @@ export default function MyProfilePage() {
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Chức vụ
                       </Label>
-                      <Input placeholder="Ví dụ: Giáo viên" />
+                      <Input placeholder="Ví dụ: Giáo viên" value={pos.jobPosition} onChange={(e) => updatePos({ jobPosition: e.target.value })} />
                     </div>
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Nhóm chức vụ
                       </Label>
-                      <Input placeholder="Ví dụ: Giáo viên" />
+                      <Input placeholder="Ví dụ: Giáo viên" value={pos.positionGroup} onChange={(e) => updatePos({ positionGroup: e.target.value })} />
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -537,13 +756,13 @@ export default function MyProfilePage() {
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Cơ quan tuyển dụng
                       </Label>
-                      <Input />
+                      <Input value={pos.recruitmentAgency} onChange={(e) => updatePos({ recruitmentAgency: e.target.value })} />
                     </div>
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Nghề nghiệp khi tuyển dụng
                       </Label>
-                      <Input />
+                      <Input value={pos.professionWhenRecruited} onChange={(e) => updatePos({ professionWhenRecruited: e.target.value })} />
                     </div>
                   </div>
                   <div className="grid grid-cols-3 gap-4">
@@ -551,19 +770,19 @@ export default function MyProfilePage() {
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Cấp bậc
                       </Label>
-                      <Input />
+                      <Input value={pos.rankLevel} onChange={(e) => updatePos({ rankLevel: e.target.value })} />
                     </div>
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Mã ngạch
                       </Label>
-                      <Input />
+                      <Input value={pos.rankCode} onChange={(e) => updatePos({ rankCode: e.target.value })} />
                     </div>
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Loại hợp đồng
                       </Label>
-                      <Input />
+                      <Input value={pos.contractType} onChange={(e) => updatePos({ contractType: e.target.value })} />
                     </div>
                   </div>
                 </div>
@@ -582,26 +801,32 @@ export default function MyProfilePage() {
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Hệ số lương
                       </Label>
-                      <Input type="number" step="0.01" />
+                      <Input type="number" step="0.01" value={sal.salaryCoefficient} onChange={(e) => updateSal({ salaryCoefficient: e.target.value })} />
                     </div>
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Bậc lương
                       </Label>
-                      <Input type="number" />
+                      <Input type="number" value={sal.salaryLevel} onChange={(e) => updateSal({ salaryLevel: e.target.value })} />
                     </div>
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Lương cơ bản
                       </Label>
-                      <Input type="number" />
+                      <Input type="number" value={sal.baseSalary} onChange={(e) => updateSal({ baseSalary: e.target.value })} />
                     </div>
                   </div>
                   <div className="space-y-1.5">
                     <Label className="text-[13px] font-semibold text-muted-foreground">
                       Ngày hưởng lương
                     </Label>
-                    <Input type="date" />
+                    <Input type="date" value={sal.salaryStartDate} onChange={(e) => updateSal({ salaryStartDate: e.target.value })} />
+                  </div>
+                  <div className="space-y-1.5 mt-4">
+                    <Label className="text-[13px] font-semibold text-muted-foreground">
+                      Ghi chú lương
+                    </Label>
+                    <Input placeholder="Nhập ghi chú về lương" value={sal.salaryNote} onChange={(e) => updateSal({ salaryNote: e.target.value })} />
                   </div>
                 </div>
                 <div className="space-y-6">
@@ -613,25 +838,25 @@ export default function MyProfilePage() {
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         PC Công đoàn (%)
                       </Label>
-                      <Input type="number" step="0.1" />
+                      <Input type="number" step="0.1" value={sal.unionAllowancePercent} onChange={(e) => updateSal({ unionAllowancePercent: e.target.value })} />
                     </div>
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         PC Thâm niên (%)
                       </Label>
-                      <Input type="number" step="0.1" />
+                      <Input type="number" step="0.1" value={sal.seniorityAllowancePercent} onChange={(e) => updateSal({ seniorityAllowancePercent: e.target.value })} />
                     </div>
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         PC Ưu đãi (%)
                       </Label>
-                      <Input type="number" step="0.1" />
+                      <Input type="number" step="0.1" value={sal.incentiveAllowancePercent} onChange={(e) => updateSal({ incentiveAllowancePercent: e.target.value })} />
                     </div>
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         PC Chức vụ (%)
                       </Label>
-                      <Input type="number" step="0.1" />
+                      <Input type="number" step="0.1" value={sal.positionAllowancePercent} onChange={(e) => updateSal({ positionAllowancePercent: e.target.value })} />
                     </div>
                   </div>
                 </div>
@@ -650,13 +875,26 @@ export default function MyProfilePage() {
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Trình độ GDPT
                       </Label>
-                      <Input placeholder="12/12" />
+                      <Input placeholder="12/12" value={qual.generalEducationLevel} onChange={(e) => updateQual({ generalEducationLevel: e.target.value })} />
                     </div>
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Trình độ chuyên môn
                       </Label>
-                      <Input placeholder="Thạc sĩ, Tiến sĩ..." />
+                      <Select value={qual.professionalLevel} onValueChange={(v) => updateQual({ professionalLevel: v })}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="-- Chọn trình độ chuyên môn --" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Trung cấp">Trung cấp</SelectItem>
+                          <SelectItem value="Cao đẳng">Cao đẳng</SelectItem>
+                          <SelectItem value="Đại học">Đại học</SelectItem>
+                          <SelectItem value="Kỹ sư">Kỹ sư</SelectItem>
+                          <SelectItem value="Cử nhân">Cử nhân</SelectItem>
+                          <SelectItem value="Thạc sĩ">Thạc sĩ</SelectItem>
+                          <SelectItem value="Tiến sĩ">Tiến sĩ</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -664,20 +902,20 @@ export default function MyProfilePage() {
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Chuyên ngành
                       </Label>
-                      <Input />
+                      <Input value={qual.major} onChange={(e) => updateQual({ major: e.target.value })} />
                     </div>
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Nơi đào tạo
                       </Label>
-                      <Input />
+                      <Input value={qual.trainingPlace} onChange={(e) => updateQual({ trainingPlace: e.target.value })} />
                     </div>
                   </div>
                   <div className="space-y-1.5">
                     <Label className="text-[13px] font-semibold text-muted-foreground">
                       Năm tốt nghiệp
                     </Label>
-                    <Input type="number" placeholder="2015" />
+                    <Input type="number" placeholder="2015" value={qual.graduationYear} onChange={(e) => updateQual({ graduationYear: e.target.value })} />
                   </div>
                 </div>
                 <div className="space-y-6">
@@ -688,13 +926,53 @@ export default function MyProfilePage() {
                     <Label className="text-[13px] font-semibold text-muted-foreground">
                       Trình độ Tin học
                     </Label>
-                    <Input placeholder="Ví dụ: IC3, MOS..." />
+                    <Select value={qual.itLevel} onValueChange={(v) => updateQual({ itLevel: v })}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="-- Chọn trình độ tin học --" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Tin học A (cũ)">Tin học A (cũ)</SelectItem>
+                        <SelectItem value="Tin học B (cũ)">Tin học B (cũ)</SelectItem>
+                        <SelectItem value="Tin học C (cũ)">Tin học C (cũ)</SelectItem>
+                        <SelectItem value="Ứng dụng CNTT cơ bản">Ứng dụng CNTT cơ bản</SelectItem>
+                        <SelectItem value="Ứng dụng CNTT nâng cao">Ứng dụng CNTT nâng cao</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="space-y-1.5">
                     <Label className="text-[13px] font-semibold text-muted-foreground">
                       Trình độ Ngoại ngữ
                     </Label>
-                    <Input placeholder="Ví dụ: IELTS 6.5, B2..." />
+                    <Select value={qual.foreignLanguageLevel} onValueChange={(v) => updateQual({ foreignLanguageLevel: v })}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="-- Chọn trình độ ngoại ngữ --" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Khung năng lực ngoại ngữ 6 bậc (Việt Nam)</SelectLabel>
+                          <SelectItem value="Bậc 1 (A1)">Bậc 1 (A1)</SelectItem>
+                          <SelectItem value="Bậc 2 (A2)">Bậc 2 (A2)</SelectItem>
+                          <SelectItem value="Bậc 3 (B1)">Bậc 3 (B1)</SelectItem>
+                          <SelectItem value="Bậc 4 (B2)">Bậc 4 (B2)</SelectItem>
+                          <SelectItem value="Bậc 5 (C1)">Bậc 5 (C1)</SelectItem>
+                          <SelectItem value="Bậc 6 (C2)">Bậc 6 (C2)</SelectItem>
+                        </SelectGroup>
+                        <SelectGroup>
+                          <SelectLabel>Chứng chỉ tiếng Anh quốc tế</SelectLabel>
+                          <SelectItem value="TOEIC">TOEIC</SelectItem>
+                          <SelectItem value="IELTS">IELTS</SelectItem>
+                          <SelectItem value="TOEFL iBT">TOEFL iBT</SelectItem>
+                          <SelectItem value="Cambridge (KET, PET, FCE, CAE, CPE)">Cambridge (KET, PET, FCE, CAE, CPE)</SelectItem>
+                        </SelectGroup>
+                        <SelectGroup>
+                          <SelectLabel>Chứng chỉ các ngoại ngữ khác</SelectLabel>
+                          <SelectItem value="Tiếng Nhật (JLPT N1-N5)">Tiếng Nhật (JLPT N1-N5)</SelectItem>
+                          <SelectItem value="Tiếng Hàn (TOPIK I-VI)">Tiếng Hàn (TOPIK I-VI)</SelectItem>
+                          <SelectItem value="Tiếng Trung (HSK 1-6)">Tiếng Trung (HSK 1-6)</SelectItem>
+                          <SelectItem value="Tiếng Pháp (DELF/DALF)">Tiếng Pháp (DELF/DALF)</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
               </div>
@@ -709,23 +987,25 @@ export default function MyProfilePage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <Label className="text-[13px] font-semibold text-muted-foreground">
-                      Xếp loại viên chức
+                      Đánh giá viên chức
                     </Label>
-                    <Input placeholder="Hoàn thành tốt nhiệm vụ" />
+                    <Select value={eval_.civilServantRating} onValueChange={(v) => updateEval({ civilServantRating: v })}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="-- Chọn đánh giá --" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Hoàn thành xuất sắc nhiệm vụ">Hoàn thành xuất sắc nhiệm vụ</SelectItem>
+                        <SelectItem value="Hoàn thành tốt nhiệm vụ">Hoàn thành tốt nhiệm vụ</SelectItem>
+                        <SelectItem value="Hoàn thành nhiệm vụ">Hoàn thành nhiệm vụ</SelectItem>
+                        <SelectItem value="Không hoàn thành">Không hoàn thành</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-[13px] font-semibold text-muted-foreground">
-                      Năm đánh giá
-                    </Label>
-                    <Input type="number" placeholder="2024" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <Label className="text-[13px] font-semibold text-muted-foreground">
                       Giáo viên giỏi
                     </Label>
-                    <Select defaultValue="no">
+                    <Select value={eval_.excellentTeacher ? "yes" : "no"} onValueChange={(v) => updateEval({ excellentTeacher: v === "yes" })}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -735,12 +1015,18 @@ export default function MyProfilePage() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-[13px] font-semibold text-muted-foreground">
-                      Ghi chú
-                    </Label>
-                    <Input placeholder="Nhập ghi chú..." />
-                  </div>
+                </div>
+                <div className="space-y-1.5 mt-4">
+                  <Label className="text-[13px] font-semibold text-muted-foreground">
+                    Năm đánh giá
+                  </Label>
+                  <Input type="number" placeholder="2024" value={eval_.evaluationYear} onChange={(e) => updateEval({ evaluationYear: e.target.value })} />
+                </div>
+                <div className="space-y-1.5 mt-4">
+                  <Label className="text-[13px] font-semibold text-muted-foreground">
+                    Ghi chú
+                  </Label>
+                  <Input placeholder="Nhập ghi chú đánh giá" value={eval_.note} onChange={(e) => updateEval({ note: e.target.value })} />
                 </div>
               </div>
             </TabsContent>
@@ -756,20 +1042,20 @@ export default function MyProfilePage() {
                     <Label className="text-[13px] font-semibold text-muted-foreground">
                       Tên ngân hàng
                     </Label>
-                    <Input placeholder="Ví dụ: Vietcombank" />
+                    <Input placeholder="Ví dụ: Vietcombank" value={bank.bankName} onChange={(e) => updateBank({ bankName: e.target.value })} />
                   </div>
                   <div className="space-y-1.5">
                     <Label className="text-[13px] font-semibold text-muted-foreground">
                       Chi nhánh
                     </Label>
-                    <Input placeholder="Ví dụ: Chi nhánh Hà Nội" />
+                    <Input placeholder="Ví dụ: Chi nhánh Hà Nội" value={bank.branch} onChange={(e) => updateBank({ branch: e.target.value })} />
                   </div>
                 </div>
                 <div className="space-y-1.5">
                   <Label className="text-[13px] font-semibold text-muted-foreground">
                     Số tài khoản
                   </Label>
-                  <Input placeholder="Nhập số tài khoản..." />
+                  <Input placeholder="Nhập số tài khoản..." value={bank.accountNumber} onChange={(e) => updateBank({ accountNumber: e.target.value })} />
                 </div>
               </div>
             </TabsContent>

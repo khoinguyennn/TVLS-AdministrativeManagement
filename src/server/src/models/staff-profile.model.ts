@@ -1,0 +1,68 @@
+import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
+import { StaffProfile } from '@interfaces/staff.interface';
+
+export type StaffProfileCreationAttributes = Optional<
+  StaffProfile,
+  | 'id'
+  | 'gender'
+  | 'dateOfBirth'
+  | 'cccdNumber'
+  | 'cccdIssueDate'
+  | 'cccdIssuePlace'
+  | 'ethnicity'
+  | 'religion'
+  | 'staffStatus'
+  | 'recruitmentDate'
+  | 'createdAt'
+  | 'updatedAt'
+>;
+
+export class StaffProfileModel extends Model<StaffProfile, StaffProfileCreationAttributes> implements StaffProfile {
+  public id: number;
+  public userId: number;
+  public staffCode: string;
+  public gender: 'male' | 'female' | 'other';
+  public dateOfBirth: string;
+  public cccdNumber: string;
+  public cccdIssueDate: string;
+  public cccdIssuePlace: string;
+  public ethnicity: string;
+  public religion: string;
+  public staffStatus: 'working' | 'resigned' | 'transferred' | 'maternity_leave' | 'unpaid_leave';
+  public recruitmentDate: string;
+
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+}
+
+export default function (sequelize: Sequelize): typeof StaffProfileModel {
+  StaffProfileModel.init(
+    {
+      id: { autoIncrement: true, primaryKey: true, type: DataTypes.INTEGER },
+      userId: { allowNull: false, type: DataTypes.INTEGER, field: 'user_id', unique: true, references: { model: 'users', key: 'id' } },
+      staffCode: { allowNull: false, type: DataTypes.STRING(50), field: 'staff_code', unique: true },
+      gender: { allowNull: true, type: DataTypes.ENUM('male', 'female', 'other') },
+      dateOfBirth: { allowNull: true, type: DataTypes.DATEONLY, field: 'date_of_birth' },
+      cccdNumber: { allowNull: true, type: DataTypes.STRING(20), field: 'cccd_number' },
+      cccdIssueDate: { allowNull: true, type: DataTypes.DATEONLY, field: 'cccd_issue_date' },
+      cccdIssuePlace: { allowNull: true, type: DataTypes.STRING(255), field: 'cccd_issue_place' },
+      ethnicity: { allowNull: true, type: DataTypes.STRING(100) },
+      religion: { allowNull: true, type: DataTypes.STRING(100) },
+      staffStatus: {
+        allowNull: true,
+        type: DataTypes.ENUM('working', 'resigned', 'transferred', 'maternity_leave', 'unpaid_leave'),
+        field: 'staff_status',
+        defaultValue: 'working',
+      },
+      recruitmentDate: { allowNull: true, type: DataTypes.DATEONLY, field: 'recruitment_date' },
+    },
+    {
+      tableName: 'staff_profiles',
+      sequelize,
+      timestamps: true,
+      underscored: true,
+    },
+  );
+
+  return StaffProfileModel;
+}

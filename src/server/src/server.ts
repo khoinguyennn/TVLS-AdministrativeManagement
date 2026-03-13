@@ -9,6 +9,7 @@ import { UserRoute } from '@routes/users.route';
 import { BuildingRoute } from '@routes/building.route';
 import { RoomRoute } from '@routes/room.route';
 // import { EquipmentRoute } from '@routes/equipment.route'; // Not used - using DeviceRoute instead
+import { StaffProfileRoute } from '@routes/staff.route';
 import { ValidateEnv } from '@utils/validateEnv';
 import { startDeviceReportsCron } from './crons/device-reports.cron';
 
@@ -28,6 +29,7 @@ const app = new App([
   new DeviceReportRoute(),
   new LeaveRequestRoute(),
   new DigitalSignatureRoute(),
+  new StaffProfileRoute(),
 ]);
 
 app.listen();
