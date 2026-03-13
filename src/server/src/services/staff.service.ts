@@ -23,6 +23,143 @@ export class StaffService {
     ];
   }
 
+  // ─── Statistics ──────────────────────────────────────────────────────────────
+
+  public async getStatistics(jobPositionFilter?: string) {
+    const rows = await DB.StaffProfiles.findAll({
+      include: [
+        { model: DB.StaffPositions, as: 'position', attributes: ['subjectGroup', 'educationLevel', 'jobPosition', 'contractType'] },
+      ],
+      attributes: ['id', 'staffStatus', 'ethnicity', 'dateOfBirth', 'gender'],
+      raw: false,
+    });
+
+    let profiles = rows.map(r => r.get({ plain: true })) as any[];
+
+    // ── Filter by job position ──
+    if (jobPositionFilter && jobPositionFilter !== 'all') {
+      if (jobPositionFilter === 'all_no_gvhd') {
+        // Toàn trường (không có GVHĐ)
+        profiles = profiles.filter(p => p.position?.jobPosition !== 'Giáo viên HĐ');
+      } else {
+        profiles = profiles.filter(p => p.position?.jobPosition === jobPositionFilter);
+      }
+    }
+
+    const total = profiles.length;
+
+    // ── By gender ──
+    const byGender: Record<string, number> = { male: 0, female: 0, other: 0 };
+    for (const p of profiles) {
+      const g = p.gender || 'other';
+      byGender[g] = (byGender[g] || 0) + 1;
+    }
+
+    // ── By status ──
+    const byStatus: Record<string, number> = {};
+    for (const p of profiles) {
+      const s = p.staffStatus || 'unknown';
+      byStatus[s] = (byStatus[s] || 0) + 1;
+    }
+
+    // ── By job position ──
+    const byJobPosition: Record<string, number> = {};
+    for (const p of profiles) {
+      const jp = p.position?.jobPosition || 'Chưa cập nhật';
+      byJobPosition[jp] = (byJobPosition[jp] || 0) + 1;
+    }
+
+    // ── By contract type ──
+    const byContractType: Record<string, number> = {};
+    for (const p of profiles) {
+      const ct = p.position?.contractType || 'Chưa cập nhật';
+      byContractType[ct] = (byContractType[ct] || 0) + 1;
+    }
+
+    // ── By subject group ──
+    const bySubjectGroup: Record<string, number> = {};
+    for (const p of profiles) {
+      const sg = p.position?.subjectGroup || 'Chưa phân tổ';
+      bySubjectGroup[sg] = (bySubjectGroup[sg] || 0) + 1;
+    }
+
+    // ── By ethnicity ──
+    const byEthnicity: Record<string, number> = {};
+    for (const p of profiles) {
+      const e = p.ethnicity || 'Chưa cập nhật';
+      byEthnicity[e] = (byEthnicity[e] || 0) + 1;
+    }
+
+    // ── By education level ──
+    const byEducationLevel: Record<string, number> = {};
+    for (const p of profiles) {
+      const el = p.position?.educationLevel || 'Chưa cập nhật';
+      byEducationLevel[el] = (byEducationLevel[el] || 0) + 1;
+    }
+
+    // ── Age helpers ──
+    const today = new Date();
+    const getAge = (dob: string | null): number | null => {
+      if (!dob) return null;
+      const birth = new Date(dob);
+      let age = today.getFullYear() - birth.getFullYear();
+      const m = today.getMonth() - birth.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+      return age;
+    };
+
+    const ageGroups = ['20-29', '30-39', '40-49', '50-54', '55-59', '60+'];
+    const getAgeGroup = (age: number | null): string => {
+      if (age === null) return 'Chưa rõ';
+      if (age < 20) return 'Chưa rõ';
+      if (age <= 29) return '20-29';
+      if (age <= 39) return '30-39';
+      if (age <= 49) return '40-49';
+      if (age <= 54) return '50-54';
+      if (age <= 59) return '55-59';
+      return '60+';
+    };
+
+    // ── By age group ──
+    const byAgeGroup: Record<string, number> = {};
+    for (const g of ageGroups) byAgeGroup[g] = 0;
+    byAgeGroup['Chưa rõ'] = 0;
+    for (const p of profiles) {
+      const ag = getAgeGroup(getAge(p.dateOfBirth));
+      byAgeGroup[ag] = (byAgeGroup[ag] || 0) + 1;
+    }
+
+    // ── Age × Education level cross-tab ──
+    const educationLevels = ['Mầm non', 'Tiểu học', 'THCS', 'THPT'];
+    const ageByEducation: Array<{ ageGroup: string; [key: string]: string | number }> = [];
+    for (const ag of ageGroups) {
+      const row: any = { ageGroup: ag };
+      for (const el of educationLevels) row[el] = 0;
+      ageByEducation.push(row);
+    }
+    for (const p of profiles) {
+      const ag = getAgeGroup(getAge(p.dateOfBirth));
+      const el = p.position?.educationLevel;
+      if (el && educationLevels.includes(el)) {
+        const row = ageByEducation.find(r => r.ageGroup === ag);
+        if (row) (row[el] as number)++;
+      }
+    }
+
+    return {
+      total,
+      byGender,
+      byStatus,
+      byJobPosition,
+      byContractType,
+      bySubjectGroup,
+      byEthnicity,
+      byEducationLevel,
+      byAgeGroup,
+      ageByEducation,
+    };
+  }
+
   // ─── CRUD ────────────────────────────────────────────────────────────────────
 
   public async findAll() {

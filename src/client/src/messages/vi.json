@@ -42,6 +42,9 @@
     "digitalSignatures": "Chữ ký số",
     "system": "Hệ thống",
     "settings": "Cài đặt",
+    "statisticsSection": "Thống kê",
+    "statistics": "Thống kê nhân sự",
+    "ageStatistics": "Thống kê theo độ tuổi",
     "logout": "Đăng xuất"
   },
   "Header": {

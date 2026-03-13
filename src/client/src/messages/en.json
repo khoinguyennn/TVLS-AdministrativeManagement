@@ -42,6 +42,9 @@
     "digitalSignatures": "Digital Signatures",
     "system": "System",
     "settings": "Settings",
+    "statisticsSection": "Statistics",
+    "statistics": "Staff Statistics",
+    "ageStatistics": "Age Statistics",
     "logout": "Logout"
   },
   "Header": {

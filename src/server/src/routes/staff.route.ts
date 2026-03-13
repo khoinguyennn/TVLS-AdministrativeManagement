@@ -28,12 +28,14 @@ const upload = multer({
 export class StaffRoute implements Routes {
   public path = '/staff';
   public router = Router();
-  public controller = new StaffController();
+  public controller = new StaffController();
   constructor() {
     this.initializeRoutes();
   }
 
   private initializeRoutes() {
+    // Statistics
+    this.router.get(`${this.path}/statistics`, AuthMiddleware, RoleMiddleware('admin', 'manager'), this.controller.getStatistics);
 
     // Excel template download & import
     this.router.get(`${this.path}/excel/template`, AuthMiddleware, RoleMiddleware('admin', 'manager'), this.controller.downloadTemplate);

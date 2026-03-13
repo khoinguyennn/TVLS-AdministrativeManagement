@@ -19,6 +19,8 @@ import {
   Settings,
   UserRound,
   Users,
+  BarChart3,
+  CalendarDays,
   X
 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -108,6 +110,21 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
     }
   ].filter(item => item.roles.includes(userRole));
 
+  const statisticsNavItems = [
+    {
+      href: "/dashboard/statistics",
+      label: t("statistics"),
+      icon: BarChart3,
+      roles: ["admin", "manager"]
+    },
+    {
+      href: "/dashboard/statistics/age",
+      label: t("ageStatistics"),
+      icon: CalendarDays,
+      roles: ["admin", "manager"]
+    }
+  ].filter(item => item.roles.includes(userRole));
+
   const facilityNavItems = [
     {
       href: "/dashboard/buildings",
@@ -160,12 +177,9 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
   ].filter(item => item.roles.includes(userRole));
 
   const isActive = (href: string) => {
-    if (href === "/dashboard") {
-      return (
-        pathname === "/dashboard" || pathname === "/vi/dashboard" || pathname === "/en/dashboard"
-      );
-    }
-    return pathname.includes(href);
+    // Strip locale prefix (/vi or /en) for comparison
+    const cleanPath = pathname.replace(/^\/(vi|en)/, "");
+    return cleanPath === href;
   };
 
   return (
@@ -246,6 +260,33 @@ export function DashboardSidebar({ isOpen = false, onClose }: DashboardSidebarPr
             </div>
 
             {facilityNavItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors",
+                  isActive(item.href)
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                )}
+              >
+                <item.icon className="size-5" />
+                <span className="text-sm font-medium">{item.label}</span>
+              </Link>
+            ))}
+          </>
+        )}
+
+        {/* Statistics Section */}
+        {statisticsNavItems.length > 0 && (
+          <>
+            <div className="pt-4 pb-2">
+              <p className="px-3 text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
+                {t("statisticsSection")}
+              </p>
+            </div>
+
+            {statisticsNavItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}

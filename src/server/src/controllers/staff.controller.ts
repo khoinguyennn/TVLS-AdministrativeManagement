@@ -7,10 +7,20 @@ import { CreateStaffProfileDto, UpdateStaffProfileDto } from '@dtos/staff.dto';
 export class StaffController {
   public service = Container.get(StaffService);
 
+  public getStatistics = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const jobPosition = req.query.jobPosition as string | undefined;
+      const data = await this.service.getStatistics(jobPosition);
+      res.status(200).json({ success: true, data, message: 'OK' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public getAll = async (_req: Request, res: Response, next: NextFunction) => {
     try {
       const data = await this.service.findAll();
-      res.status(200).json({ success: true, data, message: 'OK' });    } catch (error) {
+      res.status(200).json({ success: true, data, message: 'OK' });    } catch (error) {
       next(error);
     }
   };
