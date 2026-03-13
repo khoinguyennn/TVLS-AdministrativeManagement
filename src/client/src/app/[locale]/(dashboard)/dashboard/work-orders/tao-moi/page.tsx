@@ -50,42 +50,37 @@ export default function CreateWorkOrderAdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="px-6 py-4">
-          {/* Breadcrumb */}
-          <div className="flex items-center gap-2 mb-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => router.back()}
-              className="gap-2"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Quay lại
-            </Button>
-          </div>
+    <div className="space-y-6">
+      <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+        <div className="mb-4 flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => router.back()}
+            className="gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Quay lại
+          </Button>
+        </div>
 
-          {/* Title with Badge */}
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-gray-900">
-              Tạo Phiếu Công Lệnh Đi Công Tác
-            </h1>
-          </div>
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+            Tạo Phiếu Công Lệnh Đi Công Tác
+          </h1>
+          <p className="mt-1 text-sm text-gray-600">
+            Thông tin sẽ được lưu vào bảng work_orders theo cấu trúc dữ liệu hiện tại.
+          </p>
         </div>
       </div>
 
-      {/* Form Container */}
-      <div className="max-w-3xl mx-auto px-6 py-8">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-          <AdminWorkOrderForm
-            personnel={personnel}
-            onSubmit={handleSubmit}
-            onCancel={handleCancel}
-            isLoading={isLoading}
-          />
-        </div>
+      <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+        <AdminWorkOrderForm
+          personnel={personnel}
+          onSubmit={handleSubmit}
+          onCancel={handleCancel}
+          isLoading={isLoading}
+        />
       </div>
     </div>
   );
