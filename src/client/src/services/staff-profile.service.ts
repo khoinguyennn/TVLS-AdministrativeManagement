@@ -175,8 +175,8 @@ export const staffProfileService = {
     return response.data;
   },
 
-  updateMyProfile: async (profileId: number, data: UpdateStaffProfilePayload): Promise<StaffProfileApiResponse> => {
-    const response = await api.put<StaffProfileApiResponse>(`/staff/${profileId}`, data);
+  updateMyProfile: async (_profileId: number, data: UpdateStaffProfilePayload): Promise<StaffProfileApiResponse> => {
+    const response = await api.put<StaffProfileApiResponse>(`/staff/my-profile`, data);
     return response.data;
   },
 };

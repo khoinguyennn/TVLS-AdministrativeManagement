@@ -60,9 +60,12 @@ function transform(s: any): PersonnelRecord {
 }
 
 export const personnelService = {
-  async getAll(): Promise<PersonnelRecord[]> {
-    const res = await api.get<{ success: boolean; data: any[]; message: string }>(ENDPOINT);
-    return res.data.data.map(transform);
+  async getAll(params?: { page?: number; pageSize?: number; search?: string }): Promise<{ data: PersonnelRecord[]; total: number }> {
+    const res = await api.get<{ success: boolean; data: any[]; total: number; message: string }>(ENDPOINT, { params });
+    return {
+      data: res.data.data.map(transform),
+      total: res.data.total,
+    };
   },
 
   async getById(id: number): Promise<PersonnelRecord> {

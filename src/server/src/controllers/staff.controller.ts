@@ -3,6 +3,8 @@ import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { StaffService } from '@services/staff.service';
 import { CreateStaffProfileDto, UpdateStaffProfileDto } from '@dtos/staff.dto';
+import { RequestWithUser } from '@interfaces/auth.interface';
+import { HttpException } from '@exceptions/HttpException';
 
 export class StaffController {
   public service = Container.get(StaffService);
@@ -17,10 +19,14 @@ export class StaffController {
     }
   };
 
-  public getAll = async (_req: Request, res: Response, next: NextFunction) => {
+  public getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const data = await this.service.findAll();
-      res.status(200).json({ success: true, data, message: 'OK' });    } catch (error) {
+      const page = Math.max(1, Number(req.query.page) || 1);
+      const pageSize = Math.min(100, Math.max(1, Number(req.query.pageSize) || 10));
+      const search = (req.query.search as string) || undefined;
+      const result = await this.service.findAll({ page, pageSize, search });
+      res.status(200).json({ success: true, ...result, message: 'OK' });
+    } catch (error) {
       next(error);
     }
   };
@@ -62,6 +68,17 @@ export class StaffController {
       const dto: UpdateStaffProfileDto = req.body;
       const data = await this.service.update(id, dto);
       res.status(200).json({ success: true, data, message: 'Cập nhật hồ sơ nhân sự thành công' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public upsertMyProfile = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    try {
+      if (!req.user) throw new HttpException(401, 'Unauthorized');
+      const dto: UpdateStaffProfileDto = req.body;
+      const data = await this.service.upsertMyProfile(req.user.id, dto);
+      res.status(200).json({ success: true, data, message: 'Lưu hồ sơ cá nhân thành công' });
     } catch (error) {
       next(error);
     }

@@ -179,10 +179,6 @@ export default function MyProfilePage() {
       toast.error("Mã định danh là bắt buộc");
       return;
     }
-    if (!profile.id) {
-      toast.error("Chưa có hồ sơ nhân sự. Vui lòng liên hệ quản trị viên.");
-      return;
-    }
 
     setSaving(true);
     try {

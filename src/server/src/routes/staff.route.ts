@@ -62,6 +62,12 @@ export class StaffRoute implements Routes {
       this.controller.create,
     );
     this.router.put(
+      `${this.path}/my-profile`,
+      AuthMiddleware,
+      ValidationMiddleware(UpdateStaffProfileDto, true),
+      this.controller.upsertMyProfile,
+    );
+    this.router.put(
       `${this.path}/:id(\\d+)`,
       AuthMiddleware,
       RoleMiddleware('admin', 'manager'),
