@@ -9,6 +9,12 @@ import { EmailService } from '@services/email.service';
 export class WorkOrderService {
   @Inject()
   private emailService: EmailService;
+
+  private canOperateAsAssignee(workOrder: WorkOrder, requesterId: number, requesterRole: string): boolean {
+    if (['admin', 'manager'].includes(requesterRole)) return true;
+    return workOrder.assignedTo === requesterId;
+  }
+
   /**
    * Generate unique work order code: WO-YYYYMMDD-XXXX
    */
@@ -133,7 +139,13 @@ export class WorkOrderService {
     if (data.endDate !== undefined) updateData.endDate = new Date(data.endDate);
     if (data.note !== undefined) updateData.note = data.note;
     if (data.assignedTo !== undefined) updateData.assignedTo = data.assignedTo;
-    if (data.status !== undefined) updateData.status = data.status as WorkOrder['status'];
+    if (data.status !== undefined) {
+      const nextStatus = data.status as WorkOrder['status'];
+      if (['approved', 'rejected'].includes(nextStatus) && !['admin', 'manager'].includes(requesterRole)) {
+        throw new HttpException(403, 'Chỉ quản trị viên hoặc quản lý mới có quyền duyệt công lệnh');
+      }
+      updateData.status = nextStatus;
+    }
 
     await DB.WorkOrders.update(updateData, { where: { id } });
     return this.findById(id);
@@ -143,6 +155,11 @@ export class WorkOrderService {
     const row = await DB.WorkOrders.findByPk(id);
     if (!row) throw new HttpException(404, 'Công lệnh không tồn tại');
 
+    const plain = row.get({ plain: true }) as WorkOrder;
+    if (plain.status !== 'pending') {
+      throw new HttpException(400, 'Chỉ có thể duyệt công lệnh đang chờ duyệt');
+    }
+
     await DB.WorkOrders.update({ status: 'approved', approvedBy: approverId }, { where: { id } });
     return this.findById(id);
   }
@@ -151,7 +168,97 @@ export class WorkOrderService {
     const row = await DB.WorkOrders.findByPk(id);
     if (!row) throw new HttpException(404, 'Công lệnh không tồn tại');
 
+    const plain = row.get({ plain: true }) as WorkOrder;
+    if (plain.status !== 'pending') {
+      throw new HttpException(400, 'Chỉ có thể từ chối công lệnh đang chờ duyệt');
+    }
+
     await DB.WorkOrders.update({ status: 'rejected', approvedBy: approverId }, { where: { id } });
+    return this.findById(id);
+  }
+
+  public async uploadEvidence(id: number, requesterId: number, requesterRole: string, fileUrl: string): Promise<WorkOrder> {
+    const row = await DB.WorkOrders.findByPk(id);
+    if (!row) throw new HttpException(404, 'Công lệnh không tồn tại');
+
+    const plain = row.get({ plain: true }) as WorkOrder;
+    if (!this.canOperateAsAssignee(plain, requesterId, requesterRole)) {
+      throw new HttpException(403, 'Bạn không có quyền upload minh chứng cho công lệnh này');
+    }
+
+    if (!['approved', 'in_progress'].includes(plain.status)) {
+      throw new HttpException(400, 'Chỉ upload minh chứng khi công lệnh đang thực hiện hoặc chờ xác nhận');
+    }
+
+    await DB.WorkOrderAttachments.create({
+      workOrderId: id,
+      fileUrl,
+      uploadedBy: requesterId,
+    });
+
+    return this.findById(id);
+  }
+
+  public async submitCompletion(id: number, requesterId: number, requesterRole: string): Promise<WorkOrder> {
+    const row = await DB.WorkOrders.findByPk(id);
+    if (!row) throw new HttpException(404, 'Công lệnh không tồn tại');
+
+    const plain = row.get({ plain: true }) as WorkOrder;
+    if (!this.canOperateAsAssignee(plain, requesterId, requesterRole)) {
+      throw new HttpException(403, 'Bạn không có quyền hoàn thành công lệnh này');
+    }
+
+    if (plain.status !== 'approved') {
+      throw new HttpException(400, 'Chỉ có thể gửi hoàn thành khi công lệnh đã duyệt');
+    }
+
+    const evidenceCount = await DB.WorkOrderAttachments.count({
+      where: { workOrderId: id, uploadedBy: requesterId },
+    });
+
+    if (!evidenceCount) {
+      throw new HttpException(400, 'Vui lòng upload ít nhất 1 ảnh minh chứng trước khi hoàn thành');
+    }
+
+    const nextStatus = requesterRole === 'teacher' ? 'completed' : 'in_progress';
+    const updateData: Partial<WorkOrder> = { status: nextStatus };
+    if (requesterRole === 'teacher') {
+      updateData.approvedBy = requesterId;
+    }
+
+    await DB.WorkOrders.update(updateData, { where: { id } });
+    return this.findById(id);
+  }
+
+  public async confirmCompletion(id: number, approverId: number): Promise<WorkOrder> {
+    const row = await DB.WorkOrders.findByPk(id);
+    if (!row) throw new HttpException(404, 'Công lệnh không tồn tại');
+
+    const plain = row.get({ plain: true }) as WorkOrder;
+    if (plain.status !== 'in_progress') {
+      throw new HttpException(400, 'Công lệnh chưa ở trạng thái chờ xác nhận hoàn thành');
+    }
+
+    await DB.WorkOrders.update({ status: 'completed', approvedBy: approverId }, { where: { id } });
+    return this.findById(id);
+  }
+
+  public async requestRework(id: number, approverId: number, reason?: string): Promise<WorkOrder> {
+    const row = await DB.WorkOrders.findByPk(id);
+    if (!row) throw new HttpException(404, 'Công lệnh không tồn tại');
+
+    const plain = row.get({ plain: true }) as WorkOrder;
+    if (plain.status !== 'in_progress') {
+      throw new HttpException(400, 'Chỉ yêu cầu làm lại khi công lệnh đang chờ xác nhận hoàn thành');
+    }
+
+    let note = plain.note ?? '';
+    if (reason) {
+      const prefix = note ? '\n' : '';
+      note = `${note}${prefix}[YEU CAU LAM LAI] ${reason}`;
+    }
+
+    await DB.WorkOrders.update({ status: 'approved', approvedBy: approverId, note }, { where: { id } });
     return this.findById(id);
   }
 

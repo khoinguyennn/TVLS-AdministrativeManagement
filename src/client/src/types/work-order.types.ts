@@ -60,6 +60,10 @@ export interface UpdateWorkOrderPayload extends Partial<CreateWorkOrderPayload> 
   approvedBy?: number;
 }
 
+export interface RequestReworkPayload {
+  reason?: string;
+}
+
 export interface WorkOrderApiResponse {
   success: boolean;
   data: WorkOrder;

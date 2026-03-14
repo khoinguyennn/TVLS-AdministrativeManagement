@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { AdminWorkOrderForm } from "@/components/work-orders/admin-work-order-form";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
 import type { PersonnelRecord } from "@/types/personnel.types";
 import type { CreateWorkOrderPayload } from "@/types/work-order.types";
 import { workOrderService } from "@/services/work-order.service";
@@ -14,6 +15,7 @@ import { personnelService } from "@/services/personnel.service";
 
 export default function CreateWorkOrderAdminPage() {
   const router = useRouter();
+  const { user } = useAuth();
   const [personnel, setPersonnel] = useState<PersonnelRecord[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -77,6 +79,7 @@ export default function CreateWorkOrderAdminPage() {
       <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
         <AdminWorkOrderForm
           personnel={personnel}
+          currentUser={user}
           onSubmit={handleSubmit}
           onCancel={handleCancel}
           isLoading={isLoading}

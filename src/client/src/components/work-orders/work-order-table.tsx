@@ -23,6 +23,8 @@ interface WorkOrderTableProps {
   onApprove?: (id: number) => void;
   onReject?: (id: number) => void;
   onComplete?: (id: number) => void;
+  onConfirmCompletion?: (id: number) => void;
+  onRequestRework?: (id: number) => void;
   onPrint?: (id: number) => void;
   isLoading?: boolean;
   showActions?: boolean;
@@ -37,6 +39,8 @@ export function WorkOrderTable({
   onApprove,
   onReject,
   onComplete,
+  onConfirmCompletion,
+  onRequestRework,
   onPrint,
   isLoading = false,
   showActions = true,
@@ -73,7 +77,7 @@ export function WorkOrderTable({
     const statusConfig = {
       pending: { label: "Chờ duyệt", variant: "secondary" as const, icon: Clock },
       approved: { label: "Đã duyệt", variant: "default" as const, icon: CheckCircle },
-      in_progress: { label: "Đang thực hiện", variant: "outline" as const, icon: PlayCircle },
+      in_progress: { label: "Chờ xác nhận", variant: "outline" as const, icon: PlayCircle },
       completed: { label: "Hoàn thành", variant: "default" as const, icon: CheckCircle },
       rejected: { label: "Từ chối", variant: "destructive" as const, icon: XCircle },
       cancelled: { label: "Đã hủy", variant: "destructive" as const, icon: XCircle }
@@ -192,9 +196,31 @@ export function WorkOrderTable({
                         size="sm"
                         onClick={() => onComplete(workOrder.id)}
                         className="text-purple-600 hover:text-purple-700"
-                        title="Hoàn thành"
+                        title="Hoàn thành công lệnh"
                       >
                         <CheckCircle className="h-4 w-4" />
+                      </Button>
+                    )}
+                    {workOrder.status === "in_progress" && onConfirmCompletion && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onConfirmCompletion(workOrder.id)}
+                        className="text-green-600 hover:text-green-700"
+                        title="Xác nhận hoàn thành"
+                      >
+                        <CheckCircle className="h-4 w-4" />
+                      </Button>
+                    )}
+                    {workOrder.status === "in_progress" && onRequestRework && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onRequestRework(workOrder.id)}
+                        className="text-orange-600 hover:text-orange-700"
+                        title="Yêu cầu làm lại"
+                      >
+                        <XCircle className="h-4 w-4" />
                       </Button>
                     )}
                     <Button

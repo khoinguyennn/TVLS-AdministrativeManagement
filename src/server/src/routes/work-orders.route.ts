@@ -4,6 +4,7 @@ import { CreateWorkOrderDto, UpdateWorkOrderDto } from '@dtos/work-orders.dto';
 import { Routes } from '@interfaces/routes.interface';
 import { AuthMiddleware } from '@middlewares/auth.middleware';
 import { RoleMiddleware } from '@middlewares/role.middleware';
+import { uploadWorkOrderEvidence } from '@middlewares/upload.middleware';
 import { ValidationMiddleware } from '@middlewares/validation.middleware';
 
 export class WorkOrderRoute implements Routes {
@@ -20,11 +21,11 @@ export class WorkOrderRoute implements Routes {
     this.router.get(this.path, AuthMiddleware, this.controller.getAll);
     this.router.get(`${this.path}/:id(\\d+)`, AuthMiddleware, this.controller.getById);
 
-    // Create (admin, manager)
+    // Create (admin, manager, teacher)
     this.router.post(
       this.path,
       AuthMiddleware,
-      RoleMiddleware('admin', 'manager'),
+      RoleMiddleware('admin', 'manager', 'teacher'),
       ValidationMiddleware(CreateWorkOrderDto),
       this.controller.create,
     );
@@ -40,6 +41,22 @@ export class WorkOrderRoute implements Routes {
     // Approve / Reject (admin, manager)
     this.router.put(`${this.path}/:id(\\d+)/approve`, AuthMiddleware, RoleMiddleware('admin', 'manager'), this.controller.approve);
     this.router.put(`${this.path}/:id(\\d+)/reject`, AuthMiddleware, RoleMiddleware('admin', 'manager'), this.controller.reject);
+
+    // Execution workflow
+    this.router.post(`${this.path}/:id(\\d+)/evidence`, AuthMiddleware, uploadWorkOrderEvidence, this.controller.uploadEvidence);
+    this.router.put(`${this.path}/:id(\\d+)/submit-completion`, AuthMiddleware, this.controller.submitCompletion);
+    this.router.put(
+      `${this.path}/:id(\\d+)/confirm-completion`,
+      AuthMiddleware,
+      RoleMiddleware('admin', 'manager'),
+      this.controller.confirmCompletion,
+    );
+    this.router.put(
+      `${this.path}/:id(\\d+)/request-rework`,
+      AuthMiddleware,
+      RoleMiddleware('admin', 'manager'),
+      this.controller.requestRework,
+    );
 
     // Delete
     this.router.delete(`${this.path}/:id(\\d+)`, AuthMiddleware, this.controller.delete);
