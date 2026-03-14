@@ -1,6 +1,7 @@
 import { Service } from 'typedi';
 
 import * as XLSX from 'xlsx';
+import { Op } from 'sequelize';
 import { hash } from 'bcrypt';
 import { DB } from '@database';
 import { CreateStaffProfileDto, UpdateStaffProfileDto } from '@dtos/staff.dto';
@@ -10,17 +11,47 @@ import { HttpException } from '@exceptions/HttpException';
 export class StaffService {
   // ─── helpers ────────────────────────────────────────────────────────────────
 
-  private includeAll() {
-    return [
-      { model: DB.Users, as: 'user', attributes: ['id', 'fullName', 'email', 'role', 'status', 'avatar'] },
-      { model: DB.StaffPositions, as: 'position' },
-      { model: DB.StaffQualifications, as: 'qualification' },
-      { model: DB.StaffAddresses, as: 'addresses' },
-      { model: DB.StaffBankAccounts, as: 'bankAccount' },
-      { model: DB.StaffEvaluations, as: 'evaluation' },
-      { model: DB.StaffOrganizations, as: 'organization' },
-      { model: DB.StaffSalaries, as: 'salary' },
-    ];
+  /** User include — safe JOIN (belongsTo, always 1 row per profile) */
+  private includeUser() {
+    return { model: DB.Users, as: 'user', attributes: ['id', 'fullName', 'email', 'role', 'status', 'avatar'] };
+  }
+
+  /**
+   * Manually load all related data for an array of plain profile objects.
+   * Uses individual SELECT … WHERE staff_profile_id IN (…) queries
+   * instead of JOINs, completely avoiding the Cartesian product.
+   * For hasOne tables that may have duplicate rows, only the latest is kept.
+   */
+  private async loadRelations(profiles: any[]): Promise<any[]> {
+    if (!profiles.length) return profiles;
+    const ids = profiles.map(p => p.id);
+
+    const [positions, qualifications, addresses, bankAccounts, evaluations, organizations, salaries] = await Promise.all([
+      DB.StaffPositions.findAll({ where: { staffProfileId: ids }, order: [['id', 'DESC']] }).then(r => r.map(x => x.get({ plain: true }))),
+      DB.StaffQualifications.findAll({ where: { staffProfileId: ids }, order: [['id', 'DESC']] }).then(r => r.map(x => x.get({ plain: true }))),
+      DB.StaffAddresses.findAll({ where: { staffProfileId: ids } }).then(r => r.map(x => x.get({ plain: true }))),
+      DB.StaffBankAccounts.findAll({ where: { staffProfileId: ids }, order: [['id', 'DESC']] }).then(r => r.map(x => x.get({ plain: true }))),
+      DB.StaffEvaluations.findAll({ where: { staffProfileId: ids }, order: [['id', 'DESC']] }).then(r => r.map(x => x.get({ plain: true }))),
+      DB.StaffOrganizations.findAll({ where: { staffProfileId: ids }, order: [['id', 'DESC']] }).then(r => r.map(x => x.get({ plain: true }))),
+      DB.StaffSalaries.findAll({ where: { staffProfileId: ids }, order: [['id', 'DESC']] }).then(r => r.map(x => x.get({ plain: true }))),
+    ]);
+
+    // Group by staffProfileId, keeping only the first (latest) for hasOne relations
+    const first = <T extends { staffProfileId: number }>(arr: T[], pid: number): T | null =>
+      arr.find(r => r.staffProfileId === pid) || null;
+    const filter = <T extends { staffProfileId: number }>(arr: T[], pid: number): T[] =>
+      arr.filter(r => r.staffProfileId === pid);
+
+    for (const p of profiles) {
+      p.position = first(positions as any[], p.id);
+      p.qualification = first(qualifications as any[], p.id);
+      p.addresses = filter(addresses as any[], p.id);
+      p.bankAccount = first(bankAccounts as any[], p.id);
+      p.evaluation = first(evaluations as any[], p.id);
+      p.organization = first(organizations as any[], p.id);
+      p.salary = first(salaries as any[], p.id);
+    }
+    return profiles;
   }
 
   // ─── Statistics ──────────────────────────────────────────────────────────────
@@ -162,24 +193,66 @@ export class StaffService {
 
   // ─── CRUD ────────────────────────────────────────────────────────────────────
 
-  public async findAll() {
+  public async findAll(params?: { page?: number; pageSize?: number; search?: string }) {
+    const page = params?.page || 1;
+    const pageSize = params?.pageSize || 10;
+    const search = params?.search?.trim();
+
+    const where: any = {};
+    if (search) {
+      where[Op.or] = [
+        { staffCode: { [Op.like]: `%${search}%` } },
+        { '$user.full_name$': { [Op.like]: `%${search}%` } },
+        { '$user.email$': { [Op.like]: `%${search}%` } },
+      ];
+    }
+
+    // Count total matching profiles (with user JOIN for search)
+    const count = await DB.StaffProfiles.count({
+      where,
+      include: [this.includeUser()],
+      distinct: true,
+    });
+
+    // Fetch paginated profiles with user data only (no child JOINs)
     const rows = await DB.StaffProfiles.findAll({
-      include: this.includeAll(),
+      where,
+      include: [this.includeUser()],
+      order: [['createdAt', 'DESC']],
+      limit: pageSize,
+      offset: (page - 1) * pageSize,
+      subQuery: true,
+    });
+
+    // Convert to plain objects, then load relations separately
+    let profiles = rows.map(r => r.get({ plain: true }));
+    profiles = await this.loadRelations(profiles);
+
+    return { data: profiles, total: count, page, pageSize };
+  }
+
+  private async findAllUnpaginated() {
+    const rows = await DB.StaffProfiles.findAll({
+      include: [this.includeUser()],
       order: [['createdAt', 'DESC']],
     });
-    return rows.map(r => r.get({ plain: true }));
+    let profiles = rows.map(r => r.get({ plain: true }));
+    profiles = await this.loadRelations(profiles);
+    return profiles;
   }
 
   public async findById(id: number) {
-    const row = await DB.StaffProfiles.findByPk(id, { include: this.includeAll() });
+    const row = await DB.StaffProfiles.findByPk(id, { include: [this.includeUser()] });
     if (!row) throw new HttpException(404, 'Hồ sơ nhân sự không tồn tại');
-    return row.get({ plain: true });
+    const profiles = await this.loadRelations([row.get({ plain: true })]);
+    return profiles[0];
   }
 
   public async findByUserId(userId: number) {
-    const row = await DB.StaffProfiles.findOne({ where: { userId }, include: this.includeAll() });
+    const row = await DB.StaffProfiles.findOne({ where: { userId }, include: [this.includeUser()] });
     if (!row) throw new HttpException(404, 'Hồ sơ nhân sự không tồn tại');
-    return row.get({ plain: true });
+    const profiles = await this.loadRelations([row.get({ plain: true })]);
+    return profiles[0];
   }
 
   public async create(data: CreateStaffProfileDto) {
@@ -254,6 +327,16 @@ export class StaffService {
     return this.findById(profileId);
   }
 
+  public async upsertMyProfile(userId: number, data: UpdateStaffProfileDto) {
+    const profile = await DB.StaffProfiles.findOne({ where: { userId } });
+    if (!profile) {
+      if (!data.staffCode) throw new HttpException(400, 'Mã định danh là bắt buộc');
+      return this.create({ ...data, userId, staffCode: data.staffCode } as CreateStaffProfileDto);
+    } else {
+      return this.update(profile.get('id') as number, data);
+    }
+  }
+
   public async update(id: number, data: UpdateStaffProfileDto) {
     const profile = await DB.StaffProfiles.findByPk(id);
     if (!profile) throw new HttpException(404, 'Hồ sơ nhân sự không tồn tại');
@@ -283,10 +366,12 @@ export class StaffService {
     );
 
     if (data.position) {
-      await DB.StaffPositions.upsert({ staffProfileId: id, ...data.position });
+      await DB.StaffPositions.destroy({ where: { staffProfileId: id } });
+      await DB.StaffPositions.create({ staffProfileId: id, ...data.position });
     }
     if (data.qualification) {
-      await DB.StaffQualifications.upsert({ staffProfileId: id, ...data.qualification });
+      await DB.StaffQualifications.destroy({ where: { staffProfileId: id } });
+      await DB.StaffQualifications.create({ staffProfileId: id, ...data.qualification });
     }
     if (data.addresses) {
       await DB.StaffAddresses.destroy({ where: { staffProfileId: id } });
@@ -303,16 +388,20 @@ export class StaffService {
       }
     }
     if (data.bankAccount) {
-      await DB.StaffBankAccounts.upsert({ staffProfileId: id, ...data.bankAccount });
+      await DB.StaffBankAccounts.destroy({ where: { staffProfileId: id } });
+      await DB.StaffBankAccounts.create({ staffProfileId: id, ...data.bankAccount });
     }
     if (data.evaluation) {
-      await DB.StaffEvaluations.upsert({ staffProfileId: id, ...data.evaluation });
+      await DB.StaffEvaluations.destroy({ where: { staffProfileId: id } });
+      await DB.StaffEvaluations.create({ staffProfileId: id, ...data.evaluation });
     }
     if (data.organization) {
-      await DB.StaffOrganizations.upsert({ staffProfileId: id, ...data.organization });
+      await DB.StaffOrganizations.destroy({ where: { staffProfileId: id } });
+      await DB.StaffOrganizations.create({ staffProfileId: id, ...data.organization });
     }
     if (data.salary) {
-      await DB.StaffSalaries.upsert({ staffProfileId: id, ...data.salary });
+      await DB.StaffSalaries.destroy({ where: { staffProfileId: id } });
+      await DB.StaffSalaries.create({ staffProfileId: id, ...data.salary });
     }
 
     return this.findById(id);
@@ -327,7 +416,7 @@ export class StaffService {
   // ─── Excel Export ─────────────────────────────────────────────────────────────
 
   public async exportExcel(): Promise<Buffer> {
-    const profiles = await this.findAll() as any[];
+    const profiles = await this.findAllUnpaginated() as any[];
 
     const rows = profiles.map(p => ({
       'Mã nhân viên': p.staffCode || '',

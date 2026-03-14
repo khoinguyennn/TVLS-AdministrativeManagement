@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
-import { Plus, Search, Loader2, ChevronRight } from "lucide-react";
+import { Plus, Search, ChevronRight } from "lucide-react";
 import { TableSkeleton } from "@/components/skeletons";
 import { useTranslations } from "next-intl";
 
@@ -15,60 +15,54 @@ import { personnelService } from "@/services/personnel.service";
 import type { PersonnelRecord } from "@/types/personnel.types";
 import { toast } from "sonner";
 
+const PAGE_SIZE = 8;
+
 export default function StaffPage() {
   const tBreadcrumb = useTranslations("Breadcrumb");
   const tSidebar = useTranslations("Sidebar");
   const tStaff = useTranslations("Staff");
   const [personnel, setPersonnel] = useState<PersonnelRecord[]>([]);
-  const [filteredPersonnel, setFilteredPersonnel] = useState<PersonnelRecord[]>(
-    []
-  );
+  const [total, setTotal] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const PAGE_SIZE = 8;
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Load personnel data
+  // Debounce search input
   useEffect(() => {
-    loadPersonnel();
-  }, []);
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    debounceTimer.current = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setCurrentPage(1);
+    }, 400);
+    return () => {
+      if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    };
+  }, [searchQuery]);
 
-  // Filter personnel based on search query
-  useEffect(() => {
-    if (!searchQuery.trim()) {
-      setFilteredPersonnel(personnel);
-    } else {
-      const query = searchQuery.toLowerCase();
-      const filtered = personnel.filter(
-        (p) =>
-          p.fullName.toLowerCase().includes(query) ||
-          p.code.toLowerCase().includes(query) ||
-          p.email.toLowerCase().includes(query) ||
-          (p.contactAddress?.phone && p.contactAddress.phone.includes(query))
-      );
-      setFilteredPersonnel(filtered);
-    }
-    setCurrentPage(1);
-  }, [searchQuery, personnel]);
-
-  const pagedPersonnel = filteredPersonnel.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE
-  );
-
-  async function loadPersonnel() {
+  // Load personnel data when page or search changes
+  const loadPersonnel = useCallback(async (page: number, search: string) => {
     try {
       setIsLoading(true);
-      const data = await personnelService.getAll();
-      setPersonnel(data);
-      setFilteredPersonnel(data);
+      const result = await personnelService.getAll({
+        page,
+        pageSize: PAGE_SIZE,
+        search: search || undefined,
+      });
+      setPersonnel(result.data);
+      setTotal(result.total);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Lỗi tải dữ liệu";
       toast.error(message);
     } finally {
       setIsLoading(false);
     }
-  }
+  }, []);
+
+  useEffect(() => {
+    loadPersonnel(currentPage, debouncedSearch);
+  }, [currentPage, debouncedSearch, loadPersonnel]);
 
   async function handleDelete(id: number) {
     if (!confirm("Bạn có chắc chắn muốn xóa nhân sự này?")) {
@@ -77,8 +71,9 @@ export default function StaffPage() {
 
     try {
       await personnelService.delete(id);
-      setPersonnel((prev) => prev.filter((p) => p.id !== id));
       toast.success("Xóa nhân sự thành công");
+      // Reload current page after delete
+      loadPersonnel(currentPage, debouncedSearch);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Lỗi xóa dữ liệu";
       toast.error(message);
@@ -88,8 +83,8 @@ export default function StaffPage() {
   async function handleImportExcel(file: File) {
     try {
       const result = await personnelService.importExcel(file);
-      await loadPersonnel();
       toast.success(`Nhập thành công ${result.success} hồ sơ`);
+      loadPersonnel(currentPage, debouncedSearch);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Lỗi nhập Excel";
       toast.error(message);
@@ -164,13 +159,13 @@ export default function StaffPage() {
           ) : (
             <>
               <PersonnelTable
-                data={pagedPersonnel}
+                data={personnel}
                 onDelete={handleDelete}
                 isLoading={false}
                 startIndex={(currentPage - 1) * PAGE_SIZE + 1}
               />
               <TablePagination
-                total={filteredPersonnel.length}
+                total={total}
                 page={currentPage}
                 pageSize={PAGE_SIZE}
                 onPageChange={setCurrentPage}
