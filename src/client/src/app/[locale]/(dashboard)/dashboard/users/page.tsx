@@ -16,6 +16,9 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
 
+import { useAuth } from "@/hooks/use-auth";
+import { useRouter } from "@/i18n/navigation";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/ui/avatar";
 import { Badge } from "@/ui/badge";
 import { Button } from "@/ui/button";
@@ -114,6 +117,10 @@ export default function UsersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [mounted, setMounted] = useState(false);
 
+  // ── Auth Check ──
+  const { user } = useAuth();
+  const router = useRouter();
+
   // ── Dialog state ──
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
@@ -145,6 +152,13 @@ export default function UsersPage() {
     fetchUsers();
     setMounted(true);
   }, [fetchUsers]);
+
+  // Handle unauthorized access
+  useEffect(() => {
+    if (mounted && user && user.role !== "admin") {
+      router.replace("/dashboard");
+    }
+  }, [mounted, user, router]);
 
   // ── Filtered & paginated data ──
   const filteredUsers = useMemo(() => {
@@ -276,6 +290,15 @@ export default function UsersPage() {
   }, [currentPage, totalPages]);
 
   // ═══════════════════════════════════════════════════════════
+
+  if (!mounted || !user || user.role !== "admin") {
+    return (
+      <div className="flex h-[50vh] items-center justify-center">
+        <Loader2 className="size-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-6">
       {/* Breadcrumb */}

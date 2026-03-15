@@ -714,5 +714,63 @@
     "phoneNumber": "Số điện thoại",
     "permanentAddress": "Địa chỉ thường trú",
     "verifyIdCardAlert": "Vui lòng kiểm tra kỹ các thông tin định danh (CCCD, Ngày sinh) trước khi lưu. Các thay đổi quan trọng sẽ cần được phê duyệt bởi quản trị viên."
+  },
+  "Statistics": {
+    "title": "Thống kê nhân sự",
+    "description": "Dữ liệu nhân sự cập nhật đến ngày {date}",
+    "exportReport": "Xuất báo cáo",
+    "overall": "Tổng quát",
+    "totalStaff": "Tổng nhân sự",
+    "male": "Nam",
+    "female": "Nữ",
+    "teachers": "Giáo viên",
+    "tenured": "Biên chế",
+    "contract": "Hợp đồng",
+    "staff": "Nhân viên",
+    "regionalSalary": "Lương vùng",
+    "managementBoard": "Ban giám hiệu",
+    "personnelStatus": "Tình trạng nhân sự",
+    "currentMonth": "Tháng hiện tại",
+    "status": {
+      "working": "Đang công tác",
+      "resigned": "Nghỉ việc",
+      "transferred": "Chuyển công tác",
+      "maternity_leave": "Nghỉ hậu sản",
+      "unpaid_leave": "Nghỉ không lương"
+    },
+    "ethnicityStats": "Thống kê theo dân tộc",
+    "departmentList": "Danh sách Tổ bộ môn ({count} tổ)",
+    "department": "Tổ / Bộ phận",
+    "quantity": "Số lượng",
+    "ratio": "Tỷ lệ",
+    "other": "Khác ({count} tổ còn lại)",
+    "collapse": "Thu gọn",
+    "viewAll": "Xem tất cả tổ bộ môn",
+    "educationLevelStats": "Thống kê theo cấp học"
+  },
+  "AgeStatistics": {
+    "title": "Thống kê nhân sự theo độ tuổi",
+    "description": "Dữ liệu cập nhật dựa trên hệ thống quản lý nhân sự tập trung",
+    "filters": {
+      "all": "Toàn trường",
+      "teacher": "Giáo viên",
+      "staff": "Nhân viên",
+      "contractTeacher": "Giáo viên HĐ"
+    },
+    "chartTitle": "Biểu đồ phân bổ độ tuổi",
+    "unit": "Đơn vị: Nhân sự",
+    "staffUnit": "Nhân sự",
+    "totalStaff": "Tổng số nhân sự",
+    "updatedToday": "Cập nhật hôm nay",
+    "mostCommonAge": "Độ tuổi phổ biến",
+    "percentTotal": "% Tổng số",
+    "detailedStats": "Thống kê chi tiết theo cấp học",
+    "exportData": "Xuất dữ liệu Excel",
+    "educationUnit": "Cấp học / Đơn vị",
+    "total": "Tổng cộng",
+    "insights": "Nhận xét chuyên môn",
+    "insightsDesc": "Cơ cấu nhân sự tập trung chủ yếu ở độ tuổi vàng ({ageRange}). Đây là nguồn lực giàu kinh nghiệm và đang trong giai đoạn cống hiến cao nhất cho nhà trường.",
+    "forecast": "Dự báo nhân sự",
+    "forecastDesc": "Tỷ lệ nhân sự trẻ (dưới 30 tuổi) cần được chú trọng tuyển dụng thêm trong giai đoạn tới để đảm bảo tính kế thừa liên tục cho các cấp học."
   }
 }

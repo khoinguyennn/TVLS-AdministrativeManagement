@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { IdCard, Info, Loader2, Phone, MapPin, Home } from "lucide-react";
 import { ProfileSkeleton } from "@/components/skeletons";
 
@@ -126,6 +127,8 @@ function mapGenderToApi(gender: string): "male" | "female" | "other" | undefined
 }
 
 export default function MyProfilePage() {
+  const t = useTranslations("MyProfile");
+  const tCommon = useTranslations("Common");
   const { user, getInitials } = useAuth();
 
   const [profile, setProfile] = useState(EMPTY_PROFILE);
@@ -324,9 +327,7 @@ export default function MyProfilePage() {
 
             {/* Actions */}
             <div className="pb-2 flex gap-3">
-              <Button variant="outline" onClick={handleExport}>
-                Xuất hồ sơ
-              </Button>
+              <Button variant="outline" onClick={handleExport}>{t("exportProfile")}</Button>
               <Button onClick={handleSave} disabled={saving}>
                 {saving && <Loader2 className="size-4 animate-spin mr-2" />}
                 Lưu thay đổi
@@ -339,13 +340,13 @@ export default function MyProfilePage() {
             <div className="border-b overflow-x-auto">
               <TabsList className="inline-flex h-auto w-auto bg-transparent p-0 gap-0">
                 {[
-                  { value: "personal", label: "Thông tin cá nhân" },
-                  { value: "organization", label: "Tổ chức" },
-                  { value: "work", label: "Công tác" },
-                  { value: "salary", label: "Phụ cấp lương" },
-                  { value: "qualification", label: "Trình độ" },
-                  { value: "evaluation", label: "Đánh giá" },
-                  { value: "bank", label: "Ngân hàng" },
+                  { value: "personal", label: t("personalInfo") },
+                  { value: "organization", label: t("organization") },
+                  { value: "work", label: t("workInfo") },
+                  { value: "salary", label: t("salaryAllowance") },
+                  { value: "qualification", label: t("qualifications") },
+                  { value: "evaluation", label: t("evaluation") },
+                  { value: "bank", label: t("bankInfo") },
                 ].map((tab) => (
                   <TabsTrigger
                     key={tab.value}
@@ -368,9 +369,7 @@ export default function MyProfilePage() {
                   </h4>
 
                   <div className="space-y-1.5">
-                    <Label className="text-[13px] font-semibold text-muted-foreground">
-                      Mã định danh
-                    </Label>
+                    <Label className="text-[13px] font-semibold text-muted-foreground">{t("identifier")}</Label>
                     <Input
                       value={profile.code}
                       onChange={(e) =>
@@ -381,9 +380,7 @@ export default function MyProfilePage() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        Giới tính
-                      </Label>
+                      <Label className="text-[13px] font-semibold text-muted-foreground">{t("gender")}</Label>
                       <Select
                         value={profile.gender}
                         onValueChange={(v) =>
@@ -394,16 +391,14 @@ export default function MyProfilePage() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Nam">Nam</SelectItem>
-                          <SelectItem value="Nữ">Nữ</SelectItem>
+                          <SelectItem value="Nam">{t("male")}</SelectItem>
+                          <SelectItem value="Nữ">{t("female")}</SelectItem>
                           <SelectItem value="Khác">Khác</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        Ngày sinh
-                      </Label>
+                      <Label className="text-[13px] font-semibold text-muted-foreground">{t("birthDate")}</Label>
                       <Input
                         type="date"
                         value={profile.dateOfBirth}
@@ -415,9 +410,7 @@ export default function MyProfilePage() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <Label className="text-[13px] font-semibold text-muted-foreground">
-                      Số CMT/CCCD
-                    </Label>
+                    <Label className="text-[13px] font-semibold text-muted-foreground">{t("idCardNumber")}</Label>
                     <Input
                       value={profile.cccdNumber}
                       onChange={(e) =>
@@ -428,9 +421,7 @@ export default function MyProfilePage() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        Ngày cấp
-                      </Label>
+                      <Label className="text-[13px] font-semibold text-muted-foreground">{t("issueDate")}</Label>
                       <Input
                         type="date"
                         value={profile.cccdIssueDate}
@@ -443,9 +434,7 @@ export default function MyProfilePage() {
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        Nơi cấp
-                      </Label>
+                      <Label className="text-[13px] font-semibold text-muted-foreground">{t("issuePlace")}</Label>
                       <Input
                         value={profile.cccdIssuePlace}
                         onChange={(e) =>
@@ -467,9 +456,7 @@ export default function MyProfilePage() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        Dân tộc
-                      </Label>
+                      <Label className="text-[13px] font-semibold text-muted-foreground">{t("ethnicity")}</Label>
                       <Select
                         value={profile.ethnicity}
                         onValueChange={(v) =>
@@ -487,9 +474,7 @@ export default function MyProfilePage() {
                       </Select>
                     </div>
                     <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        Tôn giáo
-                      </Label>
+                      <Label className="text-[13px] font-semibold text-muted-foreground">{t("religion")}</Label>
                       <Input
                         value={profile.religion}
                         onChange={(e) =>
@@ -500,9 +485,7 @@ export default function MyProfilePage() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <Label className="text-[13px] font-semibold text-muted-foreground">
-                      Trạng thái CB
-                    </Label>
+                    <Label className="text-[13px] font-semibold text-muted-foreground">{t("status")}</Label>
                     <Select
                       value={profile.staffStatus}
                       onValueChange={(v) =>
@@ -513,8 +496,8 @@ export default function MyProfilePage() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="working">Đang công tác</SelectItem>
-                        <SelectItem value="resigned">Nghỉ việc</SelectItem>
+                        <SelectItem value="working">{t("working")}</SelectItem>
+                        <SelectItem value="resigned">{t("resigned")}</SelectItem>
                         <SelectItem value="transferred">Chuyển công tác</SelectItem>
                         <SelectItem value="maternity_leave">
                           Nghỉ hậu sản
@@ -525,9 +508,7 @@ export default function MyProfilePage() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <Label className="text-[13px] font-semibold text-muted-foreground">
-                      Ngày tuyển dụng
-                    </Label>
+                    <Label className="text-[13px] font-semibold text-muted-foreground">{t("hireDate")}</Label>
                     <Input
                       type="date"
                       value={profile.recruitmentDate}
@@ -543,12 +524,10 @@ export default function MyProfilePage() {
                   {/* Quê quán */}
                   <div className="space-y-4">
                     <Label className="text-[13px] font-bold flex items-center gap-2">
-                      <Home className="size-4" />
-                      Quê quán
-                    </Label>
+                      <Home className="size-4" />{t("hometown")}</Label>
                     <div className="grid grid-cols-2 gap-3">
                       <Input
-                        placeholder="Tỉnh/Thành phố"
+                        placeholder={t("provinceCity")}
                         value={profile.hometownProvince}
                         onChange={(e) =>
                           setProfile({
@@ -558,7 +537,7 @@ export default function MyProfilePage() {
                         }
                       />
                       <Input
-                        placeholder="Xã/Phường"
+                        placeholder={t("ward")}
                         value={profile.hometownWard}
                         onChange={(e) =>
                           setProfile({
@@ -598,9 +577,7 @@ export default function MyProfilePage() {
                   </h4>
 
                   <div className="space-y-1.5">
-                    <Label className="text-[13px] font-semibold text-muted-foreground">
-                      Số điện thoại
-                    </Label>
+                    <Label className="text-[13px] font-semibold text-muted-foreground">{t("phoneNumber")}</Label>
                     <div className="relative">
                       <Phone className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                       <Input
@@ -617,13 +594,11 @@ export default function MyProfilePage() {
                   {/* Địa chỉ thường trú */}
                   <div className="space-y-4">
                     <Label className="text-[13px] font-bold flex items-center gap-2">
-                      <MapPin className="size-4" />
-                      Địa chỉ thường trú
-                    </Label>
+                      <MapPin className="size-4" />{t("permanentAddress")}</Label>
                     <div className="space-y-3">
                       <div className="grid grid-cols-2 gap-3">
                         <Input
-                          placeholder="Tỉnh/Thành phố"
+                          placeholder={t("provinceCity")}
                           value={profile.contactProvince}
                           onChange={(e) =>
                             setProfile({
@@ -633,7 +608,7 @@ export default function MyProfilePage() {
                           }
                         />
                         <Input
-                          placeholder="Phường/Xã"
+                          placeholder={t("ward")}
                           value={profile.contactWard}
                           onChange={(e) =>
                             setProfile({
@@ -669,11 +644,7 @@ export default function MyProfilePage() {
                   {/* Info note */}
                   <div className="p-4 bg-primary/5 rounded-xl border border-primary/20 flex gap-3">
                     <Info className="size-5 text-primary shrink-0 mt-0.5" />
-                    <p className="text-xs text-primary/80 font-medium leading-relaxed">
-                      Vui lòng kiểm tra kỹ các thông tin định danh (CCCD, Ngày
-                      sinh) trước khi lưu. Các thay đổi quan trọng sẽ cần được
-                      phê duyệt bởi quản trị viên.
-                    </p>
+                    <p className="text-xs text-primary/80 font-medium leading-relaxed">{t("verifyIdCardAlert")}</p>
                   </div>
                 </div>
               </div>
@@ -691,9 +662,9 @@ export default function MyProfilePage() {
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Đoàn viên
                       </Label>
-                      <Select 
+                      <Select
                         value={profile.isUnionMember ? "yes" : "no"}
-                        onValueChange={(val) => setProfile({...profile, isUnionMember: val === "yes"})}
+                        onValueChange={(val) => setProfile({ ...profile, isUnionMember: val === "yes" })}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -708,10 +679,10 @@ export default function MyProfilePage() {
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Ngày vào Đoàn
                       </Label>
-                      <Input 
-                        type="date" 
+                      <Input
+                        type="date"
                         value={profile.unionJoinDate}
-                        onChange={(e) => setProfile({...profile, unionJoinDate: e.target.value})}
+                        onChange={(e) => setProfile({ ...profile, unionJoinDate: e.target.value })}
                       />
                     </div>
                   </div>
@@ -720,9 +691,9 @@ export default function MyProfilePage() {
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Đảng viên
                       </Label>
-                      <Select 
+                      <Select
                         value={profile.isPartyMember ? "yes" : "no"}
-                        onValueChange={(val) => setProfile({...profile, isPartyMember: val === "yes"})}
+                        onValueChange={(val) => setProfile({ ...profile, isPartyMember: val === "yes" })}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -737,10 +708,10 @@ export default function MyProfilePage() {
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Ngày vào Đảng
                       </Label>
-                      <Input 
-                        type="date" 
+                      <Input
+                        type="date"
                         value={profile.partyJoinDate}
-                        onChange={(e) => setProfile({...profile, partyJoinDate: e.target.value})}
+                        onChange={(e) => setProfile({ ...profile, partyJoinDate: e.target.value })}
                       />
                     </div>
                   </div>

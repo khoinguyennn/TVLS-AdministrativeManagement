@@ -11,6 +11,7 @@ export interface StaffStatistics {
   byEducationLevel: Record<string, number>;
   byAgeGroup: Record<string, number>;
   ageByEducation: Array<{ ageGroup: string; [key: string]: string | number }>;
+  byPositionGroup: Record<string, number>;
 }
 
 export interface StaffStatisticsResponse {

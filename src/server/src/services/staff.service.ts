@@ -59,7 +59,7 @@ export class StaffService {
   public async getStatistics(jobPositionFilter?: string) {
     const rows = await DB.StaffProfiles.findAll({
       include: [
-        { model: DB.StaffPositions, as: 'position', attributes: ['subjectGroup', 'educationLevel', 'jobPosition', 'contractType'] },
+        { model: DB.StaffPositions, as: 'position', attributes: ['subjectGroup', 'educationLevel', 'jobPosition', 'positionGroup', 'contractType'] },
       ],
       attributes: ['id', 'staffStatus', 'ethnicity', 'dateOfBirth', 'gender'],
       raw: false,
@@ -114,6 +114,13 @@ export class StaffService {
       bySubjectGroup[sg] = (bySubjectGroup[sg] || 0) + 1;
     }
 
+    // ── By position group ──
+    const byPositionGroup: Record<string, number> = {};
+    for (const p of profiles) {
+      const pg = p.position?.positionGroup || 'Chưa cập nhật';
+      byPositionGroup[pg] = (byPositionGroup[pg] || 0) + 1;
+    }
+
     // ── By ethnicity ──
     const byEthnicity: Record<string, number> = {};
     for (const p of profiles) {
@@ -162,7 +169,7 @@ export class StaffService {
 
     // ── Age × Education level cross-tab ──
     const educationLevels = ['Mầm non', 'Tiểu học', 'THCS', 'THPT'];
-    const ageByEducation: Array<{ ageGroup: string; [key: string]: string | number }> = [];
+    const ageByEducation: Array<{ ageGroup: string;[key: string]: string | number }> = [];
     for (const ag of ageGroups) {
       const row: any = { ageGroup: ag };
       for (const el of educationLevels) row[el] = 0;
@@ -188,6 +195,7 @@ export class StaffService {
       byEducationLevel,
       byAgeGroup,
       ageByEducation,
+      byPositionGroup,
     };
   }
 
@@ -418,37 +426,47 @@ export class StaffService {
   public async exportExcel(): Promise<Buffer> {
     const profiles = await this.findAllUnpaginated() as any[];
 
-    const rows = profiles.map(p => ({
-      'Mã nhân viên': p.staffCode || '',
-      'Họ và tên': p.user?.fullName || '',
-      'Email': p.user?.email || '',
-      'Vai trò': p.user?.role || '',
-      'Giới tính': p.gender === 'male' ? 'Nam' : p.gender === 'female' ? 'Nữ' : 'Khác',
-      'Ngày sinh': p.dateOfBirth || '',
-      'Số CCCD': p.cccdNumber || '',
-      'Ngày cấp CCCD': p.cccdIssueDate || '',
-      'Nơi cấp CCCD': p.cccdIssuePlace || '',
-      'Dân tộc': p.ethnicity || '',
-      'Tôn giáo': p.religion || '',
-      'Trạng thái': p.staffStatus || '',
-      'Ngày tuyển dụng': p.recruitmentDate || '',
-      // Position
-      'Chức vụ': p.position?.jobPosition || '',
-      'Nhóm chức vụ': p.position?.positionGroup || '',
-      'Loại hợp đồng': p.position?.contractType || '',
-      'Hệ số lương': p.position?.rankLevel || '',
-      // Qualification
-      'Trình độ chuyên môn': p.qualification?.professionalLevel || '',
-      'Ngành đào tạo': p.qualification?.major || '',
-      'Nơi đào tạo': p.qualification?.trainingPlace || '',
-      'Năm tốt nghiệp': p.qualification?.graduationYear || '',
-      'Trình độ CNTT': p.qualification?.itLevel || '',
-      'Ngoại ngữ': p.qualification?.foreignLanguageLevel || '',
-      // Salary
-      'Hệ số lương (lương)': p.salary?.salaryCoefficient || '',
-      'Bậc lương': p.salary?.salaryLevel || '',
-      'Lương cơ bản': p.salary?.baseSalary || '',
-    }));
+    const rows = profiles.map(p => {
+      const staffStatusStr = p.staffStatus === 'working' ? 'Đang công tác' : p.staffStatus === 'probation' ? 'Thử việc' : p.staffStatus === 'maternity_leave' ? 'Nghỉ thai sản' : p.staffStatus === 'retired' ? 'Nghỉ hưu' : p.staffStatus === 'resigned' ? 'Nghỉ việc' : '';
+      return {
+        'Mã định danh': p.staffCode || '',
+        'Họ tên': p.user?.fullName || '',
+        'Giới tính': p.gender === 'male' ? 'Nam' : p.gender === 'female' ? 'Nữ' : 'Khác',
+        'Ngày sinh': p.dateOfBirth || '',
+        'Ngày cấp CCCD': p.cccdIssueDate || '',
+        'Trạng thái CB': staffStatusStr,
+        'Số CMT/TCC': p.cccdNumber || '',
+        'Nơi cấp': p.cccdIssuePlace || '',
+        'Dân tộc': p.ethnicity || '',
+        'Tôn giáo': p.religion || '',
+        'Email': p.user?.email || '',
+        'Điện thoại': p.addresses?.length ? p.addresses[0].phone || '' : '',
+        'Tỉnh/Thành': p.addresses?.length ? p.addresses[0].province || '' : '',
+        'Xã/Phường': p.addresses?.length ? p.addresses[0].ward || '' : '',
+        'Tổ': p.addresses?.length ? p.addresses[0].detailAddress || '' : '',
+        'Vị trí việc làm': p.position?.jobPosition || '',
+        'Hình thức hợp đồng': p.position?.contractType || '',
+        'Ngày tuyển dụng': p.recruitmentDate || '',
+        'Cơ quan tuyển dụng': p.position?.recruitmentAgency || '',
+        'Tổ/Bộ môn': p.position?.subjectGroup || '',
+        'Cấp học': p.position?.educationLevel || '',
+        'Mã ngạch': p.position?.rankCode || '',
+        'Ngạch / Hạng': p.position?.positionGroup || '',
+        'Hệ số lương': p.salary?.salaryCoefficient || '',
+        'Bậc lương': p.salary?.salaryLevel || '',
+        'Lương cơ bản': p.salary?.baseSalary || '',
+        'Ngày hưởng lương': p.salary?.salaryStartDate || '',
+        'Ngày dự kiến': '',
+        'Phụ cấp đoàn thể %': p.salary?.unionAllowancePercent || '',
+        'Phụ cấp thâm niên %': p.salary?.seniorityAllowancePercent || '',
+        'Phụ cấp ưu đãi %': p.salary?.incentiveAllowancePercent || '',
+        'Phụ cấp chức vụ %': p.salary?.positionAllowancePercent || '',
+        'Trình độ học vấn': p.qualification?.generalEducationLevel || p.qualification?.professionalLevel || '',
+        'Tên ngân hàng': p.bankAccount?.bankName || '',
+        'Số tài khoản': p.bankAccount?.accountNumber || '',
+        'Chi nhánh': p.bankAccount?.branch || '',
+      };
+    });
 
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(rows);
@@ -472,11 +490,11 @@ export class StaffService {
       const rowNum = i + 2; // Excel row number (1-indexed header + 1)
 
       try {
-        const staffCode = String(row['Mã nhân viên'] || '').trim();
+        const staffCode = String(row['Mã định danh'] || row['Mã nhân viên'] || '').trim();
         const email = String(row['Email'] || '').trim();
 
         if (!staffCode) {
-          errors.push(`Hàng ${rowNum}: Thiếu mã nhân viên`);
+          errors.push(`Hàng ${rowNum}: Thiếu mã định danh`);
           continue;
         }
         if (!email) {
@@ -485,10 +503,17 @@ export class StaffService {
         }
 
         // Find user by email
-        const user = await DB.Users.findOne({ where: { email } });
+        let user = await DB.Users.findOne({ where: { email } });
         if (!user) {
-          errors.push(`Hàng ${rowNum}: Không tìm thấy người dùng với email ${email}`);
-          continue;
+          const fullNameStr = String(row['Họ tên'] || row['Họ và tên'] || email.split('@')[0]).trim();
+          const defaultPassword = await hash('Abc@123456', 10);
+          user = await DB.Users.create({
+            email,
+            password: defaultPassword,
+            fullName: fullNameStr,
+            role: 'teacher',
+            status: 'active',
+          } as any);
         }
 
         const userId = user.get('id') as number;
@@ -516,9 +541,12 @@ export class StaffService {
     const genderRaw = String(row['Giới tính'] || '').toLowerCase();
     const gender = genderRaw === 'nam' ? 'male' : genderRaw === 'nữ' ? 'female' : 'other';
 
-    const statusRaw = String(row['Trạng thái'] || 'working').trim();
-    const allowedStatuses = ['working', 'probation', 'maternity_leave', 'retired', 'resigned'];
-    const staffStatus = allowedStatuses.includes(statusRaw) ? statusRaw : 'working';
+    const statusRaw = String(row['Trạng thái CB'] || row['Trạng thái'] || 'Đang công tác').trim().toLowerCase();
+    let staffStatus = 'working';
+    if (statusRaw.includes('nghỉ thai sản')) staffStatus = 'maternity_leave';
+    else if (statusRaw.includes('nghỉ hưu')) staffStatus = 'retired';
+    else if (statusRaw.includes('nghỉ việc') || statusRaw.includes('thôi việc')) staffStatus = 'resigned';
+    else if (statusRaw.includes('thử việc')) staffStatus = 'probation';
 
     const toDateStr = (v: unknown): string | undefined => {
       if (!v) return undefined;
@@ -539,29 +567,35 @@ export class StaffService {
       staffCode,
       gender: gender as 'male' | 'female' | 'other',
       dateOfBirth: toDateStr(row['Ngày sinh']),
-      cccdNumber: String(row['Số CCCD'] || '').trim() || undefined,
+      cccdNumber: String(row['Số CMT/TCC'] || row['Số CCCD'] || '').trim() || undefined,
       cccdIssueDate: toDateStr(row['Ngày cấp CCCD']),
-      cccdIssuePlace: String(row['Nơi cấp CCCD'] || '').trim() || undefined,
+      cccdIssuePlace: String(row['Nơi cấp'] || row['Nơi cấp CCCD'] || '').trim() || undefined,
       ethnicity: String(row['Dân tộc'] || '').trim() || undefined,
       religion: String(row['Tôn giáo'] || '').trim() || undefined,
       staffStatus,
       recruitmentDate: toDateStr(row['Ngày tuyển dụng']),
+      fullName: String(row['Họ tên'] || row['Họ và tên'] || '').trim() || undefined,
     };
 
     // Position
-    if (row['Chức vụ'] || row['Loại hợp đồng']) {
+    if (row['Vị trí việc làm'] || row['Chức vụ'] || row['Ngạch / Hạng'] || row['Nhóm chức vụ'] || row['Hình thức hợp đồng'] || row['Loại hợp đồng'] || row['Hệ số lương'] || row['Cơ quan tuyển dụng'] || row['Tổ/Bộ môn'] || row['Cấp học'] || row['Mã ngạch']) {
       dto.position = {
-        jobPosition: String(row['Chức vụ'] || '').trim() || undefined,
-        positionGroup: String(row['Nhóm chức vụ'] || '').trim() || undefined,
-        contractType: String(row['Loại hợp đồng'] || '').trim() || undefined,
+        jobPosition: String(row['Vị trí việc làm'] || row['Chức vụ'] || '').trim() || undefined,
+        positionGroup: String(row['Ngạch / Hạng'] || row['Nhóm chức vụ'] || '').trim() || undefined,
+        contractType: String(row['Hình thức hợp đồng'] || row['Loại hợp đồng'] || '').trim() || undefined,
         rankLevel: String(row['Hệ số lương'] || '').trim() || undefined,
+        recruitmentAgency: String(row['Cơ quan tuyển dụng'] || '').trim() || undefined,
+        subjectGroup: String(row['Tổ/Bộ môn'] || '').trim() || undefined,
+        educationLevel: String(row['Cấp học'] || '').trim() || undefined,
+        rankCode: String(row['Mã ngạch'] || '').trim() || undefined,
       };
     }
 
     // Qualification
-    if (row['Trình độ chuyên môn'] || row['Ngành đào tạo']) {
+    if (row['Trình độ học vấn'] || row['Trình độ chuyên môn'] || row['Ngành đào tạo']) {
       dto.qualification = {
-        professionalLevel: String(row['Trình độ chuyên môn'] || '').trim() || undefined,
+        generalEducationLevel: String(row['Trình độ học vấn'] || '').trim() || undefined,
+        professionalLevel: String(row['Trình độ chuyên môn'] || row['Trình độ học vấn'] || '').trim() || undefined,
         major: String(row['Ngành đào tạo'] || '').trim() || undefined,
         trainingPlace: String(row['Nơi đào tạo'] || '').trim() || undefined,
         graduationYear: row['Năm tốt nghiệp'] ? Number(row['Năm tốt nghiệp']) : undefined,
@@ -571,11 +605,47 @@ export class StaffService {
     }
 
     // Salary
-    if (row['Lương cơ bản'] || row['Hệ số lương (lương)']) {
+    if (row['Lương cơ bản'] || row['Hệ số lương'] || row['Bậc lương'] || row['Ngày hưởng lương'] || row['Phụ cấp đoàn thể %'] || row['Phụ cấp thâm niên %'] || row['Phụ cấp ưu đãi %'] || row['Phụ cấp chức vụ %']) {
       dto.salary = {
-        salaryCoefficient: row['Hệ số lương (lương)'] ? Number(row['Hệ số lương (lương)']) : undefined,
+        salaryCoefficient: row['Hệ số lương'] ? Number(row['Hệ số lương']) : row['Hệ số lương (lương)'] ? Number(row['Hệ số lương (lương)']) : undefined,
         salaryLevel: row['Bậc lương'] ? Number(row['Bậc lương']) : undefined,
         baseSalary: row['Lương cơ bản'] ? Number(row['Lương cơ bản']) : undefined,
+        salaryStartDate: toDateStr(row['Ngày hưởng lương']),
+        unionAllowancePercent: row['Phụ cấp đoàn thể %'] ? Number(row['Phụ cấp đoàn thể %']) : undefined,
+        seniorityAllowancePercent: row['Phụ cấp thâm niên %'] ? Number(row['Phụ cấp thâm niên %']) : undefined,
+        incentiveAllowancePercent: row['Phụ cấp ưu đãi %'] ? Number(row['Phụ cấp ưu đãi %']) : undefined,
+        positionAllowancePercent: row['Phụ cấp chức vụ %'] ? Number(row['Phụ cấp chức vụ %']) : undefined,
+      };
+    }
+
+    // Addresses
+    const province = String(row['Tỉnh/Thành'] || '').trim();
+    const ward = String(row['Xã/Phường'] || '').trim();
+    const detailAddress = String(row['Tổ'] || '').trim();
+    const phone = String(row['Điện thoại'] || '').trim();
+
+    if (province || ward || detailAddress || phone) {
+      dto.addresses = [
+        {
+          addressType: 'contact',
+          province: province || undefined,
+          ward: ward || undefined,
+          detailAddress: detailAddress || undefined,
+          phone: phone || undefined,
+        }
+      ];
+    }
+    
+    // Bank Account
+    const bankName = String(row['Tên ngân hàng'] || '').trim();
+    const accountNumber = String(row['Số tài khoản'] || '').trim();
+    const branch = String(row['Chi nhánh'] || '').trim();
+    
+    if (bankName || accountNumber || branch) {
+      dto.bankAccount = {
+        bankName: bankName || undefined,
+        accountNumber: accountNumber || undefined,
+        branch: branch || undefined,
       };
     }
 
@@ -586,62 +656,87 @@ export class StaffService {
 
   public generateImportTemplate(): Buffer {
     const headers = [
-      'Mã nhân viên',
-      'Email',
+      'Mã định danh',
+      'Họ tên',
       'Giới tính',
       'Ngày sinh',
-      'Số CCCD',
       'Ngày cấp CCCD',
-      'Nơi cấp CCCD',
+      'Trạng thái CB',
+      'Số CMT/TCC',
+      'Nơi cấp',
       'Dân tộc',
       'Tôn giáo',
-      'Trạng thái',
+      'Email',
+      'Điện thoại',
+      'Tỉnh/Thành',
+      'Xã/Phường',
+      'Tổ',
+      'Vị trí việc làm',
+      'Hình thức hợp đồng',
       'Ngày tuyển dụng',
-      'Chức vụ',
-      'Nhóm chức vụ',
-      'Loại hợp đồng',
+      'Cơ quan tuyển dụng',
+      'Tổ/Bộ môn',
+      'Cấp học',
+      'Mã ngạch',
+      'Ngạch / Hạng',
       'Hệ số lương',
-      'Trình độ chuyên môn',
-      'Ngành đào tạo',
-      'Nơi đào tạo',
-      'Năm tốt nghiệp',
-      'Trình độ CNTT',
-      'Ngoại ngữ',
-      'Hệ số lương (lương)',
       'Bậc lương',
       'Lương cơ bản',
+      'Ngày hưởng lương',
+      'Ngày dự kiến',
+      'Phụ cấp đoàn thể %',
+      'Phụ cấp thâm niên %',
+      'Phụ cấp ưu đãi %',
+      'Phụ cấp chức vụ %',
+      'Trình độ học vấn',
+      'Tên ngân hàng',
+      'Số tài khoản',
+      'Chi nhánh'
     ];
 
     const example = {
-      'Mã nhân viên': 'NV001',
-      'Email': 'staff@example.com',
+      'Mã định danh': '8401555613',
+      'Họ tên': 'Bùi Hữu Khánh',
       'Giới tính': 'Nam',
-      'Ngày sinh': '1990-01-15',
-      'Số CCCD': '012345678901',
-      'Ngày cấp CCCD': '2020-01-01',
-      'Nơi cấp CCCD': 'Cục cảnh sát QLHC về TTXH',
+      'Ngày sinh': '1987-05-12',
+      'Ngày cấp CCCD': '2021-04-21',
+      'Trạng thái CB': 'Đang công tác',
+      'Số CMT/TCC': '084087001648',
+      'Nơi cấp': 'Cục CSQLHC&TTXH',
       'Dân tộc': 'Kinh',
       'Tôn giáo': 'Không',
-      'Trạng thái': 'working',
-      'Ngày tuyển dụng': '2020-09-01',
-      'Chức vụ': 'Giáo viên',
-      'Nhóm chức vụ': 'Giáo viên',
-      'Loại hợp đồng': 'Viên chức',
-      'Hệ số lương': '2.34',
-      'Trình độ chuyên môn': 'Đại học',
-      'Ngành đào tạo': 'Sư phạm Toán',
-      'Nơi đào tạo': 'Đại học Cần Thơ',
-      'Năm tốt nghiệp': 2015,
-      'Trình độ CNTT': 'Cơ bản',
-      'Ngoại ngữ': 'Tiếng Anh B1',
-      'Hệ số lương (lương)': 2.34,
-      'Bậc lương': 2,
+      'Email': 'bhkhanh@tvu.edu.vn',
+      'Điện thoại': '0904789498',
+      'Tỉnh/Thành': 'Tỉnh Vĩnh Long',
+      'Xã/Phường': 'Phường Trà Vinh',
+      'Tổ': 'Khóm 9',
+      'Vị trí việc làm': 'Giáo viên',
+      'Hình thức hợp đồng': 'Hợp đồng không xác định thời hạn',
+      'Ngày tuyển dụng': '2014-06-01',
+      'Cơ quan tuyển dụng': 'Đại học Trà Vinh',
+      'Tổ/Bộ môn': 'Tổ Ngoại Ngữ - Ngữ Văn THPT',
+      'Cấp học': 'THPT',
+      'Mã ngạch': 'V.07.05.15',
+      'Ngạch / Hạng': 'Giáo viên THPT hạng III (V.07.05.15)',
+      'Hệ số lương': 3.33,
+      'Bậc lương': 4,
       'Lương cơ bản': 2340000,
+      'Ngày hưởng lương': '2025-12-01',
+      'Ngày dự kiến': '2028-12-01',
+      'Phụ cấp đoàn thể %': 0,
+      'Phụ cấp thâm niên %': 11,
+      'Phụ cấp ưu đãi %': 35,
+      'Phụ cấp chức vụ %': 0,
+      'Trình độ học vấn': '12/12',
+      'Tên ngân hàng': 'VIETINBANK',
+      'Số tài khoản': '100866796183',
+      'Chi nhánh': 'Trà Vinh',
     };
 
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet([example], { header: headers });
     XLSX.utils.book_append_sheet(wb, ws, 'Mẫu nhập liệu');
 
-    return XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' }) as Buffer;  }
+    return XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' }) as Buffer;
+  }
 }

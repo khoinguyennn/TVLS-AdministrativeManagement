@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { useTranslations } from "next-intl";
 import { Download, Info, TrendingUp } from "lucide-react";
 import {
   Bar,
@@ -35,6 +36,7 @@ const FILTER_OPTIONS = [
 ];
 
 export default function AgeStatisticsPage() {
+  const t = useTranslations("AgeStatistics");
   const [stats, setStats] = useState<StaffStatistics | null>(null);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all_no_gvhd");
@@ -124,23 +126,20 @@ export default function AgeStatisticsPage() {
       {/* ── Header + Filter Tabs ── */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="text-2xl font-bold mb-2">Thống kê nhân sự theo độ tuổi</h1>
-          <p className="text-sm text-muted-foreground">
-            Dữ liệu cập nhật dựa trên hệ thống quản lý nhân sự tập trung
-          </p>
+          <h1 className="text-2xl font-bold mb-2">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground">{t("description")}</p>
         </div>
         <div className="flex bg-muted p-1 rounded-xl">
           {FILTER_OPTIONS.map((opt) => (
             <button
               key={opt.value}
               onClick={() => setFilter(opt.value)}
-              className={`px-6 py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap ${
-                filter === opt.value
+              className={`px-6 py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap ${filter === opt.value
                   ? "bg-background shadow-sm text-primary"
                   : "text-muted-foreground hover:text-foreground"
-              }`}
+                }`}
             >
-              {opt.label}
+              {opt.value === "all_no_gvhd" ? t("filters.all") : opt.value === "Giáo viên" ? t("filters.teacher") : opt.value === "Nhân viên" ? t("filters.staff") : t("filters.contractTeacher")}
             </button>
           ))}
         </div>
@@ -153,12 +152,8 @@ export default function AgeStatisticsPage() {
           <CardContent className="p-8">
             <div className="flex items-center justify-between mb-10">
               <h2 className="text-lg font-semibold flex items-center gap-2">
-                <span className="w-1.5 h-6 bg-primary rounded-full" />
-                Biểu đồ phân bổ độ tuổi
-              </h2>
-              <span className="text-xs font-medium px-3 py-1 bg-muted rounded-full text-muted-foreground">
-                Đơn vị: Nhân sự
-              </span>
+                <span className="w-1.5 h-6 bg-primary rounded-full" />{t("chartTitle")}</h2>
+              <span className="text-xs font-medium px-3 py-1 bg-muted rounded-full text-muted-foreground">{t("unit")}</span>
             </div>
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={ageData} barSize={60}>
@@ -171,7 +166,7 @@ export default function AgeStatisticsPage() {
                 />
                 <YAxis hide />
                 <Tooltip
-                  formatter={(value: number) => [value, "Nhân sự"]}
+                  formatter={(value: any) => [value, t("staffUnit")]}
                   contentStyle={{ borderRadius: 8, fontSize: 13 }}
                 />
                 <Bar
@@ -192,27 +187,21 @@ export default function AgeStatisticsPage() {
         <div className="flex flex-col gap-6">
           {/* Total Card — Blue */}
           <div className="bg-primary text-primary-foreground flex-1 p-6 rounded-xl flex flex-col justify-center items-center">
-            <span className="text-xs uppercase tracking-[0.2em] opacity-80 mb-2">
-              Tổng số nhân sự
-            </span>
+            <span className="text-xs uppercase tracking-[0.2em] opacity-80 mb-2">{t("totalStaff")}</span>
             <div className="text-5xl font-bold">{totalAge}</div>
-            <div className="mt-4 px-3 py-1 bg-white/10 rounded-full text-[10px] font-medium uppercase tracking-wider">
-              Cập nhật hôm nay
-            </div>
+            <div className="mt-4 px-3 py-1 bg-white/10 rounded-full text-[10px] font-medium uppercase tracking-wider">{t("updatedToday")}</div>
           </div>
 
           {/* Most Common Age Card */}
           <Card className="flex-1 bg-muted/50">
             <CardContent className="p-6 flex flex-col justify-center items-center h-full">
-              <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
-                Độ tuổi phổ biến
-              </span>
+              <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">{t("mostCommonAge")}</span>
               <div className="text-3xl font-bold">
                 {mostCommon.name}
               </div>
               <div className="mt-4 text-xs font-medium text-primary flex items-center gap-1">
                 <TrendingUp className="size-3.5" />
-                {mostCommon.pct}% Tổng số
+                {mostCommon.pct}{t("percentTotal")}
               </div>
             </CardContent>
           </Card>
@@ -223,29 +212,21 @@ export default function AgeStatisticsPage() {
       <Card className="shadow-sm overflow-hidden">
         <div className="p-8 border-b flex justify-between items-center">
           <h2 className="text-lg font-semibold flex items-center gap-2">
-            <span className="w-1.5 h-6 bg-muted-foreground/60 rounded-full" />
-            Thống kê chi tiết theo cấp học
-          </h2>
+            <span className="w-1.5 h-6 bg-muted-foreground/60 rounded-full" />{t("detailedStats")}</h2>
           <button className="flex items-center gap-2 text-sm text-primary font-medium px-4 py-2 hover:bg-muted rounded-lg transition-all">
-            <Download className="size-4" />
-            Xuất dữ liệu Excel
-          </button>
+            <Download className="size-4" />{t("exportData")}</button>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-muted/50 text-left">
-                <th className="py-5 px-8 text-xs font-bold text-muted-foreground uppercase tracking-widest">
-                  Cấp học / Đơn vị
-                </th>
+                <th className="py-5 px-8 text-xs font-bold text-muted-foreground uppercase tracking-widest">{t("educationUnit")}</th>
                 {AGE_GROUPS.map((ag) => (
                   <th key={ag} className="py-5 px-4 text-xs font-bold text-muted-foreground uppercase tracking-widest text-center">
                     {ag.replace("-", " - ").replace("+", " +")}
                   </th>
                 ))}
-                <th className="py-5 px-8 text-xs font-bold text-primary uppercase tracking-widest text-right">
-                  Tổng cộng
-                </th>
+                <th className="py-5 px-8 text-xs font-bold text-primary uppercase tracking-widest text-right">{t("total")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/50">
@@ -257,9 +238,8 @@ export default function AgeStatisticsPage() {
                     return (
                       <td
                         key={ag}
-                        className={`py-5 px-4 text-sm text-center ${
-                          val === 0 ? "text-muted-foreground/30" : ""
-                        }`}
+                        className={`py-5 px-4 text-sm text-center ${val === 0 ? "text-muted-foreground/30" : ""
+                          }`}
                       >
                         {val}
                       </td>
@@ -273,7 +253,7 @@ export default function AgeStatisticsPage() {
             </tbody>
             <tfoot>
               <tr className="bg-muted font-bold">
-                <td className="py-6 px-8 text-sm">Tổng cộng</td>
+                <td className="py-6 px-8 text-sm">{t("total")}</td>
                 {AGE_GROUPS.map((ag) => (
                   <td key={ag} className="py-6 px-4 text-sm text-center">
                     {colTotals[ag]}
@@ -296,11 +276,8 @@ export default function AgeStatisticsPage() {
               <Info className="size-5 text-primary" />
             </div>
             <div>
-              <h3 className="font-bold mb-1">Nhận xét chuyên môn</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Cơ cấu nhân sự tập trung chủ yếu ở độ tuổi vàng (30-49 tuổi). Đây là nguồn lực
-                giàu kinh nghiệm và đang trong giai đoạn cống hiến cao nhất cho nhà trường.
-              </p>
+              <h3 className="font-bold mb-1">{t("insights")}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{t("insightsDesc", { ageRange: "30-49" })}</p>
             </div>
           </CardContent>
         </Card>
@@ -310,11 +287,8 @@ export default function AgeStatisticsPage() {
               <TrendingUp className="size-5 text-muted-foreground" />
             </div>
             <div>
-              <h3 className="font-bold mb-1">Dự báo nhân sự</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Tỷ lệ nhân sự trẻ (dưới 30 tuổi) cần được chú trọng tuyển dụng thêm trong giai
-                đoạn tới để đảm bảo tính kế thừa liên tục cho các cấp học.
-              </p>
+              <h3 className="font-bold mb-1">{t("forecast")}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{t("forecastDesc")}</p>
             </div>
           </CardContent>
         </Card>

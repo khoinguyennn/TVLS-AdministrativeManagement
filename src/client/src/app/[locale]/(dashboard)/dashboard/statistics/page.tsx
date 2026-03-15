@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { useTranslations } from "next-intl";
 import { Download, Users, GraduationCap, BadgeCheck, Crown } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -29,6 +30,7 @@ const EDU_CONFIG = [
 const ETHNICITY_COLORS = ["bg-blue-500", "bg-orange-400", "bg-emerald-400", "bg-violet-400", "bg-rose-400", "bg-amber-400"];
 
 export default function StatisticsPage() {
+  const t = useTranslations("Statistics");
   const [stats, setStats] = useState<StaffStatistics | null>(null);
   const [loading, setLoading] = useState(true);
   const [showAllDepts, setShowAllDepts] = useState(false);
@@ -98,7 +100,11 @@ export default function StatisticsPage() {
   const gvBienChe = stats.byJobPosition?.["Giáo viên"] || 0;
   const gvHopDong = stats.byJobPosition?.["Giáo viên HĐ"] || 0;
   const nvBienChe = stats.byJobPosition?.["Nhân viên"] || 0;
-  const cbql = stats.byJobPosition?.["Cán bộ quản lý (CBQL)"] || 0;
+
+  // CBQL consists of Principal and Vice Principal in Position Group
+  const hieuTruong = stats.byPositionGroup?.["Hiệu trưởng"] || 0;
+  const phoHieuTruong = stats.byPositionGroup?.["Phó hiệu trưởng"] || 0;
+  const cbql = hieuTruong + phoHieuTruong;
 
   const visibleDepts = showAllDepts ? deptData : deptData.slice(0, 5);
   const remainingDepts = deptData.length > 5 && !showAllDepts ? deptData.slice(5) : [];
@@ -109,9 +115,9 @@ export default function StatisticsPage() {
       {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Thống kê nhân sự</h2>
+          <h2 className="text-2xl font-bold tracking-tight">{t("title")}</h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Dữ liệu nhân sự cập nhật đến ngày {new Date().toLocaleDateString("vi-VN")}
+            {t("description", { date: new Date().toLocaleDateString() })}
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -129,13 +135,13 @@ export default function StatisticsPage() {
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
               <Users className="size-5 opacity-80" />
-              <span className="text-xs font-bold px-2 py-1 bg-white/20 rounded-full">Tổng quát</span>
+              <span className="text-xs font-bold px-2 py-1 bg-white/20 rounded-full">{t("overall")}</span>
             </div>
-            <h3 className="text-sm font-medium opacity-80 uppercase tracking-wider">Tổng nhân sự</h3>
+            <h3 className="text-sm font-medium opacity-80 uppercase tracking-wider">{t("totalStaff")}</h3>
             <div className="text-4xl font-bold mt-2">{total}</div>
             <div className="flex gap-4 mt-4 text-xs font-semibold">
-              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-300" /> Nam: {stats.byGender?.male || 0}</span>
-              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-pink-300" /> Nữ: {stats.byGender?.female || 0}</span>
+              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-300" /> {t("male")}: {stats.byGender?.male || 0}</span>
+              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-pink-300" /> {t("female")}: {stats.byGender?.female || 0}</span>
             </div>
           </div>
           <div className="absolute -right-4 -bottom-4 opacity-10 scale-150 transition-transform group-hover:scale-[1.7]">
@@ -150,18 +156,18 @@ export default function StatisticsPage() {
               <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center dark:bg-blue-950 dark:text-blue-400">
                 <GraduationCap className="size-5" />
               </div>
-              <h3 className="text-sm font-bold uppercase tracking-tight text-muted-foreground">Giáo viên</h3>
+              <h3 className="text-sm font-bold uppercase tracking-tight text-muted-foreground">{t("teachers")}</h3>
             </div>
             <div className="space-y-4">
               <div className="flex justify-between items-end">
-                <span className="text-muted-foreground text-sm">Biên chế</span>
+                <span className="text-muted-foreground text-sm">{t("tenured")}</span>
                 <span className="text-xl font-bold">{gvBienChe}</span>
               </div>
               <div className="w-full bg-muted h-1.5 rounded-full">
                 <div className="bg-blue-600 h-1.5 rounded-full transition-all" style={{ width: `${total ? Math.min((gvBienChe / total) * 100, 100) : 0}%` }} />
               </div>
               <div className="flex justify-between items-end">
-                <span className="text-muted-foreground text-sm">Hợp đồng</span>
+                <span className="text-muted-foreground text-sm">{t("contract")}</span>
                 <span className="text-xl font-bold">{gvHopDong}</span>
               </div>
             </div>
@@ -175,19 +181,19 @@ export default function StatisticsPage() {
               <div className="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center dark:bg-emerald-950 dark:text-emerald-400">
                 <BadgeCheck className="size-5" />
               </div>
-              <h3 className="text-sm font-bold uppercase tracking-tight text-muted-foreground">Nhân viên</h3>
+              <h3 className="text-sm font-bold uppercase tracking-tight text-muted-foreground">{t("staff")}</h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
               <div className="flex justify-between p-2 rounded-lg bg-muted/50">
-                <span className="text-xs text-muted-foreground">Biên chế</span>
+                <span className="text-xs text-muted-foreground">{t("tenured")}</span>
                 <span className="text-sm font-bold">{nvBienChe}</span>
               </div>
               <div className="flex justify-between p-2 rounded-lg bg-muted/50">
-                <span className="text-xs text-muted-foreground">Lương vùng</span>
+                <span className="text-xs text-muted-foreground">{t("regionalSalary")}</span>
                 <span className="text-sm font-bold">{stats.byContractType?.["Hợp đồng lương vùng theo Nghị định 74/2024/NĐ-CP"] || 0}</span>
               </div>
               <div className="flex justify-between p-2 rounded-lg bg-muted/50">
-                <span className="text-xs text-muted-foreground">Hợp đồng</span>
+                <span className="text-xs text-muted-foreground">{t("contract")}</span>
                 <span className="text-sm font-bold">{stats.byContractType?.["Hợp đồng khoán"] || 0}</span>
               </div>
             </div>
@@ -197,7 +203,7 @@ export default function StatisticsPage() {
         {/* Management */}
         <Card className="hover:border-primary/30 transition-all flex flex-col justify-between bg-muted/30">
           <CardContent className="p-6">
-            <h3 className="text-sm font-bold uppercase tracking-tight text-muted-foreground mb-2">Ban giám hiệu</h3>
+            <h3 className="text-sm font-bold uppercase tracking-tight text-muted-foreground mb-2">{t("managementBoard")}</h3>
             <div className="text-3xl font-bold">{cbql}</div>
             <div className="flex -space-x-3 mt-4">
               <Crown className="size-5 text-amber-500" />
@@ -211,21 +217,21 @@ export default function StatisticsPage() {
         {/* Personnel Status */}
         <Card className="lg:col-span-2 overflow-hidden">
           <div className="px-6 py-4 border-b flex items-center justify-between">
-            <h3 className="font-bold">Tình trạng nhân sự</h3>
-            <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded">Tháng hiện tại</span>
+            <h3 className="font-bold">{t("personnelStatus")}</h3>
+            <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded">{t("currentMonth")}</span>
           </div>
           <CardContent className="p-6">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
               {STATUS_CONFIG.map((s) => {
                 const val = s.key === "working" ? working :
-                            s.key === "resigned" ? resigned :
-                            s.key === "transferred" ? transferred :
-                            s.key === "maternity_leave" ? maternityLeave :
-                            unpaidLeave;
+                  s.key === "resigned" ? resigned :
+                    s.key === "transferred" ? transferred :
+                      s.key === "maternity_leave" ? maternityLeave :
+                        unpaidLeave;
                 return (
                   <div key={s.key} className={`text-center p-4 rounded-xl border ${s.border} ${s.bg}`}>
                     <div className={`text-2xl font-bold ${s.text}`}>{val}</div>
-                    <div className={`text-[11px] font-bold uppercase mt-1 ${s.text} leading-tight`}>{s.label}</div>
+                    <div className={`text-[11px] font-bold uppercase mt-1 ${s.text} leading-tight`}>{t(`status.${s.key}`)}</div>
                   </div>
                 );
               })}
@@ -236,7 +242,7 @@ export default function StatisticsPage() {
         {/* Ethnicity Stats */}
         <Card className="overflow-hidden">
           <div className="px-6 py-4 border-b">
-            <h3 className="font-bold">Thống kê theo dân tộc</h3>
+            <h3 className="font-bold">{t("ethnicityStats")}</h3>
           </div>
           <CardContent className="p-6 space-y-4">
             {ethnicityData.slice(0, 3).map((e, i) => (
@@ -275,16 +281,16 @@ export default function StatisticsPage() {
         <Card className="overflow-hidden flex flex-col">
           <div className="px-6 py-4 border-b flex items-center justify-between">
             <h3 className="font-bold uppercase tracking-tight text-sm">
-              Danh sách Tổ bộ môn ({deptData.length} tổ)
+              {t("departmentList", { count: deptData.length })}
             </h3>
           </div>
           <div className="overflow-x-auto flex-1">
             <table className="w-full text-left text-sm">
               <thead className="bg-muted/50 border-b">
                 <tr>
-                  <th className="px-6 py-3 font-semibold text-muted-foreground">Tổ / Bộ phận</th>
-                  <th className="px-6 py-3 font-semibold text-muted-foreground text-right">Số lượng</th>
-                  <th className="px-6 py-3 font-semibold text-muted-foreground text-center">Tỷ lệ</th>
+                  <th className="px-6 py-3 font-semibold text-muted-foreground">{t("department")}</th>
+                  <th className="px-6 py-3 font-semibold text-muted-foreground text-right">{t("quantity")}</th>
+                  <th className="px-6 py-3 font-semibold text-muted-foreground text-center">{t("ratio")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
@@ -305,7 +311,7 @@ export default function StatisticsPage() {
                 {!showAllDepts && remainingDepts.length > 0 && (
                   <tr className="hover:bg-muted/30">
                     <td className="px-6 py-3 font-medium text-muted-foreground">
-                      Khác ({remainingDepts.length} tổ còn lại)
+                      {t("other", { count: remainingDepts.length })}
                     </td>
                     <td className="px-6 py-3 text-right font-bold text-primary">{remainingCount}</td>
                     <td className="px-6 py-3 text-center">
@@ -326,7 +332,7 @@ export default function StatisticsPage() {
               onClick={() => setShowAllDepts(!showAllDepts)}
               className="text-xs font-bold text-primary hover:text-primary/80 transition-colors uppercase tracking-widest"
             >
-              {showAllDepts ? "Thu gọn" : "Xem tất cả tổ bộ môn"}
+              {showAllDepts ? t("collapse") : t("viewAll")}
             </button>
           </div>
         </Card>
@@ -334,7 +340,7 @@ export default function StatisticsPage() {
         {/* Education Level Stats */}
         <Card className="overflow-hidden flex flex-col">
           <div className="px-6 py-4 border-b flex items-center justify-between bg-muted/30">
-            <h3 className="font-bold text-sm">Thống kê theo cấp học</h3>
+            <h3 className="font-bold text-sm">{t("educationLevelStats")}</h3>
           </div>
           <CardContent className="p-8 flex-1 flex flex-col justify-center">
             <div className="grid grid-cols-2 gap-8">

@@ -798,6 +798,64 @@
     "streetAddress": "House Number, Street",
     "phoneNumber": "Phone Number",
     "permanentAddress": "Permanent Address",
-    "verifyIdCardAlert": "Please verify identification information carefully before saving. Important changes may require administrator approval."
+    "verifyIdCardAlert": "Please carefully check the identification information (ID Card, Date of Birth) before saving. Major changes will need to be approved by an administrator."
+  },
+  "Statistics": {
+    "title": "Staff Statistics",
+    "description": "Staff data updated on {date}",
+    "exportReport": "Export report",
+    "overall": "Overall",
+    "totalStaff": "Total Staff",
+    "male": "Male",
+    "female": "Female",
+    "teachers": "Teachers",
+    "tenured": "Tenured",
+    "contract": "Contract",
+    "staff": "Staff",
+    "regionalSalary": "Regional Salary",
+    "managementBoard": "Management Board",
+    "personnelStatus": "Personnel Status",
+    "currentMonth": "Current month",
+    "status": {
+      "working": "Working",
+      "resigned": "Resigned",
+      "transferred": "Transferred",
+      "maternity_leave": "Maternity Leave",
+      "unpaid_leave": "Unpaid Leave"
+    },
+    "ethnicityStats": "Statistics by Ethnicity",
+    "departmentList": "Department List ({count} departments)",
+    "department": "Department",
+    "quantity": "Quantity",
+    "ratio": "Ratio",
+    "other": "Other ({count} remaining)",
+    "collapse": "Collapse",
+    "viewAll": "View all departments",
+    "educationLevelStats": "Education Level Statistics"
+  },
+  "AgeStatistics": {
+    "title": "Age Statistics of Staff",
+    "description": "Data updated based on the centralized human resource management system",
+    "filters": {
+      "all": "Entire School",
+      "teacher": "Teacher",
+      "staff": "Staff",
+      "contractTeacher": "Contract Teacher"
+    },
+    "chartTitle": "Age Distribution Chart",
+    "unit": "Unit: Personnel",
+    "staffUnit": "Personnel",
+    "totalStaff": "Total Staff",
+    "updatedToday": "Updated Today",
+    "mostCommonAge": "Most Common Age",
+    "percentTotal": "% Total",
+    "detailedStats": "Detailed Education Statistics",
+    "exportData": "Export Excel Data",
+    "educationUnit": "Education Level / Unit",
+    "total": "Total",
+    "insights": "Professional Insights",
+    "insightsDesc": "The personnel structure is mainly concentrated in the golden age ({ageRange}). This is an experienced resource in its highest contribution phase for the school.",
+    "forecast": "Personnel Forecast",
+    "forecastDesc": "The ratio of young staff (under 30) needs to be focused on for recruitment in the upcoming period to ensure continuous succession for all educational levels."
   }
 }
