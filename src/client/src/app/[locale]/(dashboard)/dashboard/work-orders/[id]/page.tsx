@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState, useEffect } from "react";
+import { AxiosError } from "axios";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -21,6 +22,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/use-auth";
+import { env } from "@/env";
 import { workOrderService } from "@/services/work-order.service";
 import type { WorkOrder } from "@/types/work-order.types";
 
@@ -28,9 +31,33 @@ export default function WorkOrderDetailPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
+  const { user } = useAuth();
 
   const [workOrder, setWorkOrder] = useState<WorkOrder | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedEvidence, setSelectedEvidence] = useState<File | null>(null);
+
+  const isAdminOrManager = user?.role === "admin" || user?.role === "manager";
+  const isAssignedStaff = (user?.role === "teacher" || user?.role === "technician") && workOrder?.assignedTo === user?.id;
+
+  const getApiErrorMessage = (error: unknown, fallback: string) => {
+    if (error instanceof AxiosError && error.response?.data?.message) {
+      return String(error.response.data.message);
+    }
+    if (error instanceof Error) {
+      return error.message;
+    }
+    return fallback;
+  };
+
+  const getImageUrl = (src?: string | null) => {
+    if (!src) return "";
+    if (src.startsWith("http://") || src.startsWith("https://") || src.startsWith("blob:")) {
+      return src;
+    }
+    return `${env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "")}${src}`;
+  };
 
   useEffect(() => {
     loadWorkOrder();
@@ -64,7 +91,7 @@ export default function WorkOrderDetailPage() {
     const statusConfig = {
       pending: { label: "Chờ duyệt", variant: "secondary" as const, icon: Clock },
       approved: { label: "Đã duyệt", variant: "default" as const, icon: CheckCircle },
-      in_progress: { label: "Đang thực hiện", variant: "outline" as const, icon: Clock },
+      in_progress: { label: "Chờ xác nhận", variant: "outline" as const, icon: Clock },
       completed: { label: "Hoàn thành", variant: "default" as const, icon: CheckCircle },
       rejected: { label: "Từ chối", variant: "destructive" as const, icon: XCircle },
       cancelled: { label: "Đã hủy", variant: "destructive" as const, icon: XCircle },
@@ -78,6 +105,72 @@ export default function WorkOrderDetailPage() {
       </Badge>
     );
   };
+
+  async function handleUploadEvidence() {
+    if (!workOrder || !selectedEvidence) return;
+
+    try {
+      setIsSubmitting(true);
+      const updated = await workOrderService.uploadEvidence(workOrder.id, selectedEvidence);
+      setWorkOrder(updated);
+      setSelectedEvidence(null);
+      toast.success("Upload ảnh minh chứng thành công");
+    } catch (error) {
+      const message = getApiErrorMessage(error, "Lỗi upload ảnh minh chứng");
+      toast.error(message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  async function handleSubmitCompletion() {
+    if (!workOrder) return;
+
+    try {
+      setIsSubmitting(true);
+      const updated = await workOrderService.submitCompletion(workOrder.id);
+      setWorkOrder(updated);
+      toast.success("Cập nhật trạng thái công lệnh thành công");
+    } catch (error) {
+      const message = getApiErrorMessage(error, "Lỗi gửi yêu cầu hoàn thành");
+      toast.error(message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  async function handleConfirmCompletion() {
+    if (!workOrder) return;
+
+    try {
+      setIsSubmitting(true);
+      const updated = await workOrderService.confirmCompletion(workOrder.id);
+      setWorkOrder(updated);
+      toast.success("Xác nhận hoàn thành thành công");
+    } catch (error) {
+      const message = getApiErrorMessage(error, "Lỗi xác nhận hoàn thành");
+      toast.error(message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  async function handleRequestRework() {
+    if (!workOrder) return;
+
+    const reason = prompt("Lý do yêu cầu thực hiện lại:") || "";
+    try {
+      setIsSubmitting(true);
+      const updated = await workOrderService.requestRework(workOrder.id, { reason });
+      setWorkOrder(updated);
+      toast.success("Đã yêu cầu thực hiện lại công lệnh");
+    } catch (error) {
+      const message = getApiErrorMessage(error, "Lỗi yêu cầu thực hiện lại");
+      toast.error(message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   if (isLoading) {
     return (
@@ -197,6 +290,58 @@ export default function WorkOrderDetailPage() {
                   </div>
                 </>
               )}
+
+              <Separator />
+              <div className="space-y-3">
+                <p className="font-medium text-gray-900">Ảnh minh chứng</p>
+                {workOrder.attachments && workOrder.attachments.length > 0 ? (
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {workOrder.attachments.map((attachment) => (
+                      <a key={attachment.id} href={getImageUrl(attachment.fileUrl)} target="_blank" rel="noreferrer">
+                        <img
+                          src={getImageUrl(attachment.fileUrl)}
+                          alt={`Minh chứng ${attachment.id}`}
+                          className="max-h-72 w-full rounded-md border bg-gray-50 object-contain p-1"
+                        />
+                      </a>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500">Chưa có ảnh minh chứng</p>
+                )}
+
+                {isAssignedStaff && workOrder.status === "approved" && (
+                  <div className="flex flex-col gap-2">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setSelectedEvidence(e.target.files?.[0] || null)}
+                        className="text-sm"
+                      />
+                      <Button
+                        variant="outline"
+                        disabled={!selectedEvidence || isSubmitting}
+                        onClick={handleUploadEvidence}
+                      >
+                        Upload minh chứng
+                      </Button>
+                    </div>
+
+                    <Button
+                      disabled={isSubmitting || !(workOrder.attachments && workOrder.attachments.length > 0)}
+                      onClick={handleSubmitCompletion}
+                      className="w-full sm:w-auto"
+                    >
+                      Hoàn thành công lệnh
+                    </Button>
+
+                    {(!workOrder.attachments || workOrder.attachments.length === 0) && (
+                      <p className="text-xs text-gray-500">Vui lòng upload ít nhất 1 ảnh minh chứng trước khi hoàn thành.</p>
+                    )}
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -259,6 +404,7 @@ export default function WorkOrderDetailPage() {
               </div>
             </CardContent>
           </Card>
+
         </div>
       </div>
     </div>

@@ -1,5 +1,10 @@
 import { api } from "@/lib/api";
-import type { WorkOrder, CreateWorkOrderPayload, UpdateWorkOrderPayload } from "@/types/work-order.types";
+import type {
+  WorkOrder,
+  CreateWorkOrderPayload,
+  UpdateWorkOrderPayload,
+  RequestReworkPayload,
+} from "@/types/work-order.types";
 
 const ENDPOINT = "/work-orders";
 
@@ -31,6 +36,33 @@ export const workOrderService = {
 
   async reject(id: number): Promise<WorkOrder> {
     const res = await api.put<{ success: boolean; data: WorkOrder; message: string }>(`${ENDPOINT}/${id}/reject`);
+    return res.data.data;
+  },
+
+  async uploadEvidence(id: number, file: File): Promise<WorkOrder> {
+    const formData = new FormData();
+    formData.append("evidence", file);
+
+    const res = await api.post<{ success: boolean; data: WorkOrder; message: string }>(`${ENDPOINT}/${id}/evidence`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res.data.data;
+  },
+
+  async submitCompletion(id: number): Promise<WorkOrder> {
+    const res = await api.put<{ success: boolean; data: WorkOrder; message: string }>(`${ENDPOINT}/${id}/submit-completion`);
+    return res.data.data;
+  },
+
+  async confirmCompletion(id: number): Promise<WorkOrder> {
+    const res = await api.put<{ success: boolean; data: WorkOrder; message: string }>(`${ENDPOINT}/${id}/confirm-completion`);
+    return res.data.data;
+  },
+
+  async requestRework(id: number, payload?: RequestReworkPayload): Promise<WorkOrder> {
+    const res = await api.put<{ success: boolean; data: WorkOrder; message: string }>(`${ENDPOINT}/${id}/request-rework`, payload ?? {});
     return res.data.data;
   },
 

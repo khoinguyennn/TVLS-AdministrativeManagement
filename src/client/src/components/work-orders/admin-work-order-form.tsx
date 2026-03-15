@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/form";
 import type { CreateWorkOrderPayload } from "@/types/work-order.types";
 import type { PersonnelRecord } from "@/types/personnel.types";
+import type { User } from "@/types/auth.types";
 
 const adminWorkOrderSchema = z.object({
   assignedTo: z.number().optional(),
@@ -46,6 +47,7 @@ type AdminWorkOrderFormData = z.infer<typeof adminWorkOrderSchema>;
 
 interface AdminWorkOrderFormProps {
   personnel: PersonnelRecord[];
+  currentUser?: Pick<User, "id" | "fullName" | "role"> | null;
   onSubmit: (data: CreateWorkOrderPayload) => Promise<void>;
   onCancel: () => void;
   isLoading?: boolean;
@@ -53,6 +55,7 @@ interface AdminWorkOrderFormProps {
 
 export function AdminWorkOrderForm({
   personnel,
+  currentUser,
   onSubmit,
   onCancel,
   isLoading = false
@@ -73,6 +76,15 @@ export function AdminWorkOrderForm({
       notes: "",
     },
   });
+
+  const isTeacherCreator = currentUser?.role === "teacher";
+
+  useEffect(() => {
+    if (!isTeacherCreator || !currentUser) return;
+    form.setValue("assignedTo", currentUser.id);
+    setSearchQuery(currentUser.fullName);
+    setShowPersonnelList(false);
+  }, [isTeacherCreator, currentUser, form]);
 
   const filteredPersonnel = useMemo(() => {
     return personnel.filter(p =>
@@ -116,14 +128,15 @@ export function AdminWorkOrderForm({
       startDate: startDate.toISOString(),
       endDate: endDate.toISOString(),
       note: data.notes,
-      assignedTo: data.assignedTo || undefined,
+      assignedTo: isTeacherCreator ? currentUser?.id : data.assignedTo || undefined,
     };
 
     await onSubmit(submitData);
   };
 
   const selectedPerson = personnel.find(p => (p.userId ?? p.id) === form.watch("assignedTo"));
-  const currentRole = selectedPerson?.role ?? "";
+  const selectedName = selectedPerson?.fullName ?? (isTeacherCreator ? currentUser?.fullName : undefined);
+  const currentRole = selectedPerson?.role ?? (isTeacherCreator ? "teacher" : "");
   const roleLabel = currentRole
     ? { admin: "Quản trị viên", manager: "Quản lý", teacher: "Giáo viên", technician: "Kỹ thuật" }[currentRole] ?? currentRole
     : "Chưa chọn";
@@ -164,16 +177,20 @@ export function AdminWorkOrderForm({
                 placeholder="Nhập tên hoặc mã nhân sự..."
                 value={searchQuery}
                 onChange={(e) => {
+                  if (isTeacherCreator) return;
                   setSearchQuery(e.target.value);
                   setShowPersonnelList(true);
                 }}
-                onFocus={() => setShowPersonnelList(true)}
+                onFocus={() => {
+                  if (!isTeacherCreator) setShowPersonnelList(true);
+                }}
+                readOnly={isTeacherCreator}
                 className="h-10 border-gray-300 pl-10"
               />
             </div>
           </div>
 
-          {showPersonnelList && (
+          {showPersonnelList && !isTeacherCreator && (
             <div className="mt-3 rounded-md border border-gray-200 bg-gray-50 p-2">
               <div className="max-h-52 space-y-1 overflow-y-auto pr-1">
                 {filteredPersonnel.length > 0 ? (
@@ -208,7 +225,7 @@ export function AdminWorkOrderForm({
               <p className="mb-1 flex items-center gap-2 text-xs text-slate-500">
                 <UserRound className="h-3.5 w-3.5" /> Họ và tên
               </p>
-              <p className="text-sm font-semibold text-slate-900">{selectedPerson?.fullName ?? "Chưa chọn"}</p>
+              <p className="text-sm font-semibold text-slate-900">{selectedName ?? "Chưa chọn"}</p>
             </div>
             <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
               <p className="mb-1 flex items-center gap-2 text-xs text-slate-500">

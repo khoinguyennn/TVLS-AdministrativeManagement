@@ -2,12 +2,21 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { AxiosError } from "axios";
 import { Plus, Search, Loader2, Filter, ChevronRight } from "lucide-react";
 import { TableSkeleton } from "@/components/skeletons";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -17,6 +26,8 @@ import {
 } from "@/components/ui/select";
 import { WorkOrderTable, WorkOrderDialog } from "@/components/work-orders";
 import { TablePagination } from "@/components/shared/table-pagination";
+import { env } from "@/env";
+import { useAuth } from "@/hooks/use-auth";
 import { workOrderService } from "@/services/work-order.service";
 import { personnelService } from "@/services/personnel.service";
 import type { WorkOrder, CreateWorkOrderPayload, UpdateWorkOrderPayload } from "@/types/work-order.types";
@@ -24,6 +35,7 @@ import type { PersonnelRecord } from "@/types/personnel.types";
 import { toast } from "sonner";
 
 export default function WorkOrdersPage() {
+  const { user } = useAuth();
   const tBreadcrumb = useTranslations("Breadcrumb");
   const tSidebar = useTranslations("Sidebar");
   const tWorkOrders = useTranslations("WorkOrders");
@@ -36,9 +48,34 @@ export default function WorkOrdersPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingWorkOrder, setEditingWorkOrder] = useState<WorkOrder | undefined>();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [evidenceDialogOpen, setEvidenceDialogOpen] = useState(false);
+  const [evidenceWorkOrder, setEvidenceWorkOrder] = useState<WorkOrder | undefined>();
+  const [evidenceFile, setEvidenceFile] = useState<File | null>(null);
+  const [isEvidenceSubmitting, setIsEvidenceSubmitting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const PAGE_SIZE = 8;
   const [mounted, setMounted] = useState(false);
+
+  const isAdminOrManager = user?.role === "admin" || user?.role === "manager";
+  const isAssignedStaff = user?.role === "teacher" || user?.role === "technician";
+
+  const getApiErrorMessage = (error: unknown, fallback: string) => {
+    if (error instanceof AxiosError && error.response?.data?.message) {
+      return String(error.response.data.message);
+    }
+    if (error instanceof Error) {
+      return error.message;
+    }
+    return fallback;
+  };
+
+  const getImageUrl = (src?: string | null) => {
+    if (!src) return "";
+    if (src.startsWith("http://") || src.startsWith("https://") || src.startsWith("blob:")) {
+      return src;
+    }
+    return `${env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "")}${src}`;
+  };
 
   // Load data
   useEffect(() => {
@@ -84,7 +121,7 @@ export default function WorkOrdersPage() {
       setFilteredWorkOrders(data);
       setPersonnel(staff);
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Lỗi tải dữ liệu";
+      const message = getApiErrorMessage(error, "Lỗi tải dữ liệu");
       toast.error(message);
     } finally {
       setIsLoading(false);
@@ -98,7 +135,7 @@ export default function WorkOrdersPage() {
       setWorkOrders(prev => [...prev, newWO]);
       toast.success("Tạo công lệnh thành công");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Lỗi tạo công lệnh";
+      const message = getApiErrorMessage(error, "Lỗi tạo công lệnh");
       toast.error(message);
       throw error;
     } finally {
@@ -115,7 +152,7 @@ export default function WorkOrdersPage() {
       setWorkOrders(prev => prev.map(wo => (wo.id === updated.id ? updated : wo)));
       toast.success("Cập nhật công lệnh thành công");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Lỗi cập nhật công lệnh";
+      const message = getApiErrorMessage(error, "Lỗi cập nhật công lệnh");
       toast.error(message);
       throw error;
     } finally {
@@ -133,7 +170,7 @@ export default function WorkOrdersPage() {
       setWorkOrders(prev => prev.filter(wo => wo.id !== id));
       toast.success("Xóa công lệnh thành công");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Lỗi xóa công lệnh";
+      const message = getApiErrorMessage(error, "Lỗi xóa công lệnh");
       toast.error(message);
     }
   }
@@ -553,7 +590,7 @@ export default function WorkOrdersPage() {
       setWorkOrders(prev => prev.map(wo => (wo.id === updated.id ? updated : wo)));
       toast.success("Duyệt công lệnh thành công");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Lỗi duyệt công lệnh";
+      const message = getApiErrorMessage(error, "Lỗi duyệt công lệnh");
       toast.error(message);
     }
   }
@@ -567,18 +604,84 @@ export default function WorkOrdersPage() {
       setWorkOrders(prev => prev.map(wo => (wo.id === updated.id ? updated : wo)));
       toast.success("Từ chối công lệnh thành công");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Lỗi từ chối công lệnh";
+      const message = getApiErrorMessage(error, "Lỗi từ chối công lệnh");
       toast.error(message);
     }
   }
 
   async function handleComplete(id: number) {
+    const targetWorkOrder = workOrders.find(wo => wo.id === id);
+    if (!targetWorkOrder) {
+      toast.error("Không tìm thấy công lệnh");
+      return;
+    }
+
+    setEvidenceWorkOrder(targetWorkOrder);
+    setEvidenceFile(null);
+    setEvidenceDialogOpen(true);
+  }
+
+  async function handleUploadEvidenceFromDialog() {
+    if (!evidenceWorkOrder || !evidenceFile) return;
+
     try {
-      const updated = await workOrderService.update(id, { status: "completed" });
+      setIsEvidenceSubmitting(true);
+      const updated = await workOrderService.uploadEvidence(evidenceWorkOrder.id, evidenceFile);
       setWorkOrders(prev => prev.map(wo => (wo.id === updated.id ? updated : wo)));
-      toast.success("Hoàn thành công lệnh thành công");
+      setEvidenceWorkOrder(updated);
+      setEvidenceFile(null);
+      toast.success("Upload ảnh minh chứng thành công");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Lỗi hoàn thành công lệnh";
+      const message = getApiErrorMessage(error, "Lỗi upload ảnh minh chứng");
+      toast.error(message);
+    } finally {
+      setIsEvidenceSubmitting(false);
+    }
+  }
+
+  async function handleCompleteFromDialog() {
+    if (!evidenceWorkOrder) return;
+    if (!evidenceWorkOrder.attachments?.length) {
+      toast.error("Vui lòng upload ảnh minh chứng trước khi hoàn thành công lệnh");
+      return;
+    }
+
+    try {
+      setIsEvidenceSubmitting(true);
+      const updated = await workOrderService.submitCompletion(evidenceWorkOrder.id);
+      setWorkOrders(prev => prev.map(wo => (wo.id === updated.id ? updated : wo)));
+      toast.success("Cập nhật trạng thái công lệnh thành công");
+      setEvidenceDialogOpen(false);
+      setEvidenceWorkOrder(undefined);
+      setEvidenceFile(null);
+    } catch (error) {
+      const message = getApiErrorMessage(error, "Lỗi hoàn thành công lệnh");
+      toast.error(message);
+    } finally {
+      setIsEvidenceSubmitting(false);
+    }
+  }
+
+  async function handleConfirmCompletion(id: number) {
+    try {
+      const updated = await workOrderService.confirmCompletion(id);
+      setWorkOrders(prev => prev.map(wo => (wo.id === updated.id ? updated : wo)));
+      toast.success("Xác nhận hoàn thành công lệnh thành công");
+    } catch (error) {
+      const message = getApiErrorMessage(error, "Lỗi xác nhận hoàn thành công lệnh");
+      toast.error(message);
+    }
+  }
+
+  async function handleRequestRework(id: number) {
+    const reason = prompt("Lý do yêu cầu thực hiện lại:") || "";
+
+    try {
+      const updated = await workOrderService.requestRework(id, { reason });
+      setWorkOrders(prev => prev.map(wo => (wo.id === updated.id ? updated : wo)));
+      toast.success("Đã yêu cầu thực hiện lại công lệnh");
+    } catch (error) {
+      const message = getApiErrorMessage(error, "Lỗi yêu cầu thực hiện lại công lệnh");
       toast.error(message);
     }
   }
@@ -675,15 +778,17 @@ export default function WorkOrdersPage() {
               <WorkOrderTable
                 data={pagedWorkOrders}
                 personnel={personnel}
-                onEdit={(id) => {
+                onEdit={isAdminOrManager ? ((id) => {
                   const workOrder = workOrders.find(wo => wo.id === id);
                   setEditingWorkOrder(workOrder);
                   setIsDialogOpen(true);
-                }}
-                onDelete={handleDelete}
-                onApprove={handleApprove}
-                onReject={handleReject}
-                onComplete={handleComplete}
+                }) : undefined}
+                onDelete={isAdminOrManager ? handleDelete : undefined}
+                onApprove={isAdminOrManager ? handleApprove : undefined}
+                onReject={isAdminOrManager ? handleReject : undefined}
+                onComplete={isAssignedStaff ? handleComplete : undefined}
+                onConfirmCompletion={isAdminOrManager ? handleConfirmCompletion : undefined}
+                onRequestRework={isAdminOrManager ? handleRequestRework : undefined}
                 onPrint={handlePrint}
                 isLoading={false}
                 startIndex={(currentPage - 1) * PAGE_SIZE + 1}
@@ -709,6 +814,59 @@ export default function WorkOrdersPage() {
         onSubmit={handleSubmit}
         isLoading={isSubmitting}
       />
+
+      <Dialog open={evidenceDialogOpen} onOpenChange={setEvidenceDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Nhập ảnh minh chứng</DialogTitle>
+            <DialogDescription>
+              {evidenceWorkOrder ? `Công lệnh ${evidenceWorkOrder.code}` : ""}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-3">
+            {evidenceWorkOrder?.attachments?.length ? (
+              <div className="grid grid-cols-2 gap-2">
+                {evidenceWorkOrder.attachments.map((attachment) => (
+                  <a key={attachment.id} href={getImageUrl(attachment.fileUrl)} target="_blank" rel="noreferrer">
+                    <img
+                      src={getImageUrl(attachment.fileUrl)}
+                      alt={`Minh chứng ${attachment.id}`}
+                      className="max-h-40 w-full rounded-md border bg-gray-50 object-contain p-1"
+                    />
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500">Chưa có ảnh minh chứng</p>
+            )}
+
+            <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setEvidenceFile(e.target.files?.[0] || null)}
+              />
+              <Button
+                variant="outline"
+                disabled={!evidenceFile || isEvidenceSubmitting}
+                onClick={handleUploadEvidenceFromDialog}
+              >
+                Upload ảnh
+              </Button>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              onClick={handleCompleteFromDialog}
+              disabled={isEvidenceSubmitting || !(evidenceWorkOrder?.attachments?.length)}
+            >
+              Hoàn thành công lệnh
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
