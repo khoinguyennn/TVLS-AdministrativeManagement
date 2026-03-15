@@ -44,9 +44,10 @@ export class WorkOrderController {
 
   public create = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
+      const isSelfAssignRole = ['teacher', 'technician'].includes(req.user.role);
       const dto: CreateWorkOrderDto = {
         ...req.body,
-        assignedTo: req.user.role === 'teacher' ? req.user.id : req.body.assignedTo,
+        assignedTo: isSelfAssignRole ? req.user.id : req.body.assignedTo,
       };
       const data = await this.service.create(dto, req.user.id);
       res.status(201).json({ success: true, data, message: 'Tạo công lệnh thành công' });

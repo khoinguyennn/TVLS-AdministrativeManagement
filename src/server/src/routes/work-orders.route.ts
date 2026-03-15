@@ -21,11 +21,11 @@ export class WorkOrderRoute implements Routes {
     this.router.get(this.path, AuthMiddleware, this.controller.getAll);
     this.router.get(`${this.path}/:id(\\d+)`, AuthMiddleware, this.controller.getById);
 
-    // Create (admin, manager, teacher)
+    // Create (admin, manager, teacher, technician)
     this.router.post(
       this.path,
       AuthMiddleware,
-      RoleMiddleware('admin', 'manager', 'teacher'),
+      RoleMiddleware('admin', 'manager', 'teacher', 'technician'),
       ValidationMiddleware(CreateWorkOrderDto),
       this.controller.create,
     );

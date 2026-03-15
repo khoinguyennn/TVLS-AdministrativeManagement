@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { AxiosError } from "axios";
 import { toast } from "sonner";
 
 import { AdminWorkOrderForm } from "@/components/work-orders/admin-work-order-form";
@@ -20,13 +21,21 @@ export default function CreateWorkOrderAdminPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    if (!user) return;
     loadPersonnel();
-  }, []);
+  }, [user?.id, user?.role]);
 
   const loadPersonnel = async () => {
     try {
-      const data = await personnelService.getAll();
-      setPersonnel(data);
+      if (!user) return;
+
+      if (user.role === "teacher" || user.role === "technician") {
+        setPersonnel([]);
+        return;
+      }
+
+      const allPersonnel = await personnelService.getAllForSelection();
+      setPersonnel(allPersonnel);
     } catch (error) {
       toast.error("Lỗi tải danh sách nhân sự");
     }
@@ -40,7 +49,12 @@ export default function CreateWorkOrderAdminPage() {
       router.refresh();
       router.push("/vi/dashboard/work-orders");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Lỗi tạo công lệnh";
+      const message =
+        error instanceof AxiosError && error.response?.data?.message
+          ? String(error.response.data.message)
+          : error instanceof Error
+            ? error.message
+            : "Lỗi tạo công lệnh";
       toast.error(message);
     } finally {
       setIsLoading(false);
