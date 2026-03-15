@@ -68,8 +68,29 @@ export const personnelService = {
     };
   },
 
+  async getAllForSelection(search?: string): Promise<PersonnelRecord[]> {
+    const pageSize = 100;
+    let page = 1;
+    let total = 0;
+    const merged: PersonnelRecord[] = [];
+
+    do {
+      const result = await this.getAll({ page, pageSize, search });
+      total = result.total;
+      merged.push(...result.data);
+      page += 1;
+    } while (merged.length < total);
+
+    return merged;
+  },
+
   async getById(id: number): Promise<PersonnelRecord> {
     const res = await api.get<{ success: boolean; data: any; message: string }>(`${ENDPOINT}/${id}`);
+    return transform(res.data.data);
+  },
+
+  async getByUserId(userId: number): Promise<PersonnelRecord> {
+    const res = await api.get<{ success: boolean; data: any; message: string }>(`${ENDPOINT}/user/${userId}`);
     return transform(res.data.data);
   },
 

@@ -113,13 +113,13 @@ export default function WorkOrdersPage() {
   async function loadData() {
     try {
       setIsLoading(true);
-      const [data, staff] = await Promise.all([
+      const [data, staffResult] = await Promise.all([
         workOrderService.getAll(),
-        personnelService.getAll().catch(() => [] as PersonnelRecord[]),
+        personnelService.getAllForSelection().catch(() => [] as PersonnelRecord[]),
       ]);
       setWorkOrders(data);
       setFilteredWorkOrders(data);
-      setPersonnel(staff);
+      setPersonnel(staffResult);
     } catch (error) {
       const message = getApiErrorMessage(error, "Lỗi tải dữ liệu");
       toast.error(message);

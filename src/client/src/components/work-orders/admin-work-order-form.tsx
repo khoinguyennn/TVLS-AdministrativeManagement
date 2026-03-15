@@ -77,20 +77,24 @@ export function AdminWorkOrderForm({
     },
   });
 
-  const isTeacherCreator = currentUser?.role === "teacher";
+  const isSelfAssignCreator = currentUser?.role === "teacher" || currentUser?.role === "technician";
 
   useEffect(() => {
-    if (!isTeacherCreator || !currentUser) return;
+    if (!isSelfAssignCreator || !currentUser) return;
     form.setValue("assignedTo", currentUser.id);
     setSearchQuery(currentUser.fullName);
     setShowPersonnelList(false);
-  }, [isTeacherCreator, currentUser, form]);
+  }, [isSelfAssignCreator, currentUser, form]);
+
+  const activePersonnel = useMemo(() => {
+    return personnel.filter((p) => p.staffStatus !== "resigned");
+  }, [personnel]);
 
   const filteredPersonnel = useMemo(() => {
-    return personnel.filter(p =>
+    return activePersonnel.filter(p =>
       p.fullName.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [personnel, searchQuery]);
+  }, [activePersonnel, searchQuery]);
 
   const calculateWorkDays = (startDate: string, endDate: string) => {
     if (!startDate || !endDate) return 0;
@@ -128,15 +132,15 @@ export function AdminWorkOrderForm({
       startDate: startDate.toISOString(),
       endDate: endDate.toISOString(),
       note: data.notes,
-      assignedTo: isTeacherCreator ? currentUser?.id : data.assignedTo || undefined,
+      assignedTo: isSelfAssignCreator ? currentUser?.id : data.assignedTo || undefined,
     };
 
     await onSubmit(submitData);
   };
 
   const selectedPerson = personnel.find(p => (p.userId ?? p.id) === form.watch("assignedTo"));
-  const selectedName = selectedPerson?.fullName ?? (isTeacherCreator ? currentUser?.fullName : undefined);
-  const currentRole = selectedPerson?.role ?? (isTeacherCreator ? "teacher" : "");
+  const selectedName = selectedPerson?.fullName ?? (isSelfAssignCreator ? currentUser?.fullName : undefined);
+  const currentRole = selectedPerson?.role ?? (isSelfAssignCreator ? currentUser?.role ?? "" : "");
   const roleLabel = currentRole
     ? { admin: "Quản trị viên", manager: "Quản lý", teacher: "Giáo viên", technician: "Kỹ thuật" }[currentRole] ?? currentRole
     : "Chưa chọn";
@@ -160,6 +164,26 @@ export function AdminWorkOrderForm({
           </div>
         </div>
 
+        {isSelfAssignCreator && (
+          <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+            <div className="mb-3 flex items-center gap-2 text-slate-900">
+              <UserRound className="h-4 w-4 text-blue-600" />
+              <p className="text-sm font-semibold">Người thực hiện</p>
+            </div>
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
+                <p className="mb-1 text-xs text-slate-500">Họ và tên</p>
+                <p className="text-sm font-semibold text-slate-900">{selectedName ?? "Chưa xác định"}</p>
+              </div>
+              <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
+                <p className="mb-1 text-xs text-slate-500">Vai trò</p>
+                <p className="text-sm font-semibold text-slate-900">{roleLabel}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {!isSelfAssignCreator && (
         <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2 text-slate-900">
@@ -177,20 +201,20 @@ export function AdminWorkOrderForm({
                 placeholder="Nhập tên hoặc mã nhân sự..."
                 value={searchQuery}
                 onChange={(e) => {
-                  if (isTeacherCreator) return;
+                  if (isSelfAssignCreator) return;
                   setSearchQuery(e.target.value);
                   setShowPersonnelList(true);
                 }}
                 onFocus={() => {
-                  if (!isTeacherCreator) setShowPersonnelList(true);
+                  if (!isSelfAssignCreator) setShowPersonnelList(true);
                 }}
-                readOnly={isTeacherCreator}
+                readOnly={isSelfAssignCreator}
                 className="h-10 border-gray-300 pl-10"
               />
             </div>
           </div>
 
-          {showPersonnelList && !isTeacherCreator && (
+          {showPersonnelList && !isSelfAssignCreator && (
             <div className="mt-3 rounded-md border border-gray-200 bg-gray-50 p-2">
               <div className="max-h-52 space-y-1 overflow-y-auto pr-1">
                 {filteredPersonnel.length > 0 ? (
@@ -247,6 +271,7 @@ export function AdminWorkOrderForm({
             </div>
           </div>
         </div>
+        )}
 
         <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
           <div className="mb-5 flex items-center gap-2 text-slate-900">

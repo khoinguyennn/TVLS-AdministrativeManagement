@@ -1,4 +1,5 @@
 import { Service, Inject } from 'typedi';
+import { Op } from 'sequelize';
 import { DB } from '@database';
 import { CreateWorkOrderDto, UpdateWorkOrderDto } from '@dtos/work-orders.dto';
 import { WorkOrder } from '@interfaces/work-orders.interface';
@@ -9,6 +10,20 @@ import { EmailService } from '@services/email.service';
 export class WorkOrderService {
   @Inject()
   private emailService: EmailService;
+
+  private async validateAssignee(assigneeId: number): Promise<void> {
+    const assignee = await DB.Users.findByPk(assigneeId, { attributes: ['id', 'status'] });
+    if (!assignee) {
+      throw new HttpException(400, 'Người được giao công lệnh không tồn tại');
+    }
+
+    const profile = await DB.StaffProfiles.findOne({ where: { userId: assigneeId }, attributes: ['staffStatus'] });
+    const staffStatus = profile?.get('staffStatus') as string | undefined;
+
+    if (staffStatus === 'resigned') {
+      throw new HttpException(400, 'Không thể tạo công lệnh cho nhân sự đã nghỉ việc');
+    }
+  }
 
   private canOperateAsAssignee(workOrder: WorkOrder, requesterId: number, requesterRole: string): boolean {
     if (['admin', 'manager'].includes(requesterRole)) return true;
@@ -21,9 +36,29 @@ export class WorkOrderService {
   private async generateCode(): Promise<string> {
     const today = new Date();
     const datePart = today.toISOString().slice(0, 10).replace(/-/g, '');
-    const count = await DB.WorkOrders.count();
-    const seq = String(count + 1).padStart(4, '0');
-    return `WO-${datePart}-${seq}`;
+    const prefix = `WO-${datePart}-`;
+
+    const latest = await DB.WorkOrders.findOne({
+      where: {
+        code: {
+          [Op.like]: `${prefix}%`,
+        },
+      },
+      attributes: ['code'],
+      order: [['code', 'DESC']],
+    });
+
+    const latestCode = latest?.get('code') as string | undefined;
+    const latestSeq = latestCode ? Number(latestCode.split('-').pop()) : 0;
+    let nextSeq = Number.isFinite(latestSeq) ? latestSeq + 1 : 1;
+
+    let candidate = `${prefix}${String(nextSeq).padStart(4, '0')}`;
+    while (await DB.WorkOrders.findOne({ where: { code: candidate }, attributes: ['id'] })) {
+      nextSeq += 1;
+      candidate = `${prefix}${String(nextSeq).padStart(4, '0')}`;
+    }
+
+    return candidate;
   }
 
   public async findAll(query: { status?: string; assignedTo?: number; createdBy?: number }): Promise<WorkOrder[]> {
@@ -74,6 +109,10 @@ export class WorkOrderService {
   }
 
   public async create(data: CreateWorkOrderDto, createdBy: number): Promise<WorkOrder> {
+    if (data.assignedTo) {
+      await this.validateAssignee(data.assignedTo);
+    }
+
     const code = await this.generateCode();
     const row = await DB.WorkOrders.create({
       code,
@@ -138,7 +177,12 @@ export class WorkOrderService {
     if (data.startDate !== undefined) updateData.startDate = new Date(data.startDate);
     if (data.endDate !== undefined) updateData.endDate = new Date(data.endDate);
     if (data.note !== undefined) updateData.note = data.note;
-    if (data.assignedTo !== undefined) updateData.assignedTo = data.assignedTo;
+    if (data.assignedTo !== undefined) {
+      if (data.assignedTo) {
+        await this.validateAssignee(data.assignedTo);
+      }
+      updateData.assignedTo = data.assignedTo;
+    }
     if (data.status !== undefined) {
       const nextStatus = data.status as WorkOrder['status'];
       if (['approved', 'rejected'].includes(nextStatus) && !['admin', 'manager'].includes(requesterRole)) {
