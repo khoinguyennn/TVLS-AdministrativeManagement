@@ -4,12 +4,15 @@ import { DB } from '@database';
 import { CreateLeaveRequestDto, CreateLeaveTypeDto, CreateLeaveBalanceDto } from '@dtos/leave.dto';
 import { HttpException } from '@/exceptions/HttpException';
 import { LeaveRequest } from '@interfaces/leave.interface';
+import NotificationService from '@services/notifications.service';
 
 // Chỉ loại "Nghỉ phép năm" mới trừ vào số ngày phép
 const ANNUAL_LEAVE_TYPE_ID = 1;
 
 @Service()
 export class LeaveRequestService {
+  private notificationService = new NotificationService();
+
   private isAnnualLeave(leaveTypeId: number): boolean {
     return leaveTypeId === ANNUAL_LEAVE_TYPE_ID;
   }
@@ -74,6 +77,19 @@ export class LeaveRequestService {
       reason: data.reason,
     });
 
+    // Notify admins/managers about the new request
+    const approvers = await DB.Users.findAll({ where: { role: ['admin', 'manager'], status: 'active' } });
+    const requester = await DB.Users.findByPk(userId);
+    for (const approver of approvers) {
+      await this.notificationService.createNotification({
+        userId: approver.id,
+        title: 'Đơn xin nghỉ phép mới',
+        message: `${requester?.fullName || 'Nhân viên'} vừa gửi một đơn xin nghỉ phép mới chờ duyệt.`,
+        type: 'leave_request',
+        referenceId: created.id,
+      });
+    }
+
     return created.get({ plain: true }) as LeaveRequest;
   }
 
@@ -107,6 +123,16 @@ export class LeaveRequestService {
 
     // Auto-deduct leave balance
     await this.deductLeaveBalance(request);
+
+    // Notify the requester
+    const approverUser = await DB.Users.findByPk(approvedBy);
+    await this.notificationService.createNotification({
+      userId: request.userId,
+      title: 'Đơn nghỉ phép đã được duyệt',
+      message: `Đơn xin nghỉ phép của bạn đã được ${approverUser?.fullName || 'quản lý'} duyệt.`,
+      type: 'leave_request',
+      referenceId: id,
+    });
 
     return this.findById(id);
   }
@@ -169,6 +195,16 @@ export class LeaveRequestService {
     if (wasApproved) {
       await this.refundLeaveBalance(request);
     }
+
+    // Notify the requester
+    const approverUser = await DB.Users.findByPk(approvedBy);
+    await this.notificationService.createNotification({
+      userId: request.userId,
+      title: 'Đơn nghỉ phép bị từ chối',
+      message: `Đơn xin nghỉ phép của bạn đã bị ${approverUser?.fullName || 'quản lý'} từ chối.`,
+      type: 'leave_request',
+      referenceId: id,
+    });
 
     return this.findById(id);
   }

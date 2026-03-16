@@ -10,6 +10,7 @@ import LeaveTypeModel from '@models/leave-types.model';
 import OTPModel from '@models/otp.model';
 import SignatureConfigModel from '@models/signature-configs.model';
 import UserModel from '@models/users.model';
+import NotificationModel from '@models/notifications.model';
 
 import BuildingModel from '@models/building.model';
 import RoomModel from '@models/room.model';
@@ -55,6 +56,7 @@ sequelize.authenticate();
 // Initialize models
 const Users = UserModel(sequelize);
 const OTPs = OTPModel(sequelize);
+const Notifications = NotificationModel(sequelize);
 
 const Buildings = BuildingModel(sequelize);
 const Rooms = RoomModel(sequelize);
@@ -87,6 +89,10 @@ const StaffSalaries = StaffSalaryModel(sequelize);
 // OTP
 Users.hasMany(OTPs, { foreignKey: 'userId', as: 'passwordResetOtps' });
 OTPs.belongsTo(Users, { foreignKey: 'userId', as: 'user' });
+
+// Notifications
+Users.hasMany(Notifications, { foreignKey: 'userId', as: 'notifications', onDelete: 'CASCADE' });
+Notifications.belongsTo(Users, { foreignKey: 'userId', as: 'user' });
 
 // Building - Room
 Buildings.hasMany(Rooms, { foreignKey: 'buildingId', as: 'rooms' });
@@ -176,6 +182,7 @@ StaffSalaries.belongsTo(StaffProfiles, { foreignKey: 'staffProfileId', as: 'staf
 export const DB = {
   Users,
   OTPs,
+  Notifications,
   Buildings,
   Rooms,
   // Equipment, // Not used - using devices instead

@@ -22,7 +22,8 @@
     "title": "Hệ thống Quản lý Hành chính",
     "description": "Hệ thống quản lý hồ sơ hành chính cho Trường Thực hành Sư phạm",
     "welcome": "Xin chào! Đây là tổng quan về hệ thống quản lý hành chính.",
-    "projectBy": "Dự án bởi"
+    "projectBy": "Dự án bởi",
+    "notifications": "Thông báo"
   },
   "Sidebar": {
     "systemTitle": "QUẢN LÝ HÀNH CHÍNH",

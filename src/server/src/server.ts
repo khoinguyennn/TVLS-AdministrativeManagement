@@ -11,7 +11,9 @@ import { RoomRoute } from '@routes/room.route';
 
 import { EquipmentRoute } from '@routes/equipment.route';
 import { WorkOrderRoute } from '@routes/work-orders.route';
-import { StaffRoute } from '@routes/staff.route';import { ValidateEnv } from '@utils/validateEnv';
+import { StaffRoute } from '@routes/staff.route';
+import NotificationRoute from '@routes/notifications.route';
+import { ValidateEnv } from '@utils/validateEnv';
 import { startDeviceReportsCron } from './crons/device-reports.cron';
 
 ValidateEnv();
@@ -32,7 +34,9 @@ const app = new App([
   new DigitalSignatureRoute(),
 
   new WorkOrderRoute(),
-  new StaffRoute(),]);
+  new StaffRoute(),
+  new NotificationRoute(),
+]);
 
 app.listen();
 

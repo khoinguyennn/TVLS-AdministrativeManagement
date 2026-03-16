@@ -56,6 +56,7 @@ export class App {
     await DB.StaffQualifications.sync();
     await DB.StaffSalaries.sync();
     await DB.StaffEvaluations.sync();
+    await DB.Notifications.sync();
     await seedAdminUser();
   }
 

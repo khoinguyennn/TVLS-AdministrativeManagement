@@ -4,11 +4,13 @@ import { CreateDeviceReportDto, UpdateDeviceReportDto } from '@dtos/device-repor
 import { HttpException } from '@/exceptions/HttpException';
 import { DeviceReport } from '@interfaces/device-reports.interface';
 import { EmailService } from '@services/email.service';
+import NotificationService from '@services/notifications.service';
 import { logger } from '@utils/logger';
 
 @Service()
 export class DeviceReportService {
   private emailService = new EmailService();
+  private notificationService = new NotificationService();
 
   // ── Queries ──
 
@@ -113,6 +115,18 @@ export class DeviceReportService {
       attachments
     );
 
+    // Get all technicians and notify them
+    const technicians = await DB.Users.findAll({ where: { role: 'technician', status: 'active' } });
+    for (const tech of technicians) {
+      await this.notificationService.createNotification({
+        userId: tech.id,
+        title: 'Báo lỗi thiết bị mới',
+        message: `Có báo hỏng thiết bị mới cần xử lý: ${device.name}`,
+        type: 'device_report',
+        referenceId: created.id,
+      });
+    }
+
     return created.get({ plain: true }) as DeviceReport;
   }
 
@@ -154,6 +168,15 @@ export class DeviceReportService {
         `,
       );
     }
+
+    // In-app Notification cho người báo
+    await this.notificationService.createNotification({
+      userId: report.reporterId,
+      title: 'Thiết bị đang được xử lý',
+      message: `Phiếu báo hỏng thiết bị ${deviceName} đã được tiếp nhận.`,
+      type: 'device_report',
+      referenceId: id,
+    });
 
     return this.findById(id);
   }
@@ -247,6 +270,15 @@ export class DeviceReportService {
         );
       }
     }
+
+    // In app notification
+    await this.notificationService.createNotification({
+      userId: report.reporterId,
+      title: 'Cập nhật tình trạng sửa chữa',
+      message: `Tình trạng sửa chữa thiết bị ${deviceName} đã được cập nhật.`,
+      type: 'device_report',
+      referenceId: id,
+    });
 
     return this.findById(id);
   }

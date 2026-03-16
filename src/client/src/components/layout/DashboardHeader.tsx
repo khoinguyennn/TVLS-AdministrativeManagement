@@ -11,6 +11,7 @@ import { LOCALES, type LocaleCode } from "@/constants/i18n.constants";
 
 import { USFlag, VietnamFlag } from "@/components/icons/flags";
 import { Button } from "@/components/ui/button";
+import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -81,13 +82,7 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
 
       {/* Actions */}
       <div className="flex items-center gap-1">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="hidden size-9 rounded-lg text-muted-foreground sm:flex"
-        >
-          <Bell className="size-5" />
-        </Button>
+        <NotificationDropdown />
         <Button
           variant="ghost"
           size="icon"

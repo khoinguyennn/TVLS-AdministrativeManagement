@@ -1,861 +1,862 @@
 {
-  "Auth": {
-    "pageTitle": "Login",
-    "systemTitle": "ADMINISTRATIVE MANAGEMENT SYSTEM",
-    "schoolName": "PRACTICE PEDAGOGICAL SCHOOL",
-    "loginTitle": "Login to the system",
-    "loginSubtitle": "Please enter your login information",
-    "email": "Email",
-    "emailPlaceholder": "Enter your email",
-    "password": "Password",
-    "passwordPlaceholder": "Enter your password",
-    "rememberMe": "Remember me",
-    "forgotPassword": "Forgot password?",
-    "loginButton": "Login",
-    "orContinueWith": "Or continue with",
-    "loginWithGoogle": "Login with Google",
-    "noAccount": "Don't have an account?",
-    "register": "Register now",
-    "copyright": "© 2024 Practice Pedagogical School. All rights reserved."
-  },
-  "Dashboard": {
-    "title": "Administrative Management System",
-    "description": "Administrative records management system for Practice Pedagogical School",
-    "welcome": "Welcome! Here is an overview of the administrative management system.",
-    "projectBy": "Project by"
-  },
-  "Sidebar": {
-    "systemTitle": "ADMIN MANAGEMENT",
-    "schoolName": "PRACTICE PEDAGOGICAL SCHOOL",
-    "dashboard": "Dashboard",
-    "users": "User Management",
-    "staff": "Staff Profiles",
-    "myProfile": "My Profile",
-    "workOrders": "Work Orders",
-    "facilitySection": "Facilities",
-    "buildings": "Buildings",
-    "rooms": "Rooms",
-    "devices": "Devices",
-    "otherSection": "Other",
-    "deviceReports": "Device Reports",
-    "leaveRequests": "Leave Requests",
-    "digitalSignatures": "Digital Signatures",
-    "system": "System",
-    "settings": "Settings",
-    "statisticsSection": "Statistics",
-    "statistics": "Staff Statistics",
-    "ageStatistics": "Age Statistics",
-    "logout": "Logout"
-  },
-  "Header": {
-    "searchPlaceholder": "Search records...",
-    "toggleTheme": "Toggle theme"
-  },
-  "Records": {
-    "title": "Administrative Records",
-    "description": "Manage and approve administrative records",
-    "createNew": "Create new record",
-    "filter": "Filter",
-    "clearFilter": "Clear filter",
-    "status": "Status",
-    "all": "All",
-    "time": "Time",
-    "thisMonth": "This month",
-    "department": "Department",
-    "table": {
-      "name": "Record Name",
-      "submitter": "Submitter",
-      "date": "Created Date",
-      "department": "Department",
-      "status": "Status",
-      "actions": "Actions"
-    },
-    "statusLabels": {
-      "pending": "Pending",
-      "approved": "Approved",
-      "rejected": "Rejected",
-      "submitted": "Submitted"
-    },
-    "actions": {
-      "view": "View",
-      "edit": "Edit",
-      "approve": "Approve",
-      "reject": "Reject"
-    },
-    "pagination": {
-      "showing": "Showing",
-      "of": "of",
-      "records": "records",
-      "previous": "Previous",
-      "next": "Next"
-    }
-  },
-  "Stats": {
-    "totalRecords": "Total Records",
-    "pending": "Pending",
-    "approved": "Approved",
-    "rejected": "Rejected",
-    "comparedToLastMonth": "compared to last month"
-  },
-  "RecentActivity": {
-    "title": "Recent Activity",
-    "submitted": "submitted a new record",
-    "approved": "approved a record",
-    "rejected": "rejected a record",
-    "edited": "edited a record"
-  },
-  "QuickActions": {
-    "title": "Quick Actions",
-    "viewAllRecords": "View all records",
-    "createNewRecord": "Create new record",
-    "manageDepartments": "Manage departments",
-    "viewReports": "View reports"
-  },
-  "Breadcrumb": {
-    "home": "Home"
-  },
-  "Common": {
-    "loading": "Loading...",
-    "error": "An error occurred",
-    "save": "Save",
-    "cancel": "Cancel",
-    "delete": "Delete",
-    "edit": "Edit",
-    "create": "Create",
-    "search": "Search"
-  },
-  "UserList": {
-    "title": "User List",
-    "description": "A list of users",
-    "error": "Error",
-    "loading": "Loading...",
-    "id": "ID",
-    "name": "Name",
-    "email": "Email",
-    "searchPlaceholder": "Search users...",
-    "noResults": "No results."
-  },
-  "AuthForm": {
-    "usernameLabel": "Username",
-    "usernamePlaceholder": "johndoe",
-    "passwordLabel": "Password",
-    "passwordPlaceholder": "••••••••",
-    "forgotPassword": "Forgot your password",
-    "submit": "Sign In"
-  },
-  "AuthSchema": {
-    "usernameMin": "Username must be at least 3 characters",
-    "usernameRegex": "Only letters, numbers and underscores are allowed",
-    "passwordMin": "Password must be at least 6 characters"
-  },
-  "Error": {
-    "title": "Error",
-    "message": "Something went wrong!",
-    "retry": "Try again",
-    "goHome": "Go to home"
-  },
-  "UserManagement": {
-    "title": "User Management",
-    "description": "Manage accounts and permissions for staff and teachers.",
-    "addUser": "Add User",
-    "editUser": "Edit User",
-    "deleteUser": "Delete User",
-    "searchPlaceholder": "Search by name or email...",
-    "allRoles": "All roles",
-    "allStatuses": "All statuses",
-    "columns": {
-      "user": "User",
-      "email": "Email",
-      "role": "Role",
-      "status": "Status",
-      "actions": "Actions"
-    },
-    "roles": {
-      "admin": "Administrator",
-      "manager": "Manager",
-      "teacher": "Teacher",
-      "technician": "Technician"
-    },
-    "statuses": {
-      "active": "Active",
-      "inactive": "Inactive",
-      "locked": "Locked"
-    },
-    "form": {
-      "fullName": "Full name",
-      "fullNamePlaceholder": "Enter full name",
-      "email": "Email",
-      "emailPlaceholder": "Enter email",
-      "password": "Password",
-      "passwordPlaceholder": "Enter password (min 9 characters)",
-      "role": "Role",
-      "selectRole": "Select role",
-      "status": "Status",
-      "selectStatus": "Select status",
-      "save": "Save",
-      "cancel": "Cancel",
-      "create": "Create User",
-      "update": "Update"
-    },
-    "deleteConfirm": {
-      "title": "Confirm Delete",
-      "description": "Are you sure you want to delete user \"{name}\"? This action cannot be undone.",
-      "confirm": "Delete",
-      "cancel": "Cancel"
-    },
-    "toast": {
-      "createSuccess": "User created successfully!",
-      "updateSuccess": "User updated successfully!",
-      "deleteSuccess": "User deleted successfully!",
-      "error": "An error occurred, please try again."
-    },
-    "pagination": {
-      "showing": "Showing",
-      "to": "-",
-      "of": "of",
-      "users": "users",
-      "previous": "Previous",
-      "next": "Next"
-    },
-    "noResults": "No users found.",
-    "loading": "Loading..."
-  },
-  "DeviceReport": {
-    "title": "Device Report Management",
-    "description": "Track and manage device repair requests in the school.",
-    "addReport": "Create Report",
-    "editReport": "Edit Report",
-    "searchPlaceholder": "Search by device, reporter...",
-    "allStatuses": "All statuses",
-    "stats": {
-      "total": "Total Reports",
-      "pending": "Pending",
-      "repairing": "Repairing",
-      "completed": "Completed"
-    },
-    "columns": {
-      "id": "ID",
-      "device": "Device",
-      "reporter": "Reporter",
-      "assignee": "Technician",
-      "date": "Date",
-      "status": "Status",
-      "actions": "Actions"
-    },
-    "statuses": {
-      "pending": "Pending",
-      "received": "Received",
-      "repairing": "Repairing",
-      "repaired": "Repaired",
-      "waiting_replacement": "Waiting Replacement",
-      "unfixable": "Unfixable",
-      "recheck_required": "Recheck Required",
-      "completed": "Completed"
-    },
-    "form": {
-      "device": "Device",
-      "selectDevice": "Select device",
-      "description": "Description",
-      "descriptionPlaceholder": "Describe the issue in detail...",
-      "image": "Image",
-      "imagePlaceholder": "Select or drag & drop an image",
-      "building": "Building",
-      "selectBuilding": "Select building",
-      "room": "Room",
-      "selectRoom": "Select room",
-      "status": "Status",
-      "selectStatus": "Select status",
-      "assignee": "Assigned Technician",
-      "selectAssignee": "Select technician",
-      "noAssignee": "Unassigned",
-      "technicianNote": "Technician Note",
-      "technicianNotePlaceholder": "Note about the repair process...",
-      "cancel": "Cancel",
-      "create": "Create Report",
-      "update": "Update"
-    },
-    "deleteConfirm": {
-      "title": "Confirm Delete",
-      "description": "Are you sure you want to delete report #{id}? This action cannot be undone.",
-      "confirm": "Delete",
-      "cancel": "Cancel"
-    },
-    "toast": {
-      "createSuccess": "Device report created successfully!",
-      "updateSuccess": "Report updated successfully!",
-      "deleteSuccess": "Report deleted successfully!",
-      "receiveSuccess": "Report received successfully!",
-      "resultSuccess": "Repair result updated!",
-      "confirmSuccess": "Device status confirmed!",
-      "error": "An error occurred, please try again."
-    },
-    "workflow": {
-      "receive": "Receive",
-      "receiveConfirm": "Are you sure you want to receive this report?",
-      "startRepair": "Start Repair",
-      "markRepaired": "Mark as Repaired",
-      "markUnfixable": "Mark as Unfixable",
-      "markWaiting": "Waiting for Replacement",
-      "confirmWorking": "Device is Working",
-      "confirmNotWorking": "Device Not Working",
-      "resultTitle": "Update Repair Result",
-      "resultDescription": "Select repair result and enter notes (optional)",
-      "confirmTitle": "Confirm Device Status",
-      "confirmDescription": "The device has been repaired. Please check and confirm the device status.",
-      "notWorkingDescription": "Describe the remaining issue...",
-      "technicianNotePlaceholder": "Enter technician notes..."
-    },
-    "pagination": {
-      "showing": "Showing",
-      "to": "-",
-      "of": "of",
-      "reports": "reports"
-    },
-    "noResults": "No device reports found.",
-    "loading": "Loading..."
-  },
-  "LeaveRequest": {
-    "title": "Leave Management",
-    "description": "Manage and approve leave requests for staff and teachers",
-    "addRequest": "Add Request",
-    "searchPlaceholder": "Search by employee name...",
-    "allStatuses": "All statuses",
-    "columns": {
-      "employee": "Employee",
-      "leaveType": "Leave Type",
-      "duration": "Duration",
-      "status": "Status",
-      "actions": "Actions"
-    },
-    "statuses": {
-      "pending": "Pending",
-      "approved": "Approved",
-      "rejected": "Rejected"
-    },
-    "stats": {
-      "total": "Total Requests",
-      "pending": "Pending",
-      "approved": "Approved",
-      "rejected": "Rejected",
-      "remainingDays": "Remaining Days"
-    },
-    "form": {
-      "leaveType": "Leave Type",
-      "leaveTypePlaceholder": "Select leave type",
-      "startDate": "Start Date",
-      "endDate": "End Date",
-      "totalDays": "Total Days",
-      "reason": "Reason",
-      "reasonPlaceholder": "Enter leave reason...",
-      "rejectedReason": "Rejection Reason",
-      "rejectedReasonPlaceholder": "Enter rejection reason...",
-      "approvedBy": "Approved By"
-    },
-    "dialog": {
-      "createTitle": "Create Leave Request",
-      "createDescription": "Fill in the information to create a new leave request",
-      "viewTitle": "Leave Request Details",
-      "rejectTitle": "Reject Request",
-      "rejectDescription": "Are you sure you want to reject this request?",
-      "deleteTitle": "Delete Request",
-      "deleteDescription": "Are you sure you want to delete this leave request? This action cannot be undone.",
-      "cancel": "Cancel",
-      "submit": "Submit Request",
-      "approve": "Approve",
-      "reject": "Reject",
-      "delete": "Delete",
-      "close": "Close",
-      "exportPdf": "Export PDF",
-      "signTitle": "Sign Leave Request",
-      "signDescription": "Enter your signature PIN to sign this leave request",
-      "signPin": "Signature PIN",
-      "signPinPlaceholder": "Enter 6-digit PIN",
-      "signConfirm": "Confirm Sign",
-      "signed": "Signed",
-      "approveTitle": "Approve Leave Request",
-      "approveDescription": "Enter your signature PIN to confirm approval of this leave request",
-      "approveConfirm": "Confirm Approve",
-      "approverSigned": "Approved & Signed by Leader",
-      "print": "Print"
-    },
-    "toast": {
-      "createSuccess": "Leave request created successfully!",
-      "pdfDownloaded": "PDF file downloaded successfully!",
-      "pdfError": "Error downloading PDF, please try again",
-      "approveSuccess": "Leave request approved!",
-      "rejectSuccess": "Leave request rejected!",
-      "deleteSuccess": "Leave request deleted!",
-      "signSuccess": "Leave request signed successfully!",
-      "signError": "Signing failed. Please check your PIN",
-      "error": "An error occurred, please try again"
-    },
-    "pagination": {
-      "showing": "Showing",
-      "to": "-",
-      "of": "of",
-      "requests": "requests"
-    },
-    "noResults": "No leave requests found.",
-    "loading": "Loading...",
-    "days": "days"
-  },
-  "Settings": {
-    "title": "Account Settings",
-    "description": "Manage your personal information and account security",
-    "personalInfo": "Personal Information",
-    "personalInfoDescription": "Update your basic information so people can recognize you.",
-    "changeAvatar": "Change photo",
-    "avatarHint": "JPG, GIF or PNG. Max 2MB.",
-    "avatarInvalidType": "Please select a valid image file",
-    "avatarTooLarge": "Maximum image size is 2MB",
-    "fullName": "Full name",
-    "email": "Official email",
-    "changePassword": "Change Password",
-    "changePasswordDescription": "Ensure your account is secured with a strong password.",
-    "currentPassword": "Current password",
-    "newPassword": "New password",
-    "confirmPassword": "Confirm new password",
-    "cancel": "Cancel changes",
-    "save": "Save changes",
-    "fullNameRequired": "Full name is required",
-    "emailRequired": "Email is required",
-    "currentPasswordRequired": "Please enter your current password",
-    "newPasswordRequired": "Please enter a new password",
-    "passwordMinLength": "Password must be at least 6 characters",
-    "passwordMismatch": "Passwords do not match",
-    "noChanges": "No changes to save",
-    "saveSuccess": "Profile updated successfully!",
-    "saveError": "An error occurred while saving changes"
-  },
-  "DigitalSignature": {
-    "title": "Personal Signature Management",
-    "description": "Set up the display image and security for your digital signature on electronic documents.",
-    "signatureImage": "Signature Image",
-    "tabs": {
-      "draw": "Draw",
-      "upload": "Upload"
-    },
-    "draw": {
-      "label": "Signature Drawing Area",
-      "placeholder": "Use mouse or drawing tablet to sign",
-      "clear": "Clear",
-      "undo": "Undo"
-    },
-    "upload": {
-      "label": "Upload Signature Image",
-      "hint": "Drag & drop or click to select a signature image file",
-      "formats": "PNG, JPG (Max 2MB)",
-      "change": "Change"
-    },
-    "guide": {
-      "title": "Guidelines",
-      "tip1": "Sign within the frame for the best display on documents.",
-      "tip2": "Use clear strokes, avoid very thin or broken lines.",
-      "tip3": "The system will automatically remove background for uploaded images.",
-      "tip4": "Supported formats: PNG, JPG (Max 2MB)."
-    },
-    "pin": {
-      "title": "Signature PIN Code",
-      "currentPin": "Current PIN",
-      "newPin": "New PIN",
-      "confirmPin": "Confirm PIN",
-      "currentPinPlaceholder": "••••••••",
-      "newPinPlaceholder": "Enter new PIN",
-      "confirmPinPlaceholder": "Confirm new PIN",
-      "warning": "Note: PIN is used to authenticate each document signing. Do not share your PIN with others.",
-      "pinMismatch": "PIN confirmation does not match",
-      "pinMinLength": "PIN must be exactly 6 digits",
-      "pinOnlyDigits": "PIN must contain only digits",
-      "noPinYet": "PIN not set yet",
-      "hasPinAlready": "PIN has been set"
-    },
-    "actions": {
-      "cancel": "Cancel",
-      "save": "Save Configuration"
-    },
-    "preview": {
-      "title": "Signature Preview",
-      "noSignature": "No signature yet"
-    },
-    "toast": {
-      "saveSignatureSuccess": "Signature saved successfully!",
-      "deleteSignatureSuccess": "Signature deleted!",
-      "setPinSuccess": "PIN set successfully!",
-      "changePinSuccess": "PIN changed successfully!",
-      "error": "An error occurred, please try again",
-      "noSignatureData": "Please draw or upload a signature image",
-      "invalidFile": "Please select a valid image file (PNG, JPG)",
-      "fileTooLarge": "Maximum file size is 2MB"
-    },
-    "loading": "Loading..."
-  },
-  "Facilities": {
-    "buildings": {
-      "title": "Building Management",
-      "description": "Manage information about buildings in the school",
-      "addBuilding": "Add Building",
-      "editBuilding": "Edit Building",
-      "deleteBuilding": "Delete Building",
-      "searchPlaceholder": "Search by building name...",
-      "columns": {
-        "no": "No.",
-        "name": "Building Name",
-        "description": "Description",
-        "actions": "Actions"
-      },
-      "form": {
-        "name": "Building Name",
-        "namePlaceholder": "E.g., Building A",
-        "description": "Description",
-        "descriptionPlaceholder": "Enter description (optional)",
-        "cancel": "Cancel",
-        "create": "Create",
-        "update": "Update"
-      },
-      "deleteConfirm": {
-        "title": "Confirm Delete",
-        "description": "Are you sure you want to delete building \"{name}\"? This action cannot be undone.",
-        "confirm": "Delete",
-        "cancel": "Cancel"
-      },
-      "toast": {
-        "createSuccess": "Building created successfully!",
-        "updateSuccess": "Building updated successfully!",
-        "deleteSuccess": "Building deleted successfully!",
-        "error": "An error occurred, please try again."
-      },
-      "pagination": {
-        "showing": "Showing",
-        "to": "to",
-        "of": "of",
-        "buildings": "buildings"
-      },
-      "noResults": "No buildings found.",
-      "loading": "Loading..."
-    },
-    "rooms": {
-      "title": "Room Management",
-      "description": "Manage information about rooms in buildings",
-      "addRoom": "Add Room",
-      "editRoom": "Edit Room",
-      "deleteRoom": "Delete Room",
-      "searchPlaceholder": "Search by room name...",
-      "allBuildings": "All buildings",
-      "columns": {
-        "no": "No.",
-        "name": "Room Name",
-        "building": "Building",
-        "actions": "Actions"
-      },
-      "form": {
-        "building": "Building",
-        "selectBuilding": "Select building",
-        "name": "Room Name",
-        "namePlaceholder": "E.g., Room 101",
-        "cancel": "Cancel",
-        "create": "Create",
-        "update": "Update"
-      },
-      "deleteConfirm": {
-        "title": "Confirm Delete",
-        "description": "Are you sure you want to delete room \"{name}\"? This action cannot be undone.",
-        "confirm": "Delete",
-        "cancel": "Cancel"
-      },
-      "toast": {
-        "createSuccess": "Room created successfully!",
-        "updateSuccess": "Room updated successfully!",
-        "deleteSuccess": "Room deleted successfully!",
-        "error": "An error occurred, please try again."
-      },
-      "pagination": {
-        "showing": "Showing",
-        "to": "to",
-        "of": "of",
-        "rooms": "rooms"
-      },
-      "noResults": "No rooms found.",
-      "loading": "Loading..."
-    },
-    "devices": {
-      "title": "Device Management",
-      "description": "Manage information about devices in rooms",
-      "addDevice": "Add Device",
-      "editDevice": "Edit Device",
-      "deleteDevice": "Delete Device",
-      "searchPlaceholder": "Search by device name...",
-      "allRooms": "All rooms",
-      "allStatuses": "All statuses",
-      "columns": {
-        "no": "No.",
-        "name": "Device Name",
-        "room": "Room",
-        "building": "Building",
-        "status": "Status",
-        "actions": "Actions"
-      },
-      "statuses": {
-        "active": "Active",
-        "under_repair": "Under Repair",
-        "waiting_replacement": "Waiting Replacement",
-        "broken": "Broken"
-      },
-      "form": {
-        "name": "Device Name",
-        "namePlaceholder": "E.g., Epson Projector",
-        "room": "Room",
-        "selectRoom": "Select room (optional)",
-        "noRoom": "No room selected",
-        "status": "Status",
-        "cancel": "Cancel",
-        "create": "Create",
-        "update": "Update"
-      },
-      "deleteConfirm": {
-        "title": "Confirm Delete",
-        "description": "Are you sure you want to delete device \"{name}\"? This action cannot be undone.",
-        "confirm": "Delete",
-        "cancel": "Cancel"
-      },
-      "toast": {
-        "createSuccess": "Device created successfully!",
-        "updateSuccess": "Device updated successfully!",
-        "deleteSuccess": "Device deleted successfully!",
-        "error": "An error occurred, please try again."
-      },
-      "pagination": {
-        "showing": "Showing",
-        "to": "to",
-        "of": "of",
-        "devices": "devices"
-      },
-      "noResults": "No devices found.",
-      "notAssigned": "Not assigned",
-      "loading": "Loading..."
-    },
-    "equipment": {
-      "title": "Equipment Management",
-      "description": "Manage information about equipment in rooms",
-      "addEquipment": "Add Equipment",
-      "editEquipment": "Edit Equipment",
-      "deleteEquipment": "Delete Equipment",
-      "searchPlaceholder": "Search by name, code or brand...",
-      "allRooms": "All rooms",
-      "allCategories": "All categories",
-      "allStatuses": "All statuses",
-      "columns": {
-        "code": "Code",
-        "name": "Equipment Name",
-        "category": "Category",
-        "room": "Room",
-        "brand": "Brand",
-        "model": "Model",
-        "price": "Price",
-        "status": "Status",
-        "actions": "Actions"
-      },
-      "categories": {
-        "computer": "Computer",
-        "projector": "Projector",
-        "furniture": "Furniture",
-        "lab-equipment": "Lab Equipment",
-        "other": "Other"
-      },
-      "statuses": {
-        "working": "Working",
-        "broken": "Broken",
-        "maintenance": "Maintenance",
-        "disposed": "Disposed"
-      },
-      "form": {
-        "name": "Equipment Name",
-        "namePlaceholder": "E.g., Dell Computer",
-        "code": "Equipment Code",
-        "codePlaceholder": "E.g., TB001",
-        "room": "Room",
-        "selectRoom": "Select room",
-        "category": "Equipment Category",
-        "brand": "Brand",
-        "brandPlaceholder": "E.g., Dell",
-        "model": "Model",
-        "modelPlaceholder": "E.g., Latitude 5420",
-        "serialNumber": "Serial Number",
-        "serialNumberPlaceholder": "E.g., SN123456",
-        "purchaseDate": "Purchase Date",
-        "warrantyExpiry": "Warranty Expiry",
-        "price": "Price (VND)",
-        "pricePlaceholder": "E.g., 15000000",
-        "status": "Status",
-        "description": "Notes",
-        "descriptionPlaceholder": "Enter notes (optional)",
-        "cancel": "Cancel",
-        "create": "Create",
-        "update": "Update",
-        "required": "*"
-      },
-      "deleteConfirm": {
-        "title": "Confirm Delete",
-        "description": "Are you sure you want to delete equipment \"{name}\"? This action cannot be undone.",
-        "confirm": "Delete",
-        "cancel": "Cancel"
-      },
-      "toast": {
-        "createSuccess": "Equipment created successfully!",
-        "updateSuccess": "Equipment updated successfully!",
-        "deleteSuccess": "Equipment deleted successfully!",
-        "error": "An error occurred, please try again."
-      },
-      "pagination": {
-        "showing": "Showing",
-        "to": "to",
-        "of": "of",
-        "equipment": "equipment"
-      },
-      "noResults": "No equipment found.",
-      "loading": "Loading...",
-      "breadcrumb": {
-        "home": "Home",
-        "equipment": "Equipment Management"
-      }
-    }
-  },
-  "Staff": {
-    "title": "Staff Profiles",
-    "description": "Manage detailed staff information",
-    "addStaff": "Add Staff",
-    "searchPlaceholder": "Search by name, code, email, or phone..."
-  },
-  "WorkOrders": {
-    "title": "Work Orders",
-    "description": "Create, approve, and track assigned tasks",
-    "createWorkOrder": "Create Work Order",
-    "searchPlaceholder": "Search by work order code, location, content...",
-    "filterStatus": "Filter by status",
-    "allStatuses": "All statuses",
-    "pending": "Pending",
-    "approved": "Approved",
-    "inProgress": "In Progress",
-    "completed": "Completed",
-    "rejected": "Rejected"
-  },
-  "ExcelImportExport": {
-    "importExport": "Import/Export Excel"
-  },
-  "DashboardHome": {
-    "goodMorning": "Good morning",
-    "goodAfternoon": "Good afternoon",
-    "goodEvening": "Good evening",
-    "todayIs": "Today is {date} - Have a productive day!",
-    "deviceReports": "Device Reports",
-    "leaveRequests": "Leave Requests",
-    "pendingReception": "Pending Receipt",
-    "repairing": "In Repair",
-    "completed": "Completed",
-    "pendingApproval": "Pending Approval",
-    "approved": "Approved",
-    "quickActions": "Quick Actions",
-    "manageUsers": "User Management",
-    "staffProfiles": "Staff Profiles",
-    "workOrders": "Work Orders",
-    "manageBuildings": "Building Management",
-    "manageDevices": "Device Management",
-    "leaveManagement": "Leave Management",
-    "digitalSignatures": "Digital Signatures"
-  },
-  "MyProfile": {
-    "exportProfile": "Export Profile",
-    "saveChanges": "Save Changes",
-    "personalInfo": "Personal Info",
-    "organization": "Organization",
-    "workInfo": "Work Info",
-    "salaryAllowance": "Salary Allowance",
-    "qualifications": "Qualifications",
-    "evaluation": "Evaluation",
-    "bankInfo": "Bank Info",
-    "basicInfo": "BASIC INFORMATION",
-    "characteristicsAndStatus": "CHARACTERISTICS & STATUS",
-    "contactAndAddress": "CONTACT & ADDRESS",
-    "identifier": "Identifier",
-    "gender": "Gender",
-    "male": "Male",
-    "female": "Female",
-    "other": "Other",
-    "birthDate": "Date of Birth",
-    "idCardNumber": "ID Card Number",
-    "issueDate": "Issue Date",
-    "issuePlace": "Issue Place",
-    "ethnicity": "Ethnicity",
-    "religion": "Religion",
-    "status": "Status",
-    "working": "Working",
-    "onLeave": "On Leave",
-    "resigned": "Resigned",
-    "hireDate": "Hire Date",
-    "hometown": "Hometown",
-    "provinceCity": "Province / City",
-    "district": "District",
-    "ward": "Ward / Commune",
-    "streetAddress": "House Number, Street",
-    "phoneNumber": "Phone Number",
-    "permanentAddress": "Permanent Address",
-    "verifyIdCardAlert": "Please carefully check the identification information (ID Card, Date of Birth) before saving. Major changes will need to be approved by an administrator."
-  },
-  "Statistics": {
-    "title": "Staff Statistics",
-    "description": "Staff data updated on {date}",
-    "exportReport": "Export report",
-    "overall": "Overall",
-    "totalStaff": "Total Staff",
-    "male": "Male",
-    "female": "Female",
-    "teachers": "Teachers",
-    "tenured": "Tenured",
-    "contract": "Contract",
-    "staff": "Staff",
-    "regionalSalary": "Regional Salary",
-    "managementBoard": "Management Board",
-    "personnelStatus": "Personnel Status",
-    "currentMonth": "Current month",
-    "status": {
-      "working": "Working",
-      "resigned": "Resigned",
-      "transferred": "Transferred",
-      "maternity_leave": "Maternity Leave",
-      "unpaid_leave": "Unpaid Leave"
-    },
-    "ethnicityStats": "Statistics by Ethnicity",
-    "departmentList": "Department List ({count} departments)",
-    "department": "Department",
-    "quantity": "Quantity",
-    "ratio": "Ratio",
-    "other": "Other ({count} remaining)",
-    "collapse": "Collapse",
-    "viewAll": "View all departments",
-    "educationLevelStats": "Education Level Statistics"
-  },
-  "AgeStatistics": {
-    "title": "Age Statistics of Staff",
-    "description": "Data updated based on the centralized human resource management system",
-    "filters": {
-      "all": "Entire School",
-      "teacher": "Teacher",
-      "staff": "Staff",
-      "contractTeacher": "Contract Teacher"
-    },
-    "chartTitle": "Age Distribution Chart",
-    "unit": "Unit: Personnel",
-    "staffUnit": "Personnel",
-    "totalStaff": "Total Staff",
-    "updatedToday": "Updated Today",
-    "mostCommonAge": "Most Common Age",
-    "percentTotal": "% Total",
-    "detailedStats": "Detailed Education Statistics",
-    "exportData": "Export Excel Data",
-    "educationUnit": "Education Level / Unit",
-    "total": "Total",
-    "insights": "Professional Insights",
-    "insightsDesc": "The personnel structure is mainly concentrated in the golden age ({ageRange}). This is an experienced resource in its highest contribution phase for the school.",
-    "forecast": "Personnel Forecast",
-    "forecastDesc": "The ratio of young staff (under 30) needs to be focused on for recruitment in the upcoming period to ensure continuous succession for all educational levels."
-  }
+    "Auth":  {
+                 "pageTitle":  "Login",
+                 "systemTitle":  "ADMINISTRATIVE MANAGEMENT SYSTEM",
+                 "schoolName":  "PRACTICE PEDAGOGICAL SCHOOL",
+                 "loginTitle":  "Login to the system",
+                 "loginSubtitle":  "Please enter your login information",
+                 "email":  "Email",
+                 "emailPlaceholder":  "Enter your email",
+                 "password":  "Password",
+                 "passwordPlaceholder":  "Enter your password",
+                 "rememberMe":  "Remember me",
+                 "forgotPassword":  "Forgot password?",
+                 "loginButton":  "Login",
+                 "orContinueWith":  "Or continue with",
+                 "loginWithGoogle":  "Login with Google",
+                 "noAccount":  "Don\u0027t have an account?",
+                 "register":  "Register now",
+                 "copyright":  "© 2024 Practice Pedagogical School. All rights reserved."
+             },
+    "Dashboard":  {
+                      "title":  "Administrative Management System",
+                      "description":  "Administrative records management system for Practice Pedagogical School",
+                      "welcome":  "Welcome! Here is an overview of the administrative management system.",
+                      "projectBy":  "Project by",
+                      "notifications":  "Notifications"
+                  },
+    "Sidebar":  {
+                    "systemTitle":  "ADMIN MANAGEMENT",
+                    "schoolName":  "PRACTICE PEDAGOGICAL SCHOOL",
+                    "dashboard":  "Dashboard",
+                    "users":  "User Management",
+                    "staff":  "Staff Profiles",
+                    "myProfile":  "My Profile",
+                    "workOrders":  "Work Orders",
+                    "facilitySection":  "Facilities",
+                    "buildings":  "Buildings",
+                    "rooms":  "Rooms",
+                    "devices":  "Devices",
+                    "otherSection":  "Other",
+                    "deviceReports":  "Device Reports",
+                    "leaveRequests":  "Leave Requests",
+                    "digitalSignatures":  "Digital Signatures",
+                    "system":  "System",
+                    "settings":  "Settings",
+                    "statisticsSection":  "Statistics",
+                    "statistics":  "Staff Statistics",
+                    "ageStatistics":  "Age Statistics",
+                    "logout":  "Logout"
+                },
+    "Header":  {
+                   "searchPlaceholder":  "Search records...",
+                   "toggleTheme":  "Toggle theme"
+               },
+    "Records":  {
+                    "title":  "Administrative Records",
+                    "description":  "Manage and approve administrative records",
+                    "createNew":  "Create new record",
+                    "filter":  "Filter",
+                    "clearFilter":  "Clear filter",
+                    "status":  "Status",
+                    "all":  "All",
+                    "time":  "Time",
+                    "thisMonth":  "This month",
+                    "department":  "Department",
+                    "table":  {
+                                  "name":  "Record Name",
+                                  "submitter":  "Submitter",
+                                  "date":  "Created Date",
+                                  "department":  "Department",
+                                  "status":  "Status",
+                                  "actions":  "Actions"
+                              },
+                    "statusLabels":  {
+                                         "pending":  "Pending",
+                                         "approved":  "Approved",
+                                         "rejected":  "Rejected",
+                                         "submitted":  "Submitted"
+                                     },
+                    "actions":  {
+                                    "view":  "View",
+                                    "edit":  "Edit",
+                                    "approve":  "Approve",
+                                    "reject":  "Reject"
+                                },
+                    "pagination":  {
+                                       "showing":  "Showing",
+                                       "of":  "of",
+                                       "records":  "records",
+                                       "previous":  "Previous",
+                                       "next":  "Next"
+                                   }
+                },
+    "Stats":  {
+                  "totalRecords":  "Total Records",
+                  "pending":  "Pending",
+                  "approved":  "Approved",
+                  "rejected":  "Rejected",
+                  "comparedToLastMonth":  "compared to last month"
+              },
+    "RecentActivity":  {
+                           "title":  "Recent Activity",
+                           "submitted":  "submitted a new record",
+                           "approved":  "approved a record",
+                           "rejected":  "rejected a record",
+                           "edited":  "edited a record"
+                       },
+    "QuickActions":  {
+                         "title":  "Quick Actions",
+                         "viewAllRecords":  "View all records",
+                         "createNewRecord":  "Create new record",
+                         "manageDepartments":  "Manage departments",
+                         "viewReports":  "View reports"
+                     },
+    "Breadcrumb":  {
+                       "home":  "Home"
+                   },
+    "Common":  {
+                   "loading":  "Loading...",
+                   "error":  "An error occurred",
+                   "save":  "Save",
+                   "cancel":  "Cancel",
+                   "delete":  "Delete",
+                   "edit":  "Edit",
+                   "create":  "Create",
+                   "search":  "Search"
+               },
+    "UserList":  {
+                     "title":  "User List",
+                     "description":  "A list of users",
+                     "error":  "Error",
+                     "loading":  "Loading...",
+                     "id":  "ID",
+                     "name":  "Name",
+                     "email":  "Email",
+                     "searchPlaceholder":  "Search users...",
+                     "noResults":  "No results."
+                 },
+    "AuthForm":  {
+                     "usernameLabel":  "Username",
+                     "usernamePlaceholder":  "johndoe",
+                     "passwordLabel":  "Password",
+                     "passwordPlaceholder":  "••••••••",
+                     "forgotPassword":  "Forgot your password",
+                     "submit":  "Sign In"
+                 },
+    "AuthSchema":  {
+                       "usernameMin":  "Username must be at least 3 characters",
+                       "usernameRegex":  "Only letters, numbers and underscores are allowed",
+                       "passwordMin":  "Password must be at least 6 characters"
+                   },
+    "Error":  {
+                  "title":  "Error",
+                  "message":  "Something went wrong!",
+                  "retry":  "Try again",
+                  "goHome":  "Go to home"
+              },
+    "UserManagement":  {
+                           "title":  "User Management",
+                           "description":  "Manage accounts and permissions for staff and teachers.",
+                           "addUser":  "Add User",
+                           "editUser":  "Edit User",
+                           "deleteUser":  "Delete User",
+                           "searchPlaceholder":  "Search by name or email...",
+                           "allRoles":  "All roles",
+                           "allStatuses":  "All statuses",
+                           "columns":  {
+                                           "user":  "User",
+                                           "email":  "Email",
+                                           "role":  "Role",
+                                           "status":  "Status",
+                                           "actions":  "Actions"
+                                       },
+                           "roles":  {
+                                         "admin":  "Administrator",
+                                         "manager":  "Manager",
+                                         "teacher":  "Teacher",
+                                         "technician":  "Technician"
+                                     },
+                           "statuses":  {
+                                            "active":  "Active",
+                                            "inactive":  "Inactive",
+                                            "locked":  "Locked"
+                                        },
+                           "form":  {
+                                        "fullName":  "Full name",
+                                        "fullNamePlaceholder":  "Enter full name",
+                                        "email":  "Email",
+                                        "emailPlaceholder":  "Enter email",
+                                        "password":  "Password",
+                                        "passwordPlaceholder":  "Enter password (min 9 characters)",
+                                        "role":  "Role",
+                                        "selectRole":  "Select role",
+                                        "status":  "Status",
+                                        "selectStatus":  "Select status",
+                                        "save":  "Save",
+                                        "cancel":  "Cancel",
+                                        "create":  "Create User",
+                                        "update":  "Update"
+                                    },
+                           "deleteConfirm":  {
+                                                 "title":  "Confirm Delete",
+                                                 "description":  "Are you sure you want to delete user \"{name}\"? This action cannot be undone.",
+                                                 "confirm":  "Delete",
+                                                 "cancel":  "Cancel"
+                                             },
+                           "toast":  {
+                                         "createSuccess":  "User created successfully!",
+                                         "updateSuccess":  "User updated successfully!",
+                                         "deleteSuccess":  "User deleted successfully!",
+                                         "error":  "An error occurred, please try again."
+                                     },
+                           "pagination":  {
+                                              "showing":  "Showing",
+                                              "to":  "-",
+                                              "of":  "of",
+                                              "users":  "users",
+                                              "previous":  "Previous",
+                                              "next":  "Next"
+                                          },
+                           "noResults":  "No users found.",
+                           "loading":  "Loading..."
+                       },
+    "DeviceReport":  {
+                         "title":  "Device Report Management",
+                         "description":  "Track and manage device repair requests in the school.",
+                         "addReport":  "Create Report",
+                         "editReport":  "Edit Report",
+                         "searchPlaceholder":  "Search by device, reporter...",
+                         "allStatuses":  "All statuses",
+                         "stats":  {
+                                       "total":  "Total Reports",
+                                       "pending":  "Pending",
+                                       "repairing":  "Repairing",
+                                       "completed":  "Completed"
+                                   },
+                         "columns":  {
+                                         "id":  "ID",
+                                         "device":  "Device",
+                                         "reporter":  "Reporter",
+                                         "assignee":  "Technician",
+                                         "date":  "Date",
+                                         "status":  "Status",
+                                         "actions":  "Actions"
+                                     },
+                         "statuses":  {
+                                          "pending":  "Pending",
+                                          "received":  "Received",
+                                          "repairing":  "Repairing",
+                                          "repaired":  "Repaired",
+                                          "waiting_replacement":  "Waiting Replacement",
+                                          "unfixable":  "Unfixable",
+                                          "recheck_required":  "Recheck Required",
+                                          "completed":  "Completed"
+                                      },
+                         "form":  {
+                                      "device":  "Device",
+                                      "selectDevice":  "Select device",
+                                      "description":  "Description",
+                                      "descriptionPlaceholder":  "Describe the issue in detail...",
+                                      "image":  "Image",
+                                      "imagePlaceholder":  "Select or drag \u0026 drop an image",
+                                      "building":  "Building",
+                                      "selectBuilding":  "Select building",
+                                      "room":  "Room",
+                                      "selectRoom":  "Select room",
+                                      "status":  "Status",
+                                      "selectStatus":  "Select status",
+                                      "assignee":  "Assigned Technician",
+                                      "selectAssignee":  "Select technician",
+                                      "noAssignee":  "Unassigned",
+                                      "technicianNote":  "Technician Note",
+                                      "technicianNotePlaceholder":  "Note about the repair process...",
+                                      "cancel":  "Cancel",
+                                      "create":  "Create Report",
+                                      "update":  "Update"
+                                  },
+                         "deleteConfirm":  {
+                                               "title":  "Confirm Delete",
+                                               "description":  "Are you sure you want to delete report #{id}? This action cannot be undone.",
+                                               "confirm":  "Delete",
+                                               "cancel":  "Cancel"
+                                           },
+                         "toast":  {
+                                       "createSuccess":  "Device report created successfully!",
+                                       "updateSuccess":  "Report updated successfully!",
+                                       "deleteSuccess":  "Report deleted successfully!",
+                                       "receiveSuccess":  "Report received successfully!",
+                                       "resultSuccess":  "Repair result updated!",
+                                       "confirmSuccess":  "Device status confirmed!",
+                                       "error":  "An error occurred, please try again."
+                                   },
+                         "workflow":  {
+                                          "receive":  "Receive",
+                                          "receiveConfirm":  "Are you sure you want to receive this report?",
+                                          "startRepair":  "Start Repair",
+                                          "markRepaired":  "Mark as Repaired",
+                                          "markUnfixable":  "Mark as Unfixable",
+                                          "markWaiting":  "Waiting for Replacement",
+                                          "confirmWorking":  "Device is Working",
+                                          "confirmNotWorking":  "Device Not Working",
+                                          "resultTitle":  "Update Repair Result",
+                                          "resultDescription":  "Select repair result and enter notes (optional)",
+                                          "confirmTitle":  "Confirm Device Status",
+                                          "confirmDescription":  "The device has been repaired. Please check and confirm the device status.",
+                                          "notWorkingDescription":  "Describe the remaining issue...",
+                                          "technicianNotePlaceholder":  "Enter technician notes..."
+                                      },
+                         "pagination":  {
+                                            "showing":  "Showing",
+                                            "to":  "-",
+                                            "of":  "of",
+                                            "reports":  "reports"
+                                        },
+                         "noResults":  "No device reports found.",
+                         "loading":  "Loading..."
+                     },
+    "LeaveRequest":  {
+                         "title":  "Leave Management",
+                         "description":  "Manage and approve leave requests for staff and teachers",
+                         "addRequest":  "Add Request",
+                         "searchPlaceholder":  "Search by employee name...",
+                         "allStatuses":  "All statuses",
+                         "columns":  {
+                                         "employee":  "Employee",
+                                         "leaveType":  "Leave Type",
+                                         "duration":  "Duration",
+                                         "status":  "Status",
+                                         "actions":  "Actions"
+                                     },
+                         "statuses":  {
+                                          "pending":  "Pending",
+                                          "approved":  "Approved",
+                                          "rejected":  "Rejected"
+                                      },
+                         "stats":  {
+                                       "total":  "Total Requests",
+                                       "pending":  "Pending",
+                                       "approved":  "Approved",
+                                       "rejected":  "Rejected",
+                                       "remainingDays":  "Remaining Days"
+                                   },
+                         "form":  {
+                                      "leaveType":  "Leave Type",
+                                      "leaveTypePlaceholder":  "Select leave type",
+                                      "startDate":  "Start Date",
+                                      "endDate":  "End Date",
+                                      "totalDays":  "Total Days",
+                                      "reason":  "Reason",
+                                      "reasonPlaceholder":  "Enter leave reason...",
+                                      "rejectedReason":  "Rejection Reason",
+                                      "rejectedReasonPlaceholder":  "Enter rejection reason...",
+                                      "approvedBy":  "Approved By"
+                                  },
+                         "dialog":  {
+                                        "createTitle":  "Create Leave Request",
+                                        "createDescription":  "Fill in the information to create a new leave request",
+                                        "viewTitle":  "Leave Request Details",
+                                        "rejectTitle":  "Reject Request",
+                                        "rejectDescription":  "Are you sure you want to reject this request?",
+                                        "deleteTitle":  "Delete Request",
+                                        "deleteDescription":  "Are you sure you want to delete this leave request? This action cannot be undone.",
+                                        "cancel":  "Cancel",
+                                        "submit":  "Submit Request",
+                                        "approve":  "Approve",
+                                        "reject":  "Reject",
+                                        "delete":  "Delete",
+                                        "close":  "Close",
+                                        "exportPdf":  "Export PDF",
+                                        "signTitle":  "Sign Leave Request",
+                                        "signDescription":  "Enter your signature PIN to sign this leave request",
+                                        "signPin":  "Signature PIN",
+                                        "signPinPlaceholder":  "Enter 6-digit PIN",
+                                        "signConfirm":  "Confirm Sign",
+                                        "signed":  "Signed",
+                                        "approveTitle":  "Approve Leave Request",
+                                        "approveDescription":  "Enter your signature PIN to confirm approval of this leave request",
+                                        "approveConfirm":  "Confirm Approve",
+                                        "approverSigned":  "Approved \u0026 Signed by Leader",
+                                        "print":  "Print"
+                                    },
+                         "toast":  {
+                                       "createSuccess":  "Leave request created successfully!",
+                                       "pdfDownloaded":  "PDF file downloaded successfully!",
+                                       "pdfError":  "Error downloading PDF, please try again",
+                                       "approveSuccess":  "Leave request approved!",
+                                       "rejectSuccess":  "Leave request rejected!",
+                                       "deleteSuccess":  "Leave request deleted!",
+                                       "signSuccess":  "Leave request signed successfully!",
+                                       "signError":  "Signing failed. Please check your PIN",
+                                       "error":  "An error occurred, please try again"
+                                   },
+                         "pagination":  {
+                                            "showing":  "Showing",
+                                            "to":  "-",
+                                            "of":  "of",
+                                            "requests":  "requests"
+                                        },
+                         "noResults":  "No leave requests found.",
+                         "loading":  "Loading...",
+                         "days":  "days"
+                     },
+    "Settings":  {
+                     "title":  "Account Settings",
+                     "description":  "Manage your personal information and account security",
+                     "personalInfo":  "Personal Information",
+                     "personalInfoDescription":  "Update your basic information so people can recognize you.",
+                     "changeAvatar":  "Change photo",
+                     "avatarHint":  "JPG, GIF or PNG. Max 2MB.",
+                     "avatarInvalidType":  "Please select a valid image file",
+                     "avatarTooLarge":  "Maximum image size is 2MB",
+                     "fullName":  "Full name",
+                     "email":  "Official email",
+                     "changePassword":  "Change Password",
+                     "changePasswordDescription":  "Ensure your account is secured with a strong password.",
+                     "currentPassword":  "Current password",
+                     "newPassword":  "New password",
+                     "confirmPassword":  "Confirm new password",
+                     "cancel":  "Cancel changes",
+                     "save":  "Save changes",
+                     "fullNameRequired":  "Full name is required",
+                     "emailRequired":  "Email is required",
+                     "currentPasswordRequired":  "Please enter your current password",
+                     "newPasswordRequired":  "Please enter a new password",
+                     "passwordMinLength":  "Password must be at least 6 characters",
+                     "passwordMismatch":  "Passwords do not match",
+                     "noChanges":  "No changes to save",
+                     "saveSuccess":  "Profile updated successfully!",
+                     "saveError":  "An error occurred while saving changes"
+                 },
+    "DigitalSignature":  {
+                             "title":  "Personal Signature Management",
+                             "description":  "Set up the display image and security for your digital signature on electronic documents.",
+                             "signatureImage":  "Signature Image",
+                             "tabs":  {
+                                          "draw":  "Draw",
+                                          "upload":  "Upload"
+                                      },
+                             "draw":  {
+                                          "label":  "Signature Drawing Area",
+                                          "placeholder":  "Use mouse or drawing tablet to sign",
+                                          "clear":  "Clear",
+                                          "undo":  "Undo"
+                                      },
+                             "upload":  {
+                                            "label":  "Upload Signature Image",
+                                            "hint":  "Drag \u0026 drop or click to select a signature image file",
+                                            "formats":  "PNG, JPG (Max 2MB)",
+                                            "change":  "Change"
+                                        },
+                             "guide":  {
+                                           "title":  "Guidelines",
+                                           "tip1":  "Sign within the frame for the best display on documents.",
+                                           "tip2":  "Use clear strokes, avoid very thin or broken lines.",
+                                           "tip3":  "The system will automatically remove background for uploaded images.",
+                                           "tip4":  "Supported formats: PNG, JPG (Max 2MB)."
+                                       },
+                             "pin":  {
+                                         "title":  "Signature PIN Code",
+                                         "currentPin":  "Current PIN",
+                                         "newPin":  "New PIN",
+                                         "confirmPin":  "Confirm PIN",
+                                         "currentPinPlaceholder":  "••••••••",
+                                         "newPinPlaceholder":  "Enter new PIN",
+                                         "confirmPinPlaceholder":  "Confirm new PIN",
+                                         "warning":  "Note: PIN is used to authenticate each document signing. Do not share your PIN with others.",
+                                         "pinMismatch":  "PIN confirmation does not match",
+                                         "pinMinLength":  "PIN must be exactly 6 digits",
+                                         "pinOnlyDigits":  "PIN must contain only digits",
+                                         "noPinYet":  "PIN not set yet",
+                                         "hasPinAlready":  "PIN has been set"
+                                     },
+                             "actions":  {
+                                             "cancel":  "Cancel",
+                                             "save":  "Save Configuration"
+                                         },
+                             "preview":  {
+                                             "title":  "Signature Preview",
+                                             "noSignature":  "No signature yet"
+                                         },
+                             "toast":  {
+                                           "saveSignatureSuccess":  "Signature saved successfully!",
+                                           "deleteSignatureSuccess":  "Signature deleted!",
+                                           "setPinSuccess":  "PIN set successfully!",
+                                           "changePinSuccess":  "PIN changed successfully!",
+                                           "error":  "An error occurred, please try again",
+                                           "noSignatureData":  "Please draw or upload a signature image",
+                                           "invalidFile":  "Please select a valid image file (PNG, JPG)",
+                                           "fileTooLarge":  "Maximum file size is 2MB"
+                                       },
+                             "loading":  "Loading..."
+                         },
+    "Facilities":  {
+                       "buildings":  {
+                                         "title":  "Building Management",
+                                         "description":  "Manage information about buildings in the school",
+                                         "addBuilding":  "Add Building",
+                                         "editBuilding":  "Edit Building",
+                                         "deleteBuilding":  "Delete Building",
+                                         "searchPlaceholder":  "Search by building name...",
+                                         "columns":  {
+                                                         "no":  "No.",
+                                                         "name":  "Building Name",
+                                                         "description":  "Description",
+                                                         "actions":  "Actions"
+                                                     },
+                                         "form":  {
+                                                      "name":  "Building Name",
+                                                      "namePlaceholder":  "E.g., Building A",
+                                                      "description":  "Description",
+                                                      "descriptionPlaceholder":  "Enter description (optional)",
+                                                      "cancel":  "Cancel",
+                                                      "create":  "Create",
+                                                      "update":  "Update"
+                                                  },
+                                         "deleteConfirm":  {
+                                                               "title":  "Confirm Delete",
+                                                               "description":  "Are you sure you want to delete building \"{name}\"? This action cannot be undone.",
+                                                               "confirm":  "Delete",
+                                                               "cancel":  "Cancel"
+                                                           },
+                                         "toast":  {
+                                                       "createSuccess":  "Building created successfully!",
+                                                       "updateSuccess":  "Building updated successfully!",
+                                                       "deleteSuccess":  "Building deleted successfully!",
+                                                       "error":  "An error occurred, please try again."
+                                                   },
+                                         "pagination":  {
+                                                            "showing":  "Showing",
+                                                            "to":  "to",
+                                                            "of":  "of",
+                                                            "buildings":  "buildings"
+                                                        },
+                                         "noResults":  "No buildings found.",
+                                         "loading":  "Loading..."
+                                     },
+                       "rooms":  {
+                                     "title":  "Room Management",
+                                     "description":  "Manage information about rooms in buildings",
+                                     "addRoom":  "Add Room",
+                                     "editRoom":  "Edit Room",
+                                     "deleteRoom":  "Delete Room",
+                                     "searchPlaceholder":  "Search by room name...",
+                                     "allBuildings":  "All buildings",
+                                     "columns":  {
+                                                     "no":  "No.",
+                                                     "name":  "Room Name",
+                                                     "building":  "Building",
+                                                     "actions":  "Actions"
+                                                 },
+                                     "form":  {
+                                                  "building":  "Building",
+                                                  "selectBuilding":  "Select building",
+                                                  "name":  "Room Name",
+                                                  "namePlaceholder":  "E.g., Room 101",
+                                                  "cancel":  "Cancel",
+                                                  "create":  "Create",
+                                                  "update":  "Update"
+                                              },
+                                     "deleteConfirm":  {
+                                                           "title":  "Confirm Delete",
+                                                           "description":  "Are you sure you want to delete room \"{name}\"? This action cannot be undone.",
+                                                           "confirm":  "Delete",
+                                                           "cancel":  "Cancel"
+                                                       },
+                                     "toast":  {
+                                                   "createSuccess":  "Room created successfully!",
+                                                   "updateSuccess":  "Room updated successfully!",
+                                                   "deleteSuccess":  "Room deleted successfully!",
+                                                   "error":  "An error occurred, please try again."
+                                               },
+                                     "pagination":  {
+                                                        "showing":  "Showing",
+                                                        "to":  "to",
+                                                        "of":  "of",
+                                                        "rooms":  "rooms"
+                                                    },
+                                     "noResults":  "No rooms found.",
+                                     "loading":  "Loading..."
+                                 },
+                       "devices":  {
+                                       "title":  "Device Management",
+                                       "description":  "Manage information about devices in rooms",
+                                       "addDevice":  "Add Device",
+                                       "editDevice":  "Edit Device",
+                                       "deleteDevice":  "Delete Device",
+                                       "searchPlaceholder":  "Search by device name...",
+                                       "allRooms":  "All rooms",
+                                       "allStatuses":  "All statuses",
+                                       "columns":  {
+                                                       "no":  "No.",
+                                                       "name":  "Device Name",
+                                                       "room":  "Room",
+                                                       "building":  "Building",
+                                                       "status":  "Status",
+                                                       "actions":  "Actions"
+                                                   },
+                                       "statuses":  {
+                                                        "active":  "Active",
+                                                        "under_repair":  "Under Repair",
+                                                        "waiting_replacement":  "Waiting Replacement",
+                                                        "broken":  "Broken"
+                                                    },
+                                       "form":  {
+                                                    "name":  "Device Name",
+                                                    "namePlaceholder":  "E.g., Epson Projector",
+                                                    "room":  "Room",
+                                                    "selectRoom":  "Select room (optional)",
+                                                    "noRoom":  "No room selected",
+                                                    "status":  "Status",
+                                                    "cancel":  "Cancel",
+                                                    "create":  "Create",
+                                                    "update":  "Update"
+                                                },
+                                       "deleteConfirm":  {
+                                                             "title":  "Confirm Delete",
+                                                             "description":  "Are you sure you want to delete device \"{name}\"? This action cannot be undone.",
+                                                             "confirm":  "Delete",
+                                                             "cancel":  "Cancel"
+                                                         },
+                                       "toast":  {
+                                                     "createSuccess":  "Device created successfully!",
+                                                     "updateSuccess":  "Device updated successfully!",
+                                                     "deleteSuccess":  "Device deleted successfully!",
+                                                     "error":  "An error occurred, please try again."
+                                                 },
+                                       "pagination":  {
+                                                          "showing":  "Showing",
+                                                          "to":  "to",
+                                                          "of":  "of",
+                                                          "devices":  "devices"
+                                                      },
+                                       "noResults":  "No devices found.",
+                                       "notAssigned":  "Not assigned",
+                                       "loading":  "Loading..."
+                                   },
+                       "equipment":  {
+                                         "title":  "Equipment Management",
+                                         "description":  "Manage information about equipment in rooms",
+                                         "addEquipment":  "Add Equipment",
+                                         "editEquipment":  "Edit Equipment",
+                                         "deleteEquipment":  "Delete Equipment",
+                                         "searchPlaceholder":  "Search by name, code or brand...",
+                                         "allRooms":  "All rooms",
+                                         "allCategories":  "All categories",
+                                         "allStatuses":  "All statuses",
+                                         "columns":  {
+                                                         "code":  "Code",
+                                                         "name":  "Equipment Name",
+                                                         "category":  "Category",
+                                                         "room":  "Room",
+                                                         "brand":  "Brand",
+                                                         "model":  "Model",
+                                                         "price":  "Price",
+                                                         "status":  "Status",
+                                                         "actions":  "Actions"
+                                                     },
+                                         "categories":  {
+                                                            "computer":  "Computer",
+                                                            "projector":  "Projector",
+                                                            "furniture":  "Furniture",
+                                                            "lab-equipment":  "Lab Equipment",
+                                                            "other":  "Other"
+                                                        },
+                                         "statuses":  {
+                                                          "working":  "Working",
+                                                          "broken":  "Broken",
+                                                          "maintenance":  "Maintenance",
+                                                          "disposed":  "Disposed"
+                                                      },
+                                         "form":  {
+                                                      "name":  "Equipment Name",
+                                                      "namePlaceholder":  "E.g., Dell Computer",
+                                                      "code":  "Equipment Code",
+                                                      "codePlaceholder":  "E.g., TB001",
+                                                      "room":  "Room",
+                                                      "selectRoom":  "Select room",
+                                                      "category":  "Equipment Category",
+                                                      "brand":  "Brand",
+                                                      "brandPlaceholder":  "E.g., Dell",
+                                                      "model":  "Model",
+                                                      "modelPlaceholder":  "E.g., Latitude 5420",
+                                                      "serialNumber":  "Serial Number",
+                                                      "serialNumberPlaceholder":  "E.g., SN123456",
+                                                      "purchaseDate":  "Purchase Date",
+                                                      "warrantyExpiry":  "Warranty Expiry",
+                                                      "price":  "Price (VND)",
+                                                      "pricePlaceholder":  "E.g., 15000000",
+                                                      "status":  "Status",
+                                                      "description":  "Notes",
+                                                      "descriptionPlaceholder":  "Enter notes (optional)",
+                                                      "cancel":  "Cancel",
+                                                      "create":  "Create",
+                                                      "update":  "Update",
+                                                      "required":  "*"
+                                                  },
+                                         "deleteConfirm":  {
+                                                               "title":  "Confirm Delete",
+                                                               "description":  "Are you sure you want to delete equipment \"{name}\"? This action cannot be undone.",
+                                                               "confirm":  "Delete",
+                                                               "cancel":  "Cancel"
+                                                           },
+                                         "toast":  {
+                                                       "createSuccess":  "Equipment created successfully!",
+                                                       "updateSuccess":  "Equipment updated successfully!",
+                                                       "deleteSuccess":  "Equipment deleted successfully!",
+                                                       "error":  "An error occurred, please try again."
+                                                   },
+                                         "pagination":  {
+                                                            "showing":  "Showing",
+                                                            "to":  "to",
+                                                            "of":  "of",
+                                                            "equipment":  "equipment"
+                                                        },
+                                         "noResults":  "No equipment found.",
+                                         "loading":  "Loading...",
+                                         "breadcrumb":  {
+                                                            "home":  "Home",
+                                                            "equipment":  "Equipment Management"
+                                                        }
+                                     }
+                   },
+    "Staff":  {
+                  "title":  "Staff Profiles",
+                  "description":  "Manage detailed staff information",
+                  "addStaff":  "Add Staff",
+                  "searchPlaceholder":  "Search by name, code, email, or phone..."
+              },
+    "WorkOrders":  {
+                       "title":  "Work Orders",
+                       "description":  "Create, approve, and track assigned tasks",
+                       "createWorkOrder":  "Create Work Order",
+                       "searchPlaceholder":  "Search by work order code, location, content...",
+                       "filterStatus":  "Filter by status",
+                       "allStatuses":  "All statuses",
+                       "pending":  "Pending",
+                       "approved":  "Approved",
+                       "inProgress":  "In Progress",
+                       "completed":  "Completed",
+                       "rejected":  "Rejected"
+                   },
+    "ExcelImportExport":  {
+                              "importExport":  "Import/Export Excel"
+                          },
+    "DashboardHome":  {
+                          "goodMorning":  "Good morning",
+                          "goodAfternoon":  "Good afternoon",
+                          "goodEvening":  "Good evening",
+                          "todayIs":  "Today is {date} - Have a productive day!",
+                          "deviceReports":  "Device Reports",
+                          "leaveRequests":  "Leave Requests",
+                          "pendingReception":  "Pending Receipt",
+                          "repairing":  "In Repair",
+                          "completed":  "Completed",
+                          "pendingApproval":  "Pending Approval",
+                          "approved":  "Approved",
+                          "quickActions":  "Quick Actions",
+                          "manageUsers":  "User Management",
+                          "staffProfiles":  "Staff Profiles",
+                          "workOrders":  "Work Orders",
+                          "manageBuildings":  "Building Management",
+                          "manageDevices":  "Device Management",
+                          "leaveManagement":  "Leave Management",
+                          "digitalSignatures":  "Digital Signatures"
+                      },
+    "MyProfile":  {
+                      "exportProfile":  "Export Profile",
+                      "saveChanges":  "Save Changes",
+                      "personalInfo":  "Personal Info",
+                      "organization":  "Organization",
+                      "workInfo":  "Work Info",
+                      "salaryAllowance":  "Salary Allowance",
+                      "qualifications":  "Qualifications",
+                      "evaluation":  "Evaluation",
+                      "bankInfo":  "Bank Info",
+                      "basicInfo":  "BASIC INFORMATION",
+                      "characteristicsAndStatus":  "CHARACTERISTICS \u0026 STATUS",
+                      "contactAndAddress":  "CONTACT \u0026 ADDRESS",
+                      "identifier":  "Identifier",
+                      "gender":  "Gender",
+                      "male":  "Male",
+                      "female":  "Female",
+                      "other":  "Other",
+                      "birthDate":  "Date of Birth",
+                      "idCardNumber":  "ID Card Number",
+                      "issueDate":  "Issue Date",
+                      "issuePlace":  "Issue Place",
+                      "ethnicity":  "Ethnicity",
+                      "religion":  "Religion",
+                      "status":  "Status",
+                      "working":  "Working",
+                      "onLeave":  "On Leave",
+                      "resigned":  "Resigned",
+                      "hireDate":  "Hire Date",
+                      "hometown":  "Hometown",
+                      "provinceCity":  "Province / City",
+                      "district":  "District",
+                      "ward":  "Ward / Commune",
+                      "streetAddress":  "House Number, Street",
+                      "phoneNumber":  "Phone Number",
+                      "permanentAddress":  "Permanent Address",
+                      "verifyIdCardAlert":  "Please carefully check the identification information (ID Card, Date of Birth) before saving. Major changes will need to be approved by an administrator."
+                  },
+    "Statistics":  {
+                       "title":  "Staff Statistics",
+                       "description":  "Staff data updated on {date}",
+                       "exportReport":  "Export report",
+                       "overall":  "Overall",
+                       "totalStaff":  "Total Staff",
+                       "male":  "Male",
+                       "female":  "Female",
+                       "teachers":  "Teachers",
+                       "tenured":  "Tenured",
+                       "contract":  "Contract",
+                       "staff":  "Staff",
+                       "regionalSalary":  "Regional Salary",
+                       "managementBoard":  "Management Board",
+                       "personnelStatus":  "Personnel Status",
+                       "currentMonth":  "Current month",
+                       "status":  {
+                                      "working":  "Working",
+                                      "resigned":  "Resigned",
+                                      "transferred":  "Transferred",
+                                      "maternity_leave":  "Maternity Leave",
+                                      "unpaid_leave":  "Unpaid Leave"
+                                  },
+                       "ethnicityStats":  "Statistics by Ethnicity",
+                       "departmentList":  "Department List ({count} departments)",
+                       "department":  "Department",
+                       "quantity":  "Quantity",
+                       "ratio":  "Ratio",
+                       "other":  "Other ({count} remaining)",
+                       "collapse":  "Collapse",
+                       "viewAll":  "View all departments",
+                       "educationLevelStats":  "Education Level Statistics"
+                   },
+    "AgeStatistics":  {
+                          "title":  "Age Statistics of Staff",
+                          "description":  "Data updated based on the centralized human resource management system",
+                          "filters":  {
+                                          "all":  "Entire School",
+                                          "teacher":  "Teacher",
+                                          "staff":  "Staff",
+                                          "contractTeacher":  "Contract Teacher"
+                                      },
+                          "chartTitle":  "Age Distribution Chart",
+                          "unit":  "Unit: Personnel",
+                          "staffUnit":  "Personnel",
+                          "totalStaff":  "Total Staff",
+                          "updatedToday":  "Updated Today",
+                          "mostCommonAge":  "Most Common Age",
+                          "percentTotal":  "% Total",
+                          "detailedStats":  "Detailed Education Statistics",
+                          "exportData":  "Export Excel Data",
+                          "educationUnit":  "Education Level / Unit",
+                          "total":  "Total",
+                          "insights":  "Professional Insights",
+                          "insightsDesc":  "The personnel structure is mainly concentrated in the golden age ({ageRange}). This is an experienced resource in its highest contribution phase for the school.",
+                          "forecast":  "Personnel Forecast",
+                          "forecastDesc":  "The ratio of young staff (under 30) needs to be focused on for recruitment in the upcoming period to ensure continuous succession for all educational levels."
+                      }
 }

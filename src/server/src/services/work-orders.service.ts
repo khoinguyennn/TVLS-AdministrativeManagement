@@ -5,11 +5,13 @@ import { CreateWorkOrderDto, UpdateWorkOrderDto } from '@dtos/work-orders.dto';
 import { WorkOrder } from '@interfaces/work-orders.interface';
 import { HttpException } from '@exceptions/HttpException';
 import { EmailService } from '@services/email.service';
+import NotificationService from '@services/notifications.service';
 
 @Service()
 export class WorkOrderService {
   @Inject()
   private emailService: EmailService;
+  private notificationService = new NotificationService();
 
   private async validateAssignee(assigneeId: number): Promise<void> {
     const assignee = await DB.Users.findByPk(assigneeId, { attributes: ['id', 'status'] });
@@ -151,6 +153,16 @@ export class WorkOrderService {
             },
           );
         }
+
+        // In app notification
+        await this.notificationService.createNotification({
+          userId: created.assignedTo,
+          title: 'Công lệnh mới được giao',
+          message: `Bạn vừa được giao một công lệnh mới: ${created.title}`,
+          type: 'work_order',
+          referenceId: created.id,
+        });
+
       } catch (emailError) {
         // Không throw lỗi mail ra ngoài
       }
@@ -180,6 +192,16 @@ export class WorkOrderService {
     if (data.assignedTo !== undefined) {
       if (data.assignedTo) {
         await this.validateAssignee(data.assignedTo);
+        if (plain.assignedTo !== data.assignedTo) {
+          // Notify new assignee
+          await this.notificationService.createNotification({
+            userId: data.assignedTo,
+            title: 'Chuyển giao công lệnh',
+            message: `Bạn vừa được giao xử lý công lệnh: ${plain.title}`,
+            type: 'work_order',
+            referenceId: plain.id,
+          });
+        }
       }
       updateData.assignedTo = data.assignedTo;
     }
