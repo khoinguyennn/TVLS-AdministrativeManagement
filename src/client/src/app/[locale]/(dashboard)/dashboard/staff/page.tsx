@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Plus, Search, ChevronRight } from "lucide-react";
 import { TableSkeleton } from "@/components/skeletons";
@@ -8,6 +8,13 @@ import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { PersonnelTable } from "@/components/personnel/personnel-table";
 import { TablePagination } from "@/components/shared/table-pagination";
 import { ExcelImportExportDialog } from "@/components/personnel/excel-import-export-dialog";
@@ -21,37 +28,23 @@ export default function StaffPage() {
   const tBreadcrumb = useTranslations("Breadcrumb");
   const tSidebar = useTranslations("Sidebar");
   const tStaff = useTranslations("Staff");
-  const [personnel, setPersonnel] = useState<PersonnelRecord[]>([]);
-  const [total, setTotal] = useState(0);
+  const [allPersonnel, setAllPersonnel] = useState<PersonnelRecord[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [mounted, setMounted] = useState(false);
 
-  // Debounce search input
   useEffect(() => {
-    if (debounceTimer.current) clearTimeout(debounceTimer.current);
-    debounceTimer.current = setTimeout(() => {
-      setDebouncedSearch(searchQuery);
-      setCurrentPage(1);
-    }, 400);
-    return () => {
-      if (debounceTimer.current) clearTimeout(debounceTimer.current);
-    };
-  }, [searchQuery]);
+    setMounted(true);
+  }, []);
 
-  // Load personnel data when page or search changes
-  const loadPersonnel = useCallback(async (page: number, search: string) => {
+  const loadPersonnel = useCallback(async () => {
     try {
       setIsLoading(true);
-      const result = await personnelService.getAll({
-        page,
-        pageSize: PAGE_SIZE,
-        search: search || undefined,
-      });
-      setPersonnel(result.data);
-      setTotal(result.total);
+      const result = await personnelService.getAllForSelection();
+      setAllPersonnel(result);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Lỗi tải dữ liệu";
       toast.error(message);
@@ -61,8 +54,49 @@ export default function StaffPage() {
   }, []);
 
   useEffect(() => {
-    loadPersonnel(currentPage, debouncedSearch);
-  }, [currentPage, debouncedSearch, loadPersonnel]);
+    loadPersonnel();
+  }, [loadPersonnel]);
+
+  const roleOptions = useMemo(() => {
+    const set = new Set<string>();
+    allPersonnel.forEach((person) => {
+      const role = person.positions?.[0]?.jobPosition?.trim();
+      if (role) {
+        set.add(role);
+      }
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b, "vi"));
+  }, [allPersonnel]);
+
+  const filteredPersonnel = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+
+    return allPersonnel.filter((person) => {
+      const role = person.positions?.[0]?.jobPosition?.trim() || "";
+      const phone = person.contactAddress?.phone || "";
+
+      const matchSearch =
+        query.length === 0 ||
+        person.fullName.toLowerCase().includes(query) ||
+        person.code.toLowerCase().includes(query) ||
+        person.email.toLowerCase().includes(query) ||
+        phone.toLowerCase().includes(query);
+
+      const matchRole = roleFilter === "all" || role === roleFilter;
+      const matchStatus = statusFilter === "all" || person.staffStatus === statusFilter;
+
+      return matchSearch && matchRole && matchStatus;
+    });
+  }, [allPersonnel, roleFilter, searchQuery, statusFilter]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, roleFilter, statusFilter]);
+
+  const pagedPersonnel = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return filteredPersonnel.slice(start, start + PAGE_SIZE);
+  }, [filteredPersonnel, currentPage]);
 
   async function handleDelete(id: number) {
     if (!confirm("Bạn có chắc chắn muốn xóa nhân sự này?")) {
@@ -72,8 +106,7 @@ export default function StaffPage() {
     try {
       await personnelService.delete(id);
       toast.success("Xóa nhân sự thành công");
-      // Reload current page after delete
-      loadPersonnel(currentPage, debouncedSearch);
+      loadPersonnel();
     } catch (error) {
       const message = error instanceof Error ? error.message : "Lỗi xóa dữ liệu";
       toast.error(message);
@@ -84,7 +117,7 @@ export default function StaffPage() {
     try {
       const result = await personnelService.importExcel(file);
       toast.success(`Nhập thành công ${result.success} hồ sơ`);
-      loadPersonnel(currentPage, debouncedSearch);
+      loadPersonnel();
     } catch (error) {
       const message = error instanceof Error ? error.message : "Lỗi nhập Excel";
       toast.error(message);
@@ -135,9 +168,9 @@ export default function StaffPage() {
         </div>
       </div>
 
-      {/* Search Bar */}
-      <div>
-        <div className="relative">
+      {/* Search and Filters */}
+      <div className="bg-card border rounded-xl p-4 shadow-sm flex flex-wrap gap-4">
+        <div className="relative flex-1 min-w-75">
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder={tStaff("searchPlaceholder")}
@@ -146,26 +179,65 @@ export default function StaffPage() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
+        {mounted ? (
+          <>
+            <Select value={roleFilter} onValueChange={setRoleFilter}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Tất cả vai trò" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tất cả vai trò</SelectItem>
+                {roleOptions.map((role) => (
+                  <SelectItem key={role} value={role}>
+                    {role}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Tất cả trạng thái" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tất cả trạng thái</SelectItem>
+                <SelectItem value="working">Đang làm việc</SelectItem>
+                <SelectItem value="probation">Thử việc</SelectItem>
+                <SelectItem value="maternity_leave">Nghỉ thai sản</SelectItem>
+                <SelectItem value="retired">Đã nghỉ hưu</SelectItem>
+                <SelectItem value="resigned">Đã nghỉ việc</SelectItem>
+              </SelectContent>
+            </Select>
+          </>
+        ) : (
+          <>
+            <div className="flex items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background w-48 h-9 text-muted-foreground opacity-50 cursor-not-allowed">
+              <span>Tất cả vai trò</span>
+              <ChevronRight className="size-4 opacity-50 rotate-90" />
+            </div>
+            <div className="flex items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background w-48 h-9 text-muted-foreground opacity-50 cursor-not-allowed">
+              <span>Tất cả trạng thái</span>
+              <ChevronRight className="size-4 opacity-50 rotate-90" />
+            </div>
+          </>
+        )}
       </div>
 
       {/* Personnel Table */}
       <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
-        <div className="border-b px-6 py-4">
-          <h2 className="text-lg font-semibold">Danh sách nhân sự</h2>
-        </div>
-        <div className="p-6">
+        <div className="p-0">
           {isLoading ? (
             <TableSkeleton columns={7} rows={5} />
           ) : (
             <>
               <PersonnelTable
-                data={personnel}
+                data={pagedPersonnel}
                 onDelete={handleDelete}
                 isLoading={false}
                 startIndex={(currentPage - 1) * PAGE_SIZE + 1}
               />
               <TablePagination
-                total={total}
+                total={filteredPersonnel.length}
                 page={currentPage}
                 pageSize={PAGE_SIZE}
                 onPageChange={setCurrentPage}

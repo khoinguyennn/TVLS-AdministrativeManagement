@@ -43,6 +43,7 @@ export default function WorkOrdersPage() {
   const [filteredWorkOrders, setFilteredWorkOrders] = useState<WorkOrder[]>([]);
   const [personnel, setPersonnel] = useState<PersonnelRecord[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [assigneeFilter, setAssigneeFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [isLoading, setIsLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -98,12 +99,35 @@ export default function WorkOrdersPage() {
     }
 
     if (statusFilter !== "all") {
-      filtered = filtered.filter((wo) => wo.status === statusFilter);
+      filtered = filtered.filter((wo) => {
+        if (statusFilter === "approved") {
+          return wo.status === "approved" || wo.status === "in_progress";
+        }
+
+        return wo.status === statusFilter;
+      });
+    }
+
+    if (assigneeFilter !== "all") {
+      filtered = filtered.filter((wo) => String(wo.assignedToUser?.id ?? wo.assignedTo ?? "") === assigneeFilter);
     }
 
     setFilteredWorkOrders(filtered);
     setCurrentPage(1);
-  }, [searchQuery, statusFilter, workOrders]);
+  }, [searchQuery, statusFilter, assigneeFilter, workOrders]);
+
+  const assigneeOptions = Array.from(
+    new Map(
+      workOrders
+        .map((wo) => {
+          const id = wo.assignedToUser?.id ?? wo.assignedTo;
+          const name = wo.assignedToUser?.fullName;
+          if (!id) return null;
+          return [String(id), name || `Nhân sự #${id}`] as const;
+        })
+        .filter((entry): entry is readonly [string, string] => entry !== null)
+    )
+  );
 
   const pagedWorkOrders = filteredWorkOrders.slice(
     (currentPage - 1) * PAGE_SIZE,
@@ -710,12 +734,12 @@ export default function WorkOrdersPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">{tSidebar("workOrders")}</h2>
-          <p className="text-gray-600 mt-1 text-sm">{tWorkOrders("description")}</p>
+          <p className="text-muted-foreground mt-1 text-sm">{tWorkOrders("description")}</p>
         </div>
         <div className="flex gap-2">
           <Link href="/vi/dashboard/work-orders/tao-moi">
-            <Button variant="default" className="gap-2 bg-blue-600 hover:bg-blue-700">
-              <Plus className="h-4 w-4" />
+            <Button className="gap-2">
+              <Plus className="size-4" />
               {tWorkOrders("createWorkOrder")}
             </Button>
           </Link>
@@ -723,54 +747,68 @@ export default function WorkOrdersPage() {
       </div>
 
       {/* Search and Filters */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="flex-1">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-            <Input
-              placeholder={tWorkOrders("searchPlaceholder")}
-              className="pl-10 bg-white border border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
+      <div className="bg-card border rounded-xl p-4 shadow-sm flex flex-wrap gap-4">
+        <div className="relative flex-1 min-w-75">
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder={tWorkOrders("searchPlaceholder")}
+            className="pl-10"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
+
         {mounted ? (
-          <div className="sm:w-48">
+          <>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="bg-white border border-gray-200 shadow-sm">
-                <Filter className="h-4 w-4 mr-2" />
+              <SelectTrigger className="w-48">
+                <Filter className="size-4 mr-2" />
                 <SelectValue placeholder={tWorkOrders("filterStatus")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">{tWorkOrders("allStatuses")}</SelectItem>
                 <SelectItem value="pending">{tWorkOrders("pending")}</SelectItem>
                 <SelectItem value="approved">{tWorkOrders("approved")}</SelectItem>
-                <SelectItem value="in_progress">{tWorkOrders("inProgress")}</SelectItem>
                 <SelectItem value="completed">{tWorkOrders("completed")}</SelectItem>
                 <SelectItem value="rejected">{tWorkOrders("rejected")}</SelectItem>
               </SelectContent>
             </Select>
-          </div>
+
+            {isAdminOrManager && (
+              <Select value={assigneeFilter} onValueChange={setAssigneeFilter}>
+                <SelectTrigger className="w-48">
+                  <SelectValue placeholder="Tất cả người nhận" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Tất cả người nhận</SelectItem>
+                  {assigneeOptions.map(([id, name]) => (
+                    <SelectItem key={id} value={id}>
+                      {name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          </>
         ) : (
-          <div className="sm:w-48">
-            <div className="flex h-10 w-full items-center justify-between rounded-md border border-gray-200 bg-white px-3 py-2 text-sm shadow-sm ring-offset-background text-muted-foreground opacity-50 cursor-not-allowed">
-              <div className="flex items-center">
-                <Filter className="h-4 w-4 mr-2" />
-                <span>Lọc theo trạng thái</span>
-              </div>
-              <ChevronRight className="h-4 w-4 opacity-50 rotate-90" />
+          <>
+            <div className="flex items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background w-48 h-9 text-muted-foreground opacity-50 cursor-not-allowed">
+              <span>Tất cả trạng thái</span>
+              <ChevronRight className="size-4 opacity-50 rotate-90" />
             </div>
-          </div>
+            {isAdminOrManager && (
+              <div className="flex items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background w-48 h-9 text-muted-foreground opacity-50 cursor-not-allowed">
+                <span>Tất cả người nhận</span>
+                <ChevronRight className="size-4 opacity-50 rotate-90" />
+              </div>
+            )}
+          </>
         )}
       </div>
 
       {/* Work Orders Table */}
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
-        <div className="border-b border-gray-200 px-6 py-4">
-          <h2 className="text-lg font-semibold text-gray-900">Danh sách công lệnh</h2>
-        </div>
-        <div className="p-6">
+      <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
+        <div className="p-0">
           {isLoading ? (
             <TableSkeleton columns={7} rows={5} />
           ) : (

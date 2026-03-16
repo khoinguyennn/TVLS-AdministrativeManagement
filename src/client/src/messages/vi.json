@@ -650,7 +650,7 @@
     "allStatuses": "Tất cả trạng thái",
     "pending": "Chờ duyệt",
     "approved": "Đã duyệt",
-    "inProgress": "Đang thực hiện",
+    "inProgress": "Đã duyệt",
     "completed": "Hoàn thành",
     "rejected": "Từ chối"
   },
