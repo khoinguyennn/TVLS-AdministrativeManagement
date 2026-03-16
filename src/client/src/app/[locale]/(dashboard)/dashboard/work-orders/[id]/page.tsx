@@ -91,7 +91,7 @@ export default function WorkOrderDetailPage() {
     const statusConfig = {
       pending: { label: "Chờ duyệt", variant: "secondary" as const, icon: Clock },
       approved: { label: "Đã duyệt", variant: "default" as const, icon: CheckCircle },
-      in_progress: { label: "Chờ xác nhận", variant: "outline" as const, icon: Clock },
+      in_progress: { label: "Đã duyệt", variant: "default" as const, icon: CheckCircle },
       completed: { label: "Hoàn thành", variant: "default" as const, icon: CheckCircle },
       rejected: { label: "Từ chối", variant: "destructive" as const, icon: XCircle },
       cancelled: { label: "Đã hủy", variant: "destructive" as const, icon: XCircle },

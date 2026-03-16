@@ -1,6 +1,6 @@
 "use client";
 
-import { Edit, Trash2, Eye, CheckCircle, XCircle, Clock, PlayCircle, FileText } from "lucide-react";
+import { Edit, Trash2, Eye, CheckCircle, XCircle, FileText } from "lucide-react";
 import Link from "next/link";
 import {
   Table,
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import type { WorkOrder } from "@/types/work-order.types";
 import type { PersonnelRecord } from "@/types/personnel.types";
 
@@ -46,24 +47,36 @@ export function WorkOrderTable({
   showActions = true,
   startIndex = 1,
 }: WorkOrderTableProps) {
-  const formatDateTime = (dateTime: string | undefined) => {
-    if (!dateTime) return "-";
-    return new Date(dateTime).toLocaleString("vi-VN", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit"
-    });
+  const formatDateTimeParts = (dateTime: string | undefined) => {
+    if (!dateTime) {
+      return {
+        date: "Chưa cập nhật",
+        time: "--:--",
+      };
+    }
+
+    const value = new Date(dateTime);
+
+    return {
+      date: value.toLocaleDateString("vi-VN", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }),
+      time: value.toLocaleTimeString("vi-VN", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    };
   };
 
-  const formatDate = (dateTime: string | undefined) => {
-    if (!dateTime) return "-";
-    return new Date(dateTime).toLocaleDateString("vi-VN", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit"
-    });
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((word) => word[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
   };
 
   const getPersonnelName = (id: number | undefined): string => {
@@ -75,20 +88,19 @@ export function WorkOrderTable({
 
   const getStatusBadge = (status: WorkOrder["status"]) => {
     const statusConfig = {
-      pending: { label: "Chờ duyệt", variant: "secondary" as const, icon: Clock },
-      approved: { label: "Đã duyệt", variant: "default" as const, icon: CheckCircle },
-      in_progress: { label: "Chờ xác nhận", variant: "outline" as const, icon: PlayCircle },
-      completed: { label: "Hoàn thành", variant: "default" as const, icon: CheckCircle },
-      rejected: { label: "Từ chối", variant: "destructive" as const, icon: XCircle },
-      cancelled: { label: "Đã hủy", variant: "destructive" as const, icon: XCircle }
+      pending: { label: "Chờ duyệt", className: "bg-amber-100 text-amber-700 border-transparent", dotClass: "bg-amber-500" },
+      approved: { label: "Đã duyệt", className: "bg-cyan-100 text-cyan-700 border-transparent", dotClass: "bg-cyan-500" },
+      in_progress: { label: "Đã duyệt", className: "bg-cyan-100 text-cyan-700 border-transparent", dotClass: "bg-cyan-500" },
+      completed: { label: "Hoàn thành", className: "bg-emerald-100 text-emerald-700 border-transparent", dotClass: "bg-emerald-500" },
+      rejected: { label: "Từ chối", className: "bg-red-100 text-red-700 border-transparent", dotClass: "bg-red-500" },
+      cancelled: { label: "Đã hủy", className: "bg-slate-100 text-slate-700 border-transparent", dotClass: "bg-slate-500" }
     };
 
     const config = statusConfig[status];
-    const Icon = config.icon;
 
     return (
-      <Badge variant={config.variant} className="gap-1">
-        <Icon className="h-3 w-3" />
+      <Badge className={`gap-1.5 ${config.className}`}>
+        <span className={`size-1.5 rounded-full ${config.dotClass}`} />
         {config.label}
       </Badge>
     );
@@ -103,148 +115,180 @@ export function WorkOrderTable({
   }
 
   return (
-    <div className="rounded-lg border">
+    <div className="overflow-x-auto">
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead className="w-20">#</TableHead>
-            <TableHead>Mã công lệnh</TableHead>
-            <TableHead>Tiêu đề</TableHead>
-            <TableHead>Địa điểm</TableHead>
-            <TableHead>Thời gian bắt đầu</TableHead>
-            <TableHead>Thời gian kết thúc</TableHead>
-            <TableHead>Người giao</TableHead>
-            <TableHead>Người nhận</TableHead>
-            <TableHead>Ngày tạo</TableHead>
-            <TableHead>Trạng thái</TableHead>
-            {showActions && <TableHead className="text-right">Hành động</TableHead>}
+          <TableRow className="bg-muted/50">
+            <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Công lệnh</TableHead>
+            <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Người giao</TableHead>
+            <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Người nhận</TableHead>
+            <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Thời gian</TableHead>
+            <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Trạng thái</TableHead>
+            {showActions && <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-right">Hành động</TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((workOrder, index) => (
-            <TableRow key={workOrder.id}>
-              <TableCell className="font-medium">{startIndex + index}</TableCell>
-              <TableCell className="font-mono text-sm">{workOrder.code}</TableCell>
-              <TableCell className="max-w-xs truncate" title={workOrder.title}>
-                {workOrder.title}
-              </TableCell>
-              <TableCell className="max-w-xs truncate" title={workOrder.location}>
-                {workOrder.location || "-"}
-              </TableCell>
-              <TableCell className="text-sm">
-                {formatDateTime(workOrder.startDate)}
-              </TableCell>
-              <TableCell className="text-sm">
-                {formatDateTime(workOrder.endDate)}
-              </TableCell>
-              <TableCell className="text-sm">
-                {workOrder.createdByUser?.fullName || "N/A"}
-              </TableCell>
-              <TableCell className="text-sm">
-                {workOrder.assignedToUser?.fullName || getPersonnelName(workOrder.assignedTo)}
-              </TableCell>
-              <TableCell className="text-sm">
-                {formatDate(workOrder.createdAt)}
-              </TableCell>
-              <TableCell>
-                {getStatusBadge(workOrder.status)}
-              </TableCell>
+          {data.map((workOrder, index) => {
+            const assigneeName = workOrder.assignedToUser?.fullName || getPersonnelName(workOrder.assignedTo);
+            const startTime = formatDateTimeParts(workOrder.startDate);
+            const endTime = formatDateTimeParts(workOrder.endDate);
+
+            return (
+              <TableRow key={workOrder.id} className="hover:bg-muted/30 transition-colors">
+                <TableCell className="px-6 py-4 min-w-90">
+                  <div className="space-y-1">
+                    <p className="font-semibold text-sm truncate">{workOrder.title}</p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      #{startIndex + index} • {workOrder.code}
+                    </p>
+                    <p className="text-xs text-muted-foreground truncate">{workOrder.location || "Chưa có địa điểm"}</p>
+                  </div>
+                </TableCell>
+
+                <TableCell className="px-6 py-4 text-sm text-muted-foreground">
+                  {workOrder.createdByUser?.fullName || "N/A"}
+                </TableCell>
+
+                <TableCell className="px-6 py-4">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="size-8">
+                      <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
+                        {getInitials(assigneeName)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="text-sm font-medium">{assigneeName}</span>
+                  </div>
+                </TableCell>
+
+                <TableCell className="px-6 py-4 min-w-72">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3 rounded-lg bg-muted/40 px-3 py-2">
+                      <span className="inline-flex min-w-16 justify-center rounded-full bg-emerald-100 px-2 py-1 text-[11px] font-semibold text-emerald-700">
+                        Bắt đầu
+                      </span>
+                      <div className="leading-tight">
+                        <p className="text-sm font-medium text-foreground">{startTime.date}</p>
+                        <p className="text-xs text-muted-foreground">{startTime.time}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 rounded-lg bg-muted/40 px-3 py-2">
+                      <span className="inline-flex min-w-16 justify-center rounded-full bg-amber-100 px-2 py-1 text-[11px] font-semibold text-amber-700">
+                        Kết thúc
+                      </span>
+                      <div className="leading-tight">
+                        <p className="text-sm font-medium text-foreground">{endTime.date}</p>
+                        <p className="text-xs text-muted-foreground">{endTime.time}</p>
+                      </div>
+                    </div>
+                  </div>
+                </TableCell>
+
+                <TableCell className="px-6 py-4">
+                  {getStatusBadge(workOrder.status)}
+                </TableCell>
+
               {showActions && (
-                <TableCell className="text-right">
+                <TableCell className="px-6 py-4 text-right">
                   <div className="flex justify-end gap-1">
                     <Link href={`/vi/dashboard/work-orders/${workOrder.id}`}>
-                      <Button variant="ghost" size="sm" title="Xem chi tiết">
-                        <Eye className="h-4 w-4" />
+                      <Button variant="ghost" size="icon" className="size-8 text-muted-foreground hover:text-primary" title="Xem chi tiết">
+                        <Eye className="size-4" />
                       </Button>
                     </Link>
                     {onPrint && (
                       <Button
                         variant="ghost"
-                        size="sm"
+                        size="icon"
                         onClick={() => onPrint(workOrder.id)}
-                        className="text-blue-600 hover:text-blue-700"
+                        className="size-8 text-muted-foreground hover:text-primary"
                         title="In PDF"
                       >
-                        <FileText className="h-4 w-4" />
+                        <FileText className="size-4" />
                       </Button>
                     )}
                     {workOrder.status === "pending" && onApprove && (
                       <Button
                         variant="ghost"
-                        size="sm"
+                        size="icon"
                         onClick={() => onApprove(workOrder.id)}
-                        className="text-green-600 hover:text-green-700"
+                        className="size-8 text-muted-foreground hover:text-emerald-600"
                         title="Duyệt"
                       >
-                        <CheckCircle className="h-4 w-4" />
+                        <CheckCircle className="size-4" />
                       </Button>
                     )}
                     {workOrder.status === "pending" && onReject && (
                       <Button
                         variant="ghost"
-                        size="sm"
+                        size="icon"
                         onClick={() => onReject(workOrder.id)}
-                        className="text-orange-600 hover:text-orange-700"
+                        className="size-8 text-muted-foreground hover:text-amber-600"
                         title="Từ chối"
                       >
-                        <XCircle className="h-4 w-4" />
+                        <XCircle className="size-4" />
                       </Button>
                     )}
                     {workOrder.status === "approved" && onComplete && (
                       <Button
                         variant="ghost"
-                        size="sm"
+                        size="icon"
                         onClick={() => onComplete(workOrder.id)}
-                        className="text-purple-600 hover:text-purple-700"
+                        className="size-8 text-muted-foreground hover:text-cyan-600"
                         title="Hoàn thành công lệnh"
                       >
-                        <CheckCircle className="h-4 w-4" />
+                        <CheckCircle className="size-4" />
                       </Button>
                     )}
                     {workOrder.status === "in_progress" && onConfirmCompletion && (
                       <Button
                         variant="ghost"
-                        size="sm"
+                        size="icon"
                         onClick={() => onConfirmCompletion(workOrder.id)}
-                        className="text-green-600 hover:text-green-700"
+                        className="size-8 text-muted-foreground hover:text-emerald-600"
                         title="Xác nhận hoàn thành"
                       >
-                        <CheckCircle className="h-4 w-4" />
+                        <CheckCircle className="size-4" />
                       </Button>
                     )}
                     {workOrder.status === "in_progress" && onRequestRework && (
                       <Button
                         variant="ghost"
-                        size="sm"
+                        size="icon"
                         onClick={() => onRequestRework(workOrder.id)}
-                        className="text-orange-600 hover:text-orange-700"
+                        className="size-8 text-muted-foreground hover:text-amber-600"
                         title="Yêu cầu làm lại"
                       >
-                        <XCircle className="h-4 w-4" />
+                        <XCircle className="size-4" />
                       </Button>
                     )}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => onEdit?.(workOrder.id)}
-                      title="Sửa"
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => onDelete?.(workOrder.id)}
-                      className="text-red-500 hover:text-red-700"
-                      title="Xóa"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    {onEdit && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => onEdit(workOrder.id)}
+                        className="size-8 text-muted-foreground hover:text-primary"
+                        title="Sửa"
+                      >
+                        <Edit className="size-4" />
+                      </Button>
+                    )}
+                    {onDelete && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => onDelete(workOrder.id)}
+                        className="size-8 text-muted-foreground hover:text-destructive"
+                        title="Xóa"
+                      >
+                        <Trash2 className="size-4" />
+                      </Button>
+                    )}
                   </div>
                 </TableCell>
               )}
-            </TableRow>
-          ))}
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </div>
