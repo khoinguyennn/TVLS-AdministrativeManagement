@@ -604,9 +604,9 @@ Copyright © 2024 Practice Pedagogical School. All rights reserved.
 
 ### Đội ngũ phát triển
 
-- **Sinh viên thực hiện**: [Tên sinh viên]
-- **Email**: [email@tvu.edu.vn]
-- **Giảng viên hướng dẫn**: [Tên giảng viên]
+- **Sinh viên thực hiện**: Trầm Khôi Nguyên - Thạch Thị Huệ Trinh - Trần Thị Yến Nhi
+- **Giảng viên hướng dẫn**: Lê Phong Dũ
+- **Cán bộ hướng dẫn**: Võ Đăng Khoa
 
 ### Trường Thực Hành Sư Phạm
 
