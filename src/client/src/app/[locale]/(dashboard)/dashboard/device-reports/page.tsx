@@ -283,7 +283,7 @@ export default function DeviceReportsPage() {
     setFormImageFile(null);
     setFormImagePreview(report.imageUrl ? getAvatarUrl(report.imageUrl) || "" : "");
     setFormStatus(report.status);
-    setFormAssignedTo(report.assignedTo ? String(report.assignedTo) : "");
+    setFormAssignedTo(report.assignedTo ? String(report.assignedTo) : "none");
     setFormTechnicianNote(report.technicianNote || "");
     setDialogOpen(true);
   }, []);
@@ -308,7 +308,7 @@ export default function DeviceReportsPage() {
         if (formTechnicianNote !== (editingReport.technicianNote || ""))
           payload.technicianNote = formTechnicianNote;
 
-        const assignedToNum = formAssignedTo ? Number(formAssignedTo) : undefined;
+        const assignedToNum = formAssignedTo && formAssignedTo !== "none" ? Number(formAssignedTo) : undefined;
         if (assignedToNum !== (editingReport.assignedTo || undefined)) {
           payload.assignedTo = assignedToNum;
         }
@@ -1099,7 +1099,7 @@ export default function DeviceReportsPage() {
                         <SelectValue placeholder={t("form.selectAssignee")} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">{t("form.noAssignee")}</SelectItem>
+                        <SelectItem value="none">{t("form.noAssignee")}</SelectItem>
                         {technicians.map((u) => (
                           <SelectItem key={u.id} value={String(u.id)}>
                             {u.fullName}
