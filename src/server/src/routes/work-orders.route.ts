@@ -20,6 +20,7 @@ export class WorkOrderRoute implements Routes {
     // List & get
     this.router.get(this.path, AuthMiddleware, this.controller.getAll);
     this.router.get(`${this.path}/:id(\\d+)`, AuthMiddleware, this.controller.getById);
+    this.router.get(`${this.path}/:id(\\d+)/pdf`, AuthMiddleware, this.controller.exportPdf);
 
     // Create (admin, manager, teacher, technician)
     this.router.post(
