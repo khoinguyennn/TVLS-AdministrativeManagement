@@ -799,7 +799,7 @@
                       "streetAddress":  "House Number, Street",
                       "phoneNumber":  "Phone Number",
                       "permanentAddress":  "Permanent Address",
-                      "verifyIdCardAlert":  "Please carefully check the identification information (ID Card, Date of Birth) before saving. Major changes will need to be approved by an administrator."
+                      "verifyIdCardAlert":  "Please carefully check the identification information (ID Card, Date of Birth) before saving."
                   },
     "Statistics":  {
                        "title":  "Staff Statistics",

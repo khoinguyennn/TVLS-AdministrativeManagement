@@ -714,7 +714,7 @@
     "streetAddress": "Số nhà, Tên đường",
     "phoneNumber": "Số điện thoại",
     "permanentAddress": "Địa chỉ thường trú",
-    "verifyIdCardAlert": "Vui lòng kiểm tra kỹ các thông tin định danh (CCCD, Ngày sinh) trước khi lưu. Các thay đổi quan trọng sẽ cần được phê duyệt bởi quản trị viên."
+    "verifyIdCardAlert": "Vui lòng kiểm tra kỹ các thông tin định danh (CCCD, Ngày sinh) trước khi lưu."
   },
   "Statistics": {
     "title": "Thống kê nhân sự",
