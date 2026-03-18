@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
-import { Bell, HelpCircle, Menu, Moon, Search, Sun } from "lucide-react";
+import { Bell, HelpCircle, Menu, Moon, Sun } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 
@@ -12,13 +12,13 @@ import { LOCALES, type LocaleCode } from "@/constants/i18n.constants";
 import { USFlag, VietnamFlag } from "@/components/icons/flags";
 import { Button } from "@/components/ui/button";
 import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
+import { CommandSearch } from "@/components/layout/CommandSearch";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 
 const FlagIcon = ({ locale, className }: { locale: LocaleCode; className?: string }) => {
   if (locale === "vi") {
@@ -64,20 +64,8 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
           <span className="sr-only">Toggle menu</span>
         </Button>
 
-        {/* Search */}
-        <div className="relative hidden w-full max-w-md sm:block">
-          <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            type="text"
-            placeholder={t("searchPlaceholder")}
-            className="w-full rounded-lg border-none bg-muted py-2 pr-4 pl-10 text-sm transition-all focus:ring-2 focus:ring-primary/20"
-          />
-        </div>
-
-        {/* Mobile Search Icon */}
-        <Button variant="ghost" size="icon" className="size-9 sm:hidden">
-          <Search className="size-5" />
-        </Button>
+        {/* Command Search */}
+        <CommandSearch />
       </div>
 
       {/* Actions */}
