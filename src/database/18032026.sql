@@ -21,7 +21,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup 
 --
 
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '732882d0-1837-11f1-9b0a-e0db55bdce6e:1-1392';
+-- SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '732882d0-1837-11f1-9b0a-e0db55bdce6e:1-1392';
 
 --
 -- Table structure for table `buildings`
