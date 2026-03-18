@@ -19,6 +19,13 @@ export const workOrderService = {
     return res.data.data;
   },
 
+  async exportPdf(id: number): Promise<Blob> {
+    const res = await api.get(`${ENDPOINT}/${id}/pdf`, {
+      responseType: 'blob',
+    });
+    return res.data as Blob;
+  },
+
   async create(payload: CreateWorkOrderPayload): Promise<WorkOrder> {
     const res = await api.post<{ success: boolean; data: WorkOrder; message: string }>(ENDPOINT, payload);
     return res.data.data;

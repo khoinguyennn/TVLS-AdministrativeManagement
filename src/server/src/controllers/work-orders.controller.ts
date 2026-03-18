@@ -3,6 +3,7 @@ import { Container } from 'typedi';
 import { RequestWithUser } from '@interfaces/auth.interface';
 import { WorkOrderService } from '@services/work-orders.service';
 import { CreateWorkOrderDto, UpdateWorkOrderDto } from '@dtos/work-orders.dto';
+import { generateWorkOrderPdf } from '@services/work-order-pdf.service';
 
 export class WorkOrderController {
   public service = Container.get(WorkOrderService);
@@ -138,6 +139,27 @@ export class WorkOrderController {
       const id = Number(req.params.id);
       await this.service.delete(id, req.user.id, req.user.role);
       res.status(200).json({ success: true, message: 'Xóa công lệnh thành công' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public exportPdf = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id);
+      const data = await this.service.findById(id);
+
+      if (['teacher', 'technician'].includes(req.user.role) && data.assignedTo !== req.user.id) {
+        return res.status(403).json({ success: false, message: 'Bạn không có quyền tải PDF công lệnh này' });
+      }
+
+      const pdfBuffer = await generateWorkOrderPdf(id);
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename="giay-di-duong-${id}.pdf"`,
+        'Content-Length': pdfBuffer.length,
+      });
+      res.send(pdfBuffer);
     } catch (error) {
       next(error);
     }
