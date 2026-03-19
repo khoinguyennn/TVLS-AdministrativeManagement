@@ -9,9 +9,10 @@ import ReactMarkdown from "react-markdown";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { chatbotService } from "@/services/chatbot.service";
+import { useAuth } from "@/hooks/use-auth";
+import { env } from "@/env";
 
 interface Message {
   id: string;
@@ -21,18 +22,38 @@ interface Message {
 
 export function ChatbotWidget() {
   const t = useTranslations("Chatbot");
+  const { user, getInitials } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "welcome",
-      role: "ai",
-      content: t("description")
-    }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Load chat history from localStorage
+  useEffect(() => {
+    if (!user?.id) return;
+    const storageKey = `chatbot_messages_${user.id}`;
+    const saved = localStorage.getItem(storageKey);
+    if (saved) {
+      try {
+        setMessages(JSON.parse(saved));
+      } catch (e) {
+        setMessages([{ id: "welcome", role: "ai", content: t("description") }]);
+      }
+    } else {
+      setMessages([{ id: "welcome", role: "ai", content: t("description") }]);
+    }
+  }, [t, user?.id]);
+
+  // Save chat history to localStorage
+  useEffect(() => {
+    if (!user?.id) return;
+    if (messages.length > 0) {
+      const storageKey = `chatbot_messages_${user.id}`;
+      localStorage.setItem(storageKey, JSON.stringify(messages));
+    }
+  }, [messages, user?.id]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -156,7 +177,7 @@ export function ChatbotWidget() {
             </div>
 
             {/* Chat Area */}
-            <ScrollArea className="flex-1 p-4 bg-muted/20">
+            <div className="flex-1 p-4 bg-muted/20 overflow-y-auto">
               <div className="flex flex-col gap-4">
                 {messages.map((msg) => (
                   <motion.div
@@ -174,7 +195,21 @@ export function ChatbotWidget() {
                           <Sparkles className="size-4" />
                         </div>
                       ) : (
-                        <AvatarFallback className="bg-primary text-primary-foreground text-xs">U</AvatarFallback>
+                        <>
+                          <AvatarImage 
+                            src={
+                              user?.avatar
+                                ? user.avatar.startsWith("http")
+                                  ? user.avatar
+                                  : `${env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "")}${user.avatar}`
+                                : undefined
+                            } 
+                            alt="User avatar" 
+                          />
+                          <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
+                            {getInitials()}
+                          </AvatarFallback>
+                        </>
                       )}
                     </Avatar>
                     
@@ -217,7 +252,7 @@ export function ChatbotWidget() {
                 )}
                 <div ref={messagesEndRef} />
               </div>
-            </ScrollArea>
+            </div>
 
             {/* Input Area */}
             <div className="p-3 border-t border-border bg-background">
