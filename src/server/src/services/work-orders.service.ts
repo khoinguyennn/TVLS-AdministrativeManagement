@@ -289,8 +289,8 @@ export class WorkOrderService {
       throw new HttpException(403, 'Bạn không có quyền hoàn thành công lệnh này');
     }
 
-    if (plain.status !== 'approved') {
-      throw new HttpException(400, 'Chỉ có thể gửi hoàn thành khi công lệnh đã duyệt');
+    if (plain.status !== 'approved' && plain.status !== 'rework_requested') {
+      throw new HttpException(400, 'Chỉ có thể gửi hoàn thành khi công lệnh đã duyệt hoặc yêu cầu thực hiện lại');
     }
 
     const evidenceCount = await DB.WorkOrderAttachments.count({
@@ -301,15 +301,12 @@ export class WorkOrderService {
       throw new HttpException(400, 'Vui lòng upload ít nhất 1 ảnh minh chứng trước khi hoàn thành');
     }
 
-    const nextStatus = requesterRole === 'teacher' ? 'completed' : 'in_progress';
+    // All submissions go to submitted_for_review status for manager review
     const updateData: Partial<WorkOrder> = {
-      status: nextStatus,
+      status: 'submitted_for_review',
       // Record the actual completion action time instead of keeping planned end time.
       endDate: new Date(),
     };
-    if (requesterRole === 'teacher') {
-      updateData.approvedBy = requesterId;
-    }
 
     await DB.WorkOrders.update(updateData, { where: { id } });
     return this.findById(id);
@@ -320,8 +317,8 @@ export class WorkOrderService {
     if (!row) throw new HttpException(404, 'Công lệnh không tồn tại');
 
     const plain = row.get({ plain: true }) as WorkOrder;
-    if (plain.status !== 'in_progress') {
-      throw new HttpException(400, 'Công lệnh chưa ở trạng thái chờ xác nhận hoàn thành');
+    if (plain.status !== 'submitted_for_review') {
+      throw new HttpException(400, 'Công lệnh chưa ở trạng thái chờ xét duyệt hoàn thành');
     }
 
     await DB.WorkOrders.update(
@@ -341,8 +338,8 @@ export class WorkOrderService {
     if (!row) throw new HttpException(404, 'Công lệnh không tồn tại');
 
     const plain = row.get({ plain: true }) as WorkOrder;
-    if (plain.status !== 'in_progress') {
-      throw new HttpException(400, 'Chỉ yêu cầu làm lại khi công lệnh đang chờ xác nhận hoàn thành');
+    if (plain.status !== 'submitted_for_review') {
+      throw new HttpException(400, 'Chỉ yêu cầu làm lại khi công lệnh ở trạng thái chờ xét duyệt');
     }
 
     let note = plain.note ?? '';
@@ -351,7 +348,31 @@ export class WorkOrderService {
       note = `${note}${prefix}[YEU CAU LAM LAI] ${reason}`;
     }
 
-    await DB.WorkOrders.update({ status: 'approved', approvedBy: approverId, note }, { where: { id } });
+    await DB.WorkOrders.update({ status: 'rework_requested', approvedBy: approverId, note }, { where: { id } });
+    return this.findById(id);
+  }
+
+  public async resubmitForRework(id: number, requesterId: number, requesterRole: string): Promise<WorkOrder> {
+    const row = await DB.WorkOrders.findByPk(id);
+    if (!row) throw new HttpException(404, 'Công lệnh không tồn tại');
+
+    const plain = row.get({ plain: true }) as WorkOrder;
+    if (!this.canOperateAsAssignee(plain, requesterId, requesterRole)) {
+      throw new HttpException(403, 'Bạn không có quyền thực hiện lại công lệnh này');
+    }
+
+    if (plain.status !== 'rework_requested') {
+      throw new HttpException(400, 'Chỉ có thể tái gửi khi công lệnh ở trạng thái "Yêu cầu thực hiện lại"');
+    }
+
+    // Resubmit goes back to submitted_for_review for manager to review again
+    await DB.WorkOrders.update(
+      {
+        status: 'submitted_for_review',
+        endDate: new Date(),
+      },
+      { where: { id } },
+    );
     return this.findById(id);
   }
 

@@ -58,6 +58,11 @@ export class WorkOrderRoute implements Routes {
       RoleMiddleware('admin', 'manager'),
       this.controller.requestRework,
     );
+    this.router.put(
+      `${this.path}/:id(\\d+)/resubmit-for-rework`,
+      AuthMiddleware,
+      this.controller.resubmitForRework,
+    );
 
     // Delete
     this.router.delete(`${this.path}/:id(\\d+)`, AuthMiddleware, this.controller.delete);

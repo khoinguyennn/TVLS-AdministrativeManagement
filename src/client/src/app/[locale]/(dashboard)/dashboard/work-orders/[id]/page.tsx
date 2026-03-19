@@ -89,8 +89,10 @@ export default function WorkOrderDetailPage() {
     const statusConfig = {
       pending: { label: "Chờ duyệt", variant: "secondary" as const, icon: Clock },
       approved: { label: "Đã duyệt", variant: "default" as const, icon: CheckCircle },
-      in_progress: { label: "Đã duyệt", variant: "default" as const, icon: CheckCircle },
+      in_progress: { label: "Đang thực hiện", variant: "default" as const, icon: CheckCircle },
+      submitted_for_review: { label: "Chờ xét duyệt", variant: "secondary" as const, icon: Clock },
       completed: { label: "Hoàn thành", variant: "default" as const, icon: CheckCircle },
+      rework_requested: { label: "Yêu cầu thực hiện lại", variant: "destructive" as const, icon: XCircle },
       rejected: { label: "Từ chối", variant: "destructive" as const, icon: XCircle },
       cancelled: { label: "Đã hủy", variant: "destructive" as const, icon: XCircle },
     };
@@ -164,6 +166,22 @@ export default function WorkOrderDetailPage() {
       toast.success("Đã yêu cầu thực hiện lại công lệnh");
     } catch (error) {
       const message = getApiErrorMessage(error, "Lỗi yêu cầu thực hiện lại");
+      toast.error(message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  async function handleResubmitForRework() {
+    if (!workOrder) return;
+
+    try {
+      setIsSubmitting(true);
+      const updated = await workOrderService.resubmitForRework(workOrder.id);
+      setWorkOrder(updated);
+      toast.success("Đã tái gửi công lệnh để xét duyệt");
+    } catch (error) {
+      const message = getApiErrorMessage(error, "Lỗi tái gửi công lệnh");
       toast.error(message);
     } finally {
       setIsSubmitting(false);
@@ -331,12 +349,48 @@ export default function WorkOrderDetailPage() {
                       onClick={handleSubmitCompletion}
                       className="w-full sm:w-auto"
                     >
-                      Hoàn thành công lệnh
+                      Gửi yêu cầu hoàn thành
                     </Button>
 
                     {(!workOrder.attachments || workOrder.attachments.length === 0) && (
                       <p className="text-xs text-gray-500">Vui lòng upload ít nhất 1 ảnh minh chứng trước khi hoàn thành.</p>
                     )}
+                  </div>
+                )}
+
+                {isAssignedStaff && workOrder.status === "rework_requested" && (
+                  <div className="flex flex-col gap-2">
+                    <p className="text-sm text-amber-600 font-medium">Công lệnh yêu cầu thực hiện lại.</p>
+                    <Button
+                      disabled={isSubmitting}
+                      onClick={handleResubmitForRework}
+                      className="w-full sm:w-auto"
+                    >
+                      Tái gửi công lệnh
+                    </Button>
+                  </div>
+                )}
+
+                {isAdminOrManager && workOrder.status === "submitted_for_review" && (
+                  <div className="flex flex-col gap-2">
+                    <p className="text-sm text-blue-600 font-medium">Công lệnh chờ xét duyệt hoàn thành.</p>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <Button
+                        disabled={isSubmitting}
+                        onClick={handleConfirmCompletion}
+                        className="sm:flex-1"
+                      >
+                        ✓ Đạt yêu cầu
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        disabled={isSubmitting}
+                        onClick={handleRequestRework}
+                        className="sm:flex-1"
+                      >
+                        ✗ Yêu cầu thực hiện lại
+                      </Button>
+                    </div>
                   </div>
                 )}
               </div>
