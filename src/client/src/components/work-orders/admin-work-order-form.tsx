@@ -121,16 +121,32 @@ export function AdminWorkOrderForm({
     setShowPersonnelList(false);
   };
 
+  const toIsoWithCurrentLocalTime = (dateInput: string) => {
+    if (!dateInput) return undefined;
+
+    if (dateInput.includes("T")) {
+      return new Date(dateInput).toISOString();
+    }
+
+    const now = new Date();
+    const hh = String(now.getHours()).padStart(2, "0");
+    const mm = String(now.getMinutes()).padStart(2, "0");
+    const ss = String(now.getSeconds()).padStart(2, "0");
+
+    // Avoid Date("YYYY-MM-DD") UTC parsing which shifts to 07:00 in +07 timezone.
+    return new Date(`${dateInput}T${hh}:${mm}:${ss}`).toISOString();
+  };
+
   const handleSubmit = async (data: AdminWorkOrderFormData) => {
-    const startDate = new Date(data.startDate);
-    const endDate = new Date(data.endDate);
+    const startDateIso = toIsoWithCurrentLocalTime(data.startDate);
+    const endDateIso = toIsoWithCurrentLocalTime(data.endDate);
 
     const submitData: CreateWorkOrderPayload = {
       title: data.title,
       content: data.content,
       location: data.location || undefined,
-      startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
+      startDate: startDateIso || new Date().toISOString(),
+      endDate: endDateIso || new Date().toISOString(),
       note: data.notes,
       assignedTo: isSelfAssignCreator ? currentUser?.id : data.assignedTo || undefined,
     };

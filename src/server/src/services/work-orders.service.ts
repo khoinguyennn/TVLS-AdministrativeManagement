@@ -32,6 +32,21 @@ export class WorkOrderService {
     return workOrder.assignedTo === requesterId;
   }
 
+  private normalizeDateInput(value?: string): Date | null {
+    if (!value) return null;
+
+    // Handle date-only payloads to avoid UTC parsing shift (e.g. 07:00 in +07 timezone).
+    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
+      const ss = String(now.getSeconds()).padStart(2, '0');
+      return new Date(`${value}T${hh}:${mm}:${ss}`);
+    }
+
+    return new Date(value);
+  }
+
   /**
    * Generate unique work order code: WO-YYYYMMDD-XXXX
    */
@@ -121,8 +136,8 @@ export class WorkOrderService {
       title: data.title,
       content: data.content,
       location: data.location,
-      startDate: data.startDate ? new Date(data.startDate) : null,
-      endDate: data.endDate ? new Date(data.endDate) : null,
+      startDate: this.normalizeDateInput(data.startDate),
+      endDate: this.normalizeDateInput(data.endDate),
       note: data.note,
       createdBy,
       assignedTo: data.assignedTo || null,
@@ -186,8 +201,8 @@ export class WorkOrderService {
     if (data.title !== undefined) updateData.title = data.title;
     if (data.content !== undefined) updateData.content = data.content;
     if (data.location !== undefined) updateData.location = data.location;
-    if (data.startDate !== undefined) updateData.startDate = new Date(data.startDate);
-    if (data.endDate !== undefined) updateData.endDate = new Date(data.endDate);
+    if (data.startDate !== undefined) updateData.startDate = this.normalizeDateInput(data.startDate);
+    if (data.endDate !== undefined) updateData.endDate = this.normalizeDateInput(data.endDate);
     if (data.note !== undefined) updateData.note = data.note;
     if (data.assignedTo !== undefined) {
       if (data.assignedTo) {
@@ -287,7 +302,11 @@ export class WorkOrderService {
     }
 
     const nextStatus = requesterRole === 'teacher' ? 'completed' : 'in_progress';
-    const updateData: Partial<WorkOrder> = { status: nextStatus };
+    const updateData: Partial<WorkOrder> = {
+      status: nextStatus,
+      // Record the actual completion action time instead of keeping planned end time.
+      endDate: new Date(),
+    };
     if (requesterRole === 'teacher') {
       updateData.approvedBy = requesterId;
     }
@@ -305,7 +324,15 @@ export class WorkOrderService {
       throw new HttpException(400, 'Công lệnh chưa ở trạng thái chờ xác nhận hoàn thành');
     }
 
-    await DB.WorkOrders.update({ status: 'completed', approvedBy: approverId }, { where: { id } });
+    await DB.WorkOrders.update(
+      {
+        status: 'completed',
+        approvedBy: approverId,
+        // Use server current time for completion timestamp.
+        endDate: new Date(),
+      },
+      { where: { id } },
+    );
     return this.findById(id);
   }
 

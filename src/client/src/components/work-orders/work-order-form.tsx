@@ -1,14 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { CalendarIcon, Clock } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -25,7 +22,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { cn } from "@/lib/utils";
 import type { CreateWorkOrderPayload, UpdateWorkOrderPayload, WorkOrder } from "@/types/work-order.types";
 import type { PersonnelRecord } from "@/types/personnel.types";
 
@@ -33,8 +29,8 @@ const workOrderSchema = z.object({
   title: z.string().min(1, "Vui lòng nhập tiêu đề công lệnh"),
   content: z.string().min(1, "Vui lòng nhập nội dung công việc"),
   location: z.string().optional(),
-  startDate: z.string().min(1, "Vui lòng chọn thời gian bắt đầu"),
-  endDate: z.string().min(1, "Vui lòng chọn thời gian kết thúc"),
+  startDate: z.string().min(1, "Vui lòng chọn ngày bắt đầu"),
+  endDate: z.string().min(1, "Vui lòng chọn ngày kết thúc"),
   note: z.string().optional(),
   assignedTo: z.number().min(1, "Vui lòng chọn nhân viên được giao"),
 });
@@ -62,26 +58,18 @@ export function WorkOrderForm({
       title: workOrder?.title || "",
       content: workOrder?.content || "",
       location: workOrder?.location || "",
-      startDate: workOrder?.startDate || "",
-      endDate: workOrder?.endDate || "",
+      startDate: workOrder?.startDate?.split('T')[0] || "",
+      endDate: workOrder?.endDate?.split('T')[0] || "",
       note: workOrder?.note || "",
       assignedTo: workOrder?.assignedTo || 0,
     },
   });
 
   const handleSubmit = async (data: WorkOrderFormData) => {
-    // Parse the date-time strings and create proper ISO strings
-    const startDateTimeStr = data.startDate;
-    const endDateTimeStr = data.endDate;
-
-    // If the strings don't contain 'T', they might be just dates, so add default times
-    const startTime = startDateTimeStr.includes('T') ? startDateTimeStr : `${startDateTimeStr}T08:00`;
-    const endTime = endDateTimeStr.includes('T') ? endDateTimeStr : `${endDateTimeStr}T17:00`;
-
     const submitData = {
       ...data,
-      startDate: startTime,
-      endDate: endTime,
+      startDate: data.startDate,
+      endDate: data.endDate,
     };
 
     await onSubmit(submitData);
@@ -197,30 +185,9 @@ export function WorkOrderForm({
             name="startDate"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Thời gian bắt đầu *</FormLabel>
+                <FormLabel>Ngày bắt đầu *</FormLabel>
                 <FormControl>
-                  <div className="flex gap-2">
-                    <Input
-                      type="date"
-                      value={field.value?.split('T')[0] || ''}
-                      onChange={(e) => {
-                        const date = e.target.value;
-                        const time = field.value?.split('T')[1] || '08:00';
-                        field.onChange(`${date}T${time}`);
-                      }}
-                      className="flex-1"
-                    />
-                    <Input
-                      type="time"
-                      value={field.value?.split('T')[1] || '08:00'}
-                      onChange={(e) => {
-                        const time = e.target.value;
-                        const date = field.value?.split('T')[0] || '';
-                        field.onChange(`${date}T${time}`);
-                      }}
-                      className="w-32"
-                    />
-                  </div>
+                  <Input type="date" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -232,30 +199,9 @@ export function WorkOrderForm({
             name="endDate"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Thời gian kết thúc *</FormLabel>
+                <FormLabel>Ngày kết thúc *</FormLabel>
                 <FormControl>
-                  <div className="flex gap-2">
-                    <Input
-                      type="date"
-                      value={field.value?.split('T')[0] || ''}
-                      onChange={(e) => {
-                        const date = e.target.value;
-                        const time = field.value?.split('T')[1] || '17:00';
-                        field.onChange(`${date}T${time}`);
-                      }}
-                      className="flex-1"
-                    />
-                    <Input
-                      type="time"
-                      value={field.value?.split('T')[1] || '17:00'}
-                      onChange={(e) => {
-                        const time = e.target.value;
-                        const date = field.value?.split('T')[0] || '';
-                        field.onChange(`${date}T${time}`);
-                      }}
-                      className="w-32"
-                    />
-                  </div>
+                  <Input type="date" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
