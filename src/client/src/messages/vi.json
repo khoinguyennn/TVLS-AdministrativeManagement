@@ -779,5 +779,13 @@
     "insightsDesc": "Cơ cấu nhân sự tập trung chủ yếu ở độ tuổi vàng ({ageRange}). Đây là nguồn lực giàu kinh nghiệm và đang trong giai đoạn cống hiến cao nhất cho nhà trường.",
     "forecast": "Dự báo nhân sự",
     "forecastDesc": "Tỷ lệ nhân sự trẻ (dưới 30 tuổi) cần được chú trọng tuyển dụng thêm trong giai đoạn tới để đảm bảo tính kế thừa liên tục cho các cấp học."
+  },
+  "Chatbot": {
+    "title": "Trợ lý AI Nội bộ",
+    "description": "Bạn cần hỗ trợ gì hôm nay?",
+    "placeholder": "Nhập tin nhắn...",
+    "error": "Xin lỗi, đã có lỗi kết nối với máy chủ AI. Vui lòng thử lại sau.",
+    "emptyMessage": "Vui lòng nhập câu hỏi của bạn.",
+    "avatarAlt": "AI Assistant"
   }
 }

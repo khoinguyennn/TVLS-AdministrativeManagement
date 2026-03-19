@@ -15,6 +15,7 @@ import { StaffRoute } from '@routes/staff.route';
 import NotificationRoute from '@routes/notifications.route';
 import { ValidateEnv } from '@utils/validateEnv';
 import { startDeviceReportsCron } from './crons/device-reports.cron';
+import { ChatbotRoute } from '@routes/chatbot.route';
 
 ValidateEnv();
 
@@ -36,6 +37,7 @@ const app = new App([
   new WorkOrderRoute(),
   new StaffRoute(),
   new NotificationRoute(),
+  new ChatbotRoute(),
 ]);
 
 app.listen();

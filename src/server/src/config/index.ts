@@ -8,3 +8,6 @@ export const { GOOGLE_CLIENT_ID } = process.env;
 
 // Email config
 export const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM } = process.env;
+
+// Gemini AI
+export const { GEMINI_API_KEY } = process.env;

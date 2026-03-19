@@ -6,6 +6,7 @@ import { DashboardHeader } from "@/components/layout/DashboardHeader";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { authStorage } from "@/lib/auth-storage";
 import { userService } from "@/services/user.service";
+import { ChatbotWidget } from "@/components/layout/ChatbotWidget";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -34,9 +35,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div className="flex min-h-screen bg-muted/40">
       <DashboardSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <main className="flex min-h-screen flex-1 flex-col lg:ml-64">
+      <main className="flex min-h-screen flex-1 flex-col lg:ml-64 relative">
         <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
         <div className="mx-auto w-full max-w-7xl p-4 sm:p-6 lg:p-8">{children}</div>
+        <ChatbotWidget />
       </main>
     </div>
   );

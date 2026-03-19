@@ -26,6 +26,7 @@
     "pm2:logs": "pm2 logs"
   },
   "dependencies": {
+    "@google/genai": "^1.46.0",
     "@types/pdfkit": "^0.17.5",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
