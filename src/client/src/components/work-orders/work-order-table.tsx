@@ -47,27 +47,14 @@ export function WorkOrderTable({
   showActions = true,
   startIndex = 1,
 }: WorkOrderTableProps) {
-  const formatDateTimeParts = (dateTime: string | undefined) => {
-    if (!dateTime) {
-      return {
-        date: "Chưa cập nhật",
-        time: "--:--",
-      };
-    }
+  const formatDate = (dateValue: string | undefined) => {
+    if (!dateValue) return "Chưa cập nhật";
 
-    const value = new Date(dateTime);
-
-    return {
-      date: value.toLocaleDateString("vi-VN", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      }),
-      time: value.toLocaleTimeString("vi-VN", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
+    return new Date(dateValue).toLocaleDateString("vi-VN", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
   };
 
   const getInitials = (name: string) => {
@@ -130,8 +117,8 @@ export function WorkOrderTable({
         <TableBody>
           {data.map((workOrder, index) => {
             const assigneeName = workOrder.assignedToUser?.fullName || getPersonnelName(workOrder.assignedTo);
-            const startTime = formatDateTimeParts(workOrder.startDate);
-            const endTime = formatDateTimeParts(workOrder.endDate);
+            const startDate = formatDate(workOrder.startDate);
+            const endDate = formatDate(workOrder.endDate);
 
             return (
               <TableRow key={workOrder.id} className="hover:bg-muted/30 transition-colors">
@@ -167,8 +154,7 @@ export function WorkOrderTable({
                         Bắt đầu
                       </span>
                       <div className="leading-tight">
-                        <p className="text-sm font-medium text-foreground">{startTime.date}</p>
-                        <p className="text-xs text-muted-foreground">{startTime.time}</p>
+                        <p className="text-sm font-medium text-foreground">{startDate}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 rounded-lg bg-muted/40 px-3 py-2">
@@ -176,8 +162,7 @@ export function WorkOrderTable({
                         Kết thúc
                       </span>
                       <div className="leading-tight">
-                        <p className="text-sm font-medium text-foreground">{endTime.date}</p>
-                        <p className="text-xs text-muted-foreground">{endTime.time}</p>
+                        <p className="text-sm font-medium text-foreground">{endDate}</p>
                       </div>
                     </div>
                   </div>

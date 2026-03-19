@@ -76,14 +76,12 @@ export default function WorkOrderDetailPage() {
     }
   }
 
-  const formatDateTime = (dateTime: string | undefined) => {
-    if (!dateTime) return "-";
-    return new Date(dateTime).toLocaleString("vi-VN", {
+  const formatDate = (dateValue: string | undefined) => {
+    if (!dateValue) return "-";
+    return new Date(dateValue).toLocaleDateString("vi-VN", {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit"
     });
   };
 
@@ -232,7 +230,7 @@ export default function WorkOrderDetailPage() {
                   <div>
                     <p className="font-medium text-gray-900">Thời gian</p>
                     <p className="text-gray-600">
-                      {formatDateTime(workOrder.startDate)} — {formatDateTime(workOrder.endDate)}
+                      {formatDate(workOrder.startDate)} — {formatDate(workOrder.endDate)}
                     </p>
                   </div>
                 </div>
@@ -358,7 +356,7 @@ export default function WorkOrderDetailPage() {
                   <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                   <div className="flex-1">
                     <p className="text-sm font-medium">Tạo công lệnh</p>
-                    <p className="text-xs text-gray-500">{formatDateTime(workOrder.createdAt)}</p>
+                    <p className="text-xs text-gray-500">{formatDate(workOrder.createdAt)}</p>
                   </div>
                 </div>
                 {workOrder.status !== "pending" && workOrder.status !== "rejected" && (
@@ -366,7 +364,7 @@ export default function WorkOrderDetailPage() {
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                     <div className="flex-1">
                     <p className="text-sm font-medium">Đã duyệt</p>
-                      <p className="text-xs text-gray-500">{formatDateTime(workOrder.updatedAt)}</p>
+                        <p className="text-xs text-gray-500">{formatDate(workOrder.updatedAt)}</p>
                     </div>
                   </div>
                 )}
@@ -396,11 +394,11 @@ export default function WorkOrderDetailPage() {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-500">Ngày tạo</span>
-                <span>{formatDateTime(workOrder.createdAt)}</span>
+                <span>{formatDate(workOrder.createdAt)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-500">Cập nhật</span>
-                <span>{formatDateTime(workOrder.updatedAt)}</span>
+                <span>{formatDate(workOrder.updatedAt)}</span>
               </div>
             </CardContent>
           </Card>
