@@ -18,7 +18,7 @@ export class WorkOrderModel extends Model<WorkOrder, WorkOrderCreationAttributes
   public createdBy: number;
   public approvedBy: number;
   public assignedTo: number;
-  public status: 'pending' | 'approved' | 'in_progress' | 'completed' | 'rejected' | 'cancelled';
+  public status: 'pending' | 'approved' | 'in_progress' | 'submitted_for_review' | 'completed' | 'rework_requested' | 'rejected' | 'cancelled';
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -83,7 +83,7 @@ export default function (sequelize: Sequelize): typeof WorkOrderModel {
       },
       status: {
         allowNull: true,
-        type: DataTypes.ENUM('pending', 'approved', 'in_progress', 'completed', 'rejected', 'cancelled'),
+        type: DataTypes.ENUM('pending', 'approved', 'in_progress', 'submitted_for_review', 'completed', 'rework_requested', 'rejected', 'cancelled'),
         defaultValue: 'pending',
       },
     },

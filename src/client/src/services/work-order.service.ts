@@ -73,6 +73,11 @@ export const workOrderService = {
     return res.data.data;
   },
 
+  async resubmitForRework(id: number): Promise<WorkOrder> {
+    const res = await api.put<{ success: boolean; data: WorkOrder; message: string }>(`${ENDPOINT}/${id}/resubmit-for-rework`);
+    return res.data.data;
+  },
+
   async delete(id: number): Promise<void> {
     await api.delete(`${ENDPOINT}/${id}`);
   },

@@ -134,6 +134,16 @@ export class WorkOrderController {
     }
   };
 
+  public resubmitForRework = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id);
+      const data = await this.service.resubmitForRework(id, req.user.id, req.user.role);
+      res.status(200).json({ success: true, data, message: 'Đã tái gửi công lệnh để xét duyệt' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public delete = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
       const id = Number(req.params.id);

@@ -77,8 +77,10 @@ export function WorkOrderTable({
     const statusConfig = {
       pending: { label: "Chờ duyệt", className: "bg-amber-100 text-amber-700 border-transparent", dotClass: "bg-amber-500" },
       approved: { label: "Đã duyệt", className: "bg-cyan-100 text-cyan-700 border-transparent", dotClass: "bg-cyan-500" },
-      in_progress: { label: "Đã duyệt", className: "bg-cyan-100 text-cyan-700 border-transparent", dotClass: "bg-cyan-500" },
+      in_progress: { label: "Đang thực hiện", className: "bg-blue-100 text-blue-700 border-transparent", dotClass: "bg-blue-500" },
+      submitted_for_review: { label: "Chờ xét duyệt", className: "bg-purple-100 text-purple-700 border-transparent", dotClass: "bg-purple-500" },
       completed: { label: "Hoàn thành", className: "bg-emerald-100 text-emerald-700 border-transparent", dotClass: "bg-emerald-500" },
+      rework_requested: { label: "Yêu cầu làm lại", className: "bg-red-100 text-red-700 border-transparent", dotClass: "bg-red-500" },
       rejected: { label: "Từ chối", className: "bg-red-100 text-red-700 border-transparent", dotClass: "bg-red-500" },
       cancelled: { label: "Đã hủy", className: "bg-slate-100 text-slate-700 border-transparent", dotClass: "bg-slate-500" }
     };
@@ -236,6 +238,28 @@ export function WorkOrderTable({
                       </Button>
                     )}
                     {workOrder.status === "in_progress" && onRequestRework && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => onRequestRework(workOrder.id)}
+                        className="size-8 text-muted-foreground hover:text-amber-600"
+                        title="Yêu cầu làm lại"
+                      >
+                        <XCircle className="size-4" />
+                      </Button>
+                    )}
+                    {workOrder.status === "submitted_for_review" && onConfirmCompletion && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => onConfirmCompletion(workOrder.id)}
+                        className="size-8 text-muted-foreground hover:text-emerald-600"
+                        title="Đạt yêu cầu"
+                      >
+                        <CheckCircle className="size-4" />
+                      </Button>
+                    )}
+                    {workOrder.status === "submitted_for_review" && onRequestRework && (
                       <Button
                         variant="ghost"
                         size="icon"
