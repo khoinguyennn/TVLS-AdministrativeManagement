@@ -125,7 +125,7 @@ export class ChatbotService {
 
       const queryOpts: any = {
         where: {
-          status: 'approved',
+          status: { [Op.in]: ['pending', 'approved'] },
           endDate: { [Op.gte]: today }
         },
         include: [
@@ -136,11 +136,16 @@ export class ChatbotService {
 
       const leaves = await DB.LeaveRequests.findAll(queryOpts);
       
-      if (leaves.length === 0) return 'DỮ LIỆU NGHỈ PHÉP (hiện tại và sắp tới): Không có ai đang nghỉ phép.';
+      if (leaves.length === 0) return 'DỮ LIỆU NGHỈ PHÉP (hiện tại và sắp tới): Không có ai xin nghỉ phép.';
+
+      const statusMap: Record<string, string> = {
+        'pending': 'Chờ duyệt',
+        'approved': 'Đã duyệt'
+      };
 
       const leaveList = leaves.map(l => {
         const req: any = l;
-        return `- Người nghỉ: ${req.user?.fullName}, Loại: ${req.leaveType?.name}, Từ: ${l.startDate} Đến: ${l.endDate}`;
+        return `- Người nghỉ: ${req.user?.fullName}, Loại: ${req.leaveType?.name}, Từ: ${l.startDate} Đến: ${l.endDate}, Trạng thái: ${statusMap[l.status as string] || l.status}`;
       });
 
       return `DỮ LIỆU NGHỈ PHÉP (những người đang và sắp nghỉ):\n${leaveList.join('\n')}`;
@@ -185,7 +190,17 @@ export class ChatbotService {
           status: { [Op.ne]: 'completed' } // Only unfinished reports
         },
         include: [
-          { model: DB.Devices, as: 'device', attributes: ['name'] },
+          { 
+            model: DB.Devices, 
+            as: 'device', 
+            attributes: ['name'],
+            include: [
+              {
+                model: DB.Rooms, as: 'room', attributes: ['name'],
+                include: [{ model: DB.Buildings, as: 'building', attributes: ['name'] }]
+              }
+            ]
+          },
           { model: DB.Users, as: 'reporter', attributes: ['fullName'] },
           { model: DB.Users, as: 'assignee', attributes: ['fullName'] }
         ]
@@ -201,7 +216,8 @@ export class ChatbotService {
 
       const reportList = reports.map(r => {
         const rep: any = r;
-        return `- Phiếu #${r.id}: Thiết bị: "${rep.device?.name}", Người báo: ${rep.reporter?.fullName}, Kỹ thuật viên xử lý: ${rep.assignee?.fullName || 'Chưa phân công'}, Trạng thái: ${statusMap[r.status] || r.status}, Mô tả lỗi: ${r.description}`;
+        const location = rep.device?.room ? ` (Phòng ${rep.device.room.name} - ${rep.device.room.building?.name || ''})` : '';
+        return `- Phiếu #${r.id}: Thiết bị: "${rep.device?.name}"${location}, Người báo: ${rep.reporter?.fullName}, Kỹ thuật viên xử lý: ${rep.assignee?.fullName || 'Chưa phân công'}, Trạng thái: ${statusMap[r.status] || r.status}, Mô tả lỗi: ${r.description}`;
       });
 
       return `DỮ LIỆU BÁO HỎNG (đang chờ và đang xử lý):\n${reportList.join('\n')}`;

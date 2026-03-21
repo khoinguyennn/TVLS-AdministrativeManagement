@@ -6,7 +6,7 @@ import { DEFAULT_LOCALE, LOCALE_TAGS, type LocaleCode } from "@/constants/i18n.c
 
 export const api = axios.create({
   baseURL: env.NEXT_PUBLIC_API_URL,
-  timeout: 10_000,
+  timeout: 60_000,
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json"
