@@ -1,7 +1,24 @@
 "use client";
 
 import { useState, useRef, useEffect, memo } from "react";
-import { MessageSquare, X, Send, Sparkles, Loader2, Maximize2, Minimize2 } from "lucide-react";
+import { MessageSquare, X, Send, Loader2, Maximize2, Minimize2 } from "lucide-react";
+
+// Robot head SVG icon for AI avatar
+const RobotIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 64 64" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <line x1="32" y1="6" x2="32" y2="14" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+    <circle cx="32" cy="4" r="3" fill="currentColor"/>
+    <rect x="12" y="14" width="40" height="30" rx="6" fill="currentColor" opacity="0.85"/>
+    <circle cx="23" cy="27" r="5" fill="white"/>
+    <circle cx="41" cy="27" r="5" fill="white"/>
+    <circle cx="24" cy="27" r="2.5" fill="currentColor"/>
+    <circle cx="42" cy="27" r="2.5" fill="currentColor"/>
+    <rect x="21" y="36" width="22" height="4" rx="2" fill="white" opacity="0.8"/>
+    <rect x="7" y="22" width="5" height="10" rx="2.5" fill="currentColor" opacity="0.7"/>
+    <rect x="52" y="22" width="5" height="10" rx="2.5" fill="currentColor" opacity="0.7"/>
+    <rect x="26" y="44" width="12" height="6" rx="2" fill="currentColor" opacity="0.7"/>
+  </svg>
+);
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
@@ -67,7 +84,7 @@ const MessageItem = memo(({
       <Avatar className={cn("size-8 shrink-0 border border-border shadow-sm", msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-white dark:bg-zinc-800")}>
         {msg.role === "ai" ? (
           <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/20 to-blue-600/20 text-primary">
-            <Sparkles className="size-4" />
+            <RobotIcon className="size-5" />
           </div>
         ) : (
           <>
@@ -202,7 +219,7 @@ export function ChatbotWidget() {
               className="relative flex size-14 items-center justify-center overflow-hidden rounded-full bg-gradient-to-r from-primary to-blue-600 p-0 text-white shadow-lg transition-transform hover:scale-105"
             >
               <div className="absolute inset-0 animate-pulse bg-white/20" />
-              <Sparkles className="relative z-10 size-6 animate-pulse" />
+              <RobotIcon className="relative z-10 size-6" />
             </Button>
           </motion.div>
         )}
@@ -224,7 +241,7 @@ export function ChatbotWidget() {
             <div className="flex items-center justify-between bg-gradient-to-r from-primary/10 to-blue-600/10 p-4 border-b border-border/50">
               <div className="flex items-center gap-3">
                 <div className="flex size-10 items-center justify-center rounded-full bg-primary/20 text-primary">
-                  <Sparkles className="size-5" />
+                  <RobotIcon className="size-5" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-foreground text-sm tracking-tight">{t("title")}</h3>
@@ -296,7 +313,7 @@ export function ChatbotWidget() {
                   >
                     <Avatar className="size-8 shrink-0 bg-white dark:bg-zinc-800 border border-border shadow-sm">
                       <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/20 to-blue-600/20 text-primary">
-                        <Sparkles className="size-4" />
+                        <RobotIcon className="size-4" />
                       </div>
                     </Avatar>
                     <div className="rounded-2xl rounded-tl-none bg-white dark:bg-zinc-900 border border-border/50 px-4 py-3 flex items-center gap-1 shadow-sm">

@@ -650,7 +650,7 @@
   "WorkOrders": {
     "title": "Quản lý công lệnh",
     "description": "Tạo, phê duyệt và theo dõi các công việc được giao",
-    "createWorkOrder": "Tạo công lênh",
+    "createWorkOrder": "Tạo công lệnh",
     "searchPlaceholder": "Tìm theo mã công lệnh, nơi công tác, nội dung...",
     "filterStatus": "Lọc theo trạng thái",
     "allStatuses": "Tất cả trạng thái",
