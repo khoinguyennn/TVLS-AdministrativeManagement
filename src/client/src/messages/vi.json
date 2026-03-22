@@ -782,7 +782,7 @@
   },
   "Chatbot": {
     "title": "Trợ lý AI Nội bộ",
-    "description": "Bạn cần hỗ trợ gì hôm nay?",
+    "description": "Xin chào thầy/cô, em là trợ lý ảo của Trường Thực hành Sư phạm. Thầy/cô cần tìm hiểu thông tin gì cứ nói cho em biết nhé?",
     "placeholder": "Nhập tin nhắn...",
     "error": "Xin lỗi, đã có lỗi kết nối với máy chủ AI. Vui lòng thử lại sau.",
     "emptyMessage": "Vui lòng nhập câu hỏi của bạn.",

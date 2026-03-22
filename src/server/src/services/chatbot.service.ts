@@ -17,17 +17,20 @@ export class ChatbotService {
   public async chat(message: string, userRole: string, userId: number): Promise<string> {
     if (!message) throw new HttpException(400, 'Nội dung tin nhắn không được để trống');
 
-    const context = await this.gatherContext(userRole, message);
-    
+    const context = await this.gatherContext(userRole, message, userId);
+
+    const currentDate = new Date().toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit' });
+
     // Combine context with system instructions
     const systemPrompt = `
       Bạn là trợ lý AI nội bộ của Trường Thực hành Sư phạm (Hệ thống Quản lý Hành chính).
+      Hôm nay là: ${currentDate}.
       Nhiệm vụ của bạn là trả lời các câu hỏi của nhân viên trong trường dựa trên dữ liệu hệ thống được cung cấp.
       
       HƯỚNG DẪN QUAN TRỌNG:
       1. CHỈ sử dụng dữ liệu được cung cấp trong phần CONTEXT bên dưới để trả lời.
       2. Nếu thông tin KHÔNG có trong CONTEXT, hãy trả lời: "Tôi không có thông tin về vấn đề này trong hệ thống.", tuyệt đối không tự bịa đặt hoặc suy đoán thông tin.
-      3. Chào hỏi người dùng một cách lịch sự nhưng ngắn gọn và chuyên nghiệp.
+      3. Chào hỏi người dùng một cách lịch sự nhưng ngắn gọn và chuyên nghiệp. LUÔN LUÔN xưng hô với người dùng là "thầy / cô" hoặc "thầy/cô" (tùy ngữ cảnh), TUYỆT ĐỐI KHÔNG dùng từ "bạn". Bản thân AI nhân xưng là "tôi" hoặc "em".
       4. Trả lời bằng tiếng Việt, có thể sử dụng markdown để định dạng cho dễ nhìn (gạch đầu dòng, in đậm).
       5. Nếu câu hỏi liên quan đến dữ liệu nhạy cảm hoặc không thuộc quyền hạn của người dùng (dựa theo context được cấp), hãy từ chối lịch sự.
       
@@ -53,15 +56,16 @@ export class ChatbotService {
     }
   }
 
-  private async gatherContext(userRole: string, message: string): Promise<string> {
+  private async gatherContext(userRole: string, message: string, userId: number): Promise<string> {
     let contextParts: string[] = [];
     const lowerMessage = message.toLowerCase();
 
     // Intent detection based on keywords to save token quota
-    const isStaffQuery = /(nhân sự|ai|người|giáo viên|sđt|số điện thoại|liệt kê|danh sách|nhân viên)/i.test(lowerMessage);
+    const isStaffQuery = /(nhân sự|ai|người|giáo viên|sđt|số điện thoại|liệt kê|danh sách|nhân viên|danh bạ|thông tin|hồ sơ|liên hệ|email|chức vụ)/i.test(lowerMessage);
     const isLeaveQuery = /(nghỉ phép|nghỉ|phép|vắng)/i.test(lowerMessage);
     const isDeviceQuery = /(thiết bị|máy|phòng|hỏng|sửa|tình trạng|chuột|bàn phím|màn hình|máy chiếu|điều hòa|máy lạnh)/i.test(lowerMessage);
     const isWorkOrderQuery = /(công lệnh|nhiệm vụ|phân công)/i.test(lowerMessage);
+    const isHelpQuery = /(hướng dẫn|cách sử dụng|chức năng|làm sao|làm thế nào|ở đâu)/i.test(lowerMessage);
 
     // 1. Thông tin nhân sự (admin, manager, teacher, technician)
     if (['admin', 'manager', 'teacher', 'technician'].includes(userRole) && isStaffQuery) {
@@ -70,7 +74,7 @@ export class ChatbotService {
 
     // 2. Thông tin nghỉ phép (admin, manager, teacher)
     if (['admin', 'manager', 'teacher'].includes(userRole) && isLeaveQuery) {
-      contextParts.push(await this.getLeaveContext(userRole === 'teacher'));
+      contextParts.push(await this.getLeaveContext(userRole === 'teacher', userId));
     }
 
     // 3. Thông tin thiết bị & báo hỏng (admin, manager, technician)
@@ -79,9 +83,14 @@ export class ChatbotService {
       contextParts.push(await this.getDeviceReportContext());
     }
 
-    // 4. Thông tin công lệnh (admin, manager)
-    if (['admin', 'manager'].includes(userRole) && isWorkOrderQuery) {
-      contextParts.push(await this.getWorkOrderContext());
+    // 4. Thông tin công lệnh (tất cả, nhưng người thường chỉ thấy của mình)
+    if (['admin', 'manager', 'teacher', 'technician'].includes(userRole) && isWorkOrderQuery) {
+      contextParts.push(await this.getWorkOrderContext(userRole, userId));
+    }
+
+    // 5. Tính năng trợ giúp / hướng dẫn (tất cả mọi người)
+    if (isHelpQuery) {
+      contextParts.push(this.getHelpContext(userRole));
     }
 
     if (contextParts.length === 0) {
@@ -117,7 +126,7 @@ export class ChatbotService {
     }
   }
 
-  private async getLeaveContext(limitToActive: boolean): Promise<string> {
+  private async getLeaveContext(limitToActive: boolean, userId: number): Promise<string> {
     try {
       // Get today and upcoming leaves
       const today = new Date();
@@ -135,20 +144,37 @@ export class ChatbotService {
       };
 
       const leaves = await DB.LeaveRequests.findAll(queryOpts);
-      
-      if (leaves.length === 0) return 'DỮ LIỆU NGHỈ PHÉP (hiện tại và sắp tới): Không có ai xin nghỉ phép.';
 
-      const statusMap: Record<string, string> = {
-        'pending': 'Chờ duyệt',
-        'approved': 'Đã duyệt'
-      };
+      let leaveContext = '';
+      if (leaves.length === 0) {
+        leaveContext = 'DỮ LIỆU NGHỈ PHÉP (hiện tại và sắp tới): Không có ai xin nghỉ phép.';
+      } else {
+        const statusMap: Record<string, string> = {
+          'pending': 'Chờ duyệt',
+          'approved': 'Đã duyệt'
+        };
 
-      const leaveList = leaves.map(l => {
-        const req: any = l;
-        return `- Người nghỉ: ${req.user?.fullName}, Loại: ${req.leaveType?.name}, Từ: ${l.startDate} Đến: ${l.endDate}, Trạng thái: ${statusMap[l.status as string] || l.status}`;
+        const leaveList = leaves.map(l => {
+          const req: any = l;
+          return `- Người nghỉ: ${req.user?.fullName}, Loại: ${req.leaveType?.name}, Từ: ${l.startDate} Đến: ${l.endDate}, Trạng thái: ${statusMap[l.status as string] || l.status}`;
+        });
+
+        leaveContext = `DỮ LIỆU NGHỈ PHÉP (những người đang và sắp nghỉ):\n${leaveList.join('\n')}`;
+      }
+
+      // Lấy thông tin số ngày phép còn lại của người dùng hiện tại
+      const currentYear = today.getFullYear();
+      const balance = await DB.LeaveBalances.findOne({
+        where: { userId: userId, year: currentYear }
       });
 
-      return `DỮ LIỆU NGHỈ PHÉP (những người đang và sắp nghỉ):\n${leaveList.join('\n')}`;
+      if (balance) {
+        leaveContext += `\n\nTHÔNG TIN NGHỈ PHÉP CÁ NHÂN (CỦA CHÍNH NGƯỜI ĐANG HỎI BẠN):\n- Năm: ${currentYear}\n- Tổng số ngày phép được nghỉ: ${balance.totalDays} ngày\n- Số ngày đã nghỉ: ${balance.usedDays} ngày\n- Số ngày phép CÒN LẠI: ${balance.totalDays - balance.usedDays} ngày`;
+      } else {
+        leaveContext += `\n\nTHÔNG TIN NGHỈ PHÉP CÁ NHÂN (CỦA CHÍNH NGƯỜI ĐANG HỎI BẠN):\nKhông tìm thấy dữ liệu ngày phép.`;
+      }
+
+      return leaveContext;
     } catch (e) {
       console.error(e);
       return 'Dữ liệu nghỉ phép: Lỗi khi truy xuất.';
@@ -159,8 +185,8 @@ export class ChatbotService {
     try {
       const devices = await DB.Devices.findAll({
         include: [
-          { 
-            model: DB.Rooms, 
+          {
+            model: DB.Rooms,
             as: 'room',
             include: [{ model: DB.Buildings, as: 'building' }]
           }
@@ -190,9 +216,9 @@ export class ChatbotService {
           status: { [Op.ne]: 'completed' } // Only unfinished reports
         },
         include: [
-          { 
-            model: DB.Devices, 
-            as: 'device', 
+          {
+            model: DB.Devices,
+            as: 'device',
             attributes: ['name'],
             include: [
               {
@@ -227,29 +253,75 @@ export class ChatbotService {
     }
   }
 
-  private async getWorkOrderContext(): Promise<string> {
+  private async getWorkOrderContext(userRole: string, userId: number): Promise<string> {
     try {
+      const whereClause = ['admin', 'manager'].includes(userRole) ? {} : {
+        [Op.or]: [{ createdBy: userId }, { assignedTo: userId }]
+      };
+
       const orders = await DB.WorkOrders.findAll({
-        where: {
-          status: { [Op.in]: ['pending', 'approved', 'in_progress'] } // Active ones
-        },
+        where: whereClause,
+        order: [['createdAt', 'DESC']],
+        limit: 50,
         include: [
           { model: DB.Users, as: 'creator', attributes: ['fullName'] },
           { model: DB.Users, as: 'assignee', attributes: ['fullName'] }
         ]
       });
 
-      if (orders.length === 0) return 'DỮ LIỆU CÔNG LỆNH (đang theo dõi): Không có công lệnh nào.';
+      if (orders.length === 0) return 'DỮ LIỆU CÔNG LỆNH: Không có công lệnh nào.';
+
+      const statusMap: Record<string, string> = {
+        'pending': 'Chờ duyệt',
+        'approved': 'Đã duyệt',
+        'in_progress': 'Đang thực hiện',
+        'completed': 'Hoàn thành',
+        'rejected': 'Từ chối'
+      };
 
       const orderList = orders.map(o => {
         const ord: any = o;
-        return `- Công lệnh [${o.code}]: Tiêu đề: "${o.title}", Người tạo: ${ord.creator?.fullName}, Phụ trách: ${ord.assignee?.fullName || 'Chưa phân công'}, Trạng thái: ${o.status}`;
+        return `- Công lệnh [${o.code}]: Tiêu đề: "${o.title}", Người tạo: ${ord.creator?.fullName}, Phụ trách: ${ord.assignee?.fullName || 'Chưa phân công'}, Trạng thái: ${statusMap[o.status as string] || o.status}`;
       });
 
-      return `DỮ LIỆU CÔNG LỆNH (đang thực hiện):\n${orderList.join('\n')}`;
+      return `DỮ LIỆU CÔNG LỆNH:\n${orderList.join('\n')}`;
     } catch (e) {
       console.error(e);
       return 'Dữ liệu công lệnh: Lỗi khi truy xuất.';
     }
+  }
+  private getHelpContext(userRole: string): string {
+    let help = `DANH SÁCH CHỨC NĂNG HỆ THỐNG VÀ HƯỚNG DẪN SỬ DỤNG:
+Hệ thống Quản lý Hành chính cung cấp các tính năng hỗ trợ sau. Khi người dùng gặp khó khăn, hãy giải thích công dụng của tính năng đó và LUÔN LUÔN CUNG CẤP ĐƯỜNG DẪN DƯỚI DẠNG MARKDOWN LINK \`[Tên chức năng](/duong-dan)\` để họ bấm trực tiếp vào.
+
+*DÀNH CHO TẤT CẢ MỌI NGƯỜI:*
+- [Tổng quan hệ thống](/dashboard): Xem thống kê chung.
+- [Hồ sơ cá nhân](/dashboard/my-profile): Xem và cập nhật thông tin cá nhân.
+- [Quản lý công lệnh](/dashboard/work-orders): Tạo, theo dõi và xử lý công việc.
+- [Báo hỏng thiết bị](/dashboard/device-reports): Tạo phiếu báo hỏng khi phát hiện thiết bị lỗi và theo dõi báo hỏng.
+- [Quản lý nghỉ phép](/dashboard/leave-requests): Xem lịch sử và tạo đơn xin nghỉ phép.
+- [Chữ ký số](/dashboard/digital-signatures): Thiết lập chữ ký cá nhân và tính năng ký duyệt điện tử.
+- [Cài đặt tài khoản](/dashboard/settings): Đổi mật khẩu, ảnh đại diện.
+`;
+
+    if (['admin'].includes(userRole)) {
+      help += `\n*DÀNH RIÊNG QUẢN TRỊ VIÊN (Admin):*\n- [Quản lý người dùng](/dashboard/users): Thêm, sửa, khóa và cấp quyền cho các tài khoản người dùng.\n`;
+    }
+    
+    if (['admin', 'manager'].includes(userRole)) {
+      help += `\n*DÀNH CHO BAN GIÁM HIỆU / QUẢN LÝ (Admin/Manager):*
+- [Hồ sơ nhân sự](/dashboard/staff): Xem và quản lý chi tiết lý lịch, hợp đồng, bằng cấp của toàn bộ nhân sự trường.
+- [Thống kê nhân sự](/dashboard/statistics): Xem báo cáo chi tiết về nhân sự theo vị trí, giới tính, loại.
+- [Thống kê độ tuổi](/dashboard/statistics/age): Biểu đồ phân bổ độ tuổi nhóm giáo viên/nhân viên.
+- [Quản lý tòa nhà](/dashboard/buildings): Quản lý danh sách các tòa nhà.
+- [Quản lý phòng](/dashboard/rooms): Quản lý danh sách các phòng học, phòng làm việc.
+- [Quản lý thiết bị](/dashboard/devices): Quản lý kho vật tư thiết bị, phân bổ phòng và lịch sử sửa chữa.\n`;
+    }
+
+    help += `\nLƯU Ý DÀNH CHO BẠN (AI):
+- Bạn phải sử dụng Markdown Link chuẩn, ví dụ: "Thầy/Cô có thể vào trang [Quản lý nghỉ phép](/dashboard/leave-requests) để làm đơn..." để người dùng nhấp vào link chuyển trang ngay lập tức. Không đưa url không có \`[]()\` định dạng Markdown.
+- KHÔNG BAO GIỜ tự bịa ra đường link ngoài danh sách này.`;
+
+    return help;
   }
 }

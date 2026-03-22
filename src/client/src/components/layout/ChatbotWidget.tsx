@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, memo } from "react";
 import { MessageSquare, X, Send, Sparkles, Loader2, Maximize2, Minimize2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,11 +14,91 @@ import { chatbotService } from "@/services/chatbot.service";
 import { useAuth } from "@/hooks/use-auth";
 import { env } from "@/env";
 
-interface Message {
+const getSuggestedPrompts = (role?: string) => {
+  const prompts = ["Hướng dẫn sử dụng hệ thống", "Tra cứu danh bạ nhân sự"]; // Ai cũng có thể tra cứu danh bạ và xem hướng dẫn
+
+  // admin, manager có thể xem thông tin nghỉ phép chung
+  if (['admin', 'manager'].includes(role || '')) {
+    prompts.push("Hôm nay có ai nghỉ phép không?");
+  }
+
+  // teacher có nút xem công lệnh cá nhân (thay cho nút xem nghỉ phép)
+  if (role === 'teacher') {
+    prompts.push("Công lệnh của tôi hôm nay");
+  }
+
+  // admin, manager, technician có thể xem thông tin thiết bị
+  if (['admin', 'manager', 'technician'].includes(role || '')) {
+    prompts.push("Danh sách thiết bị đang hỏng?");
+  }
+
+  // admin, manager có thể xem thông tin công lệnh
+  if (['admin', 'manager'].includes(role || '')) {
+    prompts.push("Công lệnh nào đang chờ duyệt?");
+  }
+
+  return prompts;
+};
+
+export interface Message {
   id: string;
   role: "user" | "ai";
   content: string;
 }
+
+const MessageItem = memo(({ 
+  msg, 
+  avatarUrl, 
+  initials 
+}: { 
+  msg: Message; 
+  avatarUrl?: string; 
+  initials: string; 
+}) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className={cn(
+        "flex gap-3 max-w-[85%]",
+        msg.role === "user" ? "self-end flex-row-reverse" : "self-start"
+      )}
+    >
+      <Avatar className={cn("size-8 shrink-0 border border-border shadow-sm", msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-white dark:bg-zinc-800")}>
+        {msg.role === "ai" ? (
+          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/20 to-blue-600/20 text-primary">
+            <Sparkles className="size-4" />
+          </div>
+        ) : (
+          <>
+            <AvatarImage src={avatarUrl} alt="User avatar" />
+            <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
+              {initials}
+            </AvatarFallback>
+          </>
+        )}
+      </Avatar>
+      
+      <div
+        className={cn(
+          "rounded-2xl px-4 py-2.5 text-sm shadow-sm break-words overflow-hidden flex-1",
+          msg.role === "user"
+            ? "bg-primary text-primary-foreground rounded-tr-none whitespace-pre-wrap"
+            : "bg-white dark:bg-zinc-900 border border-border/50 text-foreground rounded-tl-none prose prose-sm dark:prose-invert max-w-none prose-p:my-1.5 prose-p:leading-relaxed prose-pre:bg-muted prose-pre:p-2 prose-pre:rounded-md"
+        )}
+      >
+        {msg.role === "ai" ? (
+          <ReactMarkdown>
+            {msg.content}
+          </ReactMarkdown>
+        ) : (
+          msg.content
+        )}
+      </div>
+    </motion.div>
+  );
+});
+MessageItem.displayName = "MessageItem";
 
 export function ChatbotWidget() {
   const t = useTranslations("Chatbot");
@@ -63,13 +143,14 @@ export function ChatbotWidget() {
     scrollToBottom();
   }, [messages, isLoading]);
 
-  const handleSend = async () => {
-    if (!inputValue.trim()) return;
+  const handleSend = async (overrideText?: string | React.MouseEvent) => {
+    const textToSend = typeof overrideText === "string" ? overrideText : inputValue;
+    if (!textToSend.trim()) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
       role: "user",
-      content: inputValue.trim()
+      content: textToSend.trim()
     };
 
     setMessages((prev) => [...prev, userMessage]);
@@ -180,58 +261,33 @@ export function ChatbotWidget() {
             <div className="flex-1 p-4 bg-muted/20 overflow-y-auto">
               <div className="flex flex-col gap-4">
                 {messages.map((msg) => (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    key={msg.id}
-                    className={cn(
-                      "flex gap-3 max-w-[85%]",
-                      msg.role === "user" ? "self-end flex-row-reverse" : "self-start"
-                    )}
-                  >
-                    <Avatar className={cn("size-8 shrink-0 border border-border shadow-sm", msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-white dark:bg-zinc-800")}>
-                      {msg.role === "ai" ? (
-                        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/20 to-blue-600/20 text-primary">
-                          <Sparkles className="size-4" />
-                        </div>
-                      ) : (
-                        <>
-                          <AvatarImage 
-                            src={
-                              user?.avatar
-                                ? user.avatar.startsWith("http")
-                                  ? user.avatar
-                                  : `${env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "")}${user.avatar}`
-                                : undefined
-                            } 
-                            alt="User avatar" 
-                          />
-                          <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
-                            {getInitials()}
-                          </AvatarFallback>
-                        </>
-                      )}
-                    </Avatar>
-                    
-                    <div
-                      className={cn(
-                        "rounded-2xl px-4 py-2.5 text-sm shadow-sm",
-                        msg.role === "user"
-                          ? "bg-primary text-primary-foreground rounded-tr-none"
-                          : "bg-white dark:bg-zinc-900 border border-border/50 text-foreground rounded-tl-none prose prose-sm dark:prose-invert max-w-none prose-p:leading-relaxed prose-pre:bg-muted prose-pre:p-2 prose-pre:rounded-md"
-                      )}
-                    >
-                      {msg.role === "ai" ? (
-                        <ReactMarkdown>
-                          {msg.content}
-                        </ReactMarkdown>
-                      ) : (
-                        msg.content
-                      )}
-                    </div>
-                  </motion.div>
+                  <MessageItem 
+                    key={msg.id} 
+                    msg={msg} 
+                    avatarUrl={user?.avatar ? (user.avatar.startsWith("http") ? user.avatar : `${env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "")}${user.avatar}`) : undefined} 
+                    initials={getInitials()} 
+                  />
                 ))}
                 
+                {messages.length === 1 && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="flex flex-wrap gap-2 mt-2 mb-4"
+                  >
+                    {getSuggestedPrompts(user?.role).map((prompt, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleSend(prompt)}
+                        className="text-xs bg-white dark:bg-zinc-800 border border-primary/20 hover:border-primary/50 text-foreground px-3 py-1.5 rounded-full transition-all shadow-sm hover:shadow text-left"
+                      >
+                        {prompt}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+
                 {isLoading && (
                   <motion.div 
                     initial={{ opacity: 0, y: 10 }}
