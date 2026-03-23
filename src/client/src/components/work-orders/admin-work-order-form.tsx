@@ -21,6 +21,15 @@ import type { CreateWorkOrderPayload } from "@/types/work-order.types";
 import type { PersonnelRecord } from "@/types/personnel.types";
 import type { User } from "@/types/auth.types";
 
+function removeAccents(str: string): string {
+  return str
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D")
+    .toLowerCase();
+}
+
 const adminWorkOrderSchema = z.object({
   assignedTo: z.number().optional(),
   title: z.string().min(1, "Vui lòng nhập tiêu đề công lệnh"),
@@ -87,13 +96,60 @@ export function AdminWorkOrderForm({
   }, [isSelfAssignCreator, currentUser, form]);
 
   const activePersonnel = useMemo(() => {
-    return personnel.filter((p) => p.staffStatus !== "resigned");
+    const active = personnel.filter((p) => p.staffStatus !== "resigned");
+    // Loại bỏ trùng lặp theo userId
+    const seen = new Set<number>();
+    return active.filter((p) => {
+      const key = p.userId ?? p.id;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
   }, [personnel]);
 
   const filteredPersonnel = useMemo(() => {
-    return activePersonnel.filter(p =>
-      p.fullName.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const rawQuery = searchQuery.trim();
+    if (!rawQuery) return activePersonnel;
+
+    const query = removeAccents(rawQuery);
+    const rawLower = rawQuery.toLowerCase();
+
+    // Tách thành 2 nhóm: khớp và không khớp
+    const matched: PersonnelRecord[] = [];
+    const unmatched: PersonnelRecord[] = [];
+
+    for (const p of activePersonnel) {
+      const nameNorm = removeAccents(p.fullName);
+      const code = p.code?.toLowerCase() || "";
+      if (nameNorm.includes(query) || code.includes(rawLower)) {
+        matched.push(p);
+      } else {
+        unmatched.push(p);
+      }
+    }
+
+    console.log("[Search Debug]", { rawQuery, query, matchedCount: matched.length, matchedNames: matched.map(m => m.fullName) });
+
+    // Sắp xếp nhóm khớp theo mức độ liên quan
+    matched.sort((a, b) => {
+      const aN = removeAccents(a.fullName);
+      const bN = removeAccents(b.fullName);
+
+      // Khớp chính xác tên
+      if (a.fullName.toLowerCase() === rawLower) return -1;
+      if (b.fullName.toLowerCase() === rawLower) return 1;
+
+      // Bắt đầu bằng từ khóa
+      const aS = aN.startsWith(query);
+      const bS = bN.startsWith(query);
+      if (aS && !bS) return -1;
+      if (!aS && bS) return 1;
+
+      return a.fullName.localeCompare(b.fullName, "vi");
+    });
+
+    // Nối: khớp trước, không khớp sau
+    return [...matched, ...unmatched];
   }, [activePersonnel, searchQuery]);
 
   const calculateWorkDays = (startDate: string, endDate: string) => {
@@ -234,12 +290,12 @@ export function AdminWorkOrderForm({
             <div className="mt-3 rounded-md border border-gray-200 bg-gray-50 p-2">
               <div className="max-h-52 space-y-1 overflow-y-auto pr-1">
                 {filteredPersonnel.length > 0 ? (
-                  filteredPersonnel.map((person) => {
+                  filteredPersonnel.map((person, index) => {
                     const personKey = person.userId ?? person.id;
                     const isSelected = form.watch("assignedTo") === personKey;
                     return (
                       <button
-                        key={person.id}
+                        key={`${personKey}-${index}`}
                         type="button"
                         onClick={() => handlePersonnelSelect(person)}
                         className={`w-full rounded-md border px-3 py-2 text-left transition ${
