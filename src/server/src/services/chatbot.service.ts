@@ -23,20 +23,23 @@ export class ChatbotService {
 
     // Combine context with system instructions
     const systemPrompt = `
-      Bạn là trợ lý AI nội bộ của Trường Thực hành Sư phạm (Hệ thống Quản lý Hành chính).
-      Hôm nay là: ${currentDate}.
-      Nhiệm vụ của bạn là trả lời các câu hỏi của nhân viên trong trường dựa trên dữ liệu hệ thống được cung cấp.
+      You are an internal AI assistant of Trường Thực hành Sư phạm (Administrative Management System).
+      Today is: ${currentDate}.
+      Your task is to answer questions from school staff based on the system data provided.
       
-      HƯỚNG DẪN QUAN TRỌNG:
-      1. CHỈ sử dụng dữ liệu được cung cấp trong phần CONTEXT bên dưới để trả lời.
-      2. Nếu thông tin KHÔNG có trong CONTEXT, hãy trả lời: "Tôi không có thông tin về vấn đề này trong hệ thống.", tuyệt đối không tự bịa đặt hoặc suy đoán thông tin.
-      3. Chào hỏi người dùng một cách lịch sự nhưng ngắn gọn và chuyên nghiệp. LUÔN LUÔN xưng hô với người dùng là "thầy / cô" hoặc "thầy/cô" (tùy ngữ cảnh), TUYỆT ĐỐI KHÔNG dùng từ "bạn". Bản thân AI nhân xưng là "tôi" hoặc "em".
-      4. Trả lời bằng tiếng Việt, có thể sử dụng markdown để định dạng cho dễ nhìn (gạch đầu dòng, in đậm).
-      5. Nếu câu hỏi liên quan đến dữ liệu nhạy cảm hoặc không thuộc quyền hạn của người dùng (dựa theo context được cấp), hãy từ chối lịch sự.
+      IMPORTANT INSTRUCTIONS:
+      1. ONLY use data provided in the CONTEXT section below to answer.
+      2. If the information is NOT in the CONTEXT, reply: "I don't have information about this in the system." (in the same language as the user). Never fabricate or guess information.
+      3. LANGUAGE DETECTION: Detect the language of the user's message and ALWAYS reply in the SAME language.
+         - If the user writes in Vietnamese: reply in Vietnamese, address them as "thầy/cô", refer to yourself as "tôi" or "em".
+         - If the user writes in English: reply in English, address them as "you" or "sir/ma'am", refer to yourself as "I".
+         - If mixed: follow the dominant language.
+      4. Be polite, concise and professional. You may use markdown for formatting (bullet points, bold text).
+      5. If the question involves sensitive data or is outside the user's permissions (based on the provided context), politely decline.
       
-      --- BẮT ĐẦU CONTEXT TỪ HỆ THỐNG ---
+      --- BEGIN SYSTEM CONTEXT ---
       ${context}
-      --- KẾT THÚC CONTEXT ---
+      --- END CONTEXT ---
     `;
 
     try {
@@ -60,12 +63,12 @@ export class ChatbotService {
     let contextParts: string[] = [];
     const lowerMessage = message.toLowerCase();
 
-    // Intent detection based on keywords to save token quota
-    const isStaffQuery = /(nhân sự|ai|người|giáo viên|sđt|số điện thoại|liệt kê|danh sách|nhân viên|danh bạ|thông tin|hồ sơ|liên hệ|email|chức vụ)/i.test(lowerMessage);
-    const isLeaveQuery = /(nghỉ phép|nghỉ|phép|vắng)/i.test(lowerMessage);
-    const isDeviceQuery = /(thiết bị|máy|phòng|hỏng|sửa|tình trạng|chuột|bàn phím|màn hình|máy chiếu|điều hòa|máy lạnh)/i.test(lowerMessage);
-    const isWorkOrderQuery = /(công lệnh|nhiệm vụ|phân công)/i.test(lowerMessage);
-    const isHelpQuery = /(hướng dẫn|cách sử dụng|chức năng|làm sao|làm thế nào|ở đâu)/i.test(lowerMessage);
+    // Intent detection based on keywords to save token quota (Vietnamese + English)
+    const isStaffQuery = /(nhân sự|ai|người|giáo viên|sđt|số điện thoại|liệt kê|danh sách|nhân viên|danh bạ|thông tin|hồ sơ|liên hệ|email|chức vụ|staff|personnel|employee|teacher|phone|contact|directory|profile|position|who is|who are|find|search|lookup|user|name|person|member)/i.test(lowerMessage);
+    const isLeaveQuery = /(nghỉ phép|nghỉ|phép|vắng|leave|day off|absent|vacation|time off|on leave)/i.test(lowerMessage);
+    const isDeviceQuery = /(thiết bị|máy|phòng|hỏng|sửa|tình trạng|chuột|bàn phím|màn hình|máy chiếu|điều hòa|máy lạnh|device|equipment|broken|repair|room|status|mouse|keyboard|monitor|projector|air conditioner)/i.test(lowerMessage);
+    const isWorkOrderQuery = /(công lệnh|nhiệm vụ|phân công|work order|work orders|my order|my task|task|assignment|assigned|pending approval)/i.test(lowerMessage);
+    const isHelpQuery = /(hướng dẫn|cách sử dụng|chức năng|làm sao|làm thế nào|ở đâu|help|how to|guide|feature|where|what can|instruction)/i.test(lowerMessage);
 
     // 1. Thông tin nhân sự (admin, manager, teacher, technician)
     if (['admin', 'manager', 'teacher', 'technician'].includes(userRole) && isStaffQuery) {

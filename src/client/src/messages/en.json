@@ -865,4 +865,13 @@
                           "forecast":  "Personnel Forecast",
                           "forecastDesc":  "The ratio of young staff (under 30) needs to be focused on for recruitment in the upcoming period to ensure continuous succession for all educational levels."
                       }
+  ,
+  "Chatbot": {
+    "title": "Internal AI Assistant",
+    "description": "Hello! I'm the virtual assistant of Trường Thực hành Sư phạm. Feel free to ask me anything about the system.",
+    "placeholder": "Type a message...",
+    "error": "Sorry, there was an error connecting to the AI server. Please try again later.",
+    "emptyMessage": "Please enter your question.",
+    "avatarAlt": "AI Assistant"
+  }
 }

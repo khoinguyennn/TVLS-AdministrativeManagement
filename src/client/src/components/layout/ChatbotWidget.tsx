@@ -212,8 +212,20 @@ export function ChatbotWidget() {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
             transition={{ type: "spring", stiffness: 260, damping: 20 }}
-            className="fixed bottom-6 right-6 z-50 rounded-full shadow-2xl"
+            className="fixed bottom-6 right-6 z-50 flex items-end gap-3"
           >
+            {/* Speech bubble */}
+            <motion.div
+              initial={{ opacity: 0, x: 20, scale: 0.8 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              transition={{ delay: 0.6, type: "spring", stiffness: 260, damping: 20 }}
+              className="relative mb-2 max-w-[200px] rounded-2xl rounded-br-none bg-white dark:bg-zinc-800 border border-border px-3 py-2 shadow-lg text-xs text-foreground leading-relaxed"
+            >
+              Thầy/cô cần giúp gì không? Hãy hỏi em nhé 😊
+              {/* Triangle pointer */}
+              <span className="absolute -right-2 bottom-0 h-0 w-0 border-l-8 border-t-8 border-l-white dark:border-l-zinc-800 border-t-transparent" />
+            </motion.div>
+
             <Button
               onClick={() => setIsOpen(true)}
               className="relative flex size-14 items-center justify-center overflow-hidden rounded-full bg-gradient-to-r from-primary to-blue-600 p-0 text-white shadow-lg transition-transform hover:scale-105"
