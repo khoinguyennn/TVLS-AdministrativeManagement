@@ -75,6 +75,7 @@
     "tailwind-merge": "^3.3.1",
     "usehooks-ts": "^3.1.1",
     "webpack": "^5.102.1",
+    "xlsx": "^0.18.5",
     "zod": "^4.1.12",
     "zustand": "^5.0.8"
   },

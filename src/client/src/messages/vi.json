@@ -774,11 +774,7 @@
     "detailedStats": "Thống kê chi tiết theo cấp học",
     "exportData": "Xuất dữ liệu Excel",
     "educationUnit": "Cấp học / Đơn vị",
-    "total": "Tổng cộng",
-    "insights": "Nhận xét chuyên môn",
-    "insightsDesc": "Cơ cấu nhân sự tập trung chủ yếu ở độ tuổi vàng ({ageRange}). Đây là nguồn lực giàu kinh nghiệm và đang trong giai đoạn cống hiến cao nhất cho nhà trường.",
-    "forecast": "Dự báo nhân sự",
-    "forecastDesc": "Tỷ lệ nhân sự trẻ (dưới 30 tuổi) cần được chú trọng tuyển dụng thêm trong giai đoạn tới để đảm bảo tính kế thừa liên tục cho các cấp học."
+    "total": "Tổng cộng"
   },
   "Chatbot": {
     "title": "Trợ lý AI Nội bộ",

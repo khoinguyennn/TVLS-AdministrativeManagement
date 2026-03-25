@@ -272,7 +272,107 @@ export default function MyProfilePage() {
   };
 
   const handleExport = () => {
-    toast.info("Tính năng xuất hồ sơ đang được phát triển.");
+    try {
+      const XLSX = require("xlsx");
+      const wb = XLSX.utils.book_new();
+      const date = new Date().toLocaleDateString("vi-VN");
+
+      const data: (string | number | boolean)[][] = [
+        ["HỒ SƠ CÁ NHÂN"],
+        [`Họ và tên: ${user?.fullName || ""}`],
+        [`Email: ${user?.email || ""}`],
+        [`Ngày xuất: ${date}`],
+        [],
+        ["I. THÔNG TIN CÁ NHÂN", ""],
+        ["Mã định danh", profile.code],
+        ["Giới tính", profile.gender],
+        ["Ngày sinh", profile.dateOfBirth],
+        ["Số CMT/CCCD", profile.cccdNumber],
+        ["Ngày cấp", profile.cccdIssueDate],
+        ["Nơi cấp", profile.cccdIssuePlace],
+        ["Dân tộc", profile.ethnicity],
+        ["Tôn giáo", profile.religion],
+        ["Trạng thái", profile.staffStatus === "working" ? "Đang làm việc" : profile.staffStatus === "resigned" ? "Đã nghỉ việc" : profile.staffStatus === "transferred" ? "Chuyển công tác" : profile.staffStatus === "maternity_leave" ? "Nghỉ hậu sản" : profile.staffStatus === "unpaid_leave" ? "Nghỉ không lương" : profile.staffStatus],
+        ["Ngày tuyển dụng", profile.recruitmentDate],
+        ["Số điện thoại", profile.phone],
+        [],
+        ["Địa chỉ thường trú", ""],
+        ["Tỉnh/Thành phố", profile.contactProvince],
+        ["Phường/Xã", profile.contactWard],
+        ["Tổ/Thôn", profile.contactHamlet],
+        ["Địa chỉ chi tiết", profile.contactDetail],
+        [],
+        ["Quê quán", ""],
+        ["Tỉnh/Thành phố", profile.hometownProvince],
+        ["Phường/Xã", profile.hometownWard],
+        ["Tổ/Thôn", profile.hometownHamlet],
+        ["Địa chỉ chi tiết", profile.hometownDetail],
+        [],
+        ["II. TỔ CHỨC", ""],
+        ["Đoàn viên", profile.isUnionMember ? "Có" : "Không"],
+        ["Ngày vào Đoàn", profile.unionJoinDate],
+        ["Đảng viên", profile.isPartyMember ? "Có" : "Không"],
+        ["Ngày vào Đảng", profile.partyJoinDate],
+        [],
+        ["III. CÔNG TÁC", ""],
+        ["Chức vụ", pos.jobPosition],
+        ["Nhóm chức vụ", pos.positionGroup],
+        ["Cơ quan tuyển dụng", pos.recruitmentAgency],
+        ["Nghề khi tuyển dụng", pos.professionWhenRecruited],
+        ["Loại hợp đồng", pos.contractType],
+        ["Cấp học", pos.educationLevel],
+        ["Tổ bộ môn", pos.subjectGroup],
+        ["Ngạch/Hạng", pos.rankLevel],
+        ["Mã ngạch", pos.rankCode],
+        [],
+        ["IV. PHỤ CẤP LƯƠNG", ""],
+        ["Hệ số lương", sal.salaryCoefficient],
+        ["Bậc lương", sal.salaryLevel],
+        ["Lương cơ bản", sal.baseSalary],
+        ["Ngày hưởng", sal.salaryStartDate],
+        ["Phụ cấp công đoàn (%)", sal.unionAllowancePercent],
+        ["Phụ cấp thâm niên (%)", sal.seniorityAllowancePercent],
+        ["Phụ cấp ưu đãi (%)", sal.incentiveAllowancePercent],
+        ["Phụ cấp chức vụ (%)", sal.positionAllowancePercent],
+        ["Ghi chú lương", sal.salaryNote],
+        [],
+        ["V. TRÌNH ĐỘ", ""],
+        ["Trình độ GDPT", qual.generalEducationLevel],
+        ["Trình độ chuyên môn", qual.professionalLevel],
+        ["Chuyên ngành", qual.major],
+        ["Nơi đào tạo", qual.trainingPlace],
+        ["Năm tốt nghiệp", qual.graduationYear],
+        ["Trình độ tin học", qual.itLevel],
+        ["Trình độ ngoại ngữ", qual.foreignLanguageLevel],
+        [],
+        ["VI. ĐÁNH GIÁ", ""],
+        ["Xếp loại viên chức", eval_.civilServantRating],
+        ["Giáo viên giỏi", eval_.excellentTeacher ? "Có" : "Không"],
+        ["Năm đánh giá", eval_.evaluationYear],
+        ["Ghi chú", eval_.note],
+        [],
+        ["VII. NGÂN HÀNG", ""],
+        ["Tên ngân hàng", bank.bankName],
+        ["Chi nhánh", bank.branch],
+        ["Số tài khoản", bank.accountNumber],
+      ];
+
+      const ws = XLSX.utils.aoa_to_sheet(data);
+      ws["!cols"] = [{ wch: 30 }, { wch: 45 }];
+      XLSX.utils.book_append_sheet(wb, ws, "Hồ sơ cá nhân");
+
+      const wbData = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+      const blob = new Blob([wbData], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `ho-so-${(user?.fullName || "ca-nhan").replace(/\s+/g, "-").toLowerCase()}-${new Date().toISOString().split("T")[0]}.xlsx`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+
+      toast.success("Xuất hồ sơ thành công!");
+    } catch {
+      toast.error("Lỗi khi xuất hồ sơ");
+    }
   };
 
   if (!user || loading) {

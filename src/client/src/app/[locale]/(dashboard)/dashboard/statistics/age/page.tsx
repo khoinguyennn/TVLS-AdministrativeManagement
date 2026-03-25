@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useTranslations } from "next-intl";
-import { Download, Info, TrendingUp } from "lucide-react";
+import { Download, TrendingUp } from "lucide-react";
 import {
   Bar,
   BarChart,
@@ -20,6 +20,8 @@ import {
   staffStatisticsService,
   type StaffStatistics,
 } from "@/services/staff-statistics.service";
+import { exportAgeStatisticsExcel } from "@/lib/export-statistics-excel";
+import { toast } from "sonner";
 
 // ── Constants ──
 const AGE_GROUPS = ["20-29", "30-39", "40-49", "50-54", "55-59", "60+"];
@@ -101,6 +103,8 @@ export default function AgeStatisticsPage() {
     totals["total"] = Object.values(totals).reduce((s, v) => s + v, 0);
     return totals;
   }, [eduByAge]);
+
+
 
   if (loading) {
     return (
@@ -213,7 +217,18 @@ export default function AgeStatisticsPage() {
         <div className="p-8 border-b flex justify-between items-center">
           <h2 className="text-lg font-semibold flex items-center gap-2">
             <span className="w-1.5 h-6 bg-muted-foreground/60 rounded-full" />{t("detailedStats")}</h2>
-          <button className="flex items-center gap-2 text-sm text-primary font-medium px-4 py-2 hover:bg-muted rounded-lg transition-all">
+          <button
+            onClick={() => {
+              if (!stats) return;
+              try {
+                exportAgeStatisticsExcel(stats, filter);
+                toast.success("Xuất dữ liệu thành công!");
+              } catch {
+                toast.error("Lỗi khi xuất dữ liệu");
+              }
+            }}
+            className="flex items-center gap-2 text-sm text-primary font-medium px-4 py-2 hover:bg-muted rounded-lg transition-all"
+          >
             <Download className="size-4" />{t("exportData")}</button>
         </div>
         <div className="overflow-x-auto">
@@ -268,31 +283,6 @@ export default function AgeStatisticsPage() {
         </div>
       </Card>
 
-      {/* ═══════ Section 3: Insight Cards ═══════ */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="bg-muted/30 border">
-          <CardContent className="p-6 flex items-start gap-4">
-            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-              <Info className="size-5 text-primary" />
-            </div>
-            <div>
-              <h3 className="font-bold mb-1">{t("insights")}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{t("insightsDesc", { ageRange: "30-49" })}</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="bg-muted/30 border">
-          <CardContent className="p-6 flex items-start gap-4">
-            <div className="w-12 h-12 rounded-full bg-muted-foreground/10 flex items-center justify-center shrink-0">
-              <TrendingUp className="size-5 text-muted-foreground" />
-            </div>
-            <div>
-              <h3 className="font-bold mb-1">{t("forecast")}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{t("forecastDesc")}</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }

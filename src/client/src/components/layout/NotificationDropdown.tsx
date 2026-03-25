@@ -20,6 +20,7 @@ export function NotificationDropdown() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const t = useTranslations("Dashboard");
 
@@ -35,6 +36,7 @@ export function NotificationDropdown() {
   };
 
   useEffect(() => {
+    setMounted(true);
     fetchNotifications();
 
     // Poll every 1 minute
@@ -107,6 +109,14 @@ export function NotificationDropdown() {
     const date = new Date(dateString);
     return date.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" }) + " " + date.toLocaleDateString("vi-VN");
   };
+
+  if (!mounted) {
+    return (
+      <Button variant="ghost" size="icon" className="relative size-9 rounded-lg text-muted-foreground">
+        <Bell className="size-5" />
+      </Button>
+    );
+  }
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>

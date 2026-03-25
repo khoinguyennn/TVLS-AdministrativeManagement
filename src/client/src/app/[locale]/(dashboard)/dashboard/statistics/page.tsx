@@ -10,6 +10,8 @@ import {
   staffStatisticsService,
   type StaffStatistics,
 } from "@/services/staff-statistics.service";
+import { exportStaffStatisticsExcel } from "@/lib/export-statistics-excel";
+import { toast } from "sonner";
 
 // ── Color configs ──
 const STATUS_CONFIG: { key: string; label: string; border: string; bg: string; text: string }[] = [
@@ -121,7 +123,18 @@ export default function StatisticsPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-md active:scale-95">
+          <button
+            onClick={() => {
+              if (!stats) return;
+              try {
+                exportStaffStatisticsExcel(stats);
+                toast.success("Xuất báo cáo thành công!");
+              } catch {
+                toast.error("Lỗi khi xuất báo cáo");
+              }
+            }}
+            className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-md active:scale-95"
+          >
             <Download className="size-4" />
             Xuất báo cáo
           </button>
@@ -276,7 +289,7 @@ export default function StatisticsPage() {
       </div>
 
       {/* ── Row 3: Tổ bộ môn Table + Thống kê cấp học ── */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
         {/* Departments Table */}
         <Card className="overflow-hidden flex flex-col">
           <div className="px-6 py-4 border-b flex items-center justify-between">
