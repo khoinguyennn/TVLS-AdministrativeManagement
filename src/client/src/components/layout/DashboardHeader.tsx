@@ -70,7 +70,7 @@ export function DashboardHeader({ onMenuClick, sidebarCollapsed = false, onToggl
         <Button
           variant="ghost"
           size="icon"
-          className="hidden size-9 shrink-0 lg:flex"
+          className="hidden size-9 shrink-0 rounded-lg text-muted-foreground lg:flex"
           onClick={onToggleSidebar}
         >
           {sidebarCollapsed ? <PanelLeftOpen className="size-5" /> : <PanelLeftClose className="size-5" />}
