@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
-import { Bell, HelpCircle, Menu, Moon, Sun } from "lucide-react";
+import { Bell, HelpCircle, Menu, Moon, PanelLeftClose, PanelLeftOpen, Sun } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 
@@ -29,9 +29,11 @@ const FlagIcon = ({ locale, className }: { locale: LocaleCode; className?: strin
 
 interface DashboardHeaderProps {
   onMenuClick?: () => void;
+  sidebarCollapsed?: boolean;
+  onToggleSidebar?: () => void;
 }
 
-export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
+export function DashboardHeader({ onMenuClick, sidebarCollapsed = false, onToggleSidebar }: DashboardHeaderProps) {
   const { setTheme } = useTheme();
   const locale = useLocale() as LocaleCode;
   const router = useRouter();
@@ -62,6 +64,17 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
         >
           <Menu className="size-5" />
           <span className="sr-only">Toggle menu</span>
+        </Button>
+
+        {/* Sidebar Toggle - Desktop Only */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="hidden size-9 shrink-0 lg:flex"
+          onClick={onToggleSidebar}
+        >
+          {sidebarCollapsed ? <PanelLeftOpen className="size-5" /> : <PanelLeftClose className="size-5" />}
+          <span className="sr-only">Toggle sidebar</span>
         </Button>
 
         {/* Command Search */}

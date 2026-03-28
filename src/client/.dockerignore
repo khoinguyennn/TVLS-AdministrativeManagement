@@ -1,0 +1,29 @@
+# Dependencies
+node_modules
+
+# Next.js build output
+.next
+
+# Version control
+.git
+.gitignore
+
+# IDE
+.vscode
+.cursor
+
+# Debug & logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment (handled via docker-compose)
+.env
+.env.*
+
+# Misc
+.eslintcache
+.husky
+docs
+README.md
+*.md

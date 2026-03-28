@@ -10,6 +10,7 @@ import { ChatbotWidget } from "@/components/layout/ChatbotWidget";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Sync latest profile from server to localStorage on dashboard mount
   useEffect(() => {
@@ -34,9 +35,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="flex min-h-screen bg-muted/40">
-      <DashboardSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <main className="flex min-h-screen flex-1 flex-col lg:ml-64 relative">
-        <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
+      <DashboardSidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        collapsed={sidebarCollapsed}
+        onToggleCollapse={() => setSidebarCollapsed(prev => !prev)}
+      />
+      <main className={`flex min-h-screen flex-1 flex-col relative transition-[margin] duration-300 ${sidebarCollapsed ? 'lg:ml-[72px]' : 'lg:ml-64'}`}>
+        <DashboardHeader
+          onMenuClick={() => setSidebarOpen(true)}
+          sidebarCollapsed={sidebarCollapsed}
+          onToggleSidebar={() => setSidebarCollapsed(prev => !prev)}
+        />
         <div className="mx-auto w-full max-w-7xl p-4 sm:p-6 lg:p-8">{children}</div>
         <ChatbotWidget />
       </main>
