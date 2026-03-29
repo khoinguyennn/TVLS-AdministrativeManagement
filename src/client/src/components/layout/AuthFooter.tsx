@@ -8,7 +8,7 @@ export function AuthFooter() {
           <p className="font-semibold text-slate-700 dark:text-slate-300">
             © 2026 TRƯỜNG THỰC HÀNH SƯ PHẠM
           </p>
-          <p className="text-slate-500 dark:text-slate-400">TRƯỜNG ĐẠI HỌC TRÀ VINH</p>
+          <p className="text-slate-500 dark:text-slate-400">ĐẠI HỌC TRÀ VINH</p>
         </div>
         <div className="flex flex-wrap justify-center gap-6">
           <Link
