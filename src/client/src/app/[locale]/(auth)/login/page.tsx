@@ -275,15 +275,7 @@ export default function LoginPage() {
               </form>
             </CardContent>
 
-            {/* Card Footer */}
-            <CardFooter className="justify-center border-t border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-800/50">
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Gặp khó khăn khi đăng nhập?{" "}
-                <Link href="/contact" className="font-semibold text-primary hover:underline">
-                  Liên hệ bộ phận IT
-                </Link>
-              </p>
-            </CardFooter>
+
           </Card>
         </div>
       </main>

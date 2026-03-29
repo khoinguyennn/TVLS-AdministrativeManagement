@@ -66,7 +66,7 @@ export class ChatbotService {
     // Intent detection based on keywords to save token quota (Vietnamese + English)
     const isStaffQuery = /(nhân sự|ai|người|giáo viên|sđt|số điện thoại|liệt kê|danh sách|nhân viên|danh bạ|thông tin|hồ sơ|liên hệ|email|chức vụ|staff|personnel|employee|teacher|phone|contact|directory|profile|position|who is|who are|find|search|lookup|user|name|person|member)/i.test(lowerMessage);
     const isLeaveQuery = /(nghỉ phép|nghỉ|phép|vắng|leave|day off|absent|vacation|time off|on leave)/i.test(lowerMessage);
-    const isDeviceQuery = /(thiết bị|máy|phòng|hỏng|sửa|tình trạng|chuột|bàn phím|màn hình|máy chiếu|điều hòa|máy lạnh|device|equipment|broken|repair|room|status|mouse|keyboard|monitor|projector|air conditioner)/i.test(lowerMessage);
+    const isDeviceQuery = /(thiết bị|máy|phòng|hỏng|sửa|tình trạng|báo hỏng|đơn báo|báo cáo|chuột|bàn phím|màn hình|máy chiếu|điều hòa|máy lạnh|device|equipment|broken|repair|room|status|mouse|keyboard|monitor|projector|air conditioner|report)/i.test(lowerMessage);
     const isWorkOrderQuery = /(công lệnh|nhiệm vụ|phân công|work order|work orders|my order|my task|task|assignment|assigned|pending approval)/i.test(lowerMessage);
     const isHelpQuery = /(hướng dẫn|cách sử dụng|chức năng|làm sao|làm thế nào|ở đâu|help|how to|guide|feature|where|what can|instruction)/i.test(lowerMessage);
 
@@ -80,7 +80,7 @@ export class ChatbotService {
       contextParts.push(await this.getLeaveContext(userRole === 'teacher', userId));
     }
 
-    // 3. Thông tin thiết bị & báo hỏng (admin, manager, technician)
+    // 3. Thông tin thiết bị & báo hỏng (tất cả vai trò đều có thể xem)
     if (['admin', 'manager', 'technician'].includes(userRole) && isDeviceQuery) {
       contextParts.push(await this.getDeviceContext());
       contextParts.push(await this.getDeviceReportContext());
@@ -131,15 +131,13 @@ export class ChatbotService {
 
   private async getLeaveContext(limitToActive: boolean, userId: number): Promise<string> {
     try {
-      // Get today and upcoming leaves
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
+      // Fetch ALL leave requests (to answer questions about any person's leave history)
       const queryOpts: any = {
-        where: {
-          status: { [Op.in]: ['pending', 'approved'] },
-          endDate: { [Op.gte]: today }
-        },
+        order: [['startDate', 'DESC']],
+        limit: 100,
         include: [
           { model: DB.Users, as: 'user', attributes: ['fullName'] },
           { model: DB.LeaveTypes, as: 'leaveType', attributes: ['name'] }
@@ -150,19 +148,37 @@ export class ChatbotService {
 
       let leaveContext = '';
       if (leaves.length === 0) {
-        leaveContext = 'DỮ LIỆU NGHỈ PHÉP (hiện tại và sắp tới): Không có ai xin nghỉ phép.';
+        leaveContext = 'DỮ LIỆU NGHỈ PHÉP: Không có đơn nghỉ phép nào trong hệ thống.';
       } else {
         const statusMap: Record<string, string> = {
           'pending': 'Chờ duyệt',
-          'approved': 'Đã duyệt'
+          'approved': 'Đã duyệt',
+          'rejected': 'Bị từ chối'
         };
 
-        const leaveList = leaves.map(l => {
-          const req: any = l;
-          return `- Người nghỉ: ${req.user?.fullName}, Loại: ${req.leaveType?.name}, Từ: ${l.startDate} Đến: ${l.endDate}, Trạng thái: ${statusMap[l.status as string] || l.status}`;
+        const formatLeave = (l: any) => {
+          return `- Người nghỉ: ${l.user?.fullName}, Loại: ${l.leaveType?.name}, Từ: ${l.startDate} Đến: ${l.endDate}, Lý do: ${l.reason || 'Không ghi'}, Trạng thái: ${statusMap[l.status] || l.status}`;
+        };
+
+        // Split into active/upcoming vs history
+        const active = leaves.filter(l => {
+          const end = new Date(l.endDate);
+          return ['pending', 'approved'].includes(l.status as string) && end >= today;
+        });
+        const history = leaves.filter(l => {
+          const end = new Date(l.endDate);
+          return !(['pending', 'approved'].includes(l.status as string) && end >= today);
         });
 
-        leaveContext = `DỮ LIỆU NGHỈ PHÉP (những người đang và sắp nghỉ):\n${leaveList.join('\n')}`;
+        if (active.length > 0) {
+          leaveContext = `DỮ LIỆU NGHỈ PHÉP (đang và sắp nghỉ):\n${active.map(formatLeave).join('\n')}`;
+        } else {
+          leaveContext = 'DỮ LIỆU NGHỈ PHÉP (đang và sắp nghỉ): Không có ai đang hoặc sắp nghỉ.';
+        }
+
+        if (history.length > 0) {
+          leaveContext += `\n\nLỊCH SỬ NGHỈ PHÉP (đã qua):\n${history.map(formatLeave).join('\n')}`;
+        }
       }
 
       // Lấy thông tin số ngày phép còn lại của người dùng hiện tại
@@ -246,7 +262,8 @@ export class ChatbotService {
       const reportList = reports.map(r => {
         const rep: any = r;
         const location = rep.device?.room ? ` (Phòng ${rep.device.room.name} - ${rep.device.room.building?.name || ''})` : '';
-        return `- Phiếu #${r.id}: Thiết bị: "${rep.device?.name}"${location}, Người báo: ${rep.reporter?.fullName}, Kỹ thuật viên xử lý: ${rep.assignee?.fullName || 'Chưa phân công'}, Trạng thái: ${statusMap[r.status] || r.status}, Mô tả lỗi: ${r.description}`;
+        const reportDate = r.createdAt ? new Date(r.createdAt).toLocaleDateString('vi-VN') : 'N/A';
+        return `- Phiếu #${r.id}: Thiết bị: "${rep.device?.name}"${location}, Người báo: ${rep.reporter?.fullName}, Ngày gửi: ${reportDate}, Kỹ thuật viên xử lý: ${rep.assignee?.fullName || 'Chưa phân công'}, Trạng thái: ${statusMap[r.status] || r.status}, Mô tả lỗi: ${r.description}`;
       });
 
       return `DỮ LIỆU BÁO HỎNG (đang chờ và đang xử lý):\n${reportList.join('\n')}`;

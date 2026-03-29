@@ -231,7 +231,7 @@ export function ChatbotWidget() {
               className="relative flex size-14 items-center justify-center overflow-hidden rounded-full bg-gradient-to-r from-primary to-blue-600 p-0 text-white shadow-lg transition-transform hover:scale-105"
             >
               <div className="absolute inset-0 animate-pulse bg-white/20" />
-              <RobotIcon className="relative z-10 size-6" />
+              <RobotIcon className="relative z-10 size-8" />
             </Button>
           </motion.div>
         )}

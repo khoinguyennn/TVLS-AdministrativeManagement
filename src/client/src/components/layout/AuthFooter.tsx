@@ -6,7 +6,7 @@ export function AuthFooter() {
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 md:flex-row">
         <div className="text-center text-sm text-slate-500 md:text-left dark:text-slate-400">
           <p className="font-semibold text-slate-700 dark:text-slate-300">
-            © 2025 TRƯỜNG THỰC HÀNH SƯ PHẠM
+            © 2026 TRƯỜNG THỰC HÀNH SƯ PHẠM
           </p>
           <p className="text-slate-500 dark:text-slate-400">TRƯỜNG ĐẠI HỌC TRÀ VINH</p>
         </div>
