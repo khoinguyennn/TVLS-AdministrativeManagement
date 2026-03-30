@@ -62,6 +62,14 @@ export class AuthService {
     }
 
     // Verify password
+    console.log('[DEBUG] loginData.password:', loginData.password, 'typeof:', typeof loginData.password);
+    console.log('[DEBUG] findUser.password:', findUser.password, 'typeof:', typeof findUser.password);
+    console.log('[DEBUG] findUser object keys:', Object.keys((findUser as any).dataValues || findUser));
+    
+    if (!loginData.password || !findUser.password) {
+      console.error('[ERROR] BCRYPT VALIDATION WILL FAIL: Missing password payload or hash');
+    }
+
     const isPasswordMatching: boolean = await compare(loginData.password, findUser.password);
     if (!isPasswordMatching) throw new HttpException(401, 'Email hoặc mật khẩu không chính xác');
 
