@@ -7,18 +7,18 @@ export type DeviceReportCreationAttributes = Optional<
 >;
 
 export class DeviceReportModel extends Model<DeviceReport, DeviceReportCreationAttributes> implements DeviceReport {
-  public id: number;
-  public reporterId: number;
-  public deviceId: number;
-  public description: string;
-  public imageUrl: string;
-  public assignedTo: number;
-  public status: 'pending' | 'received' | 'repairing' | 'repaired' | 'waiting_replacement' | 'unfixable' | 'recheck_required' | 'completed';
-  public technicianNote: string;
-  public confirmedAt: Date;
+  public declare id: number;
+  public declare reporterId: number;
+  public declare deviceId: number;
+  public declare description: string;
+  public declare imageUrl: string;
+  public declare assignedTo: number;
+  public declare status: 'pending' | 'received' | 'repairing' | 'repaired' | 'waiting_replacement' | 'unfixable' | 'recheck_required' | 'completed';
+  public declare technicianNote: string;
+  public declare confirmedAt: Date;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  public declare readonly createdAt: Date;
+  public declare readonly updatedAt: Date;
 }
 
 export default function (sequelize: Sequelize): typeof DeviceReportModel {

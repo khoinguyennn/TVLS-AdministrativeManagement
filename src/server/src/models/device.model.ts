@@ -4,13 +4,13 @@ import { Device } from '@interfaces/facility.interface';
 export type DeviceCreationAttributes = Optional<Device, 'id' | 'createdAt' | 'updatedAt'>;
 
 export class DeviceModel extends Model<Device, DeviceCreationAttributes> implements Device {
-  public id: number;
-  public name: string;
+  public declare id: number;
+  public declare name: string;
   public roomId?: number;
-  public status: 'active' | 'under_repair' | 'waiting_replacement' | 'broken';
+  public declare status: 'active' | 'under_repair' | 'waiting_replacement' | 'broken';
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  public declare readonly createdAt: Date;
+  public declare readonly updatedAt: Date;
 }
 
 export default function (sequelize: Sequelize): typeof DeviceModel {

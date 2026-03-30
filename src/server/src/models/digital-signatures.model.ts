@@ -2,14 +2,14 @@ import { Sequelize, DataTypes, Model } from 'sequelize';
 import { DigitalSignature } from '@interfaces/digital-signature.interface';
 
 export class DigitalSignatureModel extends Model<DigitalSignature> implements DigitalSignature {
-  public id: number;
-  public entityType: 'leave_request';
-  public entityId: number;
-  public signedBy: number;
+  public declare id: number;
+  public declare entityType: 'leave_request';
+  public declare entityId: number;
+  public declare signedBy: number;
   public certificateInfo?: string;
   public documentHash?: string;
   public signatureValue?: string;
-  public signedAt: Date;
+  public declare signedAt: Date;
 }
 
 export default function (sequelize: Sequelize): typeof DigitalSignatureModel {

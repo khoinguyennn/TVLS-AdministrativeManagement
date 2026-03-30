@@ -4,14 +4,14 @@ import { StaffAddress } from '@interfaces/staff.interface';
 export type StaffAddressCreationAttributes = Optional<StaffAddress, 'id' | 'province' | 'ward' | 'hamlet' | 'detailAddress' | 'phone'>;
 
 export class StaffAddressModel extends Model<StaffAddress, StaffAddressCreationAttributes> implements StaffAddress {
-  public id: number;
-  public staffProfileId: number;
-  public addressType: 'contact' | 'hometown';
-  public province: string;
-  public ward: string;
-  public hamlet: string;
-  public detailAddress: string;
-  public phone: string;
+  public declare id: number;
+  public declare staffProfileId: number;
+  public declare addressType: 'contact' | 'hometown';
+  public declare province: string;
+  public declare ward: string;
+  public declare hamlet: string;
+  public declare detailAddress: string;
+  public declare phone: string;
 }
 
 export default function (sequelize: Sequelize): typeof StaffAddressModel {

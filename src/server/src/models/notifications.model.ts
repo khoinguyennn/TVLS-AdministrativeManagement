@@ -4,16 +4,16 @@ import { Notification } from '@interfaces/notifications.interface';
 export type NotificationCreationAttributes = Optional<Notification, 'id' | 'isRead' | 'createdAt' | 'updatedAt'>;
 
 export class NotificationModel extends Model<Notification, NotificationCreationAttributes> implements Notification {
-  public id: number;
-  public userId: number;
-  public title: string;
-  public message: string;
-  public type: 'device_report' | 'leave_request' | 'work_order' | 'system';
+  public declare id: number;
+  public declare userId: number;
+  public declare title: string;
+  public declare message: string;
+  public declare type: 'device_report' | 'leave_request' | 'work_order' | 'system';
   public referenceId?: number;
-  public isRead: boolean;
+  public declare isRead: boolean;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  public declare readonly createdAt: Date;
+  public declare readonly updatedAt: Date;
 }
 
 export default function (sequelize: Sequelize): typeof NotificationModel {

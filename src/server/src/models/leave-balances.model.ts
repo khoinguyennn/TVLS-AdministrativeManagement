@@ -4,11 +4,11 @@ import { LeaveBalance } from '@interfaces/leave.interface';
 export type LeaveBalanceCreationAttributes = Optional<LeaveBalance, 'id' | 'usedDays'>;
 
 export class LeaveBalanceModel extends Model<LeaveBalance, LeaveBalanceCreationAttributes> implements LeaveBalance {
-  public id: number;
-  public userId: number;
-  public year: number;
-  public totalDays: number;
-  public usedDays: number;
+  public declare id: number;
+  public declare userId: number;
+  public declare year: number;
+  public declare totalDays: number;
+  public declare usedDays: number;
 }
 
 export default function (sequelize: Sequelize): typeof LeaveBalanceModel {

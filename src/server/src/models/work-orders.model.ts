@@ -7,21 +7,21 @@ export type WorkOrderCreationAttributes = Optional<
 >;
 
 export class WorkOrderModel extends Model<WorkOrder, WorkOrderCreationAttributes> implements WorkOrder {
-  public id: number;
-  public code: string;
-  public title: string;
-  public content: string;
-  public location: string;
-  public startDate: Date;
-  public endDate: Date;
-  public note: string;
-  public createdBy: number;
-  public approvedBy: number;
-  public assignedTo: number;
-  public status: 'pending' | 'approved' | 'in_progress' | 'submitted_for_review' | 'completed' | 'rework_requested' | 'rejected' | 'cancelled';
+  public declare id: number;
+  public declare code: string;
+  public declare title: string;
+  public declare content: string;
+  public declare location: string;
+  public declare startDate: Date;
+  public declare endDate: Date;
+  public declare note: string;
+  public declare createdBy: number;
+  public declare approvedBy: number;
+  public declare assignedTo: number;
+  public declare status: 'pending' | 'approved' | 'in_progress' | 'submitted_for_review' | 'completed' | 'rework_requested' | 'rejected' | 'cancelled';
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  public declare readonly createdAt: Date;
+  public declare readonly updatedAt: Date;
 }
 
 export default function (sequelize: Sequelize): typeof WorkOrderModel {

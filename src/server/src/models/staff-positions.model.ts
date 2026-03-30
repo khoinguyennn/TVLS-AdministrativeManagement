@@ -4,17 +4,17 @@ import { StaffPosition } from '@interfaces/staff.interface';
 export type StaffPositionCreationAttributes = Optional<StaffPosition, 'id'>;
 
 export class StaffPositionModel extends Model<StaffPosition, StaffPositionCreationAttributes> implements StaffPosition {
-  public id: number;
-  public staffProfileId: number;
-  public jobPosition: string;
-  public positionGroup: string;
-  public recruitmentAgency: string;
-  public professionWhenRecruited: string;
-  public rankLevel: string;
-  public educationLevel: string;
-  public rankCode: string;
-  public subjectGroup: string;
-  public contractType: string;
+  public declare id: number;
+  public declare staffProfileId: number;
+  public declare jobPosition: string;
+  public declare positionGroup: string;
+  public declare recruitmentAgency: string;
+  public declare professionWhenRecruited: string;
+  public declare rankLevel: string;
+  public declare educationLevel: string;
+  public declare rankCode: string;
+  public declare subjectGroup: string;
+  public declare contractType: string;
 }
 
 export default function (sequelize: Sequelize): typeof StaffPositionModel {

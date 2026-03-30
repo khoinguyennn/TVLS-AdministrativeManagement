@@ -4,9 +4,9 @@ import { LeaveType } from '@interfaces/leave.interface';
 export type LeaveTypeCreationAttributes = Optional<LeaveType, 'id' | 'maxDaysPerYear'>;
 
 export class LeaveTypeModel extends Model<LeaveType, LeaveTypeCreationAttributes> implements LeaveType {
-  public id: number;
-  public name: string;
-  public maxDaysPerYear: number;
+  public declare id: number;
+  public declare name: string;
+  public declare maxDaysPerYear: number;
 }
 
 export default function (sequelize: Sequelize): typeof LeaveTypeModel {

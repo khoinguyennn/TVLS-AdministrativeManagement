@@ -4,12 +4,12 @@ import { StaffEvaluation } from '@interfaces/staff.interface';
 export type StaffEvaluationCreationAttributes = Optional<StaffEvaluation, 'id' | 'civilServantRating' | 'excellentTeacher' | 'evaluationYear' | 'note'>;
 
 export class StaffEvaluationModel extends Model<StaffEvaluation, StaffEvaluationCreationAttributes> implements StaffEvaluation {
-  public id: number;
-  public staffProfileId: number;
-  public civilServantRating: string;
-  public excellentTeacher: boolean;
-  public evaluationYear: number;
-  public note: string;
+  public declare id: number;
+  public declare staffProfileId: number;
+  public declare civilServantRating: string;
+  public declare excellentTeacher: boolean;
+  public declare evaluationYear: number;
+  public declare note: string;
 }
 
 export default function (sequelize: Sequelize): typeof StaffEvaluationModel {

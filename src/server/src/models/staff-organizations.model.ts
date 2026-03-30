@@ -7,12 +7,12 @@ export type StaffOrganizationCreationAttributes = Optional<
 >;
 
 export class StaffOrganizationModel extends Model<StaffOrganization, StaffOrganizationCreationAttributes> implements StaffOrganization {
-  public id: number;
-  public staffProfileId: number;
-  public isUnionMember: boolean;
-  public unionJoinDate: string;
-  public isPartyMember: boolean;
-  public partyJoinDate: string;
+  public declare id: number;
+  public declare staffProfileId: number;
+  public declare isUnionMember: boolean;
+  public declare unionJoinDate: string;
+  public declare isPartyMember: boolean;
+  public declare partyJoinDate: string;
 }
 
 export default function (sequelize: Sequelize): typeof StaffOrganizationModel {

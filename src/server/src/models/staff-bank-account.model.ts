@@ -4,11 +4,11 @@ import { StaffBankAccount } from '@interfaces/staff.interface';
 
 export type StaffBankAccountCreationAttributes = Optional<StaffBankAccount, 'id' | 'bankName' | 'branch' | 'accountNumber'>;
 export class StaffBankAccountModel extends Model<StaffBankAccount, StaffBankAccountCreationAttributes> implements StaffBankAccount {
-  public id: number;
-  public staffProfileId: number;
-  public bankName: string;
-  public branch: string;
-  public accountNumber: string;
+  public declare id: number;
+  public declare staffProfileId: number;
+  public declare bankName: string;
+  public declare branch: string;
+  public declare accountNumber: string;
 }
 
 export default function (sequelize: Sequelize): typeof StaffBankAccountModel {

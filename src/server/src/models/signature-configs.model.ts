@@ -4,13 +4,13 @@ import { SignatureConfig } from '@interfaces/digital-signature.interface';
 export type SignatureConfigCreationAttributes = Optional<SignatureConfig, 'id' | 'signatureImage' | 'pinHash'>;
 
 export class SignatureConfigModel extends Model<SignatureConfig, SignatureConfigCreationAttributes> implements SignatureConfig {
-  public id: number;
-  public userId: number;
+  public declare id: number;
+  public declare userId: number;
   public signatureImage?: string;
   public pinHash?: string;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  public declare readonly createdAt: Date;
+  public declare readonly updatedAt: Date;
 }
 
 export default function (sequelize: Sequelize): typeof SignatureConfigModel {

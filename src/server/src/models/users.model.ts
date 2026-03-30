@@ -4,17 +4,17 @@ import { User } from '@interfaces/users.interface';
 export type UserCreationAttributes = Optional<User, 'id' | 'role' | 'status' | 'avatar' | 'lastLoginAt' | 'createdAt' | 'updatedAt'>;
 
 export class UserModel extends Model<User, UserCreationAttributes> implements User {
-  public id: number;
-  public email: string;
-  public password: string;
-  public fullName: string;
-  public avatar: string;
-  public role: 'admin' | 'manager' | 'teacher' | 'technician';
-  public status: 'active' | 'inactive' | 'locked';
-  public lastLoginAt: Date;
+  public declare id: number;
+  public declare email: string;
+  public declare password: string;
+  public declare fullName: string;
+  public declare avatar: string;
+  public declare role: 'admin' | 'manager' | 'teacher' | 'technician';
+  public declare status: 'active' | 'inactive' | 'locked';
+  public declare lastLoginAt: Date;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  public declare readonly createdAt: Date;
+  public declare readonly updatedAt: Date;
 }
 
 export default function (sequelize: Sequelize): typeof UserModel {

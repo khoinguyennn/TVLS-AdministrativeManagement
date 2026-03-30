@@ -7,21 +7,21 @@ export type LeaveRequestCreationAttributes = Optional<
 >;
 
 export class LeaveRequestModel extends Model<LeaveRequest, LeaveRequestCreationAttributes> implements LeaveRequest {
-  public id: number;
-  public userId: number;
-  public leaveTypeId: number;
-  public startDate: string;
-  public endDate: string;
-  public totalDays: number;
-  public reason: string;
-  public status: 'pending' | 'approved' | 'rejected';
-  public approvedBy: number;
-  public rejectedReason: string;
-  public signedAt: Date;
-  public approverSignedAt: Date;
+  public declare id: number;
+  public declare userId: number;
+  public declare leaveTypeId: number;
+  public declare startDate: string;
+  public declare endDate: string;
+  public declare totalDays: number;
+  public declare reason: string;
+  public declare status: 'pending' | 'approved' | 'rejected';
+  public declare approvedBy: number;
+  public declare rejectedReason: string;
+  public declare signedAt: Date;
+  public declare approverSignedAt: Date;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  public declare readonly createdAt: Date;
+  public declare readonly updatedAt: Date;
 }
 
 export default function (sequelize: Sequelize): typeof LeaveRequestModel {

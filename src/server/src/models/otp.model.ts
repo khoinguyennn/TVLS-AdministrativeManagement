@@ -14,15 +14,15 @@ export interface OTPAttributes {
 export type OTPCreationAttributes = Optional<OTPAttributes, 'id' | 'isUsed'>;
 
 export class OTPModel extends Model<OTPAttributes, OTPCreationAttributes> implements OTPAttributes {
-  public id: number;
-  public userId: number;
-  public email: string;
-  public otp: string;
-  public expiresAt: Date;
-  public isUsed: boolean;
+  public declare id: number;
+  public declare userId: number;
+  public declare email: string;
+  public declare otp: string;
+  public declare expiresAt: Date;
+  public declare isUsed: boolean;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  public declare readonly createdAt: Date;
+  public declare readonly updatedAt: Date;
 }
 
 export default function (sequelize: Sequelize): typeof OTPModel {

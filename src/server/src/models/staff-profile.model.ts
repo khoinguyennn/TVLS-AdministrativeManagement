@@ -18,21 +18,21 @@ export type StaffProfileCreationAttributes = Optional<
 >;
 
 export class StaffProfileModel extends Model<StaffProfile, StaffProfileCreationAttributes> implements StaffProfile {
-  public id: number;
-  public userId: number;
-  public staffCode: string;
-  public gender: 'male' | 'female' | 'other';
-  public dateOfBirth: string;
-  public cccdNumber: string;
-  public cccdIssueDate: string;
-  public cccdIssuePlace: string;
-  public ethnicity: string;
-  public religion: string;
+  public declare id: number;
+  public declare userId: number;
+  public declare staffCode: string;
+  public declare gender: 'male' | 'female' | 'other';
+  public declare dateOfBirth: string;
+  public declare cccdNumber: string;
+  public declare cccdIssueDate: string;
+  public declare cccdIssuePlace: string;
+  public declare ethnicity: string;
+  public declare religion: string;
 
-  public staffStatus: 'working' | 'probation' | 'maternity_leave' | 'retired' | 'resigned';  public recruitmentDate: string;
+  public declare staffStatus: 'working' | 'probation' | 'maternity_leave' | 'retired' | 'resigned';  public declare recruitmentDate: string;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  public declare readonly createdAt: Date;
+  public declare readonly updatedAt: Date;
 }
 
 export default function (sequelize: Sequelize): typeof StaffProfileModel {

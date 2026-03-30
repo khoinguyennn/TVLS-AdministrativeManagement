@@ -7,12 +7,12 @@ export class WorkOrderAttachmentModel
   extends Model<WorkOrderAttachment, WorkOrderAttachmentCreationAttributes>
   implements WorkOrderAttachment
 {
-  public id: number;
-  public workOrderId: number;
-  public fileUrl: string;
-  public uploadedBy: number;
+  public declare id: number;
+  public declare workOrderId: number;
+  public declare fileUrl: string;
+  public declare uploadedBy: number;
 
-  public readonly createdAt!: Date;
+  public declare readonly createdAt: Date;
 }
 
 export default function (sequelize: Sequelize): typeof WorkOrderAttachmentModel {

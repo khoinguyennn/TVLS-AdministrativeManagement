@@ -4,9 +4,9 @@ import { Building } from '@interfaces/facility.interface';
 export type BuildingCreationAttributes = Optional<Building, 'id' | 'description'>;
 
 export class BuildingModel extends Model<Building, BuildingCreationAttributes> implements Building {
-  public id: number;
-  public name: string;
-  public description: string;
+  public declare id: number;
+  public declare name: string;
+  public declare description: string;
 }
 
 export default function (sequelize: Sequelize): typeof BuildingModel {

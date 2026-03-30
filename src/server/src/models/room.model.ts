@@ -4,9 +4,9 @@ import { Room } from '@interfaces/facility.interface';
 export type RoomCreationAttributes = Optional<Room, 'id'>;
 
 export class RoomModel extends Model<Room, RoomCreationAttributes> implements Room {
-  public id: number;
-  public buildingId: number;
-  public name: string;
+  public declare id: number;
+  public declare buildingId: number;
+  public declare name: string;
 }
 
 export default function (sequelize: Sequelize): typeof RoomModel {

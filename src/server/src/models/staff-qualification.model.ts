@@ -7,15 +7,15 @@ export type StaffQualificationCreationAttributes = Optional<
 >;
 
 export class StaffQualificationModel extends Model<StaffQualification, StaffQualificationCreationAttributes> implements StaffQualification {
-  public id: number;
-  public staffProfileId: number;
-  public generalEducationLevel: string;
-  public professionalLevel: string;
-  public major: string;
-  public trainingPlace: string;
-  public graduationYear: number;
-  public itLevel: string;
-  public foreignLanguageLevel: string;
+  public declare id: number;
+  public declare staffProfileId: number;
+  public declare generalEducationLevel: string;
+  public declare professionalLevel: string;
+  public declare major: string;
+  public declare trainingPlace: string;
+  public declare graduationYear: number;
+  public declare itLevel: string;
+  public declare foreignLanguageLevel: string;
 }
 
 export default function (sequelize: Sequelize): typeof StaffQualificationModel {

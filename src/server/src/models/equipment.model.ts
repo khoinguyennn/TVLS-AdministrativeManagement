@@ -7,22 +7,22 @@ export type EquipmentCreationAttributes = Optional<
 >;
 
 export class EquipmentModel extends Model<Equipment, EquipmentCreationAttributes> implements Equipment {
-  public id: number;
-  public roomId: number;
-  public name: string;
-  public code: string;
-  public category: 'computer' | 'projector' | 'furniture' | 'lab-equipment' | 'other';
-  public brand: string;
-  public model: string;
-  public serialNumber: string;
-  public purchaseDate: Date;
-  public warrantyExpiry: Date;
-  public price: number;
-  public status: 'working' | 'broken' | 'maintenance' | 'disposed';
-  public description: string;
+  public declare id: number;
+  public declare roomId: number;
+  public declare name: string;
+  public declare code: string;
+  public declare category: 'computer' | 'projector' | 'furniture' | 'lab-equipment' | 'other';
+  public declare brand: string;
+  public declare model: string;
+  public declare serialNumber: string;
+  public declare purchaseDate: Date;
+  public declare warrantyExpiry: Date;
+  public declare price: number;
+  public declare status: 'working' | 'broken' | 'maintenance' | 'disposed';
+  public declare description: string;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  public declare readonly createdAt: Date;
+  public declare readonly updatedAt: Date;
 }
 
 export default function (sequelize: Sequelize): typeof EquipmentModel {

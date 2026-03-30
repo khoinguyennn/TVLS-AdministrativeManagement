@@ -4,17 +4,17 @@ import { StaffSalary } from '@interfaces/staff.interface';
 export type StaffSalaryCreationAttributes = Optional<StaffSalary, 'id'>;
 
 export class StaffSalaryModel extends Model<StaffSalary, StaffSalaryCreationAttributes> implements StaffSalary {
-  public id: number;
-  public staffProfileId: number;
-  public salaryCoefficient: number;
-  public salaryLevel: number;
-  public baseSalary: number;
-  public salaryStartDate: string;
-  public unionAllowancePercent: number;
-  public seniorityAllowancePercent: number;
-  public incentiveAllowancePercent: number;
-  public positionAllowancePercent: number;
-  public salaryNote: string;
+  public declare id: number;
+  public declare staffProfileId: number;
+  public declare salaryCoefficient: number;
+  public declare salaryLevel: number;
+  public declare baseSalary: number;
+  public declare salaryStartDate: string;
+  public declare unionAllowancePercent: number;
+  public declare seniorityAllowancePercent: number;
+  public declare incentiveAllowancePercent: number;
+  public declare positionAllowancePercent: number;
+  public declare salaryNote: string;
 }
 
 export default function (sequelize: Sequelize): typeof StaffSalaryModel {
