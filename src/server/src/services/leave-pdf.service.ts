@@ -37,7 +37,25 @@ export async function generateLeaveRequestPdf(leaveRequestId: number): Promise<B
   // ── Fetch data ──
   const request = await DB.LeaveRequests.findByPk(leaveRequestId, {
     include: [
-      { model: DB.Users, as: 'user', attributes: ['id', 'fullName', 'email', 'role'] },
+      {
+        model: DB.Users,
+        as: 'user',
+        attributes: ['id', 'fullName', 'email', 'role'],
+        include: [
+          {
+            model: DB.StaffProfiles,
+            as: 'staffProfile',
+            attributes: ['id'],
+            include: [
+              {
+                model: DB.StaffPositions,
+                as: 'position',
+                attributes: ['subjectGroup'],
+              },
+            ],
+          },
+        ],
+      },
       { model: DB.LeaveTypes, as: 'leaveType', attributes: ['id', 'name'] },
       { model: DB.Users, as: 'approver', attributes: ['id', 'fullName'] },
     ],
@@ -69,6 +87,7 @@ export async function generateLeaveRequestPdf(leaveRequestId: number): Promise<B
 
   const fullName: string = data.user?.fullName || '…………………………';
   const roleLabel: string = ROLE_LABELS[data.user?.role] || data.user?.role || '…………………………';
+  const subjectGroup: string = data.user?.staffProfile?.position?.subjectGroup || '…………………………………………';
   const startDMY = getDayMonthYear(data.startDate);
   const endDMY = getDayMonthYear(data.endDate);
   const createdDMY = data.createdAt ? getDayMonthYear(data.createdAt) : getDayMonthYear(new Date().toISOString());
@@ -81,7 +100,7 @@ export async function generateLeaveRequestPdf(leaveRequestId: number): Promise<B
 
     const buffers: Buffer[] = [];
     doc.on('data', (chunk: Buffer) => buffers.push(chunk));
-    doc.on('end', () => resolve(Buffer.concat(buffers)));
+    doc.on('end', () => resolve(Buffer.concat(buffers as unknown as Uint8Array[])));
     doc.on('error', reject);
 
     // Register fonts
@@ -161,9 +180,9 @@ export async function generateLeaveRequestPdf(leaveRequestId: number): Promise<B
     doc.font('Bold').text(roleLabel);
     y += doc.currentLineHeight() + 6;
 
-    // Thuộc tổ  (we don't have department field – leave blank / fill with leaveType name)
+    // Thuộc tổ (tổ bộ môn of the requester)
     doc.font('Regular').text('Thuộc tổ: ', bodyIndent, y, { continued: true, width: bodyWidth });
-    doc.font('Bold').text('…………………………………………');
+    doc.font('Bold').text(subjectGroup);
     y += doc.currentLineHeight() + 14;
 
     // Main request paragraph
