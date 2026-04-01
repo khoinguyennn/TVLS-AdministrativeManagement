@@ -29,7 +29,10 @@ export class WorkOrderService {
 
   private canOperateAsAssignee(workOrder: WorkOrder, requesterId: number, requesterRole: string): boolean {
     if (['admin', 'manager'].includes(requesterRole)) return true;
-    return workOrder.assignedTo === requesterId;
+    // Check both old assignedTo field and new junction table
+    const isAssignedToThisUser = workOrder.assignedTo === requesterId ||
+      workOrder.assignees?.some((a: any) => a.assigned_to_user_id === requesterId || a.assignedUser?.id === requesterId);
+    return isAssignedToThisUser;
   }
 
   private normalizeDateInput(value?: string): Date | null {
@@ -81,8 +84,25 @@ export class WorkOrderService {
   public async findAll(query: { status?: string; assignedTo?: number; createdBy?: number }): Promise<WorkOrder[]> {
     const where: Record<string, unknown> = {};
     if (query.status) where.status = query.status;
-    if (query.assignedTo) where.assignedTo = query.assignedTo;
     if (query.createdBy) where.createdBy = query.createdBy;
+
+    // When filtering by assignedTo, check both the legacy single-assignee field
+    // and the junction table. Load assignee IDs first so the main query can
+    // stay on real WorkOrders columns only.
+    if (query.assignedTo) {
+      const assignedWorkOrderRows = await DB.WorkOrderAssignees.findAll({
+        where: { assigned_to_user_id: query.assignedTo },
+        attributes: ['work_order_id'],
+        raw: true,
+      });
+
+      const assignedWorkOrderIds = assignedWorkOrderRows.map((row: any) => row.work_order_id);
+
+      where[Op.or] = [
+        { assignedTo: query.assignedTo },
+        ...(assignedWorkOrderIds.length > 0 ? [{ id: { [Op.in]: assignedWorkOrderIds } }] : []),
+      ];
+    }
 
     const rows = await DB.WorkOrders.findAll({
       where,
@@ -90,9 +110,19 @@ export class WorkOrderService {
         { model: DB.Users, as: 'creator', attributes: ['id', 'fullName', 'email', 'role'] },
         { model: DB.Users, as: 'approver', attributes: ['id', 'fullName', 'email', 'role'] },
         { model: DB.Users, as: 'assignee', attributes: ['id', 'fullName', 'email', 'role'] },
+        {
+          model: DB.WorkOrderAssignees,
+          as: 'assignees',
+          attributes: ['assigned_to_user_id'],
+          separate: true,
+          required: false,
+          include: [{ model: DB.Users, as: 'assignedUser', attributes: ['id', 'fullName', 'email', 'role'] }],
+        },
         { model: DB.WorkOrderAttachments, as: 'attachments' },
       ],
       order: [['createdAt', 'DESC']],
+      subQuery: false,
+      distinct: true,
     });
 
     return rows.map(r => {
@@ -112,6 +142,13 @@ export class WorkOrderService {
         { model: DB.Users, as: 'creator', attributes: ['id', 'fullName', 'email', 'role'] },
         { model: DB.Users, as: 'approver', attributes: ['id', 'fullName', 'email', 'role'] },
         { model: DB.Users, as: 'assignee', attributes: ['id', 'fullName', 'email', 'role'] },
+        {
+          model: DB.WorkOrderAssignees,
+          as: 'assignees',
+          attributes: ['assigned_to_user_id'],
+          separate: true,
+          include: [{ model: DB.Users, as: 'assignedUser', attributes: ['id', 'fullName', 'email', 'role'] }],
+        },
         { model: DB.WorkOrderAttachments, as: 'attachments' },
       ],
     });
@@ -126,8 +163,14 @@ export class WorkOrderService {
   }
 
   public async create(data: CreateWorkOrderDto, createdBy: number): Promise<WorkOrder> {
-    if (data.assignedTo) {
-      await this.validateAssignee(data.assignedTo);
+    // Support both assignedTo (single) and assignedToIds (array) for backward compatibility
+    const assigneeIds = data.assignedToIds && data.assignedToIds.length > 0
+      ? data.assignedToIds
+      : (data.assignedTo ? [data.assignedTo] : []);
+
+    // Validate all assignees
+    for (const assigneeId of assigneeIds) {
+      await this.validateAssignee(assigneeId);
     }
 
     const code = await this.generateCode();
@@ -140,46 +183,65 @@ export class WorkOrderService {
       endDate: this.normalizeDateInput(data.endDate),
       note: data.note,
       createdBy,
-      assignedTo: data.assignedTo || null,
+      assignedTo: assigneeIds.length > 0 ? assigneeIds[0] : null, // Store primary assignee for backward compat
       status: 'pending',
     });
-    const created = await this.findById(row.get('id') as number);
 
-    // Gửi email thông báo cho người nhận (không chặn response nếu lỗi mail)
-    if (created.assignedTo) {
+    const workOrderId = row.get('id') as number;
+
+    // Insert assignees into junction table
+    if (assigneeIds.length > 0) {
+      const assigneeRecords = assigneeIds.map((assigneeId) => ({
+        work_order_id: workOrderId,
+        assigned_to_user_id: assigneeId,
+      }));
+      await DB.WorkOrderAssignees.bulkCreate(assigneeRecords);
+    }
+
+    const created = await this.findById(workOrderId);
+
+    // Send notifications to all assignees (don't block on mail errors)
+    if (assigneeIds.length > 0) {
       try {
-        const assignee = await DB.Users.findByPk(created.assignedTo, { attributes: ['email', 'fullName'] });
         const creator = await DB.Users.findByPk(createdBy, { attributes: ['fullName'] });
-        if (assignee) {
-          const plain = assignee.get({ plain: true }) as any;
-          const creatorPlain = creator?.get({ plain: true }) as any;
-          await this.emailService.sendWorkOrderEmail(
-            plain.email,
-            plain.fullName,
-            {
-              code: created.code,
-              title: created.title,
-              content: created.content,
-              location: created.location,
-              startDate: created.startDate,
-              endDate: created.endDate,
-              note: created.note,
-              creatorName: creatorPlain?.fullName || 'Quản trị viên',
-            },
-          );
+        const creatorPlain = creator?.get({ plain: true }) as any;
+
+        for (const assigneeId of assigneeIds) {
+          try {
+            const assignee = await DB.Users.findByPk(assigneeId, { attributes: ['email', 'fullName'] });
+            if (assignee) {
+              const plain = assignee.get({ plain: true }) as any;
+              await this.emailService.sendWorkOrderEmail(
+                plain.email,
+                plain.fullName,
+                {
+                  code: created.code,
+                  title: created.title,
+                  content: created.content,
+                  location: created.location,
+                  startDate: created.startDate,
+                  endDate: created.endDate,
+                  note: created.note,
+                  creatorName: creatorPlain?.fullName || 'Quản trị viên',
+                },
+              );
+            }
+
+            // In app notification
+            await this.notificationService.createNotification({
+              userId: assigneeId,
+              title: 'Công lệnh mới được giao',
+              message: `Bạn vừa được giao một công lệnh mới: ${created.title}`,
+              type: 'work_order',
+              referenceId: workOrderId,
+            });
+          } catch (assigneeError) {
+            // Log individually but don't block
+            logger.error(`Failed to notify assignee ${assigneeId}:`, assigneeError);
+          }
         }
-
-        // In app notification
-        await this.notificationService.createNotification({
-          userId: created.assignedTo,
-          title: 'Công lệnh mới được giao',
-          message: `Bạn vừa được giao một công lệnh mới: ${created.title}`,
-          type: 'work_order',
-          referenceId: created.id,
-        });
-
-      } catch (emailError) {
-        // Không throw lỗi mail ra ngoài
+      } catch (error) {
+        logger.error('Error sending work order notifications:', error);
       }
     }
 

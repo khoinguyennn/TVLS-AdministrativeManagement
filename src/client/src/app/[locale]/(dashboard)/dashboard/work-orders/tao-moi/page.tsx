@@ -45,7 +45,11 @@ export default function CreateWorkOrderAdminPage() {
     setIsLoading(true);
     try {
       await workOrderService.create(data);
-      toast.success("Tạo công lệnh thành công");
+      const successMsg =
+        (data.assignedToIds?.length ?? 1) > 1
+          ? `Tạo công lệnh công tác thành công cho ${data.assignedToIds?.length} nhân sự`
+          : "Tạo công lệnh thành công";
+      toast.success(successMsg);
       router.refresh();
       router.push("/vi/dashboard/work-orders");
     } catch (error) {

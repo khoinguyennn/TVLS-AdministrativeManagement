@@ -118,7 +118,11 @@ export function WorkOrderTable({
         </TableHeader>
         <TableBody>
           {data.map((workOrder, index) => {
-            const assigneeName = workOrder.assignedToUser?.fullName || getPersonnelName(workOrder.assignedTo);
+            // Get list of assignees from junction table or fallback to single assignedToUser
+            const assigneeList = workOrder.assignees?.map((a) => a.assignedUser).filter(Boolean) || [];
+            const primaryAssignee = assigneeList.length === 0 ? workOrder.assignedToUser : null;
+            const allAssignees = assigneeList.length > 0 ? assigneeList : (primaryAssignee ? [primaryAssignee] : []);
+
             const startDate = formatDate(workOrder.startDate);
             const endDate = formatDate(workOrder.endDate);
 
@@ -139,13 +143,28 @@ export function WorkOrderTable({
                 </TableCell>
 
                 <TableCell className="px-6 py-4">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="size-8">
-                      <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
-                        {getInitials(assigneeName)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="text-sm font-medium">{assigneeName}</span>
+                  <div className="flex items-center gap-2">
+                    {allAssignees.length > 0 ? (
+                      <>
+                        {allAssignees.slice(0, 3).map((assignee, idx) => (
+                          <Avatar key={`${assignee?.id}-${idx}`} className="size-8" title={assignee?.fullName}>
+                            <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
+                              {getInitials(assignee?.fullName || "N/A")}
+                            </AvatarFallback>
+                          </Avatar>
+                        ))}
+                        {allAssignees.length > 3 && (
+                          <div className="size-8 flex items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground">
+                            +{allAssignees.length - 3}
+                          </div>
+                        )}
+                        {allAssignees.length === 1 && (
+                          <span className="text-sm font-medium">{allAssignees[0]?.fullName}</span>
+                        )}
+                      </>
+                    ) : (
+                      <span className="text-sm text-muted-foreground">Chưa phân công</span>
+                    )}
                   </div>
                 </TableCell>
 
