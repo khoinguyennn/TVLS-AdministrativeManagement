@@ -41,8 +41,8 @@ export const workOrderService = {
     return res.data.data;
   },
 
-  async reject(id: number): Promise<WorkOrder> {
-    const res = await api.put<{ success: boolean; data: WorkOrder; message: string }>(`${ENDPOINT}/${id}/reject`);
+  async reject(id: number, payload?: { reason?: string }): Promise<WorkOrder> {
+    const res = await api.put<{ success: boolean; data: WorkOrder; message: string }>(`${ENDPOINT}/${id}/reject`, payload ?? {});
     return res.data.data;
   },
 

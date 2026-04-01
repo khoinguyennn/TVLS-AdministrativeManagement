@@ -21,7 +21,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount } from "@/components/ui/avatar";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
 import { env } from "@/env";
@@ -38,6 +47,8 @@ export default function WorkOrderDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedEvidence, setSelectedEvidence] = useState<File | null>(null);
+  const [reworkDialogOpen, setReworkDialogOpen] = useState(false);
+  const [reworkReason, setReworkReason] = useState("");
 
   const isAdminOrManager = user?.role === "admin" || user?.role === "manager";
   const assigneeUsers = workOrder?.assignees?.map((assignee) => assignee.assignedUser).filter(Boolean) ?? [];
@@ -171,8 +182,19 @@ export default function WorkOrderDetailPage() {
 
   async function handleRequestRework() {
     if (!workOrder) return;
+    setReworkReason("");
+    setReworkDialogOpen(true);
+  }
 
-    const reason = prompt("Lý do yêu cầu thực hiện lại:") || "";
+  async function submitReworkRequest() {
+    if (!workOrder) return;
+
+    const reason = reworkReason.trim();
+    if (!reason) {
+      toast.error("Vui lòng nhập lý do");
+      return;
+    }
+
     try {
       setIsSubmitting(true);
       const updated = await workOrderService.requestRework(workOrder.id, { reason });
@@ -183,6 +205,7 @@ export default function WorkOrderDetailPage() {
       toast.error(message);
     } finally {
       setIsSubmitting(false);
+      setReworkDialogOpen(false);
     }
   }
 
@@ -464,8 +487,8 @@ export default function WorkOrderDetailPage() {
                     <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                     <div className="flex-1">
                     <p className="text-sm font-medium">Từ chối</p>
-                      {workOrder.rejectionReason && (
-                        <p className="text-xs text-gray-500">{workOrder.rejectionReason}</p>
+                      {workOrder.note && workOrder.status === "rejected" && (
+                        <p className="text-xs text-gray-500 whitespace-pre-wrap">{workOrder.note}</p>
                       )}
                     </div>
                   </div>
@@ -496,6 +519,33 @@ export default function WorkOrderDetailPage() {
 
         </div>
       </div>
+
+      <Dialog open={reworkDialogOpen} onOpenChange={setReworkDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Lý do yêu cầu thực hiện lại</DialogTitle>
+            <DialogDescription>
+              Nhập nội dung ngắn gọn để phản hồi cho người thực hiện.
+            </DialogDescription>
+          </DialogHeader>
+
+          <Textarea
+            value={reworkReason}
+            onChange={(e) => setReworkReason(e.target.value)}
+            placeholder="Ví dụ: Cần bổ sung ảnh minh chứng rõ hơn..."
+            className="min-h-28"
+          />
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setReworkDialogOpen(false)}>
+              Hủy
+            </Button>
+            <Button onClick={submitReworkRequest} disabled={isSubmitting}>
+              Gửi yêu cầu
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

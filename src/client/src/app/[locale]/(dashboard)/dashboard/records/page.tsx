@@ -7,6 +7,16 @@ import { TableSkeleton } from "@/components/skeletons";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { PersonnelTable } from "@/components/personnel/personnel-table";
 import { ExcelImportExportDialog } from "@/components/personnel/excel-import-export-dialog";
 import { personnelService } from "@/services/personnel.service";
@@ -20,6 +30,7 @@ export default function PersonnelPage() {
   );
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [deleteTarget, setDeleteTarget] = useState<PersonnelRecord | null>(null);
 
   // Load personnel data
   useEffect(() => {
@@ -151,17 +162,21 @@ export default function PersonnelPage() {
   }
 
   async function handleDelete(id: number) {
-    if (!confirm("Bạn có chắc chắn muốn xóa nhân sự này?")) {
-      return;
-    }
+    const target = personnel.find((person) => person.id === id) ?? null;
+    setDeleteTarget(target);
+  }
 
+  async function confirmDelete() {
+    if (!deleteTarget) return;
     try {
       // await personnelService.delete(id);
-      setPersonnel((prev) => prev.filter((p) => p.id !== id));
+      setPersonnel((prev) => prev.filter((p) => p.id !== deleteTarget.id));
       toast.success("Xóa nhân sự thành công");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Lỗi xóa dữ liệu";
       toast.error(message);
+    } finally {
+      setDeleteTarget(null);
     }
   }
 
@@ -270,6 +285,21 @@ export default function PersonnelPage() {
           )}
         </div>
       </div>
+
+      <AlertDialog open={deleteTarget !== null} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
+            <AlertDialogDescription>
+              Bạn có chắc chắn muốn xóa nhân sự "{deleteTarget?.fullName ?? "này"}"? Hành động này không thể hoàn tác.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setDeleteTarget(null)}>Hủy</AlertDialogCancel>
+            <AlertDialogAction variant="destructive" onClick={confirmDelete}>Xóa</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -325,7 +325,7 @@ export class WorkOrderService {
     return this.findById(id);
   }
 
-  public async reject(id: number, approverId: number): Promise<WorkOrder> {
+  public async reject(id: number, approverId: number, rejectionReason?: string): Promise<WorkOrder> {
     const row = await DB.WorkOrders.findByPk(id);
     if (!row) throw new HttpException(404, 'Công lệnh không tồn tại');
 
@@ -334,7 +334,13 @@ export class WorkOrderService {
       throw new HttpException(400, 'Chỉ có thể từ chối công lệnh đang chờ duyệt');
     }
 
-    await DB.WorkOrders.update({ status: 'rejected', approvedBy: approverId }, { where: { id } });
+    let note = plain.note ?? '';
+    if (rejectionReason) {
+      const prefix = note ? '\n' : '';
+      note = `${note}${prefix}[LY DO TU CHOI] ${rejectionReason}`;
+    }
+
+    await DB.WorkOrders.update({ status: 'rejected', approvedBy: approverId, note }, { where: { id } });
     return this.findById(id);
   }
 
