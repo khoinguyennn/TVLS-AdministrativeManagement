@@ -227,6 +227,11 @@ export function AdminWorkOrderForm({
     : selectedPersonnel.length
       ? selectedPersonnel.map((p) => p.fullName).join(", ")
       : undefined;
+  const roleLabel = currentUser?.role === "teacher"
+    ? "Giáo viên"
+    : currentUser?.role === "technician"
+      ? "Kỹ thuật viên"
+      : "Nhân sự";
   const selectedCount = isSelfAssignCreator ? 1 : selectedIds.length;
 
   return (
