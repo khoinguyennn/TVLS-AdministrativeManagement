@@ -215,14 +215,27 @@ export async function generateWorkOrderPdf(workOrderId: number): Promise<Buffer>
       { model: DB.Users, as: 'creator', attributes: ['id', 'fullName', 'email'] },
       { model: DB.Users, as: 'assignee', attributes: ['id', 'fullName', 'email', 'role'] },
       { model: DB.Users, as: 'approver', attributes: ['id', 'fullName', 'email'] },
+      {
+        model: DB.WorkOrderAssignees,
+        as: 'assignees',
+        attributes: ['assigned_to_user_id'],
+        include: [{ model: DB.Users, as: 'assignedUser', attributes: ['id', 'fullName', 'email', 'role'] }],
+      },
     ],
   });
 
   if (!row) throw new HttpException(404, 'Công lệnh không tồn tại');
 
   const data = row.get({ plain: true }) as any;
-  const assigneeName = truncateText(data.assignee?.fullName || data.creator?.fullName, 42);
-  const roleLabel = data.assignee?.role === 'teacher' ? 'Giáo viên' : data.assignee?.role === 'technician' ? 'Kỹ thuật viên' : 'Nhân viên';
+  const assigneeUsers = (data.assignees?.map((assignee: any) => assignee.assignedUser).filter(Boolean) ?? []) as Array<{ fullName: string; role?: string }>;
+  const fallbackAssigneeUsers = assigneeUsers.length > 0
+    ? assigneeUsers
+    : (data.assignee ? [data.assignee] : data.creator ? [data.creator] : []);
+  const assigneeName = truncateText(fallbackAssigneeUsers.map((user) => user.fullName).join(', '), 72);
+  const roleSet = Array.from(new Set(fallbackAssigneeUsers.map((user) => user.role).filter(Boolean)));
+  const roleLabel = roleSet.length === 1
+    ? (roleSet[0] === 'teacher' ? 'Giáo viên' : roleSet[0] === 'technician' ? 'Kỹ thuật viên' : 'Nhân viên')
+    : 'Nhân sự';
   const location = truncateText(data.location, 60);
   const content = truncateText(data.content, 140);
   const startDate = formatDate(data.startDate);

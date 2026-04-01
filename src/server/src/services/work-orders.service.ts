@@ -266,20 +266,17 @@ export class WorkOrderService {
     if (data.startDate !== undefined) updateData.startDate = this.normalizeDateInput(data.startDate);
     if (data.endDate !== undefined) updateData.endDate = this.normalizeDateInput(data.endDate);
     if (data.note !== undefined) updateData.note = data.note;
-    if (data.assignedTo !== undefined) {
-      if (data.assignedTo) {
-        await this.validateAssignee(data.assignedTo);
-        if (plain.assignedTo !== data.assignedTo) {
-          // Notify new assignee
-          await this.notificationService.createNotification({
-            userId: data.assignedTo,
-            title: 'Chuyển giao công lệnh',
-            message: `Bạn vừa được giao xử lý công lệnh: ${plain.title}`,
-            type: 'work_order',
-            referenceId: plain.id,
-          });
-        }
+
+    const nextAssigneeIds = data.assignedToIds && data.assignedToIds.length > 0
+      ? Array.from(new Set(data.assignedToIds))
+      : (data.assignedTo !== undefined && data.assignedTo ? [data.assignedTo] : undefined);
+
+    if (nextAssigneeIds) {
+      for (const assigneeId of nextAssigneeIds) {
+        await this.validateAssignee(assigneeId);
       }
+      updateData.assignedTo = nextAssigneeIds[0] ?? null;
+    } else if (data.assignedTo !== undefined) {
       updateData.assignedTo = data.assignedTo;
     }
     if (data.status !== undefined) {
@@ -291,6 +288,27 @@ export class WorkOrderService {
     }
 
     await DB.WorkOrders.update(updateData, { where: { id } });
+
+    if (nextAssigneeIds) {
+      await DB.WorkOrderAssignees.destroy({ where: { work_order_id: id } });
+      await DB.WorkOrderAssignees.bulkCreate(
+        nextAssigneeIds.map((assigneeId) => ({
+          work_order_id: id,
+          assigned_to_user_id: assigneeId,
+        }))
+      );
+
+      for (const assigneeId of nextAssigneeIds) {
+        await this.notificationService.createNotification({
+          userId: assigneeId,
+          title: 'Chuyển giao công lệnh',
+          message: `Bạn vừa được giao xử lý công lệnh: ${plain.title}`,
+          type: 'work_order',
+          referenceId: plain.id,
+        });
+      }
+    }
+
     return this.findById(id);
   }
 

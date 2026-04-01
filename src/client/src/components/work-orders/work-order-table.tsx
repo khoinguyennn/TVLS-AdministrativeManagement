@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount } from "@/components/ui/avatar";
 import type { WorkOrder } from "@/types/work-order.types";
 import type { PersonnelRecord } from "@/types/personnel.types";
 
@@ -108,12 +108,12 @@ export function WorkOrderTable({
       <Table>
         <TableHeader>
           <TableRow className="bg-muted/50">
-            <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Công lệnh</TableHead>
-            <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Người giao</TableHead>
-            <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Người nhận</TableHead>
-            <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Thời gian</TableHead>
-            <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Trạng thái</TableHead>
-            {showActions && <TableHead className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-right">Hành động</TableHead>}
+            <TableHead className="px-4 py-4 text-xs font-bold uppercase tracking-wider">Công lệnh</TableHead>
+            <TableHead className="px-4 py-4 text-xs font-bold uppercase tracking-wider whitespace-nowrap">Người giao</TableHead>
+            <TableHead className="px-4 py-4 text-xs font-bold uppercase tracking-wider whitespace-nowrap">Người nhận</TableHead>
+            <TableHead className="px-4 py-4 text-xs font-bold uppercase tracking-wider whitespace-nowrap">Thời gian</TableHead>
+            <TableHead className="px-4 py-4 text-xs font-bold uppercase tracking-wider whitespace-nowrap">Trạng thái</TableHead>
+            {showActions && <TableHead className="px-4 py-4 text-xs font-bold uppercase tracking-wider text-right whitespace-nowrap">Hành động</TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -128,7 +128,7 @@ export function WorkOrderTable({
 
             return (
               <TableRow key={workOrder.id} className="hover:bg-muted/30 transition-colors">
-                <TableCell className="px-6 py-4 min-w-90">
+                <TableCell className="px-4 py-4 min-w-0 max-w-[26rem]">
                   <div className="space-y-1">
                     <p className="font-semibold text-sm truncate">{workOrder.title}</p>
                     <p className="text-xs text-muted-foreground truncate">
@@ -138,14 +138,14 @@ export function WorkOrderTable({
                   </div>
                 </TableCell>
 
-                <TableCell className="px-6 py-4 text-sm text-muted-foreground">
+                <TableCell className="px-4 py-4 text-sm text-muted-foreground whitespace-nowrap">
                   {workOrder.createdByUser?.fullName || "N/A"}
                 </TableCell>
 
-                <TableCell className="px-6 py-4">
-                  <div className="flex items-center gap-2">
-                    {allAssignees.length > 0 ? (
-                      <>
+                <TableCell className="px-4 py-4">
+                  {allAssignees.length > 0 ? (
+                    <div className="flex items-center gap-2">
+                      <AvatarGroup>
                         {allAssignees.slice(0, 3).map((assignee, idx) => (
                           <Avatar key={`${assignee?.id}-${idx}`} className="size-8" title={assignee?.fullName}>
                             <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
@@ -154,21 +154,16 @@ export function WorkOrderTable({
                           </Avatar>
                         ))}
                         {allAssignees.length > 3 && (
-                          <div className="size-8 flex items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground">
-                            +{allAssignees.length - 3}
-                          </div>
+                          <AvatarGroupCount>+{allAssignees.length - 3}</AvatarGroupCount>
                         )}
-                        {allAssignees.length === 1 && (
-                          <span className="text-sm font-medium">{allAssignees[0]?.fullName}</span>
-                        )}
-                      </>
-                    ) : (
-                      <span className="text-sm text-muted-foreground">Chưa phân công</span>
-                    )}
-                  </div>
+                      </AvatarGroup>
+                    </div>
+                  ) : (
+                    <span className="text-sm text-muted-foreground">Chưa phân công</span>
+                  )}
                 </TableCell>
 
-                <TableCell className="px-6 py-4 min-w-72">
+                <TableCell className="px-4 py-4 min-w-0">
                   <div className="space-y-2">
                     <div className="flex items-center gap-3 rounded-lg bg-muted/40 px-3 py-2">
                       <span className="inline-flex min-w-16 justify-center rounded-full bg-emerald-100 px-2 py-1 text-[11px] font-semibold text-emerald-700">
@@ -189,12 +184,12 @@ export function WorkOrderTable({
                   </div>
                 </TableCell>
 
-                <TableCell className="px-6 py-4">
+                <TableCell className="px-4 py-4 whitespace-nowrap">
                   {getStatusBadge(workOrder.status)}
                 </TableCell>
 
               {showActions && (
-                <TableCell className="px-6 py-4 text-right">
+                <TableCell className="px-4 py-4 text-right whitespace-nowrap">
                   <div className="flex justify-end gap-1">
                     <Link href={`/vi/dashboard/work-orders/${workOrder.id}`}>
                       <Button variant="ghost" size="icon" className="size-8 text-muted-foreground hover:text-primary" title="Xem chi tiết">

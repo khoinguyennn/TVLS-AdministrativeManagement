@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
 import { env } from "@/env";
@@ -39,7 +40,11 @@ export default function WorkOrderDetailPage() {
   const [selectedEvidence, setSelectedEvidence] = useState<File | null>(null);
 
   const isAdminOrManager = user?.role === "admin" || user?.role === "manager";
-  const isAssignedStaff = (user?.role === "teacher" || user?.role === "technician") && workOrder?.assignedTo === user?.id;
+  const assigneeUsers = workOrder?.assignees?.map((assignee) => assignee.assignedUser).filter(Boolean) ?? [];
+  const fallbackAssignee = !assigneeUsers.length && workOrder?.assignedToUser ? [workOrder.assignedToUser] : [];
+  const allAssignees = assigneeUsers.length ? assigneeUsers : fallbackAssignee;
+  const isAssignedStaff = (user?.role === "teacher" || user?.role === "technician")
+    && allAssignees.some((assignee) => assignee?.id === user?.id);
 
   const getApiErrorMessage = (error: unknown, fallback: string) => {
     if (error instanceof AxiosError && error.response?.data?.message) {
@@ -104,6 +109,15 @@ export default function WorkOrderDetailPage() {
         {config.label}
       </Badge>
     );
+  };
+
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((word) => word[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
   };
 
   async function handleUploadEvidence() {
@@ -257,9 +271,32 @@ export default function WorkOrderDetailPage() {
                   <User className="h-5 w-5 text-gray-400 mt-0.5" />
                   <div>
                     <p className="font-medium text-gray-900">Người thực hiện</p>
-                    <p className="text-gray-600">
-                      {workOrder.assignedToUser?.fullName || "-"}
-                    </p>
+                    {allAssignees.length > 0 ? (
+                      <div className="mt-2 flex items-center gap-3">
+                        <AvatarGroup>
+                          {allAssignees.slice(0, 3).map((assignee, index) => (
+                            <Avatar key={`${assignee?.id ?? index}`} className="size-8" title={assignee?.fullName}>
+                              <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
+                                {getInitials(assignee?.fullName || "N/A")}
+                              </AvatarFallback>
+                            </Avatar>
+                          ))}
+                          {allAssignees.length > 3 && (
+                            <AvatarGroupCount>+{allAssignees.length - 3}</AvatarGroupCount>
+                          )}
+                        </AvatarGroup>
+                        <div className="text-gray-600">
+                          <p className="font-medium text-gray-900">
+                            {allAssignees.map((assignee) => assignee?.fullName).filter(Boolean).join(", ")}
+                          </p>
+                          {allAssignees.length > 1 && (
+                            <p className="text-xs text-gray-500">{allAssignees.length} người được giao</p>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-gray-600">-</p>
+                    )}
                   </div>
                 </div>
 
