@@ -1,102 +1,92 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import { Service } from 'typedi';
-import { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM } from '@config';
+import { RESEND_API_KEY, RESEND_FROM } from '@config';
 import { logger } from '@utils/logger';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Service()
 export class EmailService {
-  private transporter: nodemailer.Transporter;
+  private resend: Resend;
 
   constructor() {
-    this.transporter = nodemailer.createTransport({
-      host: SMTP_HOST,
-      port: Number(SMTP_PORT) || 587,
-      secure: false, // true for 465, false for other ports
-      auth: {
-        user: SMTP_USER,
-        pass: SMTP_PASS,
-      },
-      tls: {
-        rejectUnauthorized: false
-      }
-    });
+    this.resend = new Resend(RESEND_API_KEY);
   }
 
   public async sendOTPEmail(to: string, otp: string, fullName: string): Promise<boolean> {
-    try {
-      const mailOptions = {
-        from: SMTP_FROM,
-        to,
-        subject: '🔐 Mã xác thực đặt lại mật khẩu - THSP Admin',
-        html: `
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          </head>
-          <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4;">
-            <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
-              <!-- Header -->
-              <tr>
-                <td style="background: linear-gradient(135deg, #2060df 0%, #1a4fc9 100%); padding: 30px; text-align: center;">
-                  <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Trường Thực hành Sư phạm</h1>
-                  <p style="color: #e0e0e0; margin: 10px 0 0 0; font-size: 14px;">Hệ thống Quản lý Hành chính</p>
-                </td>
-              </tr>
+    const { data, error } = await this.resend.emails.send({
+      from: RESEND_FROM || 'THSP Admin <admin@thsp.tvu.edu.vn>',
+      to: [to],
+      subject: '🔐 Mã xác thực đặt lại mật khẩu - THSP Admin',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+            <!-- Header -->
+            <tr>
+              <td style="background: linear-gradient(135deg, #2060df 0%, #1a4fc9 100%); padding: 30px; text-align: center;">
+                <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Trường Thực hành Sư phạm</h1>
+                <p style="color: #e0e0e0; margin: 10px 0 0 0; font-size: 14px;">Hệ thống Quản lý Hành chính</p>
+              </td>
+            </tr>
 
-              <!-- Content -->
-              <tr>
-                <td style="padding: 40px 30px;">
-                  <h2 style="color: #333; margin: 0 0 20px 0; font-size: 20px;">Xin chào ${fullName},</h2>
-                  <p style="color: #666; line-height: 1.6; margin: 0 0 20px 0;">
-                    Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn.
-                    Vui lòng sử dụng mã xác thực bên dưới để tiếp tục:
+            <!-- Content -->
+            <tr>
+              <td style="padding: 40px 30px;">
+                <h2 style="color: #333; margin: 0 0 20px 0; font-size: 20px;">Xin chào ${fullName},</h2>
+                <p style="color: #666; line-height: 1.6; margin: 0 0 20px 0;">
+                  Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn.
+                  Vui lòng sử dụng mã xác thực bên dưới để tiếp tục:
+                </p>
+
+                <!-- OTP Code -->
+                <div style="background-color: #f8f9fa; border: 2px dashed #2060df; border-radius: 10px; padding: 25px; text-align: center; margin: 30px 0;">
+                  <p style="color: #666; margin: 0 0 10px 0; font-size: 14px;">Mã xác thực của bạn:</p>
+                  <h1 style="color: #2060df; margin: 0; font-size: 40px; letter-spacing: 8px; font-weight: bold;">${otp}</h1>
+                </div>
+
+                <!-- Warning -->
+                <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0;">
+                  <p style="color: #856404; margin: 0; font-size: 14px;">
+                    ⏰ <strong>Lưu ý:</strong> Mã xác thực này có hiệu lực trong <strong>5 phút</strong>.
                   </p>
+                </div>
 
-                  <!-- OTP Code -->
-                  <div style="background-color: #f8f9fa; border: 2px dashed #2060df; border-radius: 10px; padding: 25px; text-align: center; margin: 30px 0;">
-                    <p style="color: #666; margin: 0 0 10px 0; font-size: 14px;">Mã xác thực của bạn:</p>
-                    <h1 style="color: #2060df; margin: 0; font-size: 40px; letter-spacing: 8px; font-weight: bold;">${otp}</h1>
-                  </div>
+                <p style="color: #666; line-height: 1.6; margin: 20px 0 0 0;">
+                  Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này hoặc liên hệ bộ phận IT để được hỗ trợ.
+                </p>
+              </td>
+            </tr>
 
-                  <!-- Warning -->
-                  <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0;">
-                    <p style="color: #856404; margin: 0; font-size: 14px;">
-                      ⏰ <strong>Lưu ý:</strong> Mã xác thực này có hiệu lực trong <strong>5 phút</strong>.
-                    </p>
-                  </div>
+            <!-- Footer -->
+            <tr>
+              <td style="background-color: #f8f9fa; padding: 20px 30px; text-align: center; border-top: 1px solid #e0e0e0;">
+                <p style="color: #999; margin: 0; font-size: 12px;">
+                  © 2026 Trường Thực hành Sư phạm. All rights reserved.
+                </p>
+                <p style="color: #999; margin: 10px 0 0 0; font-size: 12px;">
+                  Email này được gửi tự động, vui lòng không trả lời.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </body>
+        </html>
+      `,
+    });
 
-                  <p style="color: #666; line-height: 1.6; margin: 20px 0 0 0;">
-                    Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này hoặc liên hệ bộ phận IT để được hỗ trợ.
-                  </p>
-                </td>
-              </tr>
-
-              <!-- Footer -->
-              <tr>
-                <td style="background-color: #f8f9fa; padding: 20px 30px; text-align: center; border-top: 1px solid #e0e0e0;">
-                  <p style="color: #999; margin: 0; font-size: 12px;">
-                    © 2026 Trường Thực hành Sư phạm. All rights reserved.
-                  </p>
-                  <p style="color: #999; margin: 10px 0 0 0; font-size: 12px;">
-                    Email này được gửi tự động, vui lòng không trả lời.
-                  </p>
-                </td>
-              </tr>
-            </table>
-          </body>
-          </html>
-        `,
-      };
-
-      await this.transporter.sendMail(mailOptions);
-      logger.info(`OTP email sent successfully to ${to}`);
-      return true;
-    } catch (error) {
-      logger.error(`Failed to send OTP email to ${to}: ${error}`);
+    if (error) {
+      logger.error(`Failed to send OTP email to ${to}: ${error.message}`);
       return false;
     }
+
+    logger.info(`OTP email sent successfully to ${to} (id: ${data?.id})`);
+    return true;
   }
 
   /**
@@ -112,120 +102,142 @@ export class EmailService {
     note?: string;
     creatorName: string;
   }): Promise<boolean> {
-    try {
-      const fmt = (d?: string | Date) => d ? new Date(d).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Không xác định';
-      const mailOptions = {
-        from: SMTP_FROM,
-        to,
-        subject: `📋 Công lệnh mới được giao cho bạn: ${workOrder.title} - THSP`,
-        html: `
-          <!DOCTYPE html>
-          <html>
-          <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-          <body style="margin:0;padding:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:#f4f4f4;">
-            <table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background-color:#ffffff;">
-              <tr>
-                <td style="background:linear-gradient(135deg,#2060df 0%,#1a4fc9 100%);padding:30px;text-align:center;">
-                  <h1 style="color:#ffffff;margin:0;font-size:24px;">Trường Thực hành Sư phạm</h1>
-                  <p style="color:#e0e0e0;margin:10px 0 0 0;font-size:14px;">Hệ thống Quản lý Hành chính</p>
-                </td>
-              </tr>
-              <tr>
-                <td style="padding:40px 30px;">
-                  <h2 style="color:#333;margin:0 0 20px 0;font-size:20px;">Xin chào ${assigneeName},</h2>
-                  <p style="color:#666;line-height:1.6;margin:0 0 20px 0;">
-                    Bạn vừa được giao một công lệnh mới từ <strong>${workOrder.creatorName}</strong>. Vui lòng xem thông tin chi tiết bên dưới và xác nhận thực hiện.
-                  </p>
-                  <table style="width:100%;border-collapse:collapse;margin:20px 0;">
-                    <tr><td style="padding:10px;background:#f8f9fa;border:1px solid #e0e0e0;font-weight:bold;width:35%;">Mã công lệnh</td><td style="padding:10px;border:1px solid #e0e0e0;">${workOrder.code}</td></tr>
-                    <tr><td style="padding:10px;background:#f8f9fa;border:1px solid #e0e0e0;font-weight:bold;">Tiêu đề</td><td style="padding:10px;border:1px solid #e0e0e0;">${workOrder.title}</td></tr>
-                    <tr><td style="padding:10px;background:#f8f9fa;border:1px solid #e0e0e0;font-weight:bold;">Nội dung</td><td style="padding:10px;border:1px solid #e0e0e0;">${workOrder.content}</td></tr>
-                    <tr><td style="padding:10px;background:#f8f9fa;border:1px solid #e0e0e0;font-weight:bold;">Địa điểm</td><td style="padding:10px;border:1px solid #e0e0e0;">${workOrder.location || 'Không xác định'}</td></tr>
-                    <tr><td style="padding:10px;background:#f8f9fa;border:1px solid #e0e0e0;font-weight:bold;">Thời gian bắt đầu</td><td style="padding:10px;border:1px solid #e0e0e0;">${fmt(workOrder.startDate)}</td></tr>
-                    <tr><td style="padding:10px;background:#f8f9fa;border:1px solid #e0e0e0;font-weight:bold;">Thời gian kết thúc</td><td style="padding:10px;border:1px solid #e0e0e0;">${fmt(workOrder.endDate)}</td></tr>
-                    ${workOrder.note ? `<tr><td style="padding:10px;background:#f8f9fa;border:1px solid #e0e0e0;font-weight:bold;">Ghi chú</td><td style="padding:10px;border:1px solid #e0e0e0;">${workOrder.note}</td></tr>` : ''}
-                  </table>
-                  <div style="background-color:#e8f5e9;border-left:4px solid #4caf50;padding:15px;margin:20px 0;">
-                    <p style="color:#2e7d32;margin:0;font-size:14px;">✅ Vui lòng đăng nhập hệ thống để xem chi tiết và xác nhận thực hiện công lệnh.</p>
-                  </div>
-                  <p style="color:#666;line-height:1.6;">Người giao: <strong>${workOrder.creatorName}</strong></p>
-                </td>
-              </tr>
-              <tr>
-                <td style="background-color:#f8f9fa;padding:20px 30px;text-align:center;border-top:1px solid #e0e0e0;">
-                  <p style="color:#999;margin:0;font-size:12px;">© 2026 Trường Thực hành Sư phạm. All rights reserved.</p>
-                  <p style="color:#999;margin:10px 0 0 0;font-size:12px;">Email này được gửi tự động, vui lòng không trả lời.</p>
-                </td>
-              </tr>
-            </table>
-          </body>
-          </html>
-        `,
-      };
-      await this.transporter.sendMail(mailOptions);
-      logger.info(`Work order email sent to ${to}`);
-      return true;
-    } catch (error) {
-      logger.error(`Failed to send work order email to ${to}: ${error}`);
+    const fmt = (d?: string | Date) => d ? new Date(d).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Không xác định';
+
+    const { data, error } = await this.resend.emails.send({
+      from: RESEND_FROM || 'THSP Admin <admin@thsp.tvu.edu.vn>',
+      to: [to],
+      subject: `📋 Công lệnh mới được giao cho bạn: ${workOrder.title} - THSP`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+        <body style="margin:0;padding:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:#f4f4f4;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background-color:#ffffff;">
+            <tr>
+              <td style="background:linear-gradient(135deg,#2060df 0%,#1a4fc9 100%);padding:30px;text-align:center;">
+                <h1 style="color:#ffffff;margin:0;font-size:24px;">Trường Thực hành Sư phạm</h1>
+                <p style="color:#e0e0e0;margin:10px 0 0 0;font-size:14px;">Hệ thống Quản lý Hành chính</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:40px 30px;">
+                <h2 style="color:#333;margin:0 0 20px 0;font-size:20px;">Xin chào ${assigneeName},</h2>
+                <p style="color:#666;line-height:1.6;margin:0 0 20px 0;">
+                  Bạn vừa được giao một công lệnh mới từ <strong>${workOrder.creatorName}</strong>. Vui lòng xem thông tin chi tiết bên dưới và xác nhận thực hiện.
+                </p>
+                <table style="width:100%;border-collapse:collapse;margin:20px 0;">
+                  <tr><td style="padding:10px;background:#f8f9fa;border:1px solid #e0e0e0;font-weight:bold;width:35%;">Mã công lệnh</td><td style="padding:10px;border:1px solid #e0e0e0;">${workOrder.code}</td></tr>
+                  <tr><td style="padding:10px;background:#f8f9fa;border:1px solid #e0e0e0;font-weight:bold;">Tiêu đề</td><td style="padding:10px;border:1px solid #e0e0e0;">${workOrder.title}</td></tr>
+                  <tr><td style="padding:10px;background:#f8f9fa;border:1px solid #e0e0e0;font-weight:bold;">Nội dung</td><td style="padding:10px;border:1px solid #e0e0e0;">${workOrder.content}</td></tr>
+                  <tr><td style="padding:10px;background:#f8f9fa;border:1px solid #e0e0e0;font-weight:bold;">Địa điểm</td><td style="padding:10px;border:1px solid #e0e0e0;">${workOrder.location || 'Không xác định'}</td></tr>
+                  <tr><td style="padding:10px;background:#f8f9fa;border:1px solid #e0e0e0;font-weight:bold;">Thời gian bắt đầu</td><td style="padding:10px;border:1px solid #e0e0e0;">${fmt(workOrder.startDate)}</td></tr>
+                  <tr><td style="padding:10px;background:#f8f9fa;border:1px solid #e0e0e0;font-weight:bold;">Thời gian kết thúc</td><td style="padding:10px;border:1px solid #e0e0e0;">${fmt(workOrder.endDate)}</td></tr>
+                  ${workOrder.note ? `<tr><td style="padding:10px;background:#f8f9fa;border:1px solid #e0e0e0;font-weight:bold;">Ghi chú</td><td style="padding:10px;border:1px solid #e0e0e0;">${workOrder.note}</td></tr>` : ''}
+                </table>
+                <div style="background-color:#e8f5e9;border-left:4px solid #4caf50;padding:15px;margin:20px 0;">
+                  <p style="color:#2e7d32;margin:0;font-size:14px;">✅ Vui lòng đăng nhập hệ thống để xem chi tiết và xác nhận thực hiện công lệnh.</p>
+                </div>
+                <p style="color:#666;line-height:1.6;">Người giao: <strong>${workOrder.creatorName}</strong></p>
+              </td>
+            </tr>
+            <tr>
+              <td style="background-color:#f8f9fa;padding:20px 30px;text-align:center;border-top:1px solid #e0e0e0;">
+                <p style="color:#999;margin:0;font-size:12px;">© 2026 Trường Thực hành Sư phạm. All rights reserved.</p>
+                <p style="color:#999;margin:10px 0 0 0;font-size:12px;">Email này được gửi tự động, vui lòng không trả lời.</p>
+              </td>
+            </tr>
+          </table>
+        </body>
+        </html>
+      `,
+    });
+
+    if (error) {
+      logger.error(`Failed to send work order email to ${to}: ${error.message}`);
       return false;
     }
+
+    logger.info(`Work order email sent to ${to} (id: ${data?.id})`);
+    return true;
   }
 
-  public async sendDeviceReportEmail(to: string | string[], subject: string, bodyContent: string, attachments?: nodemailer.SendMailOptions['attachments']): Promise<boolean> {
-    try {
-      const recipients = Array.isArray(to) ? to.join(', ') : to;
-      const mailOptions: nodemailer.SendMailOptions = {
-        from: SMTP_FROM,
-        to: recipients,
-        subject: `📋 ${subject} - THSP Admin`,
-        attachments,
-        html: `
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          </head>
-          <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4;">
-            <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
-              <!-- Header -->
-              <tr>
-                <td style="background: linear-gradient(135deg, #2060df 0%, #1a4fc9 100%); padding: 30px; text-align: center;">
-                  <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Trường Thực hành Sư phạm</h1>
-                  <p style="color: #e0e0e0; margin: 10px 0 0 0; font-size: 14px;">Hệ thống Quản lý Hành chính</p>
-                </td>
-              </tr>
+  public async sendDeviceReportEmail(to: string | string[], subject: string, bodyContent: string, attachments?: { filename: string; path: string }[]): Promise<boolean> {
+    const recipients = Array.isArray(to) ? to : [to];
 
-              <!-- Content -->
-              <tr>
-                <td style="padding: 40px 30px;">
-                  ${bodyContent}
-                </td>
-              </tr>
+    // Convert path-based attachments to base64 content for Resend API
+    let resendAttachments: { filename: string; content: string }[] | undefined;
+    if (attachments && attachments.length > 0) {
+      resendAttachments = [];
+      for (const att of attachments) {
+        try {
+          const filePath = path.resolve(att.path);
+          const fileBuffer = fs.readFileSync(filePath);
+          resendAttachments.push({
+            filename: att.filename,
+            content: fileBuffer.toString('base64'),
+          });
+        } catch (err) {
+          logger.warn(`Could not read attachment file ${att.path}: ${err}`);
+        }
+      }
+      if (resendAttachments.length === 0) {
+        resendAttachments = undefined;
+      }
+    }
 
-              <!-- Footer -->
-              <tr>
-                <td style="background-color: #f8f9fa; padding: 20px 30px; text-align: center; border-top: 1px solid #e0e0e0;">
-                  <p style="color: #999; margin: 0; font-size: 12px;">
-                    © 2026 Trường Thực hành Sư phạm. All rights reserved.
-                  </p>
-                  <p style="color: #999; margin: 10px 0 0 0; font-size: 12px;">
-                    Email này được gửi tự động, vui lòng không trả lời.
-                  </p>
-                </td>
-              </tr>
-            </table>
-          </body>
-          </html>
-        `,
-      };
+    const { data, error } = await this.resend.emails.send({
+      from: RESEND_FROM || 'THSP Admin <admin@thsp.tvu.edu.vn>',
+      to: recipients,
+      subject: `📋 ${subject} - THSP Admin`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+            <!-- Header -->
+            <tr>
+              <td style="background: linear-gradient(135deg, #2060df 0%, #1a4fc9 100%); padding: 30px; text-align: center;">
+                <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Trường Thực hành Sư phạm</h1>
+                <p style="color: #e0e0e0; margin: 10px 0 0 0; font-size: 14px;">Hệ thống Quản lý Hành chính</p>
+              </td>
+            </tr>
 
-      await this.transporter.sendMail(mailOptions);
-      logger.info(`Device report email sent to ${recipients}`);
-      return true;
-    } catch (error) {
-      logger.error(`Failed to send device report email: ${error}`);
+            <!-- Content -->
+            <tr>
+              <td style="padding: 40px 30px;">
+                ${bodyContent}
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="background-color: #f8f9fa; padding: 20px 30px; text-align: center; border-top: 1px solid #e0e0e0;">
+                <p style="color: #999; margin: 0; font-size: 12px;">
+                  © 2026 Trường Thực hành Sư phạm. All rights reserved.
+                </p>
+                <p style="color: #999; margin: 10px 0 0 0; font-size: 12px;">
+                  Email này được gửi tự động, vui lòng không trả lời.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </body>
+        </html>
+      `,
+      ...(resendAttachments ? { attachments: resendAttachments } : {}),
+    });
+
+    if (error) {
+      logger.error(`Failed to send device report email: ${error.message}`);
       return false;
     }
+
+    logger.info(`Device report email sent to ${recipients.join(', ')} (id: ${data?.id})`);
+    return true;
   }
 }
