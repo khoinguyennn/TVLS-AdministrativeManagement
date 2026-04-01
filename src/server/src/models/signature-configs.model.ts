@@ -6,8 +6,8 @@ export type SignatureConfigCreationAttributes = Optional<SignatureConfig, 'id' |
 export class SignatureConfigModel extends Model<SignatureConfig, SignatureConfigCreationAttributes> implements SignatureConfig {
   public declare id: number;
   public declare userId: number;
-  public signatureImage?: string;
-  public pinHash?: string;
+  public declare signatureImage?: string;
+  public declare pinHash?: string;
 
   public declare readonly createdAt: Date;
   public declare readonly updatedAt: Date;
