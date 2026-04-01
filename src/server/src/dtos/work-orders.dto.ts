@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional, IsInt, IsIn, IsDateString } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsInt, IsIn, IsDateString, IsArray } from 'class-validator';
 
 export class CreateWorkOrderDto {
   @IsString()
@@ -28,6 +28,11 @@ export class CreateWorkOrderDto {
   @IsOptional()
   @IsInt()
   public assignedTo?: number;
+
+  @IsOptional()
+  @IsArray()
+  @IsInt({ each: true })
+  public assignedToIds?: number[];
 }
 
 export class UpdateWorkOrderDto {
@@ -60,7 +65,12 @@ export class UpdateWorkOrderDto {
   public assignedTo?: number;
 
   @IsOptional()
+  @IsArray()
+  @IsInt({ each: true })
+  public assignedToIds?: number[];
+
+  @IsOptional()
   @IsString()
-  @IsIn(['pending', 'approved', 'in_progress', 'completed', 'rejected', 'cancelled'])
+  @IsIn(['pending', 'approved', 'in_progress', 'submitted_for_review', 'completed', 'rework_requested', 'rejected', 'cancelled'])
   public status?: string;
 }

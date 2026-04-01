@@ -36,6 +36,20 @@ export interface WorkOrder {
     email: string;
   };
 
+  // Danh sách tất cả nhân viên được giao (từ work_order_assignees)
+  assignees?: Array<{
+    id: number;
+    work_order_id: number;
+    assigned_to_user_id: number;
+    assigned_at: string;
+    assignedUser?: {
+      id: number;
+      fullName: string;
+      email: string;
+      role: string;
+    };
+  }>;
+
   // File đính kèm (từ work_order_attachments)
   attachments?: Array<{
     id: number;
@@ -53,6 +67,7 @@ export interface CreateWorkOrderPayload {
   endDate?: string;
   note?: string;
   assignedTo?: number;
+  assignedToIds?: number[];
 }
 
 export interface UpdateWorkOrderPayload extends Partial<CreateWorkOrderPayload> {

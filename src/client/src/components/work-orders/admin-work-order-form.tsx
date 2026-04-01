@@ -31,7 +31,7 @@ function removeAccents(str: string): string {
 }
 
 const adminWorkOrderSchema = z.object({
-  assignedTo: z.number().optional(),
+  assignedTo: z.array(z.number()).min(1, "Vui lòng chọn ít nhất 1 nhân sự"),
   title: z.string().min(1, "Vui lòng nhập tiêu đề công lệnh"),
   content: z.string().min(1, "Vui lòng nhập nội dung công tác"),
   location: z.string().optional(),
@@ -75,7 +75,7 @@ export function AdminWorkOrderForm({
   const form = useForm<AdminWorkOrderFormData>({
     resolver: zodResolver(adminWorkOrderSchema),
     defaultValues: {
-      assignedTo: undefined,
+      assignedTo: [],
       title: "",
       content: "",
       location: "",
@@ -90,7 +90,7 @@ export function AdminWorkOrderForm({
 
   useEffect(() => {
     if (!isSelfAssignCreator || !currentUser) return;
-    form.setValue("assignedTo", currentUser.id);
+    form.setValue("assignedTo", [currentUser.id]);
     setSearchQuery(currentUser.fullName);
     setShowPersonnelList(false);
   }, [isSelfAssignCreator, currentUser, form]);
@@ -172,9 +172,15 @@ export function AdminWorkOrderForm({
   };
 
   const handlePersonnelSelect = (person: PersonnelRecord) => {
-    form.setValue("assignedTo", person.userId ?? person.id);
-    setSearchQuery(person.fullName);
-    setShowPersonnelList(false);
+    const personId = person.userId ?? person.id;
+    const selectedIds = form.getValues("assignedTo");
+    const nextIds = selectedIds.includes(personId)
+      ? selectedIds.filter((id) => id !== personId)
+      : Array.from(new Set([...selectedIds, personId]));
+
+    form.setValue("assignedTo", nextIds, { shouldValidate: true });
+    setSearchQuery("");
+    setShowPersonnelList(true);
   };
 
   const toIsoWithCurrentLocalTime = (dateInput: string) => {
@@ -197,6 +203,10 @@ export function AdminWorkOrderForm({
     const startDateIso = toIsoWithCurrentLocalTime(data.startDate);
     const endDateIso = toIsoWithCurrentLocalTime(data.endDate);
 
+    const finalAssigneeIds = isSelfAssignCreator
+      ? (currentUser?.id ? [currentUser.id] : [])
+      : Array.from(new Set(data.assignedTo));
+
     const submitData: CreateWorkOrderPayload = {
       title: data.title,
       content: data.content,
@@ -204,22 +214,20 @@ export function AdminWorkOrderForm({
       startDate: startDateIso || new Date().toISOString(),
       endDate: endDateIso || new Date().toISOString(),
       note: data.notes,
-      assignedTo: isSelfAssignCreator ? currentUser?.id : data.assignedTo || undefined,
+      assignedToIds: finalAssigneeIds,
     };
 
     await onSubmit(submitData);
   };
 
-  const selectedPerson = personnel.find(p => (p.userId ?? p.id) === form.watch("assignedTo"));
-  const selectedName = selectedPerson?.fullName ?? (isSelfAssignCreator ? currentUser?.fullName : undefined);
-  const currentRole = selectedPerson?.role ?? (isSelfAssignCreator ? currentUser?.role ?? "" : "");
-  const roleLabel = currentRole
-    ? { admin: "Quản trị viên", manager: "Quản lý", teacher: "Giáo viên", technician: "Kỹ thuật" }[currentRole] ?? currentRole
-    : "Chưa chọn";
-  const primaryPosition = selectedPerson?.positions?.[0];
-  const jobPosition = primaryPosition?.jobPosition || "Chưa cập nhật";
-  const positionGroup = primaryPosition?.positionGroup || "Chưa cập nhật";
-  const contractType = primaryPosition?.contractType || "Chưa cập nhật";
+  const selectedIds = form.watch("assignedTo");
+  const selectedPersonnel = personnel.filter((p) => selectedIds.includes(p.userId ?? p.id));
+  const selectedName = isSelfAssignCreator
+    ? currentUser?.fullName
+    : selectedPersonnel.length
+      ? selectedPersonnel.map((p) => p.fullName).join(", ")
+      : undefined;
+  const selectedCount = isSelfAssignCreator ? 1 : selectedIds.length;
 
   return (
     <Form {...form}>
@@ -292,7 +300,7 @@ export function AdminWorkOrderForm({
                 {filteredPersonnel.length > 0 ? (
                   filteredPersonnel.map((person, index) => {
                     const personKey = person.userId ?? person.id;
-                    const isSelected = form.watch("assignedTo") === personKey;
+                    const isSelected = selectedIds.includes(personKey);
                     return (
                       <button
                         key={`${personKey}-${index}`}
@@ -316,6 +324,10 @@ export function AdminWorkOrderForm({
             </div>
           )}
 
+          {form.formState.errors.assignedTo?.message && (
+            <p className="mt-2 text-sm text-rose-600">{form.formState.errors.assignedTo.message}</p>
+          )}
+
           <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
             <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
               <p className="mb-1 flex items-center gap-2 text-xs text-slate-500">
@@ -325,21 +337,13 @@ export function AdminWorkOrderForm({
             </div>
             <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
               <p className="mb-1 flex items-center gap-2 text-xs text-slate-500">
-                <BriefcaseBusiness className="h-3.5 w-3.5" /> Vai trò
+                <BriefcaseBusiness className="h-3.5 w-3.5" /> Số nhân sự
               </p>
-              <p className="text-sm font-semibold text-slate-900">{roleLabel}</p>
-            </div>
-            <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
-              <p className="mb-1 text-xs text-slate-500">Chức vụ</p>
-              <p className="text-sm font-semibold text-slate-900">{jobPosition}</p>
-            </div>
-            <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
-              <p className="mb-1 text-xs text-slate-500">Tổ/nhóm</p>
-              <p className="text-sm font-semibold text-slate-900">{positionGroup}</p>
+              <p className="text-sm font-semibold text-slate-900">{selectedCount}</p>
             </div>
             <div className="rounded-md border border-gray-200 bg-gray-50 p-4 md:col-span-2">
-              <p className="mb-1 text-xs text-slate-500">Loại hợp đồng</p>
-              <p className="text-sm font-semibold text-slate-900">{contractType}</p>
+              <p className="mb-1 text-xs text-slate-500">Nhân sự đã chọn</p>
+              <p className="text-sm font-semibold text-slate-900">{selectedName ?? "Chưa chọn"}</p>
             </div>
           </div>
         </div>

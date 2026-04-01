@@ -18,6 +18,7 @@ import RoomModel from '@models/room.model';
 import DeviceModel from '@models/device.model';
 import WorkOrderModel from '@models/work-orders.model';
 import WorkOrderAttachmentModel from '@models/work-order-attachments.model';
+import WorkOrderAssigneeModel from '@models/work-order-assignees.model';
 import StaffProfileModel from '@models/staff-profile.model';
 import StaffPositionModel from '@models/staff-position.model';
 import StaffQualificationModel from '@models/staff-qualification.model';
@@ -74,6 +75,7 @@ const SignatureConfigs = SignatureConfigModel(sequelize);
 
 const WorkOrders = WorkOrderModel(sequelize);
 const WorkOrderAttachments = WorkOrderAttachmentModel(sequelize);
+const WorkOrderAssignees = WorkOrderAssigneeModel(sequelize);
 
 const StaffProfiles = StaffProfileModel(sequelize);
 const StaffPositions = StaffPositionModel(sequelize);
@@ -148,6 +150,13 @@ WorkOrders.belongsTo(Users, { foreignKey: 'approvedBy', as: 'approver' });
 Users.hasMany(WorkOrders, { foreignKey: 'assignedTo', as: 'assignedWorkOrders' });
 WorkOrders.belongsTo(Users, { foreignKey: 'assignedTo', as: 'assignee' });
 
+// Work Order Assignees (Many-to-Many)
+WorkOrders.hasMany(WorkOrderAssignees, { foreignKey: 'work_order_id', as: 'assignees', onDelete: 'CASCADE' });
+WorkOrderAssignees.belongsTo(WorkOrders, { foreignKey: 'work_order_id', as: 'workOrder' });
+
+Users.hasMany(WorkOrderAssignees, { foreignKey: 'assigned_to_user_id', as: 'workOrderAssignments' });
+WorkOrderAssignees.belongsTo(Users, { foreignKey: 'assigned_to_user_id', as: 'assignedUser' });
+
 WorkOrders.hasMany(WorkOrderAttachments, { foreignKey: 'workOrderId', as: 'attachments', onDelete: 'CASCADE' });
 WorkOrderAttachments.belongsTo(WorkOrders, { foreignKey: 'workOrderId', as: 'workOrder' });
 
@@ -196,6 +205,7 @@ export const DB = {
 
   WorkOrders,
   WorkOrderAttachments,
+  WorkOrderAssignees,
   StaffProfiles,
   StaffPositions,
   StaffQualifications,

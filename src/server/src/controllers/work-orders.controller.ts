@@ -33,8 +33,13 @@ export class WorkOrderController {
       const data = await this.service.findById(id);
 
       // Giáo viên và kỹ thuật viên chỉ xem được công lệnh được giao cho chính họ
-      if (['teacher', 'technician'].includes(req.user.role) && data.assignedTo !== req.user.id) {
-        return res.status(403).json({ success: false, message: 'Bạn không có quyền xem công lệnh này' });
+      if (['teacher', 'technician'].includes(req.user.role)) {
+        const isAssignedToThisUser = data.assignedTo === req.user.id ||
+          data.assignees?.some((a: any) => a.assignedUser?.id === req.user.id || a.assigned_to_user_id === req.user.id);
+        
+        if (!isAssignedToThisUser) {
+          return res.status(403).json({ success: false, message: 'Bạn không có quyền xem công lệnh này' });
+        }
       }
 
       res.status(200).json({ success: true, data, message: 'OK' });
@@ -48,6 +53,10 @@ export class WorkOrderController {
       const isSelfAssignRole = ['teacher', 'technician'].includes(req.user.role);
       const dto: CreateWorkOrderDto = {
         ...req.body,
+        // If teacher/technician, self-assign to their ID
+        assignedToIds: isSelfAssignRole 
+          ? [req.user.id]
+          : (req.body.assignedToIds || (req.body.assignedTo ? [req.body.assignedTo] : undefined)),
         assignedTo: isSelfAssignRole ? req.user.id : req.body.assignedTo,
       };
       const data = await this.service.create(dto, req.user.id);
