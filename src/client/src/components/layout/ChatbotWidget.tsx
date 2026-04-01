@@ -125,7 +125,21 @@ export function ChatbotWidget() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showBubble, setShowBubble] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Hiện bubble 1 lần duy nhất, tự ẩn sau 4 giây
+  useEffect(() => {
+    const seen = localStorage.getItem("chatbot_bubble_seen");
+    if (!seen) {
+      const showTimer = setTimeout(() => setShowBubble(true), 1500);
+      const hideTimer = setTimeout(() => {
+        setShowBubble(false);
+        localStorage.setItem("chatbot_bubble_seen", "1");
+      }, 5500);
+      return () => { clearTimeout(showTimer); clearTimeout(hideTimer); };
+    }
+  }, []);
 
   // Load chat history from localStorage
   useEffect(() => {
@@ -215,16 +229,20 @@ export function ChatbotWidget() {
             className="fixed bottom-6 right-6 z-50 flex items-end gap-3"
           >
             {/* Speech bubble */}
-            <motion.div
-              initial={{ opacity: 0, x: 20, scale: 0.8 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              transition={{ delay: 0.6, type: "spring", stiffness: 260, damping: 20 }}
-              className="relative mb-2 max-w-[200px] rounded-2xl rounded-br-none bg-white dark:bg-zinc-800 border border-border px-3 py-2 shadow-lg text-xs text-foreground leading-relaxed"
-            >
-              Thầy/cô cần giúp gì không? Hãy hỏi em nhé 😊
-              {/* Triangle pointer */}
-              <span className="absolute -right-2 bottom-0 h-0 w-0 border-l-8 border-t-8 border-l-white dark:border-l-zinc-800 border-t-transparent" />
-            </motion.div>
+            <AnimatePresence>
+              {showBubble && (
+                <motion.div
+                  initial={{ opacity: 0, x: 20, scale: 0.8 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: 20, scale: 0.8 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                  className="relative mb-2 max-w-[200px] rounded-2xl rounded-br-none bg-white dark:bg-zinc-800 border border-border px-3 py-2 shadow-lg text-xs text-foreground leading-relaxed"
+                >
+                  Thầy/cô cần giúp gì không? Hãy hỏi em nhé 😊
+                  <span className="absolute -right-2 bottom-0 h-0 w-0 border-l-8 border-t-8 border-l-white dark:border-l-zinc-800 border-t-transparent" />
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <Button
               onClick={() => setIsOpen(true)}

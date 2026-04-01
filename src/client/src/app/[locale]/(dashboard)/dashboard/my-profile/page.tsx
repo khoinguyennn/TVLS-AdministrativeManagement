@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { IdCard, Info, Loader2, Phone, MapPin, Home } from "lucide-react";
+import { IdCard, Info, Loader2, Phone, MapPin, Home, User, Building2, Briefcase, Banknote, GraduationCap, Star, CreditCard } from "lucide-react";
 import { ProfileSkeleton } from "@/components/skeletons";
 
 import gradientLight from "@/assets/images/gradient1.jpg";
@@ -437,30 +437,34 @@ export default function MyProfilePage() {
 
           {/* ── Tabs ── */}
           <Tabs defaultValue="personal" className="w-full">
-            <div className="border-b overflow-x-auto">
-              <TabsList className="inline-flex h-auto w-auto bg-transparent p-0 gap-0">
+            <div className="flex gap-6 mt-2">
+              {/* Sidebar menu dọc */}
+              <TabsList className="flex flex-col h-auto w-52 shrink-0 bg-transparent rounded-xl p-0 gap-1 self-start sticky top-20">
                 {[
-                  { value: "personal", label: t("personalInfo") },
-                  { value: "organization", label: t("organization") },
-                  { value: "work", label: t("workInfo") },
-                  { value: "salary", label: t("salaryAllowance") },
-                  { value: "qualification", label: t("qualifications") },
-                  { value: "evaluation", label: t("evaluation") },
-                  { value: "bank", label: t("bankInfo") },
+                  { value: "personal", label: t("personalInfo"), icon: User },
+                  { value: "organization", label: t("organization"), icon: Building2 },
+                  { value: "work", label: t("workInfo"), icon: Briefcase },
+                  { value: "salary", label: t("salaryAllowance"), icon: Banknote },
+                  { value: "qualification", label: t("qualifications"), icon: GraduationCap },
+                  { value: "evaluation", label: t("evaluation"), icon: Star },
+                  { value: "bank", label: t("bankInfo"), icon: CreditCard },
                 ].map((tab) => (
                   <TabsTrigger
                     key={tab.value}
                     value={tab.value}
-                    className="relative px-4 py-3 rounded-none border-b-[3px] border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:shadow-none text-sm font-bold text-muted-foreground bg-transparent hover:text-foreground whitespace-nowrap"
+                    className="w-full flex items-center justify-start gap-2.5 px-4 py-2.5 rounded-lg text-sm font-medium text-muted-foreground data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none data-[state=active]:font-semibold hover:text-foreground hover:bg-muted transition-all border-l-2 border-transparent data-[state=active]:border-primary"
                   >
+                    <tab.icon className="size-4 shrink-0" />
                     {tab.label}
                   </TabsTrigger>
                 ))}
               </TabsList>
-            </div>
+
+              {/* Nội dung tab */}
+              <div className="flex-1 min-w-0">
 
             {/* ═══════════ Tab 1: Thông tin cá nhân ═══════════ */}
-            <TabsContent value="personal" className="mt-8">
+            <TabsContent value="personal" className="mt-0">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {/* ── Column 1: Thông tin cơ bản ── */}
                 <div className="space-y-6">
@@ -478,7 +482,7 @@ export default function MyProfilePage() {
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-6">
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-muted-foreground">{t("gender")}</Label>
                       <Select
@@ -519,7 +523,7 @@ export default function MyProfilePage() {
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-6">
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-muted-foreground">{t("issueDate")}</Label>
                       <Input
@@ -554,7 +558,7 @@ export default function MyProfilePage() {
                     Đặc điểm & Trạng thái
                   </h4>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-6">
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-muted-foreground">{t("ethnicity")}</Label>
                       <Select
@@ -751,13 +755,13 @@ export default function MyProfilePage() {
             </TabsContent>
 
             {/* ═══════════ Tab 2: Tổ chức ═══════════ */}
-            <TabsContent value="organization" className="mt-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <TabsContent value="organization" className="mt-0">
+              <div className="max-w-2xl space-y-6">
                 <div className="space-y-6">
                   <h4 className="text-sm font-bold uppercase tracking-wider text-primary border-l-4 border-primary pl-3">
                     Đoàn thể
                   </h4>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-6">
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Đoàn viên
@@ -786,7 +790,7 @@ export default function MyProfilePage() {
                       />
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-6">
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Đảng viên
@@ -820,13 +824,13 @@ export default function MyProfilePage() {
             </TabsContent>
 
             {/* ═══════════ Tab 3: Công tác ═══════════ */}
-            <TabsContent value="work" className="mt-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <TabsContent value="work" className="mt-0">
+              <div className="space-y-6">
                 <div className="space-y-6">
                   <h4 className="text-sm font-bold uppercase tracking-wider text-primary border-l-4 border-primary pl-3">
                     Vị trí công tác
                   </h4>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-3 gap-6">
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-muted-foreground">
                         Chức vụ
@@ -865,29 +869,25 @@ export default function MyProfilePage() {
                       </Select>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-3 gap-6">
                     <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        Cơ quan tuyển dụng
-                      </Label>
+                      <Label className="text-[13px] font-semibold text-muted-foreground">Cơ quan tuyển dụng</Label>
                       <Input value={pos.recruitmentAgency} onChange={(e) => updatePos({ recruitmentAgency: e.target.value })} />
                     </div>
                     <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        Nghề nghiệp khi tuyển dụng
-                      </Label>
+                      <Label className="text-[13px] font-semibold text-muted-foreground">Nghề nghiệp khi tuyển dụng</Label>
                       <Input value={pos.professionWhenRecruited} onChange={(e) => updatePos({ professionWhenRecruited: e.target.value })} />
                     </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        Loại hợp đồng
-                      </Label>
+                      <Label className="text-[13px] font-semibold text-muted-foreground">Ngạch hạng</Label>
+                      <Input value={pos.rankCode} onChange={(e) => updatePos({ rankCode: e.target.value })} />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-6">
+                    <div className="space-y-1.5 col-span-2">
+                      <Label className="text-[13px] font-semibold text-muted-foreground">Loại hợp đồng</Label>
                       <Select value={pos.contractType} onValueChange={(v) => updatePos({ contractType: v })}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="-- Chọn hình thức hợp đồng --" />
-                        </SelectTrigger>
+                        <SelectTrigger><SelectValue placeholder="-- Chọn hình thức hợp đồng --" /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="Hợp đồng xác định thời hạn">Hợp đồng xác định thời hạn</SelectItem>
                           <SelectItem value="Hợp đồng không xác định thời hạn">Hợp đồng không xác định thời hạn</SelectItem>
@@ -899,21 +899,15 @@ export default function MyProfilePage() {
                       </Select>
                     </div>
                     <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        Ngạch hạng
-                      </Label>
-                      <Input value={pos.rankCode} onChange={(e) => updatePos({ rankCode: e.target.value })} />
+                      <Label className="text-[13px] font-semibold text-muted-foreground">Cấp bậc</Label>
+                      <Input value={pos.rankLevel} onChange={(e) => updatePos({ rankLevel: e.target.value })} />
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        Tổ bộ môn
-                      </Label>
+                  <div className="grid grid-cols-3 gap-6">
+                    <div className="space-y-1.5 col-span-2">
+                      <Label className="text-[13px] font-semibold text-muted-foreground">Tổ bộ môn</Label>
                       <Select value={pos.subjectGroup} onValueChange={(v) => updatePos({ subjectGroup: v })}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="-- Chọn tổ bộ môn --" />
-                        </SelectTrigger>
+                        <SelectTrigger><SelectValue placeholder="-- Chọn tổ bộ môn --" /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="Tổ Văn phòng">Tổ Văn phòng</SelectItem>
                           <SelectItem value="Tổ Chồi - Lá">Tổ Chồi - Lá</SelectItem>
@@ -937,13 +931,9 @@ export default function MyProfilePage() {
                       </Select>
                     </div>
                     <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        Cấp học
-                      </Label>
+                      <Label className="text-[13px] font-semibold text-muted-foreground">Cấp học</Label>
                       <Select value={pos.educationLevel} onValueChange={(v) => updatePos({ educationLevel: v })}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="-- Chọn cấp học --" />
-                        </SelectTrigger>
+                        <SelectTrigger><SelectValue placeholder="-- Chọn cấp học --" /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="Mầm non">Mầm non</SelectItem>
                           <SelectItem value="Tiểu học">Tiểu học</SelectItem>
@@ -953,157 +943,101 @@ export default function MyProfilePage() {
                       </Select>
                     </div>
                   </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-[13px] font-semibold text-muted-foreground">
-                      Cấp bậc
-                    </Label>
-                    <Input value={pos.rankLevel} onChange={(e) => updatePos({ rankLevel: e.target.value })} />
-                  </div>
                 </div>
               </div>
             </TabsContent>
 
             {/* ═══════════ Tab 4: Phụ cấp lương ═══════════ */}
-            <TabsContent value="salary" className="mt-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-6">
-                  <h4 className="text-sm font-bold uppercase tracking-wider text-primary border-l-4 border-primary pl-3">
-                    Thông tin lương
-                  </h4>
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        Hệ số lương
-                      </Label>
-                      <Input type="number" step="0.01" value={sal.salaryCoefficient} onChange={(e) => updateSal({ salaryCoefficient: e.target.value })} />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        Bậc lương
-                      </Label>
-                      <Input type="number" value={sal.salaryLevel} onChange={(e) => updateSal({ salaryLevel: e.target.value })} />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        Lương cơ bản
-                      </Label>
-                      <Input type="number" value={sal.baseSalary} onChange={(e) => updateSal({ baseSalary: e.target.value })} />
-                    </div>
+            <TabsContent value="salary" className="mt-0">
+              <div className="space-y-6">
+                <h4 className="text-sm font-bold uppercase tracking-wider text-primary border-l-4 border-primary pl-3">
+                  Thông tin lương & Phụ cấp
+                </h4>
+                <div className="grid grid-cols-4 gap-6">
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-muted-foreground">Hệ số lương</Label>
+                    <Input type="number" step="0.01" value={sal.salaryCoefficient} onChange={(e) => updateSal({ salaryCoefficient: e.target.value })} />
                   </div>
                   <div className="space-y-1.5">
-                    <Label className="text-[13px] font-semibold text-muted-foreground">
-                      Ngày hưởng lương
-                    </Label>
+                    <Label className="text-[13px] font-semibold text-muted-foreground">Bậc lương</Label>
+                    <Input type="number" value={sal.salaryLevel} onChange={(e) => updateSal({ salaryLevel: e.target.value })} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-muted-foreground">Lương cơ bản</Label>
+                    <Input type="number" value={sal.baseSalary} onChange={(e) => updateSal({ baseSalary: e.target.value })} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-muted-foreground">Ngày hưởng lương</Label>
                     <Input type="date" value={sal.salaryStartDate} onChange={(e) => updateSal({ salaryStartDate: e.target.value })} />
                   </div>
-                  <div className="space-y-1.5 mt-4">
-                    <Label className="text-[13px] font-semibold text-muted-foreground">
-                      Ghi chú lương
-                    </Label>
-                    <Input placeholder="Nhập ghi chú về lương" value={sal.salaryNote} onChange={(e) => updateSal({ salaryNote: e.target.value })} />
+                </div>
+                <div className="grid grid-cols-4 gap-6">
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-muted-foreground">PC Công đoàn (%)</Label>
+                    <Input type="number" step="0.1" value={sal.unionAllowancePercent} onChange={(e) => updateSal({ unionAllowancePercent: e.target.value })} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-muted-foreground">PC Thâm niên (%)</Label>
+                    <Input type="number" step="0.1" value={sal.seniorityAllowancePercent} onChange={(e) => updateSal({ seniorityAllowancePercent: e.target.value })} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-muted-foreground">PC Ưu đãi (%)</Label>
+                    <Input type="number" step="0.1" value={sal.incentiveAllowancePercent} onChange={(e) => updateSal({ incentiveAllowancePercent: e.target.value })} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-muted-foreground">PC Chức vụ (%)</Label>
+                    <Input type="number" step="0.1" value={sal.positionAllowancePercent} onChange={(e) => updateSal({ positionAllowancePercent: e.target.value })} />
                   </div>
                 </div>
-                <div className="space-y-6">
-                  <h4 className="text-sm font-bold uppercase tracking-wider text-primary border-l-4 border-primary pl-3">
-                    Phụ cấp
-                  </h4>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        PC Công đoàn (%)
-                      </Label>
-                      <Input type="number" step="0.1" value={sal.unionAllowancePercent} onChange={(e) => updateSal({ unionAllowancePercent: e.target.value })} />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        PC Thâm niên (%)
-                      </Label>
-                      <Input type="number" step="0.1" value={sal.seniorityAllowancePercent} onChange={(e) => updateSal({ seniorityAllowancePercent: e.target.value })} />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        PC Ưu đãi (%)
-                      </Label>
-                      <Input type="number" step="0.1" value={sal.incentiveAllowancePercent} onChange={(e) => updateSal({ incentiveAllowancePercent: e.target.value })} />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        PC Chức vụ (%)
-                      </Label>
-                      <Input type="number" step="0.1" value={sal.positionAllowancePercent} onChange={(e) => updateSal({ positionAllowancePercent: e.target.value })} />
-                    </div>
-                  </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[13px] font-semibold text-muted-foreground">Ghi chú lương</Label>
+                  <Input placeholder="Nhập ghi chú về lương" value={sal.salaryNote} onChange={(e) => updateSal({ salaryNote: e.target.value })} />
                 </div>
               </div>
             </TabsContent>
 
             {/* ═══════════ Tab 5: Trình độ ═══════════ */}
-            <TabsContent value="qualification" className="mt-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-6">
-                  <h4 className="text-sm font-bold uppercase tracking-wider text-primary border-l-4 border-primary pl-3">
-                    Trình độ đào tạo
-                  </h4>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        Trình độ GDPT
-                      </Label>
-                      <Input placeholder="12/12" value={qual.generalEducationLevel} onChange={(e) => updateQual({ generalEducationLevel: e.target.value })} />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        Trình độ chuyên môn
-                      </Label>
-                      <Select value={qual.professionalLevel} onValueChange={(v) => updateQual({ professionalLevel: v })}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="-- Chọn trình độ chuyên môn --" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Trung cấp">Trung cấp</SelectItem>
-                          <SelectItem value="Cao đẳng">Cao đẳng</SelectItem>
-                          <SelectItem value="Đại học">Đại học</SelectItem>
-                          <SelectItem value="Kỹ sư">Kỹ sư</SelectItem>
-                          <SelectItem value="Cử nhân">Cử nhân</SelectItem>
-                          <SelectItem value="Thạc sĩ">Thạc sĩ</SelectItem>
-                          <SelectItem value="Tiến sĩ">Tiến sĩ</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        Chuyên ngành
-                      </Label>
-                      <Input value={qual.major} onChange={(e) => updateQual({ major: e.target.value })} />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-muted-foreground">
-                        Nơi đào tạo
-                      </Label>
-                      <Input value={qual.trainingPlace} onChange={(e) => updateQual({ trainingPlace: e.target.value })} />
-                    </div>
+            <TabsContent value="qualification" className="mt-0">
+              <div className="space-y-6">
+                <h4 className="text-sm font-bold uppercase tracking-wider text-primary border-l-4 border-primary pl-3">
+                  Trình độ đào tạo & Ngoại ngữ
+                </h4>
+                <div className="grid grid-cols-3 gap-6">
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-muted-foreground">Trình độ GDPT</Label>
+                    <Input placeholder="12/12" value={qual.generalEducationLevel} onChange={(e) => updateQual({ generalEducationLevel: e.target.value })} />
                   </div>
                   <div className="space-y-1.5">
-                    <Label className="text-[13px] font-semibold text-muted-foreground">
-                      Năm tốt nghiệp
-                    </Label>
+                    <Label className="text-[13px] font-semibold text-muted-foreground">Trình độ chuyên môn</Label>
+                    <Select value={qual.professionalLevel} onValueChange={(v) => updateQual({ professionalLevel: v })}>
+                      <SelectTrigger><SelectValue placeholder="-- Chọn trình độ --" /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Trung cấp">Trung cấp</SelectItem>
+                        <SelectItem value="Cao đẳng">Cao đẳng</SelectItem>
+                        <SelectItem value="Đại học">Đại học</SelectItem>
+                        <SelectItem value="Kỹ sư">Kỹ sư</SelectItem>
+                        <SelectItem value="Cử nhân">Cử nhân</SelectItem>
+                        <SelectItem value="Thạc sĩ">Thạc sĩ</SelectItem>
+                        <SelectItem value="Tiến sĩ">Tiến sĩ</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-muted-foreground">Chuyên ngành</Label>
+                    <Input value={qual.major} onChange={(e) => updateQual({ major: e.target.value })} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-muted-foreground">Nơi đào tạo</Label>
+                    <Input value={qual.trainingPlace} onChange={(e) => updateQual({ trainingPlace: e.target.value })} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-muted-foreground">Năm tốt nghiệp</Label>
                     <Input type="number" placeholder="2015" value={qual.graduationYear} onChange={(e) => updateQual({ graduationYear: e.target.value })} />
                   </div>
-                </div>
-                <div className="space-y-6">
-                  <h4 className="text-sm font-bold uppercase tracking-wider text-primary border-l-4 border-primary pl-3">
-                    Ngoại ngữ & Tin học
-                  </h4>
                   <div className="space-y-1.5">
-                    <Label className="text-[13px] font-semibold text-muted-foreground">
-                      Trình độ Tin học
-                    </Label>
+                    <Label className="text-[13px] font-semibold text-muted-foreground">Trình độ Tin học</Label>
                     <Select value={qual.itLevel} onValueChange={(v) => updateQual({ itLevel: v })}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="-- Chọn trình độ tin học --" />
-                      </SelectTrigger>
+                      <SelectTrigger><SelectValue placeholder="-- Chọn trình độ tin học --" /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Tin học A (cũ)">Tin học A (cũ)</SelectItem>
                         <SelectItem value="Tin học B (cũ)">Tin học B (cũ)</SelectItem>
@@ -1113,14 +1047,10 @@ export default function MyProfilePage() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-[13px] font-semibold text-muted-foreground">
-                      Trình độ Ngoại ngữ
-                    </Label>
+                  <div className="space-y-1.5 col-span-2">
+                    <Label className="text-[13px] font-semibold text-muted-foreground">Trình độ Ngoại ngữ</Label>
                     <Select value={qual.foreignLanguageLevel} onValueChange={(v) => updateQual({ foreignLanguageLevel: v })}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="-- Chọn trình độ ngoại ngữ --" />
-                      </SelectTrigger>
+                      <SelectTrigger><SelectValue placeholder="-- Chọn trình độ ngoại ngữ --" /></SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Khung năng lực ngoại ngữ 6 bậc (Việt Nam)</SelectLabel>
@@ -1152,13 +1082,13 @@ export default function MyProfilePage() {
               </div>
             </TabsContent>
 
-            {/* ═══════════ Tab 6: Đánh giá ═══════════ */}
-            <TabsContent value="evaluation" className="mt-8">
+            {/* Tab 6: Đánh giá */}
+            <TabsContent value="evaluation" className="mt-0">
               <div className="space-y-6 max-w-2xl">
                 <h4 className="text-sm font-bold uppercase tracking-wider text-primary border-l-4 border-primary pl-3">
                   Đánh giá viên chức
                 </h4>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-1.5">
                     <Label className="text-[13px] font-semibold text-muted-foreground">
                       Đánh giá viên chức
@@ -1206,12 +1136,12 @@ export default function MyProfilePage() {
             </TabsContent>
 
             {/* ═══════════ Tab 7: Ngân hàng ═══════════ */}
-            <TabsContent value="bank" className="mt-8">
+            <TabsContent value="bank" className="mt-0">
               <div className="space-y-6 max-w-2xl">
                 <h4 className="text-sm font-bold uppercase tracking-wider text-primary border-l-4 border-primary pl-3">
                   Tài khoản ngân hàng
                 </h4>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-1.5">
                     <Label className="text-[13px] font-semibold text-muted-foreground">
                       Tên ngân hàng
@@ -1233,6 +1163,8 @@ export default function MyProfilePage() {
                 </div>
               </div>
             </TabsContent>
+              </div>{/* end flex-1 content wrapper */}
+            </div>{/* end flex gap-6 */}
           </Tabs>
         </div>
       </div>
