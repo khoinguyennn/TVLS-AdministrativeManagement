@@ -90,7 +90,8 @@ export class WorkOrderController {
   public reject = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
       const id = Number(req.params.id);
-      const data = await this.service.reject(id, req.user.id);
+      const reason = typeof req.body?.reason === 'string' ? req.body.reason.trim() : '';
+      const data = await this.service.reject(id, req.user.id, reason);
       res.status(200).json({ success: true, data, message: 'Từ chối công lệnh thành công' });
     } catch (error) {
       next(error);

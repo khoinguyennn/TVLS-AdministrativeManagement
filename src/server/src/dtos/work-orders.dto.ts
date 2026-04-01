@@ -73,4 +73,8 @@ export class UpdateWorkOrderDto {
   @IsString()
   @IsIn(['pending', 'approved', 'in_progress', 'submitted_for_review', 'completed', 'rework_requested', 'rejected', 'cancelled'])
   public status?: string;
+
+  @IsOptional()
+  @IsString()
+  public rejectionReason?: string;
 }

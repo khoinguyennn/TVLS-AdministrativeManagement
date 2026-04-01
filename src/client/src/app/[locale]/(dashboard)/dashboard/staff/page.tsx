@@ -9,6 +9,16 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -35,6 +45,7 @@ export default function StaffPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [mounted, setMounted] = useState(false);
+  const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -99,17 +110,20 @@ export default function StaffPage() {
   }, [filteredPersonnel, currentPage]);
 
   async function handleDelete(id: number) {
-    if (!confirm("Bạn có chắc chắn muốn xóa nhân sự này?")) {
-      return;
-    }
+    setDeleteTargetId(id);
+  }
 
+  async function confirmDelete() {
+    if (!deleteTargetId) return;
     try {
-      await personnelService.delete(id);
+      await personnelService.delete(deleteTargetId);
       toast.success("Xóa nhân sự thành công");
       loadPersonnel();
     } catch (error) {
       const message = error instanceof Error ? error.message : "Lỗi xóa dữ liệu";
       toast.error(message);
+    } finally {
+      setDeleteTargetId(null);
     }
   }
 
@@ -247,6 +261,21 @@ export default function StaffPage() {
           )}
         </div>
       </div>
+
+      <AlertDialog open={deleteTargetId !== null} onOpenChange={(open) => !open && setDeleteTargetId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Xóa nhân sự</AlertDialogTitle>
+            <AlertDialogDescription>
+              Bạn có chắc chắn muốn xóa nhân sự này? Hành động này không thể hoàn tác.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setDeleteTargetId(null)}>Hủy</AlertDialogCancel>
+            <AlertDialogAction variant="destructive" onClick={confirmDelete}>Xóa</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

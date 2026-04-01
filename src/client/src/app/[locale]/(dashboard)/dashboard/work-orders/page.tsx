@@ -9,6 +9,7 @@ import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -17,6 +18,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
   Select,
   SelectContent,
@@ -54,6 +65,13 @@ export default function WorkOrdersPage() {
   const [evidenceFile, setEvidenceFile] = useState<File | null>(null);
   const [isEvidenceSubmitting, setIsEvidenceSubmitting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [deleteTarget, setDeleteTarget] = useState<WorkOrder | null>(null);
+  const [reasonDialog, setReasonDialog] = useState<{ open: boolean; mode: "reject" | "rework"; id: number | null; reason: string }>({
+    mode: "reject",
+    open: false,
+    id: null,
+    reason: "",
+  });
   const PAGE_SIZE = 8;
   const [mounted, setMounted] = useState(false);
 
@@ -185,17 +203,21 @@ export default function WorkOrdersPage() {
   }
 
   async function handleDelete(id: number) {
-    if (!confirm("Bạn có chắc chắn muốn xóa công lệnh này?")) {
-      return;
-    }
+    const target = workOrders.find((workOrder) => workOrder.id === id) ?? null;
+    setDeleteTarget(target);
+  }
 
+  async function confirmDelete() {
+    if (!deleteTarget) return;
     try {
-      await workOrderService.delete(id);
-      setWorkOrders(prev => prev.filter(wo => wo.id !== id));
+      await workOrderService.delete(deleteTarget.id);
+      setWorkOrders(prev => prev.filter(wo => wo.id !== deleteTarget.id));
       toast.success("Xóa công lệnh thành công");
     } catch (error) {
       const message = getApiErrorMessage(error, "Lỗi xóa công lệnh");
       toast.error(message);
+    } finally {
+      setDeleteTarget(null);
     }
   }
 
@@ -228,16 +250,36 @@ export default function WorkOrdersPage() {
   }
 
   async function handleReject(id: number) {
-    const reason = prompt("Lý do từ chối:");
-    if (!reason) return;
+    setReasonDialog({ open: true, mode: "reject", id, reason: "" });
+  }
+
+  async function handleRequestRework(id: number) {
+    setReasonDialog({ open: true, mode: "rework", id, reason: "" });
+  }
+
+  async function submitReasonDialog() {
+    if (!reasonDialog.id) return;
+    const reason = reasonDialog.reason.trim();
+    if (!reason) {
+      toast.error("Vui lòng nhập lý do");
+      return;
+    }
 
     try {
-      const updated = await workOrderService.reject(id);
-      setWorkOrders(prev => prev.map(wo => (wo.id === updated.id ? updated : wo)));
-      toast.success("Từ chối công lệnh thành công");
+      if (reasonDialog.mode === "reject") {
+        const updated = await workOrderService.reject(reasonDialog.id, { reason });
+        setWorkOrders(prev => prev.map(wo => (wo.id === updated.id ? updated : wo)));
+        toast.success("Từ chối công lệnh thành công");
+      } else {
+        const updated = await workOrderService.requestRework(reasonDialog.id, { reason });
+        setWorkOrders(prev => prev.map(wo => (wo.id === updated.id ? updated : wo)));
+        toast.success("Đã yêu cầu thực hiện lại công lệnh");
+      }
     } catch (error) {
-      const message = getApiErrorMessage(error, "Lỗi từ chối công lệnh");
+      const message = getApiErrorMessage(error, reasonDialog.mode === "reject" ? "Lỗi từ chối công lệnh" : "Lỗi yêu cầu thực hiện lại công lệnh");
       toast.error(message);
+    } finally {
+      setReasonDialog({ open: false, mode: "reject", id: null, reason: "" });
     }
   }
 
@@ -301,19 +343,6 @@ export default function WorkOrdersPage() {
       toast.success("Xác nhận hoàn thành công lệnh thành công");
     } catch (error) {
       const message = getApiErrorMessage(error, "Lỗi xác nhận hoàn thành công lệnh");
-      toast.error(message);
-    }
-  }
-
-  async function handleRequestRework(id: number) {
-    const reason = prompt("Lý do yêu cầu thực hiện lại:") || "";
-
-    try {
-      const updated = await workOrderService.requestRework(id, { reason });
-      setWorkOrders(prev => prev.map(wo => (wo.id === updated.id ? updated : wo)));
-      toast.success("Đã yêu cầu thực hiện lại công lệnh");
-    } catch (error) {
-      const message = getApiErrorMessage(error, "Lỗi yêu cầu thực hiện lại công lệnh");
       toast.error(message);
     }
   }
@@ -461,6 +490,21 @@ export default function WorkOrdersPage() {
         isLoading={isSubmitting}
       />
 
+      <AlertDialog open={deleteTarget !== null} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
+            <AlertDialogDescription>
+              Bạn có chắc chắn muốn xóa công lệnh "{deleteTarget?.code ?? "này"}"? Hành động này không thể hoàn tác.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setDeleteTarget(null)}>Hủy</AlertDialogCancel>
+            <AlertDialogAction variant="destructive" onClick={confirmDelete}>Xóa</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <Dialog open={evidenceDialogOpen} onOpenChange={setEvidenceDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -509,6 +553,37 @@ export default function WorkOrdersPage() {
               disabled={isEvidenceSubmitting || !(evidenceWorkOrder?.attachments?.length)}
             >
               Hoàn thành công lệnh
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={reasonDialog.open} onOpenChange={(open) => !open && setReasonDialog({ open: false, mode: "reject", id: null, reason: "" })}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {reasonDialog.mode === "reject" ? "Từ chối công lệnh" : "Lý do yêu cầu thực hiện lại"}
+            </DialogTitle>
+            <DialogDescription>
+              {reasonDialog.mode === "reject"
+                ? "Nhập lý do từ chối để lưu vào hệ thống và phản hồi rõ ràng cho người nhận."
+                : "Nhập nội dung ngắn gọn để phản hồi cho người thực hiện."}
+            </DialogDescription>
+          </DialogHeader>
+
+          <Textarea
+            value={reasonDialog.reason}
+            onChange={(e) => setReasonDialog((prev) => ({ ...prev, reason: e.target.value }))}
+            placeholder={reasonDialog.mode === "reject" ? "Ví dụ: Công việc chưa đủ điều kiện triển khai..." : "Ví dụ: Cần bổ sung ảnh minh chứng rõ hơn..."}
+            className="min-h-28"
+          />
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setReasonDialog({ open: false, mode: "reject", id: null, reason: "" })}>
+              Hủy
+            </Button>
+            <Button onClick={submitReasonDialog}>
+              {reasonDialog.mode === "reject" ? "Từ chối" : "Xác nhận"}
             </Button>
           </DialogFooter>
         </DialogContent>
