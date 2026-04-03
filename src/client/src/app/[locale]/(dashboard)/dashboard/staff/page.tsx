@@ -68,22 +68,31 @@ export default function StaffPage() {
     loadPersonnel();
   }, [loadPersonnel]);
 
+  // Các positionGroup được coi là CBQL
+  const CBQL_GROUPS = ["Hiệu trưởng", "Phó hiệu trưởng"];
+
+  const isCBQL = (person: (typeof allPersonnel)[0]) =>
+    (person.positions ?? []).some((pos) =>
+      CBQL_GROUPS.includes(pos.positionGroup?.trim() ?? "")
+    );
+
   const roleOptions = useMemo(() => {
     const set = new Set<string>();
     allPersonnel.forEach((person) => {
-      const role = person.positions?.[0]?.jobPosition?.trim();
-      if (role) {
-        set.add(role);
-      }
+      if (isCBQL(person)) return; // CBQL có option riêng
+      person.positions?.forEach((pos) => {
+        const role = pos.jobPosition?.trim();
+        if (role) set.add(role);
+      });
     });
     return Array.from(set).sort((a, b) => a.localeCompare(b, "vi"));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allPersonnel]);
 
   const filteredPersonnel = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
     return allPersonnel.filter((person) => {
-      const role = person.positions?.[0]?.jobPosition?.trim() || "";
       const phone = person.contactAddress?.phone || "";
 
       const matchSearch =
@@ -93,11 +102,26 @@ export default function StaffPage() {
         person.email.toLowerCase().includes(query) ||
         phone.toLowerCase().includes(query);
 
-      const matchRole = roleFilter === "all" || role === roleFilter;
+      let matchRole: boolean;
+      if (roleFilter === "all") {
+        matchRole = true;
+      } else if (roleFilter === "__cbql__") {
+        // Lọc riêng CBQL theo positionGroup
+        matchRole = isCBQL(person);
+      } else {
+        // Lọc theo jobPosition nhưng loại trừ CBQL
+        matchRole =
+          !isCBQL(person) &&
+          (person.positions ?? []).some(
+            (pos) => pos.jobPosition?.trim() === roleFilter
+          );
+      }
+
       const matchStatus = statusFilter === "all" || person.staffStatus === statusFilter;
 
       return matchSearch && matchRole && matchStatus;
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allPersonnel, roleFilter, searchQuery, statusFilter]);
 
   useEffect(() => {
@@ -201,6 +225,7 @@ export default function StaffPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tất cả vai trò</SelectItem>
+                <SelectItem value="__cbql__">Cán bộ quản lý</SelectItem>
                 {roleOptions.map((role) => (
                   <SelectItem key={role} value={role}>
                     {role}
