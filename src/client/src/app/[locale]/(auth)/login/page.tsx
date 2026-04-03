@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 import { useGoogleLogin } from "@react-oauth/google";
 import { AxiosError } from "axios";
@@ -12,6 +11,7 @@ import { toast } from "react-toastify";
 import { AuthFooter } from "@/components/layout/AuthFooter";
 import { AuthHeader } from "@/components/layout/AuthHeader";
 import { authStorage } from "@/lib/auth-storage";
+import { useRouter } from "@/i18n/navigation";
 import { authService } from "@/services/auth.service";
 import type { AuthError } from "@/types/auth.types";
 import { Button, Card, CardContent, CardFooter, Input, Label, Separator } from "@/ui";
@@ -130,26 +130,29 @@ export default function LoginPage() {
 
               {/* Form */}
               <form className="space-y-4 sm:space-y-5" onSubmit={handleSubmit}>
-                {/* Email/Username field */}
+                {/* Email field */}
                 <div className="space-y-2">
                   <Label
                     htmlFor="email"
                     className="text-sm font-semibold text-slate-700 dark:text-slate-300"
                   >
-                    Email hoặc Tên đăng nhập
+                    Email đăng nhập
                   </Label>
                   <div className="relative">
                     <User className="absolute top-1/2 left-3 size-5 -translate-y-1/2 text-slate-400" />
                     <Input
                       id="email"
-                      type="text"
-                      placeholder="example@thsp.edu.vn"
+                      type="email"
+                      placeholder="admin@thsp.edu.vn"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       disabled={isLoading}
                       className="h-11 rounded-lg border-slate-300 pr-4 pl-10 transition-all sm:h-12 focus-visible:border-primary focus-visible:ring-primary dark:border-slate-700"
                     />
                   </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Hệ thống hiện chỉ chấp nhận đăng nhập bằng email.
+                  </p>
                 </div>
 
                 {/* Password field */}

@@ -7,13 +7,22 @@ import * as path from 'path';
 
 @Service()
 export class EmailService {
-  private resend: Resend;
+  private resend?: Resend;
 
   constructor() {
-    this.resend = new Resend(RESEND_API_KEY);
+    if (RESEND_API_KEY) {
+      this.resend = new Resend(RESEND_API_KEY);
+    } else {
+      logger.warn('RESEND_API_KEY is not configured. Email sending is disabled until it is provided.');
+    }
   }
 
   public async sendOTPEmail(to: string, otp: string, fullName: string): Promise<boolean> {
+    if (!this.resend) {
+      logger.error(`Cannot send OTP email to ${to}: RESEND_API_KEY is missing`);
+      return false;
+    }
+
     const { data, error } = await this.resend.emails.send({
       from: RESEND_FROM || 'THSP Admin <admin@thsp.tvu.edu.vn>',
       to: [to],
@@ -102,6 +111,11 @@ export class EmailService {
     note?: string;
     creatorName: string;
   }): Promise<boolean> {
+    if (!this.resend) {
+      logger.error(`Cannot send work order email to ${to}: RESEND_API_KEY is missing`);
+      return false;
+    }
+
     const fmt = (d?: string | Date) => d ? new Date(d).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Không xác định';
 
     const { data, error } = await this.resend.emails.send({
@@ -163,6 +177,12 @@ export class EmailService {
   }
 
   public async sendDeviceReportEmail(to: string | string[], subject: string, bodyContent: string, attachments?: { filename: string; path: string }[]): Promise<boolean> {
+    if (!this.resend) {
+      const recipients = Array.isArray(to) ? to : [to];
+      logger.error(`Cannot send device report email to ${recipients.join(', ')}: RESEND_API_KEY is missing`);
+      return false;
+    }
+
     const recipients = Array.isArray(to) ? to : [to];
 
     // Convert path-based attachments to base64 content for Resend API

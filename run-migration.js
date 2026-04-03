@@ -28,17 +28,9 @@ async function runMigration() {
 
   try {
     const migrationDir = path.join(__dirname, 'src/database');
-    
-    // Get migration file from command line or use default
-    const migrationFile = process.argv[2] || '20260401_add_work_order_assignees.sql';
-    const sqlFile = path.join(migrationDir, migrationFile);
-    
-    if (!fs.existsSync(sqlFile)) {
-      console.error(`❌ Migration file not found: ${sqlFile}`);
-      process.exit(1);
-    }
-    
-    console.log(`📄 Running migration: ${migrationFile}`);
+    const preferredFile = path.join(migrationDir, '19032026_migration.sql');
+    const legacyFile = path.join(migrationDir, '19032026.sql');
+    const sqlFile = fs.existsSync(preferredFile) ? preferredFile : legacyFile;
     const sql = fs.readFileSync(sqlFile, 'utf8');
     
     // Split by semicolon and execute each statement

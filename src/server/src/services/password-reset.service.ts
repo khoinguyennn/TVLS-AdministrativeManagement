@@ -1,6 +1,6 @@
 import { hash } from 'bcrypt';
 import { Op } from 'sequelize';
-import { Service, Container } from 'typedi';
+import { Service, Inject } from 'typedi';
 import { DB } from '@database';
 import { ForgotPasswordDto, VerifyOTPDto, ResetPasswordDto } from '@dtos/users.dto';
 import { HttpException } from '@/exceptions/HttpException';
@@ -11,7 +11,8 @@ const OTP_EXPIRY_MINUTES = 5;
 
 @Service()
 export class PasswordResetService {
-  private emailService = Container.get(EmailService);
+  @Inject()
+  private emailService: EmailService;
 
   // Generate 6-digit OTP
   private generateOTP(): string {

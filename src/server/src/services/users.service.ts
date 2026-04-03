@@ -64,6 +64,51 @@ export class UserService {
     const findUser: User = await DB.Users.findByPk(userId);
     if (!findUser) throw new HttpException(409, "User doesn't exist");
 
+    // Check if user has any work orders assigned
+    const assignedWorkOrders = await DB.WorkOrders.count({
+      where: { assignedTo: userId }
+    });
+
+    if (assignedWorkOrders > 0) {
+      throw new HttpException(409, `Không thể xóa người dùng vì vẫn còn ${assignedWorkOrders} công lệnh được giao. Vui lòng giao lại hoặc xóa những công lệnh này trước.`);
+    }
+
+    // Check if user has any work order assignees (many-to-many)
+    const workOrderAssignees = await DB.WorkOrderAssignees.count({
+      where: { assigned_to_user_id: userId }
+    });
+
+    if (workOrderAssignees > 0) {
+      throw new HttpException(409, `Không thể xóa người dùng vì vẫn còn ${workOrderAssignees} công lệnh được giao trong danh sách người thực hiện. Vui lòng gỡ bỏ trước.`);
+    }
+
+    // Check if user has device reports assigned
+    const assignedReports = await DB.DeviceReports.count({
+      where: { assignedTo: userId }
+    });
+
+    if (assignedReports > 0) {
+      throw new HttpException(409, `Không thể xóa người dùng vì vẫn còn ${assignedReports} báo cáo thiết bị được giao. Vui lòng giao lại trước.`);
+    }
+
+    // Check if user has leave requests
+    const leaveRequests = await DB.LeaveRequests.count({
+      where: { userId }
+    });
+
+    if (leaveRequests > 0) {
+      throw new HttpException(409, `Không thể xóa người dùng vì vẫn còn ${leaveRequests} đơn xin phép. Vui lòng xóa đơn này trước.`);
+    }
+
+    // Check if user is approver for any leave requests
+    const approvedLeaves = await DB.LeaveRequests.count({
+      where: { approvedBy: userId }
+    });
+
+    if (approvedLeaves > 0) {
+      throw new HttpException(409, `Không thể xóa người dùng vì vẫn còn người khác được người dùng này phê duyệt. Vui lòng giao lại quyền phê duyệt trước.`);
+    }
+
     await DB.Users.destroy({ where: { id: userId } });
 
     return findUser;
